@@ -1,2 +1,2 @@
 # fin-app
-App for managing finances
+App for managing finances.
