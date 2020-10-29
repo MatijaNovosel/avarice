@@ -1,14 +1,13 @@
 <template>
-  <navbar style="z-index: 99" v-model:sidebar="state.visible" />
+  <navbar v-model:sidebar="state.visible" />
   <sidebar
     :dismissable="true"
     :modal="false"
-    :autoZIndex="false"
     :showCloseIcon="false"
     v-model:visible="state.visible"
-    style="z-index: -1"
+    style="margin-top: 65px"
   >
-    <panel-menu style="margin-top: 65px" :model="state.menuItems" />
+    <panel-menu :model="state.menuItems" />
   </sidebar>
   <router-view />
 </template>
