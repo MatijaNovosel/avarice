@@ -1,35 +1,35 @@
 <template>
-  <menubar class="no-border-radius" :model="state.items">
+  <menubar class="no-border-radius no-border" :model="state.items">
     <template #start>
       <btn
         icon="pi pi-bars"
         class="p-button-rounded p-button-text p-mx-2"
         style="color: white"
-        @click="openSidebar"
+        @click="changeSiderbarState"
       />
     </template>
     <template #end>
-      <btn icon="pi pi-power-off" class="p-button-rounded" @click="logout" />
+      <btn
+        icon="pi pi-power-off"
+        style="background-color: #bb0707"
+        class="p-button-rounded p-mr-2"
+        @click="logout"
+      />
     </template>
   </menubar>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, watch, SetupContext } from "vue";
+import MenuItem from "@/models/menu-item";
 
 interface Props {
   title?: string | null;
   sidebar: boolean;
 }
 
-interface NavbarItem {
-  label?: string | null;
-  icon?: string | null;
-  items?: Array<NavbarItem> | null;
-}
-
 interface State {
-  items: Array<NavbarItem>;
+  items: Array<MenuItem>;
   title?: string | null;
   sidebar: boolean;
 }
@@ -179,15 +179,15 @@ export default defineComponent({
       console.log("Click!");
     }
 
-    function openSidebar() {
-      state.sidebar = true;
+    function changeSiderbarState() {
+      state.sidebar = !state.sidebar;
       context.emit("update:sidebar", state.sidebar);
     }
 
     return {
       state,
       logout,
-      openSidebar
+      changeSiderbarState
     };
   }
 });

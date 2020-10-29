@@ -14,6 +14,7 @@ import Menubar from "primevue/menubar";
 import Sidebar from "primevue/sidebar";
 import Menu from "primevue/menu";
 import Toast from 'primevue/toast';
+import PanelMenu from 'primevue/panelmenu';
 
 // CSS
 import "primevue/resources/themes/mdc-dark-indigo/theme.css";
@@ -40,6 +41,7 @@ app.component("btn", Button);
 app.component("sidebar", Sidebar);
 app.component("p-menu", Menu);
 app.component("toast", Toast);
+app.component("panel-menu", PanelMenu);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };
