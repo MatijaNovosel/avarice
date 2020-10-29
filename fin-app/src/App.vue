@@ -4,8 +4,9 @@
     :dismissable="true"
     :modal="false"
     :showCloseIcon="false"
+    :autoZIndex="false"
     v-model:visible="state.visible"
-    style="margin-top: 65px"
+    style="margin-top: 65px; z-index: 1"
   >
     <panel-menu :model="state.menuItems" />
   </sidebar>
