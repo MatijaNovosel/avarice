@@ -1,76 +1,26 @@
 <template>
   <navbar v-model:sidebar="state.visible" />
-  <sidebar
-    :dismissable="true"
-    :modal="false"
-    :showCloseIcon="false"
-    :autoZIndex="false"
-    v-model:visible="state.visible"
-    style="z-index: 1"
-    class="navbar-offset"
-  >
-    <panel-menu :model="state.menuItems" />
-  </sidebar>
+  <drawer v-model:visible="state.visible" />
   <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import navbar from "@/components/navbar.vue";
-import MenuItem from "@/models/menu-item";
+import drawer from "@/components/drawer.vue";
 
 interface State {
   visible: boolean;
-  menuItems: Array<MenuItem>;
 }
 
 export default defineComponent({
   components: {
-    navbar
+    navbar,
+    drawer
   },
   setup() {
     const state: State = reactive({
-      visible: false,
-      menuItems: [
-        {
-          label: "Options",
-          items: [
-            {
-              label: "Update",
-              icon: "pi pi-refresh",
-              command: () => {
-                console.log("Click!");
-              }
-            },
-            {
-              label: "Delete",
-              icon: "pi pi-times",
-              command: () => {
-                console.log("Click!");
-              }
-            }
-          ]
-        },
-        {
-          label: "Options",
-          items: [
-            {
-              label: "Update",
-              icon: "pi pi-refresh",
-              command: () => {
-                console.log("Click!");
-              }
-            },
-            {
-              label: "Delete",
-              icon: "pi pi-times",
-              command: () => {
-                console.log("Click!");
-              }
-            }
-          ]
-        }
-      ]
+      visible: false
     });
 
     return {

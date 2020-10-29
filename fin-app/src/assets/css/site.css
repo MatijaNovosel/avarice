@@ -26,3 +26,9 @@ body {
 .p-menubar .p-submenu-list {
   z-index: 2;
 }
+
+.p-dialog-footer {
+  border-top: 1px solid #ffffff42 !important;
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}

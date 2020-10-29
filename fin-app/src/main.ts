@@ -18,9 +18,11 @@ import PanelMenu from 'primevue/panelmenu';
 import Chart from 'primevue/chart';
 import Dialog from 'primevue/dialog';
 import InputNumber from 'primevue/inputnumber';
+import Listbox from 'primevue/listbox';
+import InputText from 'primevue/inputtext';
 
 // CSS
-import "primevue/resources/themes/mdc-dark-indigo/theme.css";
+import "primevue/resources/themes/mdc-dark-deeppurple/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
@@ -48,6 +50,8 @@ app.component("panel-menu", PanelMenu);
 app.component("chart", Chart);
 app.component("p-dialog", Dialog);
 app.component("input-number", InputNumber);
+app.component("list-box", Listbox);
+app.component("input-text", InputText);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

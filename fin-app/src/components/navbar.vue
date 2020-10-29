@@ -11,7 +11,6 @@
     <template #end>
       <btn
         icon="pi pi-power-off"
-        style="background-color: #bb0707"
         class="p-button-rounded p-mr-2"
         @click="logout"
       />
