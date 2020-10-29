@@ -1,3 +1,7 @@
+:root {
+  --navbar-height: 55px;
+}
+
 body {
   margin: 0px;
   background-color: rgb(18 18 18);
@@ -13,6 +17,10 @@ body {
 
 .p-panelmenu-header {
   border-bottom: 1px solid #ffffff42;
+}
+
+.p-dialog-header {
+  border-bottom: 1px solid #ffffff42 !important;
 }
 
 .p-menubar .p-submenu-list {

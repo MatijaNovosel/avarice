@@ -16,6 +16,8 @@ import Menu from "primevue/menu";
 import Toast from 'primevue/toast';
 import PanelMenu from 'primevue/panelmenu';
 import Chart from 'primevue/chart';
+import Dialog from 'primevue/dialog';
+import InputNumber from 'primevue/inputnumber';
 
 // CSS
 import "primevue/resources/themes/mdc-dark-indigo/theme.css";
@@ -44,6 +46,8 @@ app.component("p-menu", Menu);
 app.component("toast", Toast);
 app.component("panel-menu", PanelMenu);
 app.component("chart", Chart);
+app.component("p-dialog", Dialog);
+app.component("input-number", InputNumber);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

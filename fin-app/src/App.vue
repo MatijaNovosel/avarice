@@ -6,7 +6,8 @@
     :showCloseIcon="false"
     :autoZIndex="false"
     v-model:visible="state.visible"
-    style="margin-top: 65px; z-index: 1"
+    style="z-index: 1"
+    class="navbar-offset"
   >
     <panel-menu :model="state.menuItems" />
   </sidebar>
@@ -86,5 +87,8 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.navbar-offset {
+  margin-top: var(--navbar-height);
 }
 </style>

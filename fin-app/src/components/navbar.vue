@@ -1,5 +1,5 @@
 <template>
-  <menubar class="no-border-radius no-border" :model="state.items">
+  <menubar class="no-border-radius no-border navbar-height" :model="state.items">
     <template #start>
       <btn
         icon="pi pi-bars"
@@ -194,4 +194,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.navbar-height {
+  height: var(--navbar-height);
+}
 </style>
