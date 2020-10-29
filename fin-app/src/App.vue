@@ -48,6 +48,25 @@ export default defineComponent({
               }
             }
           ]
+        },
+        {
+          label: "Options",
+          items: [
+            {
+              label: "Update",
+              icon: "pi pi-refresh",
+              command: () => {
+                console.log("Click!");
+              }
+            },
+            {
+              label: "Delete",
+              icon: "pi pi-times",
+              command: () => {
+                console.log("Click!");
+              }
+            }
+          ]
         }
       ]
     });

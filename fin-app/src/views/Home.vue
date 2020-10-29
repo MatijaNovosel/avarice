@@ -1,12 +1,12 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter">
-    <div class="p-col">
+    <div class="p-col p-px-5">
       <chart type="bar" :data="state.basicData" />
     </div>
-    <div class="p-col">
+    <div class="p-col p-px-5">
       <chart type="bar" :data="state.basicData" />
     </div>
-    <div class="p-col">
+    <div class="p-col p-px-5">
       <chart type="bar" :data="state.basicData" />
     </div>
   </div>
