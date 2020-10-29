@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, SetupContext } from "vue";
-import { useToast } from "primevue/usetoast";
 
 interface Props {
   title?: string | null;
