@@ -5,7 +5,7 @@ import router from "./router";
 import store from "./store";
 import ToastService from 'primevue/toastservice';
 
-// Component import
+// PrimeVue component import
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
@@ -21,6 +21,9 @@ import InputNumber from 'primevue/inputnumber';
 import Listbox from 'primevue/listbox';
 import InputText from 'primevue/inputtext';
 
+// Custom component import
+import Chip from '@/components/chip.vue';
+
 // CSS
 import "primevue/resources/themes/mdc-dark-deeppurple/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -35,7 +38,10 @@ app.use(store);
 app.use(router);
 app.use(ToastService);
 
-// Components
+// Custom components
+app.component("chip", Chip);
+
+// PrimeVue components
 app.component("vee-field", Field);
 app.component("vee-form", Form);
 app.component("data-table", DataTable);
