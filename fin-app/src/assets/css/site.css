@@ -1,10 +1,16 @@
 :root {
   --navbar-height: 55px;
+  --vue-logo-green: #41b883;
+  --vue-logo-blue: #35495e;
+  --color-dark: rgba(255, 255, 255, 0.6);
+  --color-light: rgba(0, 0, 0, 0.12);
+  --color-dark-gradient-3: rgb(18, 18, 18);
+  --color-dark-gradient-1: #ffffff42;
 }
 
 body {
   margin: 0px;
-  background-color: rgb(18, 18, 18);
+  background-color: var(--color-dark-gradient-3);
 }
 
 .no-border {
@@ -16,11 +22,11 @@ body {
 }
 
 .p-panelmenu-header {
-  border-bottom: 1px solid #ffffff42;
+  border-bottom: 1px solid var(--color-dark-gradient-1);
 }
 
 .p-dialog-header {
-  border-bottom: 1px solid #ffffff42 !important;
+  border-bottom: 1px solid var(--color-dark-gradient-1) !important;
 }
 
 .p-menubar .p-submenu-list {
@@ -28,7 +34,11 @@ body {
 }
 
 .p-dialog-footer {
-  border-top: 1px solid #ffffff42 !important;
+  border-top: 1px solid var(--color-dark-gradient-1) !important;
   padding-top: 15px !important;
   padding-bottom: 15px !important;
+}
+
+.shadow {
+  box-shadow: 5px 5px 4px #888888 !important;
 }

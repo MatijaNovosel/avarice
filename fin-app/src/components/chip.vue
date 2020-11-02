@@ -1,6 +1,11 @@
 <template>
-  <span class="v-chip v-size--default">
-    <span class="v-chip__content">{{ state.label }}</span>
+  <span
+    class="chip size-default"
+    :style="{ 'background-color': state.color, 'border-color': state.color }"
+  >
+    <span class="chip-content" :style="{ color: state.textColor }">
+      <slot />
+    </span>
   </span>
 </template>
 
@@ -8,26 +13,35 @@
 import { defineComponent, reactive, watch } from "vue";
 
 interface Props {
-  label?: string | null;
+  color?: string | null;
+  textColor?: string | null;
 }
 
 interface State {
-  label?: string | null;
+  color?: string | null;
+  textColor?: string | null;
 }
 
 export default defineComponent({
   name: "chip",
   props: {
-    label: String
+    color: String,
+    textColor: String
   },
   setup(props: Props) {
     const state: State = reactive({
-      label: props.label
+      color: props.color,
+      textColor: props.textColor
     });
 
     watch(
-      () => props.label,
-      (val) => (state.label = val)
+      () => props.color,
+      (val) => (state.color = val)
+    );
+
+    watch(
+      () => props.textColor,
+      (val) => (state.textColor = val)
     );
 
     return {
@@ -38,12 +52,12 @@ export default defineComponent({
 </script>
 
 <style>
-.v-chip.v-size--default {
+.chip.size-default {
   border-radius: 16px;
   font-size: 14px;
   height: 32px;
 }
-.v-chip {
+.chip {
   align-items: center;
   cursor: default;
   display: inline-flex;
@@ -59,14 +73,11 @@ export default defineComponent({
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   vertical-align: middle;
   white-space: nowrap;
-  background-color: #f44336 !important;
-  border-color: #f44336 !important;
 }
-.v-chip .v-chip__content {
+.chip .chip-content {
   align-items: center;
   display: inline-flex;
   height: 100%;
   max-width: 100%;
-  color: white;
 }
 </style>

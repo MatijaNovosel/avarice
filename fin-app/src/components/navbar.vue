@@ -1,5 +1,8 @@
 <template>
-  <menubar class="no-border-radius no-border navbar-height" :model="state.items">
+  <menubar
+    class="no-border-radius no-border navbar-height"
+    :model="state.items"
+  >
     <template #start>
       <btn
         icon="pi pi-bars"
@@ -192,8 +195,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 .navbar-height {
   height: var(--navbar-height);
+}
+.p-panelmenu-content {
+  background-color: var(--color-dark-gradient-3) !important;
 }
 </style>

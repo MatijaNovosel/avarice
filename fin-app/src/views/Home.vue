@@ -2,7 +2,7 @@
   <div class="p-grid p-mt-5 p-nogutter">
     <div class="p-col p-px-5">1</div>
     <div class="p-col p-px-5">
-      Trenutačno stanje: <chip class="p-ml-2" label="10,000kn" />
+      Trenutačno stanje: <chip text-color="white" color="#f44336" class="p-ml-2"> 10,000kn </chip>
     </div>
     <div class="p-col p-px-5">3</div>
   </div>
