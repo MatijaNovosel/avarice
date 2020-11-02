@@ -5,7 +5,24 @@
   --color-dark: rgba(255, 255, 255, 0.6);
   --color-light: rgba(0, 0, 0, 0.12);
   --color-dark-gradient-3: rgb(18, 18, 18);
+  --color-dark-gradient-2: #262626;
   --color-dark-gradient-1: #ffffff42;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-gradient-3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 body {

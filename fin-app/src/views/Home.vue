@@ -1,20 +1,25 @@
 <template>
-  <div class="p-grid p-mt-5 p-nogutter">
-    <div class="p-col p-px-5">1</div>
+  <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col p-px-5">
-      Trenutačno stanje: <chip text-color="white" color="#f44336" class="p-ml-2"> 10,000kn </chip>
+      Trenutačno stanje:
+      <chip text-color="white" color="#f44336" class="p-ml-2"> 10,000kn </chip>
     </div>
-    <div class="p-col p-px-5">3</div>
   </div>
   <div class="p-grid p-mt-5 p-nogutter">
     <div class="p-col p-px-5">
-      <chart type="bar" :data="state.basicData" />
+      <group-box title="Graf 1">
+        <chart type="bar" :data="state.basicData" />
+      </group-box>
     </div>
     <div class="p-col p-px-5">
-      <chart type="bar" :data="state.basicData" />
+      <group-box title="Graf 2">
+        <chart type="bar" :data="state.basicData" />
+      </group-box>
     </div>
     <div class="p-col p-px-5">
-      <chart type="bar" :data="state.basicData" />
+      <group-box title="Graf 3">
+        <chart type="bar" :data="state.basicData" />
+      </group-box>
     </div>
   </div>
 </template>

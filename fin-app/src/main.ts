@@ -20,9 +20,12 @@ import Dialog from 'primevue/dialog';
 import InputNumber from 'primevue/inputnumber';
 import Listbox from 'primevue/listbox';
 import InputText from 'primevue/inputtext';
+import SelectButton from 'primevue/selectbutton';
+import MultiSelect from 'primevue/multiselect';
 
 // Custom component import
 import Chip from '@/components/chip.vue';
+import GroupBox from '@/components/group-box.vue';
 
 // CSS
 import "primevue/resources/themes/mdc-dark-deeppurple/theme.css";
@@ -40,6 +43,7 @@ app.use(ToastService);
 
 // Custom components
 app.component("chip", Chip);
+app.component("group-box", GroupBox);
 
 // PrimeVue components
 app.component("vee-field", Field);
@@ -58,6 +62,8 @@ app.component("p-dialog", Dialog);
 app.component("input-number", InputNumber);
 app.component("list-box", Listbox);
 app.component("input-text", InputText);
+app.component("select-button", SelectButton);
+app.component("multi-select", MultiSelect);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

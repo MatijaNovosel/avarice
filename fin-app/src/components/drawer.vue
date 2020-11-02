@@ -20,7 +20,7 @@
       <h3>Unos novog troška</h3>
     </template>
     <vee-form>
-      <div class="p-fluid p-grid p-formgrid p-my-5">
+      <div class="p-fluid p-grid p-formgrid p-my-5 p-px-3">
         <div class="p-field p-col-12">
           <span class="p-float-label">
             <input-number
@@ -33,30 +33,41 @@
             <label for="newEntry">Iznos troška</label>
           </span>
         </div>
+        <div class="p-field p-col-12 p-mb-5 p-mt-3">
+          <group-box title="Izvor plaćanja" background-color="#262626">
+            <select-button
+              v-model="state.input.paymentSource"
+              :options="paymentSources"
+              optionLabel="text"
+              optionValue="val"
+            />
+          </group-box>
+        </div>
         <div class="p-field p-col-12">
-          <h4 class="p-text-left">Kategorija</h4>
-          <list-box
-            :multiple="true"
-            :filter="true"
-            v-model="state.selectedCategories"
-            :options="state.categories"
-            dataKey="value"
-            listStyle="max-height:250px"
-            optionValue="value"
-            optionLabel="text"
-          >
-            <template #option="slotProps">
-              <div>
-                <i
-                  v-if="
-                    state.selectedCategories.includes(slotProps.option.value)
-                  "
-                  class="pi pi-check p-mr-2"
-                  style="fontsize: 1rem"
-                />{{ slotProps.option.text }}
-              </div>
-            </template>
-          </list-box>
+          <group-box title="Kategorija" background-color="#262626">
+            <list-box
+              :multiple="true"
+              :filter="true"
+              v-model="state.input.categories"
+              :options="categories"
+              dataKey="val"
+              listStyle="max-height: 250px"
+              optionValue="val"
+              optionLabel="text"
+            >
+              <template #option="slotProps">
+                <div>
+                  <i
+                    v-if="
+                      state.input.categories.includes(slotProps.option.value)
+                    "
+                    class="pi pi-check p-mr-2"
+                    style="fontsize: 1rem"
+                  />{{ slotProps.option.text }}
+                </div>
+              </template>
+            </list-box>
+          </group-box>
         </div>
       </div>
     </vee-form>
@@ -75,13 +86,24 @@
 import { defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/models/menu-item";
 
-interface SelectItem {
+interface SelectItem<T> {
   text: string;
-  value: string | number;
+  val: T | number;
 }
 
 interface Props {
   visible: boolean;
+}
+
+enum PaymentSource {
+  GyroAccount = 1,
+  CheckingAccount = 2,
+  Pocket = 3
+}
+
+interface Input {
+  paymentSource?: PaymentSource | null;
+  categories: Array<number>;
 }
 
 interface State {
@@ -89,8 +111,7 @@ interface State {
   visible: boolean;
   dialog: boolean;
   newEntry?: string | null;
-  categories: Array<SelectItem>;
-  selectedCategories?: Array<SelectItem> | null;
+  input: Input;
 }
 
 export default defineComponent({
@@ -100,48 +121,13 @@ export default defineComponent({
   },
   setup(props: Props) {
     const state: State = reactive({
+      input: {
+        paymentSource: PaymentSource.GyroAccount,
+        categories: []
+      },
       visible: props.visible,
       dialog: false,
       newEntry: null,
-      selectedCategories: [],
-      categories: [
-        {
-          text: "Text",
-          value: 1
-        },
-        {
-          text: "Text",
-          value: 2
-        },
-        {
-          text: "Text",
-          value: 3
-        },
-        {
-          text: "Text",
-          value: 4
-        },
-        {
-          text: "Text",
-          value: 5
-        },
-        {
-          text: "Text",
-          value: 6
-        },
-        {
-          text: "Text",
-          value: 7
-        },
-        {
-          text: "Text",
-          value: 8
-        },
-        {
-          text: "Text",
-          value: 9
-        }
-      ],
       menuItems: [
         {
           label: "Financijske akcije",
@@ -189,13 +175,69 @@ export default defineComponent({
       (val) => (state.visible = val)
     );
 
+    const paymentSources: Array<SelectItem<PaymentSource>> = [
+      {
+        text: "Žiro račun",
+        val: PaymentSource.GyroAccount
+      },
+      {
+        text: "Tekući račun",
+        val: PaymentSource.CheckingAccount
+      },
+      {
+        text: "Džep (novčanik)",
+        val: PaymentSource.Pocket
+      }
+    ];
+
+    const categories: Array<SelectItem<number>> = [
+      {
+        text: "Text",
+        val: 1
+      },
+      {
+        text: "Text",
+        val: 2
+      },
+      {
+        text: "Text",
+        val: 3
+      },
+      {
+        text: "Text",
+        val: 4
+      },
+      {
+        text: "Text",
+        val: 5
+      },
+      {
+        text: "Text",
+        val: 6
+      },
+      {
+        text: "Text",
+        val: 7
+      },
+      {
+        text: "Text",
+        val: 8
+      },
+      {
+        text: "Text",
+        val: 9
+      }
+    ];
+
     function addExpense() {
       state.dialog = false;
     }
 
     return {
       state,
-      addExpense
+      addExpense,
+      paymentSources,
+      categories
     };
   }
 });
