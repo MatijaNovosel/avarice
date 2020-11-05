@@ -1,6 +1,6 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col p-px-5">
+    <div class="p-col">
       Trenutačno stanje:
       <chip text-color="white" color="#f44336" class="p-ml-2"> 10,000kn </chip>
     </div>
