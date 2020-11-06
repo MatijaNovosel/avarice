@@ -2,7 +2,9 @@
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col">
       Trenutačno stanje:
-      <chip text-color="white" color="#f44336" class="p-ml-2"> 10,000kn </chip>
+      <chip text-color="white" color="#f44336" class="p-ml-2">
+        {{ state.currentAmount }}
+      </chip>
     </div>
   </div>
   <div class="p-grid p-mt-5 p-nogutter">
@@ -25,12 +27,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
+import { db } from "@/services/firebase";
+
+interface State {
+  currentAmount: string;
+}
 
 export default defineComponent({
   name: "Home",
   setup() {
     const state = reactive({
+      currentAmount: null,
       basicData: {
         labels: [
           "January",
@@ -54,6 +62,20 @@ export default defineComponent({
           }
         ]
       }
+    });
+
+    onMounted(() => {
+      db.collection("current-amount").onSnapshot((snapshotChange) => {
+        const data = snapshotChange.docs[0].data();
+        state.currentAmount = data.val;
+      });
+      /*
+      db.collection("history").onSnapshot((snapshotChange) => {
+        snapshotChange.forEach(x => {
+          console.log(x.data());
+        });
+      })
+      */
     });
 
     return { state };

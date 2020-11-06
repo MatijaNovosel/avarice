@@ -84,7 +84,7 @@ export default defineComponent({
 }
 .top-left {
   position: absolute;
-  top: 20px;
+  top: 19px;
   left: 55px;
 }
 .leading-text {
