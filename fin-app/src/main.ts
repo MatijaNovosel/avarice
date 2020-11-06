@@ -22,6 +22,7 @@ import Listbox from "primevue/listbox";
 import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
 import MultiSelect from "primevue/multiselect";
+import Textarea from 'primevue/textarea';
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -66,6 +67,7 @@ app.component("list-box", Listbox);
 app.component("input-text", InputText);
 app.component("select-button", SelectButton);
 app.component("multi-select", MultiSelect);
+app.component("text-area", Textarea);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

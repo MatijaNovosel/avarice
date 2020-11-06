@@ -27,17 +27,23 @@
               locale="hr-HR"
               mode="currency"
               currency="HRK"
-              id="newEntry"
-              v-model="state.newEntry"
+              id="amount"
+              v-model="state.input.amount"
             />
-            <label for="newEntry">Iznos troška</label>
+            <label for="amount">Iznos troška</label>
+          </span>
+        </div>
+        <div class="p-field p-col-12">
+          <span class="p-float-label">
+            <text-area v-model="state.input.description" id="text-area" />
+            <label for="text-area">Opis</label>
           </span>
         </div>
         <div class="p-field p-col-12 p-mb-5 p-mt-3">
           <group-box title="Izvor plaćanja" background-color="#262626">
             <select-button
-              v-model="state.input.paymentSource"
-              :options="paymentSources"
+              v-model="state.input.PaymentSourceEnum"
+              :options="PaymentSourceEnums"
               optionLabel="text"
               optionValue="val"
             />
@@ -59,7 +65,9 @@
                 <div>
                   <i
                     v-if="
-                      state.input.categories.includes(slotProps.option.value)
+                      state.input.categories.some(
+                        (x) => x == slotProps.option.val
+                      )
                     "
                     class="pi pi-check p-mr-2"
                     style="fontsize: 1rem"
@@ -85,32 +93,25 @@
 <script lang="ts">
 import { defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/models/menu-item";
+import { CategoryEnum } from "@/constants/category-enum";
+import { PaymentSourceEnum } from "@/constants/payment-source-enum";
+import { SelectItem } from "@/constants/select-item";
 
-interface SelectItem<T> {
-  text: string;
-  val: T | number;
+interface Input {
+  PaymentSourceEnum?: PaymentSourceEnum | null;
+  categories: Array<number>;
+  description: string | null;
+  amount: string | null;
 }
 
 interface Props {
   visible: boolean;
 }
 
-enum PaymentSource {
-  GyroAccount = 1,
-  CheckingAccount = 2,
-  Pocket = 3
-}
-
-interface Input {
-  paymentSource?: PaymentSource | null;
-  categories: Array<number>;
-}
-
 interface State {
   menuItems: Array<MenuItem>;
   visible: boolean;
   dialog: boolean;
-  newEntry?: string | null;
   input: Input;
 }
 
@@ -122,12 +123,13 @@ export default defineComponent({
   setup(props: Props) {
     const state: State = reactive({
       input: {
-        paymentSource: PaymentSource.GyroAccount,
-        categories: []
+        PaymentSourceEnum: PaymentSourceEnum.GyroAccount,
+        categories: [],
+        description: null,
+        amount: null
       },
       visible: props.visible,
       dialog: false,
-      newEntry: null,
       menuItems: [
         {
           label: "Financijske akcije",
@@ -175,57 +177,37 @@ export default defineComponent({
       (val) => (state.visible = val)
     );
 
-    const paymentSources: Array<SelectItem<PaymentSource>> = [
+    const PaymentSourceEnums: Array<SelectItem<PaymentSourceEnum>> = [
       {
         text: "Žiro račun",
-        val: PaymentSource.GyroAccount
+        val: PaymentSourceEnum.GyroAccount
       },
       {
         text: "Tekući račun",
-        val: PaymentSource.CheckingAccount
+        val: PaymentSourceEnum.CheckingAccount
       },
       {
         text: "Džep (novčanik)",
-        val: PaymentSource.Pocket
+        val: PaymentSourceEnum.Pocket
       }
     ];
 
-    const categories: Array<SelectItem<number>> = [
+    const categories: Array<SelectItem<CategoryEnum>> = [
       {
-        text: "Text",
-        val: 1
+        text: "Hrana",
+        val: CategoryEnum.Food
       },
       {
-        text: "Text",
-        val: 2
+        text: "Darovi",
+        val: CategoryEnum.Gifts
       },
       {
-        text: "Text",
-        val: 3
+        text: "Igre",
+        val: CategoryEnum.Games
       },
       {
-        text: "Text",
-        val: 4
-      },
-      {
-        text: "Text",
-        val: 5
-      },
-      {
-        text: "Text",
-        val: 6
-      },
-      {
-        text: "Text",
-        val: 7
-      },
-      {
-        text: "Text",
-        val: 8
-      },
-      {
-        text: "Text",
-        val: 9
+        text: "Javni prijevoz",
+        val: CategoryEnum.PublicTransport
       }
     ];
 
@@ -236,7 +218,7 @@ export default defineComponent({
     return {
       state,
       addExpense,
-      paymentSources,
+      PaymentSourceEnums,
       categories
     };
   }
