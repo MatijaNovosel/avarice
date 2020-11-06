@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch } from "vue";
-import MenuItem from "@/models/menu-item";
+import MenuItem from "@/constants/menu-item";
 import { CategoryEnum } from "@/constants/category-enum";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
