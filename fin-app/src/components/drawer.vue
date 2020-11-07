@@ -6,8 +6,21 @@
     :autoZIndex="false"
     v-model:visible="state.visible"
     style="z-index: 1"
-    class="navbar-offset"
+    class="navbar-offset sidebar"
   >
+    <btn
+      icon="pi pi-cog"
+      class="p-button-rounded p-button-text settings-button p-button-lg pb-button-secondary"
+      v-tooltip.bottom="'Postavke'"
+    />
+    <div class="drawer-header">
+      <img
+        class="avatar"
+        src="https://p7.hiclipart.com/preview/873/489/293/avatar-youtube-cat-cute-dog-thumbnail.jpg"
+      />
+      <span class="header-title">Matija Novosel</span>
+      <span class="header-subtitle">Admin</span>
+    </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
   <p-dialog
@@ -95,7 +108,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "vue";
+import { defineComponent, reactive, watch, SetupContext } from "vue";
 import MenuItem from "@/constants/menu-item";
 import { CategoryEnum } from "@/constants/category-enum";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
@@ -124,7 +137,7 @@ export default defineComponent({
   props: {
     visible: Boolean
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       input: {
         PaymentSourceEnum: PaymentSourceEnum.GyroAccount,
@@ -231,7 +244,36 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.drawer-header {
+  margin: 10px 0px 15px 0px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .navbar-height {
   height: var(--navbar-height);
+}
+.header-title {
+  margin: 10px 0px 5px 0px;
+  font-size: 16px;
+}
+.header-subtitle {
+  font-size: 12px;
+  color: #dc2424;
+}
+.avatar {
+  border-radius: 50%;
+  width: 100px;
+}
+.settings-button {
+  position: absolute;
+  top: -10px;
+  right: 0px;
+  color: grey !important;
+}
+.sidebar {
+  outline: none;
 }
 </style>

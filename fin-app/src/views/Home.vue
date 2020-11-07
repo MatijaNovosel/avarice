@@ -3,23 +3,18 @@
     <div class="p-col p-text-center">
       Trenutačno stanje:
       <chip text-color="white" color="#f44336" class="p-ml-2">
-        {{ state.currentAmount }}
+        <span v-if="state.loading">
+          <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+        </span>
+        <span v-else>
+          {{ state.currentAmount }}
+        </span>
       </chip>
     </div>
   </div>
-  <div class="p-grid p-mt-5 p-nogutter">
-    <div class="p-col p-px-5">
-      <group-box title="Graf 1">
-        <chart type="bar" :data="state.basicData" />
-      </group-box>
-    </div>
-    <div class="p-col p-px-5">
-      <group-box title="Graf 2">
-        <chart type="bar" :data="state.basicData" />
-      </group-box>
-    </div>
-    <div class="p-col p-px-5">
-      <group-box title="Graf 3">
+  <div class="p-grid p-mt-3 p-nogutter p-justify-center">
+    <div class="p-col-6 p-px-5">
+      <group-box icon="dollar" title="Stanje kroz vrijeme">
         <chart type="bar" :data="state.basicData" />
       </group-box>
     </div>
@@ -28,17 +23,21 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import { db } from "@/services/firebase";
+import { CurrentAmountService } from "@/services/api/current-amount-service";
 
 interface State {
-  currentAmount: string;
+  currentAmount: string | null;
+  currentAmountService: CurrentAmountService | null;
+  loading: boolean;
 }
 
 export default defineComponent({
   name: "Home",
   setup() {
-    const state = reactive({
+    const state: State = reactive({
       currentAmount: null,
+      loading: false,
+      currentAmountService: null,
       basicData: {
         labels: [
           "January",
@@ -64,21 +63,18 @@ export default defineComponent({
       }
     });
 
-    onMounted(() => {
-      db.collection("current-amount").onSnapshot((snapshotChange) => {
-        const data = snapshotChange.docs[0].data();
-        state.currentAmount = data.val;
-      });
-      /*
-      db.collection("history").onSnapshot((snapshotChange) => {
-        snapshotChange.forEach(x => {
-          console.log(x.data());
-        });
-      })
-      */
+    onMounted(async () => {
+      state.currentAmountService = new CurrentAmountService();
+      state.loading = true;
+      const data = await state.currentAmountService.getCurrentAmount();
+      state.currentAmount = data.val;
+      state.loading = false;
     });
 
     return { state };
   }
 });
 </script>
+
+<style>
+</style>

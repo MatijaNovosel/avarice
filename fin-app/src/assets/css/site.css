@@ -59,3 +59,7 @@ body {
 .shadow {
   box-shadow: 5px 5px 4px #888888 !important;
 }
+
+.p-tooltip {
+  z-index: 999 !important;
+}
