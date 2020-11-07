@@ -20,7 +20,7 @@
       <h3>Unos novog troška</h3>
     </template>
     <vee-form>
-      <div class="p-fluid p-grid p-formgrid p-my-5 p-px-3">
+      <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
         <div class="p-field p-col-12">
           <span class="p-float-label">
             <input-number
@@ -30,17 +30,21 @@
               id="amount"
               v-model="state.input.amount"
             />
-            <label for="amount">Iznos troška</label>
+            <label for="amount"
+              ><icon class="p-pr-1" name="dollar" /> Iznos troška</label
+            >
           </span>
         </div>
         <div class="p-field p-col-12">
           <span class="p-float-label">
             <text-area v-model="state.input.description" id="text-area" />
-            <label for="text-area">Opis</label>
+            <label for="text-area"
+              ><icon class="p-pr-1" name="comments" /> Opis</label
+            >
           </span>
         </div>
-        <div class="p-field p-col-12 p-mb-5 p-mt-3">
-          <group-box title="Izvor plaćanja" background-color="#262626">
+        <div class="p-field p-col-12">
+          <group-box icon="id-card" title="Izvor plaćanja">
             <select-button
               v-model="state.input.PaymentSourceEnum"
               :options="PaymentSourceEnums"
@@ -50,7 +54,7 @@
           </group-box>
         </div>
         <div class="p-field p-col-12">
-          <group-box title="Kategorija" background-color="#262626">
+          <group-box icon="tag" title="Kategorija">
             <list-box
               :multiple="true"
               :filter="true"
@@ -83,7 +87,7 @@
       <btn
         @click="addExpense"
         label="Spremi"
-        icon="pi pi-check"
+        icon="pi pi-save"
         class="p-button-raised p-button-success"
       />
     </template>
@@ -212,6 +216,7 @@ export default defineComponent({
     ];
 
     function addExpense() {
+      // const payload = { ...state.input };
       state.dialog = false;
     }
 

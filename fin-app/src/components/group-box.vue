@@ -1,14 +1,14 @@
 <template>
-  <div class="group-box">
-    <span
-      class="group-box-title"
-      :style="{
-        backgroundColor: state.backgroundColor
-      }"
-      >{{ state.title }}</span
-    >
+  <field-set>
+    <template #legend>
+      <span
+        ><icon v-if="state.icon" class="p-pr-2" :name="state.icon" />{{
+          state.title
+        }}</span
+      >
+    </template>
     <slot></slot>
-  </div>
+  </field-set>
 </template>
 
 <script lang="ts">
@@ -16,24 +16,25 @@ import { defineComponent, reactive, watch } from "vue";
 
 interface Props {
   title?: string | null;
-  backgroundColor?: string | null;
+  icon?: string | null;
 }
 
 interface State {
   title?: string | null;
-  backgroundColor?: string | null;
+  icon?: string | null;
 }
 
 export default defineComponent({
   name: "group-box",
   props: {
     title: String,
-    backgroundColor: String
+    backgroundColor: String,
+    icon: String
   },
   setup(props: Props) {
     const state: State = reactive({
       title: props.title,
-      backgroundColor: props.backgroundColor
+      icon: props.icon
     });
 
     watch(
@@ -42,8 +43,8 @@ export default defineComponent({
     );
 
     watch(
-      () => props.backgroundColor,
-      (val) => (state.backgroundColor = val)
+      () => props.icon,
+      (val) => (state.icon = val)
     );
 
     return {
@@ -53,19 +54,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.group-box {
-  border-radius: 8px;
-  border: 1px solid var(--color-dark);
-  padding: 20px;
-  position: relative;
-}
-.group-box-title {
-  position: absolute;
-  top: -12px;
-  left: 20px;
-  padding: 5px;
-  color: var(--color-dark);
-  background-color: var(--color-dark-gradient-3);
+<style>
+.p-fieldset .p-fieldset-legend {
+  border: 1px solid var(--color-dark) !important;
+  border-radius: 6px;
 }
 </style>

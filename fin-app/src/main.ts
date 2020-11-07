@@ -23,6 +23,7 @@ import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
 import MultiSelect from "primevue/multiselect";
 import Textarea from 'primevue/textarea';
+import Fieldset from 'primevue/fieldset';
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -68,6 +69,7 @@ app.component("input-text", InputText);
 app.component("select-button", SelectButton);
 app.component("multi-select", MultiSelect);
 app.component("text-area", Textarea);
+app.component("field-set", Fieldset);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

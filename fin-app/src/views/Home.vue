@@ -1,6 +1,6 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col">
+    <div class="p-col p-text-center">
       Trenutačno stanje:
       <chip text-color="white" color="#f44336" class="p-ml-2">
         {{ state.currentAmount }}
