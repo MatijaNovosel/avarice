@@ -14,7 +14,7 @@
     </div>
     <div class="p-col-3 p-px-3">
       <group-box icon="dollar" title="Tekući račun" class="p-text-center">
-        <chip text-color="white" color="#f44336" class="p-ml-2">
+        <chip text-color="white" color="#2790f2" class="p-ml-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
@@ -26,7 +26,7 @@
     </div>
     <div class="p-col-3">
       <group-box icon="dollar" title="Džep" class="p-text-center">
-        <chip text-color="white" color="#f44336" class="p-ml-2">
+        <chip text-color="white" color="#FFA726" class="p-ml-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
@@ -49,6 +49,8 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
 import { CurrentAmountService } from "@/services/api/current-amount-service";
+import { AmountHistoryService } from "@/services/api/amount-history-service";
+import { Timestamp } from "@firebase/firestore-types";
 
 interface CurrentAmount {
   gyro: string;
@@ -56,9 +58,17 @@ interface CurrentAmount {
   pocket: string;
 }
 
+interface HistoryItem {
+  gyro: string;
+  checking: string;
+  pocket: string;
+  date: Timestamp;
+}
+
 interface State {
   currentAmount: CurrentAmount;
   currentAmountService: CurrentAmountService | null;
+  amountHistoryService: AmountHistoryService | null;
   loading: boolean;
 }
 
@@ -73,36 +83,32 @@ export default defineComponent({
       },
       loading: false,
       currentAmountService: null,
+      amountHistoryService: null,
       basicData: {
         labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July"
+          "1/11/2020",
+          "2/12/2020",
+          "3/12/2020",
+          "4/12/2020",
+          "5/12/2020",
+          "6/12/2020",
+          "7/12/2020"
         ],
         datasets: [
           {
-            label: "First Dataset",
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            borderColor: "#42A5F5"
-          },
-          {
-            label: "Second Dataset",
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            borderDash: [5, 5],
-            borderColor: "#66BB6A"
-          },
-          {
-            label: "Third Dataset",
-            data: [12, 51, 62, 33, 21, 62, 45],
+            label: "Žiro račun",
+            data: [
+              8340.32,
+              8440.32,
+              8240.32,
+              7340.32,
+              8340.32,
+              8340.32,
+              8340.32
+            ],
             fill: true,
-            borderColor: "#FFA726",
-            backgroundColor: "rgba(255,167,38,0.2)"
+            borderColor: "#c71e12",
+            backgroundColor: "rgba(150, 24, 15, 0.2)"
           }
         ]
       }
@@ -110,11 +116,17 @@ export default defineComponent({
 
     onMounted(async () => {
       state.currentAmountService = new CurrentAmountService();
+      state.amountHistoryService = new AmountHistoryService();
+
       state.loading = true;
+
       const data = await state.currentAmountService.getCurrentAmount();
       state.currentAmount.gyro = data.gyro;
       state.currentAmount.checking = data.checking;
       state.currentAmount.pocket = data.pocket;
+
+      const history = state.amountHistoryService.getHistory();
+
       state.loading = false;
     });
 
