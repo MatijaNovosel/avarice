@@ -9,7 +9,9 @@
     <template #header>
       <h3>Postavke</h3>
     </template>
-    <div>Bruh</div>
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-mb-2 p-px-3">
+      Bruh
+    </div>
   </p-dialog>
 </template>
 

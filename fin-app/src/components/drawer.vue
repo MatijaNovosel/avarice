@@ -9,6 +9,7 @@
     class="navbar-offset sidebar"
   >
     <btn
+      @click="state.settingsDialog = true"
       icon="pi pi-cog"
       class="p-button-rounded p-button-text settings-button p-button-lg pb-button-secondary"
       v-tooltip.bottom="'Postavke'"
@@ -72,25 +73,6 @@ export default defineComponent({
             {
               label: "Stanje kroz vrijeme",
               icon: "pi pi-dollar",
-              command: () => {
-                console.log("Click!");
-              }
-            }
-          ]
-        },
-        {
-          label: "Postavke",
-          items: [
-            {
-              label: "Aplikacijske postavke",
-              icon: "pi pi-cog",
-              command: () => {
-                console.log("Click!");
-              }
-            },
-            {
-              label: "Korisničke postavke",
-              icon: "pi pi-user",
               command: () => {
                 console.log("Click!");
               }
