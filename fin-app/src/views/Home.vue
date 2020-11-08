@@ -1,7 +1,21 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-6">
-      <group-box icon="dollar" title="Trenutačno stanje">
+    <div class="p-col-3">
+      <group-box icon="dollar" title="Žiro račun">
+        <div>Žiro račun: 10,000HRK</div>
+        <div>Tekući račun: 10,000HRK</div>
+        <div>Džep: 10,000HRK</div>
+      </group-box>
+    </div>
+    <div class="p-col-3 p-px-3">
+      <group-box icon="dollar" title="Tekući račun">
+        <div>Žiro račun: 10,000HRK</div>
+        <div>Tekući račun: 10,000HRK</div>
+        <div>Džep: 10,000HRK</div>
+      </group-box>
+    </div>
+    <div class="p-col-3">
+      <group-box icon="dollar" title="Džep">
         <div>Žiro račun: 10,000HRK</div>
         <div>Tekući račun: 10,000HRK</div>
         <div>Džep: 10,000HRK</div>
@@ -24,7 +38,7 @@
   </div>
   -->
   <div class="p-grid p-mt-3 p-nogutter p-justify-center">
-    <div class="p-col-6">
+    <div class="p-col-9">
       <group-box icon="dollar" title="Stanje kroz vrijeme">
         <chart type="line" :data="state.basicData" />
       </group-box>
