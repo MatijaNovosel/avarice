@@ -67,7 +67,7 @@ export default defineComponent({
       state.currentAmountService = new CurrentAmountService();
       state.loading = true;
       const data = await state.currentAmountService.getCurrentAmount();
-      state.currentAmount = data.val;
+      state.currentAmount = data.gyro;
       state.loading = false;
     });
 
