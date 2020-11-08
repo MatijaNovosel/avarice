@@ -23,25 +23,15 @@
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
-  <expense-dialog
-    v-model:input="state.input"
-    v-model:dialog="state.dialog"
-    @add-expense="addExpense"
-  />
+  <expense-dialog v-model:dialog="state.expenseDialog" />
+  <settings-dialog v-model:dialog="state.settingsDialog" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/constants/menu-item";
 import ExpenseDialog from "@/components/expense-dialog.vue";
-import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-
-interface Input {
-  PaymentSourceEnum: PaymentSourceEnum | null;
-  categories: Array<number>;
-  description: string | null;
-  amount: string | null;
-}
+import SettingsDialog from "@/components/settings-dialog.vue";
 
 interface Props {
   visible: boolean;
@@ -50,8 +40,8 @@ interface Props {
 interface State {
   menuItems: Array<MenuItem>;
   visible: boolean;
-  dialog: boolean;
-  input: Input;
+  expenseDialog: boolean;
+  settingsDialog: boolean;
 }
 
 export default defineComponent({
@@ -60,18 +50,14 @@ export default defineComponent({
     visible: Boolean
   },
   components: {
-    ExpenseDialog
+    ExpenseDialog,
+    SettingsDialog
   },
   setup(props: Props) {
     const state: State = reactive({
-      input: {
-        PaymentSourceEnum: PaymentSourceEnum.GyroAccount,
-        categories: [],
-        description: null,
-        amount: null
-      },
       visible: props.visible,
-      dialog: false,
+      settingsDialog: false,
+      expenseDialog: false,
       menuItems: [
         {
           label: "Financijske akcije",
@@ -80,7 +66,7 @@ export default defineComponent({
               label: "Novi unos",
               icon: "pi pi-plus",
               command: () => {
-                state.dialog = true;
+                state.expenseDialog = true;
               }
             },
             {
@@ -119,14 +105,8 @@ export default defineComponent({
       (val) => (state.visible = val)
     );
 
-    function addExpense() {
-      // const payload = { ...state.input };
-      state.dialog = false;
-    }
-
     return {
-      state,
-      addExpense
+      state
     };
   }
 });

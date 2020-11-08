@@ -1,5 +1,6 @@
 <template>
   <p-dialog
+    @hide="hideDialog"
     :maximizable="true"
     :modal="true"
     v-model:visible="state.dialog"
@@ -115,7 +116,12 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       dialog: props.dialog,
-      input: props.input
+      input: {
+        PaymentSourceEnum: PaymentSourceEnum.GyroAccount,
+        categories: [],
+        description: null,
+        amount: null
+      }
     });
 
     watch(
@@ -127,10 +133,6 @@ export default defineComponent({
       () => props.input,
       (val) => (state.input = val)
     );
-
-    function addExpense() {
-      context.emit("add-expense");
-    }
 
     const PaymentSourceEnums: Array<SelectItem<PaymentSourceEnum>> = [
       {
@@ -166,11 +168,21 @@ export default defineComponent({
       }
     ];
 
+    function addExpense() {
+      // const payload = { ...state.input };
+      state.dialog = false;
+    }
+
+    function hideDialog() {
+      context.emit("update:dialog", state.dialog);
+    }
+
     return {
       state,
       addExpense,
       categories,
-      PaymentSourceEnums
+      PaymentSourceEnums,
+      hideDialog
     };
   }
 });
