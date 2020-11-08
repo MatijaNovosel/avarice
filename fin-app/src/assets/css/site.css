@@ -1,3 +1,8 @@
+* {
+  font-family: bender, "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 :root {
   --navbar-height: 55px;
   --vue-logo-green: #41b883;
@@ -7,6 +12,8 @@
   --color-dark-gradient-3: rgb(18, 18, 18);
   --color-dark-gradient-2: #262626;
   --color-dark-gradient-1: #ffffff42;
+  --tarkov-brown: #9a8866;
+  --tarkov-grey: #aeaeb0;
 }
 
 ::-webkit-scrollbar {

@@ -109,10 +109,10 @@ export default defineComponent({
 .header-title {
   margin: 10px 0px 5px 0px;
   font-size: 16px;
+  color: var(--tarkov-brown);
 }
 .header-subtitle {
   font-size: 12px;
-  color: #dc2424;
 }
 .avatar {
   border-radius: 50%;

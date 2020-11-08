@@ -22,9 +22,10 @@ import Listbox from "primevue/listbox";
 import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
 import MultiSelect from "primevue/multiselect";
-import Textarea from 'primevue/textarea';
-import Fieldset from 'primevue/fieldset';
-import Tooltip from 'primevue/tooltip';
+import Textarea from "primevue/textarea";
+import Fieldset from "primevue/fieldset";
+import Tooltip from "primevue/tooltip";
+import Card from "primevue/card";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -71,6 +72,7 @@ app.component("select-button", SelectButton);
 app.component("multi-select", MultiSelect);
 app.component("text-area", Textarea);
 app.component("field-set", Fieldset);
+app.component("card", Card);
 
 // Directives
 app.directive("tooltip", Tooltip);

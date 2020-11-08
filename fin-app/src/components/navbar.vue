@@ -15,7 +15,7 @@
     <template #end>
       <btn
         icon="pi pi-power-off"
-        class="p-button-rounded p-mr-2"
+        class="p-button-rounded p-mr-2 logout-button"
         @click="logout"
       />
     </template>
@@ -84,14 +84,18 @@ export default defineComponent({
 }
 .top-left {
   position: absolute;
-  top: 19px;
+  top: 17px;
   left: 55px;
 }
 .leading-text {
   font-size: 16px;
+  color: var(--tarkov-brown);
 }
 .following-text {
   margin-left: 5px;
-  color: grey;
+  color: white;
+}
+.logout-button {
+  background-color: var(--tarkov-brown) !important;
 }
 </style>

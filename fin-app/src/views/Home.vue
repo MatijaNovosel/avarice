@@ -1,4 +1,10 @@
 <template>
+  <div class="p-grid p-mt-5 p-nogutter p-justify-center p-text-center">
+    <div class="p-col">
+      <dashboard-card class="p-mx-auto" />
+    </div>
+  </div>
+  <!--
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col p-text-center">
       Trenutačno stanje:
@@ -12,10 +18,11 @@
       </chip>
     </div>
   </div>
+  -->
   <div class="p-grid p-mt-3 p-nogutter p-justify-center">
     <div class="p-col-6 p-px-5">
       <group-box icon="dollar" title="Stanje kroz vrijeme">
-        <chart type="bar" :data="state.basicData" />
+        <chart type="line" :data="state.basicData" />
       </group-box>
     </div>
   </div>
@@ -24,6 +31,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
 import { CurrentAmountService } from "@/services/api/current-amount-service";
+import DashboardCard from "@/components/dashboard-card.vue";
 
 interface State {
   currentAmount: string | null;
@@ -33,6 +41,9 @@ interface State {
 
 export default defineComponent({
   name: "Home",
+  components: {
+    DashboardCard
+  },
   setup() {
     const state: State = reactive({
       currentAmount: null,
@@ -50,14 +61,24 @@ export default defineComponent({
         ],
         datasets: [
           {
-            label: "My First dataset",
-            backgroundColor: "#42A5F5",
-            data: [65, 59, 80, 81, 56, 55, 40]
+            label: "First Dataset",
+            data: [65, 59, 80, 81, 56, 55, 40],
+            fill: false,
+            borderColor: "#42A5F5"
           },
           {
-            label: "My Second dataset",
-            backgroundColor: "#9CCC65",
-            data: [28, 48, 40, 19, 86, 27, 90]
+            label: "Second Dataset",
+            data: [28, 48, 40, 19, 86, 27, 90],
+            fill: false,
+            borderDash: [5, 5],
+            borderColor: "#66BB6A"
+          },
+          {
+            label: "Third Dataset",
+            data: [12, 51, 62, 33, 21, 62, 45],
+            fill: true,
+            borderColor: "#FFA726",
+            backgroundColor: "rgba(255,167,38,0.2)"
           }
         ]
       }
