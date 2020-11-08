@@ -1,7 +1,11 @@
 <template>
-  <div class="p-grid p-mt-5 p-nogutter p-justify-center p-text-center">
-    <div class="p-col">
-      <dashboard-card class="p-mx-auto" />
+  <div class="p-grid p-mt-5 p-nogutter p-justify-center">
+    <div class="p-col-6">
+      <group-box icon="dollar" title="Trenutačno stanje">
+        <div>Žiro račun: 10,000HRK</div>
+        <div>Tekući račun: 10,000HRK</div>
+        <div>Džep: 10,000HRK</div>
+      </group-box>
     </div>
   </div>
   <!--
@@ -20,7 +24,7 @@
   </div>
   -->
   <div class="p-grid p-mt-3 p-nogutter p-justify-center">
-    <div class="p-col-6 p-px-5">
+    <div class="p-col-6">
       <group-box icon="dollar" title="Stanje kroz vrijeme">
         <chart type="line" :data="state.basicData" />
       </group-box>
@@ -31,7 +35,6 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
 import { CurrentAmountService } from "@/services/api/current-amount-service";
-import DashboardCard from "@/components/dashboard-card.vue";
 
 interface State {
   currentAmount: string | null;
@@ -41,9 +44,6 @@ interface State {
 
 export default defineComponent({
   name: "Home",
-  components: {
-    DashboardCard
-  },
   setup() {
     const state: State = reactive({
       currentAmount: null,
