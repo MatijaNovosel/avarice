@@ -1,5 +1,5 @@
 <template>
-  <menubar class="no-border-radius no-border navbar-height">
+  <menubar class="no-border-radius no-border navbar">
     <template #start>
       <btn
         icon="pi pi-bars"
@@ -76,7 +76,10 @@ export default defineComponent({
 </script>
 
 <style>
-.navbar-height {
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
   height: var(--navbar-height);
 }
 .p-panelmenu-content {
