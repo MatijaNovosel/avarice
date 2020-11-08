@@ -7,7 +7,7 @@
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
           <span v-else>
-            {{ state.currentAmount }}
+            {{ state.currentAmount.gyro }}
           </span>
         </chip>
       </group-box>
@@ -19,7 +19,7 @@
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
           <span v-else>
-            {{ state.currentAmount }}
+            {{ state.currentAmount.checking }}
           </span>
         </chip>
       </group-box>
@@ -31,7 +31,7 @@
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
           <span v-else>
-            {{ state.currentAmount }}
+            {{ state.currentAmount.pocket }}
           </span>
         </chip>
       </group-box>
@@ -50,8 +50,14 @@
 import { defineComponent, reactive, onMounted } from "vue";
 import { CurrentAmountService } from "@/services/api/current-amount-service";
 
+interface CurrentAmount {
+  gyro: string;
+  checking: string;
+  pocket: string;
+}
+
 interface State {
-  currentAmount: string | null;
+  currentAmount: CurrentAmount;
   currentAmountService: CurrentAmountService | null;
   loading: boolean;
 }
@@ -60,7 +66,11 @@ export default defineComponent({
   name: "Home",
   setup() {
     const state: State = reactive({
-      currentAmount: null,
+      currentAmount: {
+        gyro: "",
+        checking: "",
+        pocket: ""
+      },
       loading: false,
       currentAmountService: null,
       basicData: {
@@ -102,7 +112,9 @@ export default defineComponent({
       state.currentAmountService = new CurrentAmountService();
       state.loading = true;
       const data = await state.currentAmountService.getCurrentAmount();
-      state.currentAmount = data.gyro;
+      state.currentAmount.gyro = data.gyro;
+      state.currentAmount.checking = data.checking;
+      state.currentAmount.pocket = data.pocket;
       state.loading = false;
     });
 
