@@ -36,8 +36,8 @@
         <div class="p-field p-col-12">
           <group-box icon="id-card" title="Izvor plaćanja">
             <select-button
-              v-model="state.input.PaymentSourceEnum"
-              :options="PaymentSourceEnums"
+              v-model="state.input.paymentSource"
+              :options="paymentSources"
               optionLabel="text"
               optionValue="val"
             />
@@ -46,9 +46,9 @@
         <div class="p-field p-col-12">
           <group-box icon="tag" title="Kategorija">
             <list-box
-              :multiple="true"
+              :multiple="false"
               :filter="true"
-              v-model="state.input.categories"
+              v-model="state.input.category"
               :options="categories"
               dataKey="val"
               listStyle="max-height: 250px"
@@ -58,11 +58,7 @@
               <template #option="slotProps">
                 <div>
                   <i
-                    v-if="
-                      state.input.categories.some(
-                        (x) => x == slotProps.option.val
-                      )
-                    "
+                    v-if="state.input.category == slotProps.option.val"
                     class="pi pi-check p-mr-2"
                     style="fontsize: 1rem"
                   />{{ slotProps.option.text }}
@@ -89,22 +85,19 @@ import { defineComponent, reactive, SetupContext, watch } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { CategoryEnum } from "@/constants/category-enum";
-
-interface Input {
-  PaymentSourceEnum: PaymentSourceEnum | null;
-  categories: Array<number>;
-  description: string | null;
-  amount: string | null;
-}
+import { AmountHistoryService } from "@/services/api/amount-history-service";
+import { ExpenseItem } from "@/models/expense-item";
+import { parseCurrency } from "@/helpers/helpers";
 
 interface Props {
   dialog: boolean;
-  input?: Input;
+  input?: ExpenseItem;
 }
 
 interface State {
   dialog: boolean;
-  input?: Input;
+  input?: ExpenseItem;
+  amountHistoryService: AmountHistoryService | null;
 }
 
 export default defineComponent({
@@ -115,12 +108,14 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
+      amountHistoryService: new AmountHistoryService(),
       dialog: props.dialog,
       input: {
-        PaymentSourceEnum: PaymentSourceEnum.GyroAccount,
-        categories: [],
+        paymentSource: PaymentSourceEnum.GyroAccount,
+        category: CategoryEnum.Food,
         description: null,
-        amount: null
+        amount: null,
+        date: null
       }
     });
 
@@ -134,7 +129,7 @@ export default defineComponent({
       (val) => (state.input = val)
     );
 
-    const PaymentSourceEnums: Array<SelectItem<PaymentSourceEnum>> = [
+    const paymentSources: Array<SelectItem<PaymentSourceEnum>> = [
       {
         text: "Žiro račun",
         val: PaymentSourceEnum.GyroAccount
@@ -168,8 +163,43 @@ export default defineComponent({
       }
     ];
 
-    function addExpense() {
-      // const payload = { ...state.input };
+    async function addExpense() {
+      const payload = {
+        ...state.input
+      } as ExpenseItem;
+
+      payload.amount = payload.amount?.toString() + "HRK";
+      payload.date = new Date();
+
+      const currentAmount = await state.amountHistoryService?.getCurrentAmount();
+
+      const gyroVal = parseCurrency(currentAmount?.gyro as string);
+      const checkingVal = parseCurrency(currentAmount?.checking as string);
+      const pocketVal = parseCurrency(currentAmount?.pocket as string);
+
+      state.amountHistoryService?.addHistory({
+        gyro:
+          state.input?.paymentSource == PaymentSourceEnum.GyroAccount
+            ? (gyroVal - parseFloat(state.input.amount as string)).toString() +
+              "HRK"
+            : gyroVal.toString() + "HRK",
+        checking:
+          state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
+            ? (
+                checkingVal - parseFloat(state.input.amount as string)
+              ).toString() + "HRK"
+            : gyroVal.toString() + "HRK",
+        pocket:
+          state.input?.paymentSource == PaymentSourceEnum.Pocket
+            ? (
+                pocketVal - parseFloat(state.input.amount as string)
+              ).toString() + "HRK"
+            : gyroVal.toString() + "HRK",
+        date: new Date()
+      });
+
+      state.amountHistoryService?.addExpense(payload);
+
       state.dialog = false;
     }
 
@@ -181,7 +211,7 @@ export default defineComponent({
       state,
       addExpense,
       categories,
-      PaymentSourceEnums,
+      paymentSources,
       hideDialog
     };
   }

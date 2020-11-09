@@ -70,7 +70,7 @@
         class="p-text-center shadow p-my-5"
         style="position: relative"
       >
-        <chip text-color="white" color="#FFA726" class="p-my-2">
+        <chip text-color="white" color="#43A047" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
@@ -145,9 +145,9 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       account: {
-        gyro: false,
+        gyro: true,
         pocket: true,
-        checking: false
+        checking: true
       },
       currentAmount: {
         gyro: "",
@@ -155,7 +155,7 @@ export default defineComponent({
         pocket: ""
       },
       loading: false,
-      amountHistoryService: null,
+      amountHistoryService: new AmountHistoryService(),
       graphOptions: {
         legend: {
           display: true
@@ -174,8 +174,8 @@ export default defineComponent({
         label: "Ukupno",
         data: [],
         fill: true,
-        borderColor: "green",
-        backgroundColor: "green"
+        borderColor: "#43A047",
+        backgroundColor: "rgba(67, 160, 71, 0.2)"
       };
 
       const gyroDataset: DatasetItem = {
@@ -190,16 +190,16 @@ export default defineComponent({
         label: "Tekući račun",
         data: [],
         fill: true,
-        borderColor: "blue",
-        backgroundColor: "blue"
+        borderColor: "#1565C0",
+        backgroundColor: "rgba(21, 101, 192, 0.2)"
       };
 
       const pocketDataset: DatasetItem = {
         label: "Džep",
         data: [],
         fill: true,
-        borderColor: "yellow",
-        backgroundColor: "yellow"
+        borderColor: "#fdd835",
+        backgroundColor: "rgba(253, 216, 53, 0.2)"
       };
 
       const graphData: GraphData = {
@@ -219,10 +219,15 @@ export default defineComponent({
           parseCurrency(x.checking)
       );
 
-      state.currentAmount.gyro = gyroDataset.data[gyroDataset.data.length - 1].toString() + "HRK";
-      state.currentAmount.pocket = pocketDataset.data[pocketDataset.data.length - 1].toString() + "HRK";
-      state.currentAmount.checking = checkingDataset.data[checkingDataset.data.length - 1].toString() + "HRK";
-      state.totalAmount = totalDataset.data[totalDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.gyro =
+        gyroDataset.data[gyroDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.pocket =
+        pocketDataset.data[pocketDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.checking =
+        checkingDataset.data[checkingDataset.data.length - 1].toString() +
+        "HRK";
+      state.totalAmount =
+        totalDataset.data[totalDataset.data.length - 1].toString() + "HRK";
 
       if (
         state.account.gyro &&
@@ -247,7 +252,6 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      state.amountHistoryService = new AmountHistoryService();
       updateData();
     });
 

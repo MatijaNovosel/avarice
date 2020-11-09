@@ -69,13 +69,6 @@ export default defineComponent({
               command: () => {
                 state.expenseDialog = true;
               }
-            },
-            {
-              label: "Stanje kroz vrijeme",
-              icon: "pi pi-dollar",
-              command: () => {
-                console.log("Click!");
-              }
             }
           ]
         }
