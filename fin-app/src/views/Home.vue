@@ -1,7 +1,7 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-3">
-      <group-box icon="dollar" title="Žiro račun" class="p-text-center">
+    <div class="p-col-4 p-pl-5">
+      <group-box icon="dollar" title="Žiro račun" class="p-text-center shadow">
         <chip text-color="white" color="#f44336" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -11,9 +11,7 @@
           </span>
         </chip>
       </group-box>
-    </div>
-    <div class="p-col-3 p-px-3">
-      <group-box icon="dollar" title="Tekući račun" class="p-text-center">
+      <group-box icon="dollar" title="Tekući račun" class="p-text-center p-my-5 shadow">
         <chip text-color="white" color="#2790f2" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -23,9 +21,7 @@
           </span>
         </chip>
       </group-box>
-    </div>
-    <div class="p-col-3">
-      <group-box icon="dollar" title="Džep" class="p-text-center">
+      <group-box icon="dollar" title="Džep" class="p-text-center shadow">
         <chip text-color="white" color="#FFA726" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -36,10 +32,8 @@
         </chip>
       </group-box>
     </div>
-  </div>
-  <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-9">
-      <group-box icon="dollar" title="Stanje kroz vrijeme">
+    <div class="p-col-8 p-px-5">
+      <group-box icon="dollar" title="Stanje kroz vrijeme" class="shadow">
         <chart
           type="line"
           :data="state.graphData"

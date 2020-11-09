@@ -55,8 +55,4 @@ export default defineComponent({
 </script>
 
 <style>
-.p-fieldset .p-fieldset-legend {
-  border: 1px solid var(--tarkov-brown) !important;
-  border-radius: 6px;
-}
 </style>

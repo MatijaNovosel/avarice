@@ -74,3 +74,17 @@ body {
 .p-sidebar-left {
   width: 25rem;
 }
+
+.shadow {
+  box-shadow: 12px 12px 4px #100f0f !important;
+}
+
+.navbar-shadow {
+  box-shadow: 8px 8px 4px #100f0f !important;
+}
+
+.p-fieldset .p-fieldset-legend {
+  border: 1px solid var(--tarkov-brown) !important;
+  border-radius: 6px;
+  box-shadow: 10px 10px 8px #181818 !important;
+}

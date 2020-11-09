@@ -1,5 +1,5 @@
 <template>
-  <menubar class="no-border-radius no-border navbar">
+  <menubar class="no-border-radius no-border navbar navbar-shadow">
     <template #start>
       <btn
         icon="pi pi-bars"
