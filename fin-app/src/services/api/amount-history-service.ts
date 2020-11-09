@@ -16,7 +16,7 @@ export class AmountHistoryService {
     const res: Array<HistoryItem> = [];
     const data = await db
       .collection("history")
-      .orderBy("date", "desc")
+      .orderBy("date", "asc")
       .get();
     data.forEach(document => {
       res.push(document.data() as HistoryItem);
