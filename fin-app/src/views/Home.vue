@@ -89,6 +89,48 @@
         />
       </group-box>
     </div>
+    <div class="p-col-12 p-px-5 p-mt-6">
+      <group-box icon="dollar" title="Troškovi" class="shadow">
+        <data-table
+          :value="state.expenses"
+          :paginator="true"
+          :rows="10"
+          :rowHover="true"
+          :loading="state.loading"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          :rowsPerPageOptions="[10, 25, 50]"
+          currentPageReportTemplate="Prikazujem {first} od {last} ({totalRecords} ukupnih zapisa)"
+        >
+          <template #empty> Nema ni jednog troška. </template>
+          <template #loading> Učitavam troškove. Pričekajte. </template>
+          <column field="amount" header="Iznos">
+            <template #body="slotProps">
+              {{ slotProps.data.amount }}
+            </template>
+          </column>
+          <column field="paymentSource" header="Izvor plaćanja">
+            <template #body="slotProps">
+              {{ slotProps.data.paymentSource }}
+            </template>
+          </column>
+          <column field="description" header="Opis">
+            <template #body="slotProps">
+              {{ slotProps.data.description }}
+            </template>
+          </column>
+          <column field="category" header="Kategorija">
+            <template #body="slotProps">
+              {{ slotProps.data.category }}
+            </template>
+          </column>
+          <column field="date" header="Datum">
+            <template #body="slotProps">
+              {{ format(slotProps.data.date.toDate(), "dd/MM/yyyy - HH:mm") }}
+            </template>
+          </column>
+        </data-table>
+      </group-box>
+    </div>
   </div>
 </template>
 
@@ -98,6 +140,7 @@ import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { Timestamp } from "@firebase/firestore-types";
 import { parseCurrency } from "@/helpers/helpers";
 import { format } from "date-fns";
+import { ExpenseItem } from "@/models/expense-item";
 
 interface DatasetItem {
   label: string;
@@ -133,17 +176,19 @@ interface HistoryItem {
 
 interface State {
   currentAmount: CurrentAmount;
-  amountHistoryService: AmountHistoryService | null;
+  amountHistoryService: AmountHistoryService;
   loading: boolean;
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
+  expenses: Array<ExpenseItem>;
 }
 
 export default defineComponent({
   name: "Home",
   setup() {
     const state: State = reactive({
+      expenses: [],
       account: {
         gyro: true,
         pocket: true,
@@ -252,6 +297,8 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      state.expenses = await state.amountHistoryService.getExpenses();
+      console.log(state.expenses);
       updateData();
     });
 
@@ -259,7 +306,7 @@ export default defineComponent({
       updateData();
     });
 
-    return { state };
+    return { state, format };
   }
 });
 </script>

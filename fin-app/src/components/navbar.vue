@@ -80,6 +80,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 1;
   height: var(--navbar-height);
 }
 .p-panelmenu-content {

@@ -13,6 +13,17 @@ export class AmountHistoryService {
   async addGain(payload: GainItem): Promise<void> {
     await db.collection("gain").add(payload);
   }
+  async getExpenses(): Promise<Array<ExpenseItem>> {
+    const res: Array<ExpenseItem> = [];
+    const data = await db
+      .collection("expense")
+      .orderBy("date", "desc")
+      .get();
+    data.forEach(document => {
+      res.push(document.data() as ExpenseItem);
+    });
+    return res;
+  }
   async getHistory(): Promise<Array<HistoryItemDto>> {
     const res: Array<HistoryItemDto> = [];
     const data = await db
