@@ -25,6 +25,7 @@
     <panel-menu :model="state.menuItems" />
   </sidebar>
   <expense-dialog v-model:dialog="state.expenseDialog" />
+  <gain-dialog v-model:dialog="state.gainDialog" />
   <settings-dialog v-model:dialog="state.settingsDialog" />
 </template>
 
@@ -32,6 +33,7 @@
 import { defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/constants/menu-item";
 import ExpenseDialog from "@/components/expense-dialog.vue";
+import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 
 interface Props {
@@ -42,6 +44,7 @@ interface State {
   menuItems: Array<MenuItem>;
   visible: boolean;
   expenseDialog: boolean;
+  gainDialog: boolean;
   settingsDialog: boolean;
 }
 
@@ -52,22 +55,31 @@ export default defineComponent({
   },
   components: {
     ExpenseDialog,
-    SettingsDialog
+    SettingsDialog,
+    GainDialog
   },
   setup(props: Props) {
     const state: State = reactive({
       visible: props.visible,
       settingsDialog: false,
       expenseDialog: false,
+      gainDialog: false,
       menuItems: [
         {
           label: "Financijske akcije",
           items: [
             {
-              label: "Novi unos",
-              icon: "pi pi-plus",
+              label: "Novi trošak",
+              icon: "pi pi-minus",
               command: () => {
                 state.expenseDialog = true;
+              }
+            },
+            {
+              label: "Novi dobitak",
+              icon: "pi pi-plus",
+              command: () => {
+                state.gainDialog = true;
               }
             }
           ]

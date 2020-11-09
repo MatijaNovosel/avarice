@@ -1,5 +1,6 @@
 import { db } from "../firebase";
 import { ExpenseItem } from "@/models/expense-item";
+import { GainItem } from "@/models/gain-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
 export class AmountHistoryService {
@@ -8,6 +9,9 @@ export class AmountHistoryService {
   }
   async addHistory(payload: HistoryItem): Promise<void> {
     await db.collection("history").add(payload);
+  }
+  async addGain(payload: GainItem): Promise<void> {
+    await db.collection("gain").add(payload);
   }
   async getHistory(): Promise<Array<HistoryItemDto>> {
     const res: Array<HistoryItemDto> = [];
