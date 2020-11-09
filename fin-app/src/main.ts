@@ -26,7 +26,8 @@ import Textarea from "primevue/textarea";
 import Fieldset from "primevue/fieldset";
 import Tooltip from "primevue/tooltip";
 import Card from "primevue/card";
-import InputSwitch from 'primevue/inputswitch';
+import InputSwitch from "primevue/inputswitch";
+import Checkbox from "primevue/checkbox";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -75,6 +76,7 @@ app.component("text-area", Textarea);
 app.component("field-set", Fieldset);
 app.component("card", Card);
 app.component("input-switch", InputSwitch);
+app.component("p-checkbox", Checkbox);
 
 // Directives
 app.directive("tooltip", Tooltip);

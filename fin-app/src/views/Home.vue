@@ -1,7 +1,13 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col-4 p-pl-5">
-      <group-box icon="dollar" title="Žiro račun" class="p-text-center shadow">
+      <group-box
+        icon="dollar"
+        title="Žiro račun"
+        class="p-text-center shadow"
+        style="position: relative"
+      >
+        <img :src="require('@/assets/icons/euros.png')" class="aside" />
         <chip text-color="white" color="#f44336" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -10,8 +16,19 @@
             {{ state.currentAmount.gyro }}
           </span>
         </chip>
+        <p-checkbox
+          v-model="state.account.gyro"
+          class="aside-reverse"
+          :binary="true"
+        />
       </group-box>
-      <group-box icon="dollar" title="Tekući račun" class="p-text-center p-my-5 shadow">
+      <group-box
+        icon="dollar"
+        title="Tekući račun"
+        class="p-text-center p-my-5 shadow"
+        style="position: relative"
+      >
+        <img :src="require('@/assets/icons/roubles.png')" class="aside" />
         <chip text-color="white" color="#2790f2" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -20,14 +37,45 @@
             {{ state.currentAmount.checking }}
           </span>
         </chip>
+        <p-checkbox
+          v-model="state.account.checking"
+          class="aside-reverse"
+          :binary="true"
+        />
       </group-box>
-      <group-box icon="dollar" title="Džep" class="p-text-center shadow">
+      <group-box
+        icon="dollar"
+        title="Džep"
+        class="p-text-center shadow"
+        style="position: relative"
+      >
+        <img :src="require('@/assets/icons/wallet.png')" class="aside" />
         <chip text-color="white" color="#FFA726" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.pocket }}
+          </span>
+        </chip>
+        <p-checkbox
+          v-model="state.account.pocket"
+          class="aside-reverse"
+          :binary="true"
+        />
+      </group-box>
+      <group-box
+        icon="dollar"
+        title="Ukupno"
+        class="p-text-center shadow p-my-5"
+        style="position: relative"
+      >
+        <chip text-color="white" color="#FFA726" class="p-my-2">
+          <span v-if="state.loading">
+            <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+          </span>
+          <span v-else>
+            {{ state.totalAmount }}
           </span>
         </chip>
       </group-box>
@@ -46,7 +94,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch } from "vue";
-import { CurrentAmountService } from "@/services/api/current-amount-service";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { Timestamp } from "@firebase/firestore-types";
 import { parseCurrency } from "@/helpers/helpers";
@@ -86,11 +133,11 @@ interface HistoryItem {
 
 interface State {
   currentAmount: CurrentAmount;
-  currentAmountService: CurrentAmountService | null;
   amountHistoryService: AmountHistoryService | null;
   loading: boolean;
   account: Account;
   graphData: GraphData | null;
+  totalAmount: string;
 }
 
 export default defineComponent({
@@ -98,8 +145,8 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       account: {
-        gyro: true,
-        pocket: false,
+        gyro: false,
+        pocket: true,
         checking: false
       },
       currentAmount: {
@@ -108,56 +155,105 @@ export default defineComponent({
         pocket: ""
       },
       loading: false,
-      currentAmountService: null,
       amountHistoryService: null,
       graphOptions: {
         legend: {
-          display: false
+          display: true
         }
       },
-      graphData: null
+      graphData: null,
+      totalAmount: "0,00HRK"
     });
 
-    onMounted(async () => {
-      state.currentAmountService = new CurrentAmountService();
-      state.amountHistoryService = new AmountHistoryService();
-
+    async function updateData() {
       state.loading = true;
 
-      const data = await state.currentAmountService.getCurrentAmount();
-      state.currentAmount.gyro = data.gyro;
-      state.currentAmount.checking = data.checking;
-      state.currentAmount.pocket = data.pocket;
+      const history = await (state.amountHistoryService as AmountHistoryService).getHistory();
 
-      const history = await state.amountHistoryService.getHistory();
-      const graphData: GraphData = {
-        labels: [],
-        datasets: [
-          {
-            label: "Žiro račun",
-            data: [],
-            fill: true,
-            borderColor: "#c71e12",
-            backgroundColor: "rgba(150, 24, 15, 0.2)"
-          }
-        ]
+      const totalDataset: DatasetItem = {
+        label: "Ukupno",
+        data: [],
+        fill: true,
+        borderColor: "green",
+        backgroundColor: "green"
       };
 
-      history.forEach((x) => {
-        graphData.datasets[0].data.push(parseCurrency(x.gyro));
-        graphData.labels.push(format(x.date.toDate(), "dd/MM/yyyy - HH:mm"));
-      });
+      const gyroDataset: DatasetItem = {
+        label: "Žiro račun",
+        data: [],
+        fill: true,
+        borderColor: "#c71e12",
+        backgroundColor: "rgba(150, 24, 15, 0.2)"
+      };
+
+      const checkingDataset: DatasetItem = {
+        label: "Tekući račun",
+        data: [],
+        fill: true,
+        borderColor: "blue",
+        backgroundColor: "blue"
+      };
+
+      const pocketDataset: DatasetItem = {
+        label: "Džep",
+        data: [],
+        fill: true,
+        borderColor: "yellow",
+        backgroundColor: "yellow"
+      };
+
+      const graphData: GraphData = {
+        labels: history.map((x) =>
+          format(x.date.toDate(), "dd/MM/yyyy - HH:mm")
+        ),
+        datasets: []
+      };
+
+      gyroDataset.data = history.map((x) => parseCurrency(x.gyro));
+      pocketDataset.data = history.map((x) => parseCurrency(x.pocket));
+      checkingDataset.data = history.map((x) => parseCurrency(x.checking));
+      totalDataset.data = history.map(
+        (x) =>
+          parseCurrency(x.gyro) +
+          parseCurrency(x.pocket) +
+          parseCurrency(x.checking)
+      );
+
+      state.currentAmount.gyro = gyroDataset.data[gyroDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.pocket = pocketDataset.data[pocketDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.checking = checkingDataset.data[checkingDataset.data.length - 1].toString() + "HRK";
+      state.totalAmount = totalDataset.data[totalDataset.data.length - 1].toString() + "HRK";
+
+      if (
+        state.account.gyro &&
+        state.account.pocket &&
+        state.account.checking
+      ) {
+        graphData.datasets.push(totalDataset);
+      } else {
+        if (state.account.gyro) {
+          graphData.datasets.push(gyroDataset);
+        }
+        if (state.account.pocket) {
+          graphData.datasets.push(pocketDataset);
+        }
+        if (state.account.checking) {
+          graphData.datasets.push(checkingDataset);
+        }
+      }
 
       state.graphData = graphData;
       state.loading = false;
+    }
+
+    onMounted(async () => {
+      state.amountHistoryService = new AmountHistoryService();
+      updateData();
     });
 
-    watch(
-      () => state.account.gyro,
-      (val) => {
-        console.log(val);
-      }
-    );
+    watch([state.account], () => {
+      updateData();
+    });
 
     return { state };
   }
@@ -165,4 +261,16 @@ export default defineComponent({
 </script>
 
 <style>
+.aside {
+  position: absolute;
+  left: 35px;
+  top: 45px;
+  width: 40px;
+  height: 40px;
+}
+.aside-reverse {
+  position: absolute;
+  right: 45px;
+  top: 55px;
+}
 </style>
