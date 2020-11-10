@@ -12,7 +12,8 @@ const categoryTranslation = {
   [CategoryEnum.Food]: "Hrana",
   [CategoryEnum.Games]: "Igre",
   [CategoryEnum.Gifts]: "Darovi",
-  [CategoryEnum.PublicTransport]: "Javni prijevoz"
+  [CategoryEnum.PublicTransport]: "Javni prijevoz",
+  [CategoryEnum.Other]: "Ostalo",
 };
 
 export function formatCategory(val: CategoryEnum): string {

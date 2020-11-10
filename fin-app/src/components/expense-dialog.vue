@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch } from "vue";
+import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { CategoryEnum } from "@/constants/category-enum";
@@ -98,6 +98,8 @@ interface State {
   dialog: boolean;
   input?: ExpenseItem;
   amountHistoryService: AmountHistoryService | null;
+  // eslint-disable-next-line
+  refresh: any;
 }
 
 export default defineComponent({
@@ -116,7 +118,8 @@ export default defineComponent({
         description: null,
         amount: null,
         date: null
-      }
+      },
+      refresh: inject("refresh")
     });
 
     watch(
@@ -160,8 +163,16 @@ export default defineComponent({
       {
         text: "Javni prijevoz",
         val: CategoryEnum.PublicTransport
+      },
+      {
+        text: "Ostalo",
+        val: CategoryEnum.Other
       }
     ];
+
+    function refresh() {
+      state.refresh.refresh();
+    }
 
     async function addExpense() {
       const payload = {
@@ -182,7 +193,7 @@ export default defineComponent({
           state.input?.paymentSource == PaymentSourceEnum.GyroAccount
             ? (gyroVal - parseFloat(state.input.amount as string)).toString() +
               "HRK"
-            : gyroVal.toString() + "HRK",
+            : checkingVal.toString() + "HRK",
         checking:
           state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
             ? (
@@ -194,13 +205,14 @@ export default defineComponent({
             ? (
                 pocketVal - parseFloat(state.input.amount as string)
               ).toString() + "HRK"
-            : gyroVal.toString() + "HRK",
+            : pocketVal.toString() + "HRK",
         date: new Date()
       });
 
       state.amountHistoryService?.addExpense(payload);
 
       state.dialog = false;
+      refresh();
     }
 
     function hideDialog() {

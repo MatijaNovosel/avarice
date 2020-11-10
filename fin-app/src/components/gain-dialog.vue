@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch } from "vue";
+import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
@@ -73,6 +73,8 @@ interface State {
   dialog: boolean;
   input?: GainItem;
   amountHistoryService: AmountHistoryService | null;
+  // eslint-disable-next-line
+  refresh: any;
 }
 
 export default defineComponent({
@@ -90,7 +92,8 @@ export default defineComponent({
         description: null,
         amount: null,
         date: null
-      }
+      },
+      refresh: inject("refresh")
     });
 
     watch(
@@ -117,6 +120,10 @@ export default defineComponent({
         val: PaymentSourceEnum.Pocket
       }
     ];
+
+    function refresh() {
+      state.refresh.refresh();
+    }
 
     async function addExpense() {
       const payload = {
@@ -156,6 +163,7 @@ export default defineComponent({
       state.amountHistoryService?.addGain(payload);
 
       state.dialog = false;
+      refresh();
     }
 
     function hideDialog() {

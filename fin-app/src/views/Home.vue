@@ -148,7 +148,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch } from "vue";
+import { defineComponent, reactive, onMounted, watch, inject } from "vue";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { Timestamp } from "@firebase/firestore-types";
 import {
@@ -200,12 +200,15 @@ interface State {
   totalAmount: string;
   expenses: Array<ExpenseItem>;
   cardView: boolean;
+  // eslint-disable-next-line
+  refresh: any;
 }
 
 export default defineComponent({
   name: "Home",
   setup() {
     const state: State = reactive({
+      refresh: inject("refresh"),
       cardView: false,
       expenses: [],
       account: {
@@ -317,13 +320,12 @@ export default defineComponent({
 
     onMounted(async () => {
       state.expenses = await state.amountHistoryService.getExpenses();
-      console.log(state.expenses);
+      console.log();
       updateData();
     });
 
-    watch([state.account], () => {
-      updateData();
-    });
+    watch([state.account], () => updateData());
+    watch([state.refresh], () => updateData());
 
     return { state, format, formatCategory, formatPaymentSource };
   }

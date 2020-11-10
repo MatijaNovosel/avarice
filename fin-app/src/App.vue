@@ -8,6 +8,7 @@
 import { defineComponent, reactive } from "vue";
 import navbar from "@/components/navbar.vue";
 import drawer from "@/components/drawer.vue";
+import refresh from "@/helpers/refresh";
 
 interface State {
   visible: boolean;
@@ -17,6 +18,9 @@ export default defineComponent({
   components: {
     navbar,
     drawer
+  },
+  provide: {
+    refresh
   },
   setup() {
     const state: State = reactive({
