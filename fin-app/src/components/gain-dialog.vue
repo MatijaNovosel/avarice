@@ -150,13 +150,13 @@ export default defineComponent({
             ? (
                 checkingVal + parseFloat(state.input.amount as string)
               ).toString() + "HRK"
-            : gyroVal.toString() + "HRK",
+            : checkingVal.toString() + "HRK",
         pocket:
           state.input?.paymentSource == PaymentSourceEnum.Pocket
             ? (
                 pocketVal + parseFloat(state.input.amount as string)
               ).toString() + "HRK"
-            : gyroVal.toString() + "HRK",
+            : pocketVal.toString() + "HRK",
         date: new Date()
       });
 

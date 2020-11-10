@@ -193,13 +193,13 @@ export default defineComponent({
           state.input?.paymentSource == PaymentSourceEnum.GyroAccount
             ? (gyroVal - parseFloat(state.input.amount as string)).toString() +
               "HRK"
-            : checkingVal.toString() + "HRK",
+            : gyroVal.toString() + "HRK",
         checking:
           state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
             ? (
                 checkingVal - parseFloat(state.input.amount as string)
               ).toString() + "HRK"
-            : gyroVal.toString() + "HRK",
+            : checkingVal.toString() + "HRK",
         pocket:
           state.input?.paymentSource == PaymentSourceEnum.Pocket
             ? (
