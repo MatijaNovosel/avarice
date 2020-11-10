@@ -315,12 +315,11 @@ export default defineComponent({
       }
 
       state.graphData = graphData;
+      state.expenses = await state.amountHistoryService.getExpenses();
       state.loading = false;
     }
 
     onMounted(async () => {
-      state.expenses = await state.amountHistoryService.getExpenses();
-      console.log();
       updateData();
     });
 
