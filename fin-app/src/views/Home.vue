@@ -226,6 +226,11 @@ export default defineComponent({
       graphOptions: {
         legend: {
           display: true
+        },
+        elements: {
+          line: {
+            tension: 0
+          }
         }
       },
       graphData: null,
