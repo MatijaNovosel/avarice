@@ -174,6 +174,17 @@ export default defineComponent({
       state.refresh.refresh();
     }
 
+    function resetDialog() {
+      state.dialog = false;
+      state.input = {
+        paymentSource: PaymentSourceEnum.GyroAccount,
+        category: CategoryEnum.Food,
+        description: null,
+        amount: null,
+        date: null
+      };
+    }
+
     async function addExpense() {
       const payload = {
         ...state.input
@@ -211,11 +222,12 @@ export default defineComponent({
 
       state.amountHistoryService?.addExpense(payload);
 
-      state.dialog = false;
+      resetDialog();
       refresh();
     }
 
     function hideDialog() {
+      resetDialog();
       context.emit("update:dialog", state.dialog);
     }
 

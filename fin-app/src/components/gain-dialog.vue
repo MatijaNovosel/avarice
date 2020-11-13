@@ -121,6 +121,16 @@ export default defineComponent({
       }
     ];
 
+    function resetDialog() {
+      state.dialog = false;
+      state.input = {
+        paymentSource: PaymentSourceEnum.GyroAccount,
+        description: null,
+        amount: null,
+        date: null
+      };
+    }
+
     function refresh() {
       state.refresh.refresh();
     }
@@ -162,11 +172,12 @@ export default defineComponent({
 
       state.amountHistoryService?.addGain(payload);
 
-      state.dialog = false;
+      resetDialog();
       refresh();
     }
 
     function hideDialog() {
+      resetDialog();
       context.emit("update:dialog", state.dialog);
     }
 
