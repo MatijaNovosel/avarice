@@ -1,6 +1,9 @@
 * {
-  font-family: bender, "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: bender;
+}
+
+.p-inputtext {
+  font-family: bender, "Source Sans Pro" !important;
 }
 
 :root {

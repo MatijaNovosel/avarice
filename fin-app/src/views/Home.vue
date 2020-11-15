@@ -229,7 +229,7 @@ export default defineComponent({
         },
         elements: {
           line: {
-            tension: 0
+            tension: 0.2
           }
         }
       },

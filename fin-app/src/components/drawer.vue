@@ -17,7 +17,7 @@
     <div class="drawer-header">
       <img
         class="avatar"
-        src="https://p7.hiclipart.com/preview/873/489/293/avatar-youtube-cat-cute-dog-thumbnail.jpg"
+        :src="require('@/assets/avatar.jpg')"
       />
       <span class="header-title">Matija Novosel</span>
       <span class="header-subtitle">Admin</span>
