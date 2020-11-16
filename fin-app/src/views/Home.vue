@@ -1,6 +1,6 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-4 p-pl-5">
+    <div class="p-col-12 p-md-4 p-pl-5">
       <group-box
         icon="dollar"
         title="Žiro račun"
@@ -80,7 +80,7 @@
         </chip>
       </group-box>
     </div>
-    <div class="p-col-8 p-px-5">
+    <div class="p-col-12 p-md-8 p-px-5">
       <group-box icon="dollar" title="Stanje kroz vrijeme" class="shadow">
         <chart
           type="line"
@@ -98,7 +98,7 @@
               Prikaz u obliku kartica</label
             >
           </div>
-          <div class="p-col-12">
+          <div class="p-col-12" v-if="!state.cardView">
             <data-table
               :value="state.expenses"
               :paginator="true"
@@ -140,6 +140,31 @@
                 </template>
               </column>
             </data-table>
+          </div>
+          <div class="p-col-12" v-else>
+            <div class="p-grid">
+              <div
+                class="p-col-4"
+                v-for="(expense, i) in state.expenses"
+                :key="i"
+              >
+                <card class="p-shadow-5 card-bg">
+                  <template #title>
+                    <span class="expense-text p-px-3">{{ expense.amount }}</span>
+                  </template>
+                  <template #content>
+                    <div class="p-grid p-px-3">
+                      <div class="p-col-12">
+                        {{ format(expense.date.toDate(), "dd.MM.yyyy. hh:mm") }}
+                      </div>
+                      <div class="p-col-12">
+                        <span class="expense-description">{{ expense.description }}</span>
+                      </div>
+                    </div>
+                  </template>
+                </card>
+              </div>
+            </div>
           </div>
         </div>
       </group-box>
@@ -328,8 +353,7 @@ export default defineComponent({
       updateData();
     });
 
-    watch([state.account], () => updateData());
-    watch([state.refresh], () => updateData());
+    watch([state.account, state.refresh], () => updateData());
 
     return { state, format, formatCategory, formatPaymentSource };
   }
@@ -348,5 +372,21 @@ export default defineComponent({
   position: absolute;
   right: 45px;
   top: 55px;
+}
+.card-bg {
+  background-color: #7673731a !important;
+}
+.expense-text {
+  color: rgb(197, 38, 38);
+}
+.p-card .p-card-body {
+  padding: 10px 0px 0px 0px !important;
+}
+.p-card .p-card-title {
+  border-bottom: 1px solid var(--color-dark);
+  padding-bottom: 10px;
+}
+.expense-description {
+  color: rgb(155, 154, 154);
 }
 </style>

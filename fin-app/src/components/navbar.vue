@@ -9,7 +9,7 @@
       />
       <div class="top-left">
         <span class="leading-text">FinApp</span
-        ><span class="following-text">MatijaNovosel</span>
+        ><span class="following-text">Matija Novosel</span>
       </div>
     </template>
     <template #end>
