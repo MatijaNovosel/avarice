@@ -2,6 +2,8 @@ import { db } from "../firebase";
 import { ExpenseItem } from "@/models/expense-item";
 import { GainItem } from "@/models/gain-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
+import { TableItem } from "@/constants/table-item";
+import { compareDesc } from "date-fns";
 
 export class AmountHistoryService {
   async addExpense(payload: ExpenseItem): Promise<void> {
@@ -13,16 +15,24 @@ export class AmountHistoryService {
   async addGain(payload: GainItem): Promise<void> {
     await db.collection("gain").add(payload);
   }
-  async getExpenses(): Promise<Array<ExpenseItem>> {
-    const res: Array<ExpenseItem> = [];
-    const data = await db
-      .collection("expense")
-      .orderBy("date", "desc")
-      .get();
+  async getGainsAndExpenses(): Promise<Array<TableItem>> {
+    const res: Array<TableItem> = [];
+
+    // Expenses
+    let data = await db.collection("expense").get();
     data.forEach(document => {
-      res.push(document.data() as ExpenseItem);
+      res.push({ ...document.data(), expense: true } as TableItem);
     });
-    return res;
+
+    // Gains
+    data = await db.collection("gain").get();
+    data.forEach(document => {
+      res.push({ ...document.data(), expense: false } as TableItem);
+    });
+
+    return res.sort((x, y) => {
+      return compareDesc(x.date.toDate(), y.date.toDate());
+    });
   }
   async getHistory(): Promise<Array<HistoryItemDto>> {
     const res: Array<HistoryItemDto> = [];

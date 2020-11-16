@@ -100,7 +100,7 @@
           </div>
           <div class="p-col-12" v-if="!state.cardView">
             <data-table
-              :value="state.expenses"
+              :value="state.expensesAndGains"
               :paginator="true"
               :rows="10"
               :rowHover="true"
@@ -145,20 +145,33 @@
             <div class="p-grid">
               <div
                 class="p-col-4"
-                v-for="(expense, i) in state.expenses"
+                v-for="(expense, i) in state.expensesAndGains"
                 :key="i"
               >
                 <card class="p-shadow-5 card-bg">
                   <template #title>
-                    <span class="expense-text p-px-3">{{ expense.amount }}</span>
+                    <div class="expense-title p-px-3">
+                      <span
+                        :class="{
+                          'expense-text': expense.expense,
+                          'gain-text': !expense.expense
+                        }"
+                        >{{ expense.amount }}</span
+                      >
+                      <span class="expense-description">{{
+                        formatCategory(expense.category) || "Dobitak"
+                      }}</span>
+                    </div>
                   </template>
                   <template #content>
                     <div class="p-grid p-px-3">
                       <div class="p-col-12">
-                        {{ format(expense.date.toDate(), "dd.MM.yyyy. hh:mm") }}
+                        {{ format(expense.date.toDate(), "dd.MM.yyyy. HH:mm") }}
                       </div>
                       <div class="p-col-12">
-                        <span class="expense-description">{{ expense.description }}</span>
+                        <span class="expense-description">{{
+                          expense.description
+                        }}</span>
                       </div>
                     </div>
                   </template>
@@ -182,7 +195,7 @@ import {
   formatPaymentSource
 } from "@/helpers/helpers";
 import { format } from "date-fns";
-import { ExpenseItem } from "@/models/expense-item";
+import { TableItem } from "@/constants/table-item";
 
 interface DatasetItem {
   label: string;
@@ -223,7 +236,7 @@ interface State {
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
-  expenses: Array<ExpenseItem>;
+  expensesAndGains: Array<TableItem>;
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
@@ -235,7 +248,7 @@ export default defineComponent({
     const state: State = reactive({
       refresh: inject("refresh"),
       cardView: false,
-      expenses: [],
+      expensesAndGains: [],
       account: {
         gyro: true,
         pocket: true,
@@ -345,7 +358,7 @@ export default defineComponent({
       }
 
       state.graphData = graphData;
-      state.expenses = await state.amountHistoryService.getExpenses();
+      state.expensesAndGains = await state.amountHistoryService.getGainsAndExpenses();
       state.loading = false;
     }
 
@@ -379,6 +392,9 @@ export default defineComponent({
 .expense-text {
   color: rgb(197, 38, 38);
 }
+.gain-text {
+  color: rgb(69, 170, 98);
+}
 .p-card .p-card-body {
   padding: 10px 0px 0px 0px !important;
 }
@@ -388,5 +404,10 @@ export default defineComponent({
 }
 .expense-description {
   color: rgb(155, 154, 154);
+}
+.expense-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>
