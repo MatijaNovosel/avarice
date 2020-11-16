@@ -7,7 +7,6 @@
         class="p-text-center shadow"
         style="position: relative"
       >
-        <img :src="require('@/assets/icons/euros.png')" class="aside" />
         <chip text-color="white" color="#f44336" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -28,7 +27,6 @@
         class="p-text-center p-my-5 shadow"
         style="position: relative"
       >
-        <img :src="require('@/assets/icons/roubles.png')" class="aside" />
         <chip text-color="white" color="#2790f2" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -49,7 +47,6 @@
         class="p-text-center shadow"
         style="position: relative"
       >
-        <img :src="require('@/assets/icons/wallet.png')" class="aside" />
         <chip text-color="white" color="#FFA726" class="p-my-2">
           <span v-if="state.loading">
             <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
@@ -374,13 +371,6 @@ export default defineComponent({
 </script>
 
 <style>
-.aside {
-  position: absolute;
-  left: 35px;
-  top: 45px;
-  width: 40px;
-  height: 40px;
-}
 .aside-reverse {
   position: absolute;
   right: 45px;

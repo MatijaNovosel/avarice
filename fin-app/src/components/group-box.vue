@@ -1,11 +1,11 @@
 <template>
   <field-set>
     <template #legend>
-      <span
-        ><icon v-if="state.icon" class="p-pr-2" :name="state.icon" />{{
+      <span>
+        <icon v-if="state.icon" class="p-pr-2" :name="state.icon" />{{
           state.title
-        }}</span
-      >
+        }}
+      </span>
     </template>
     <slot></slot>
   </field-set>
