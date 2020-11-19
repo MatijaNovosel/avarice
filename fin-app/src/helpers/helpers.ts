@@ -13,7 +13,7 @@ const categoryTranslation = {
   [CategoryEnum.Games]: "Igre",
   [CategoryEnum.Gifts]: "Darovi",
   [CategoryEnum.PublicTransport]: "Javni prijevoz",
-  [CategoryEnum.Other]: "Ostalo",
+  [CategoryEnum.Other]: "Ostalo"
 };
 
 export function formatCategory(val: CategoryEnum): string {
@@ -28,4 +28,19 @@ const paymentSourceTranslation = {
 
 export function formatPaymentSource(val: PaymentSourceEnum): string {
   return paymentSourceTranslation[val];
+}
+
+export function hexToRGBA(hex: string, opacity: number): string {
+  const hexFixed: string = hex.replace(
+    /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+    (m, r, g, b) => "#" + r + r + g + g + b + b
+  );
+  const matchResult = hexFixed.match(/.{2}/g);
+
+  if (matchResult != null) {
+    const res: number[] = matchResult.map(x => parseInt(x, 16)) as number[];
+    return `rgba(${res.join(", ")}, ${opacity})`;
+  } else {
+    return `rgba(255, 255, 255, 1)`;
+  }
 }

@@ -170,10 +170,6 @@ export default defineComponent({
       }
     ];
 
-    function refresh() {
-      state.refresh.refresh();
-    }
-
     function resetDialog() {
       state.dialog = false;
       state.input = {
@@ -223,7 +219,7 @@ export default defineComponent({
       state.amountHistoryService?.addExpense(payload);
 
       resetDialog();
-      refresh();
+      state.refresh.refresh();
     }
 
     function hideDialog() {

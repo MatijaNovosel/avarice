@@ -34,22 +34,39 @@
         </div>
       </div>
     </group-box>
+    <template #footer>
+      <btn
+        @click="save"
+        label="Spremi"
+        icon="pi pi-save"
+        class="p-button-raised p-button-success"
+      />
+    </template>
   </p-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch, onMounted } from "vue";
+import {
+  defineComponent,
+  reactive,
+  SetupContext,
+  watch,
+  onMounted,
+  inject
+} from "vue";
 import { UserSettingsService } from "@/services/api/user-settings-service";
-import { UserSettingsDto } from "@/models/user-settings";
+import { UserSettings } from "@/models/user-settings";
 
 interface Props {
   dialog: boolean;
 }
 
 interface State {
-  settings: UserSettingsDto;
+  settings: UserSettings;
   dialog: boolean;
   userSettingsService: UserSettingsService;
+  // eslint-disable-next-line
+  refresh: any;
 }
 
 export default defineComponent({
@@ -66,7 +83,8 @@ export default defineComponent({
         totalColor: "",
         pocketColor: ""
       },
-      userSettingsService: new UserSettingsService()
+      userSettingsService: new UserSettingsService(),
+      refresh: inject("refresh")
     });
 
     watch(
@@ -78,13 +96,20 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
+    async function save() {
+      await state.userSettingsService.saveSettings(state.settings);
+      state.dialog = false;
+      state.refresh.refresh();
+    }
+
     onMounted(async () => {
       state.settings = await state.userSettingsService.getSettings();
     });
 
     return {
       state,
-      hideDialog
+      hideDialog,
+      save
     };
   }
 });

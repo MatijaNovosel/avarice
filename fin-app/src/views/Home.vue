@@ -7,9 +7,13 @@
         class="p-text-center shadow"
         style="position: relative"
       >
-        <chip text-color="white" color="#f44336" class="p-my-2">
+        <chip
+          text-color="white"
+          :color="`#${state.settings.gyroColor}`"
+          class="p-my-2"
+        >
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
+            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.gyro }}
@@ -27,9 +31,13 @@
         class="p-text-center p-my-5 shadow"
         style="position: relative"
       >
-        <chip text-color="white" color="#2790f2" class="p-my-2">
+        <chip
+          text-color="white"
+          :color="`#${state.settings.checkingColor}`"
+          class="p-my-2"
+        >
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
+            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.checking }}
@@ -47,9 +55,13 @@
         class="p-text-center shadow"
         style="position: relative"
       >
-        <chip text-color="white" color="#FFA726" class="p-my-2">
+        <chip
+          text-color="white"
+          :color="`#${state.settings.pocketColor}`"
+          class="p-my-2"
+        >
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
+            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.pocket }}
@@ -67,9 +79,13 @@
         class="p-text-center shadow p-my-5"
         style="position: relative"
       >
-        <chip text-color="white" color="#43A047" class="p-my-2">
+        <chip
+          text-color="white"
+          :color="`#${state.settings.totalColor}`"
+          class="p-my-2"
+        >
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
+            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
           </span>
           <span v-else>
             {{ state.totalAmount }}
@@ -118,12 +134,12 @@
                     }"
                     >{{ slotProps.data.amount }}
                     <i
-                      class="pi currency-change-caret-table"
+                      class="pi currency-change-caret-table p-ml-1"
                       :class="{
                         'pi-caret-up': !slotProps.data.expense,
                         'pi-caret-down': slotProps.data.expense
                       }"
-                      style="fontsize: 1rem"
+                      style="font-size: 1rem"
                     />
                   </span>
                 </template>
@@ -156,7 +172,7 @@
             <div class="p-grid p-justify-center" v-if="state.loading">
               <i
                 class="pi pi-spin pi-spinner"
-                style="fontsize: 5rem; color: grey"
+                style="font-size: 5rem; color: grey"
               ></i>
             </div>
             <div class="p-grid" v-else>
@@ -175,12 +191,12 @@
                         }"
                         >{{ expense.amount }}
                         <i
-                          class="pi currency-change-caret"
+                          class="pi currency-change-caret p-ml-1"
                           :class="{
                             'pi-caret-up': !expense.expense,
                             'pi-caret-down': expense.expense
                           }"
-                          style="fontsize: 1rem"
+                          style="font-size: 1rem"
                         />
                       </span>
                       <span class="expense-description">{{
@@ -236,7 +252,6 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject } from "vue";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
-import { Timestamp } from "@firebase/firestore-types";
 import {
   parseCurrency,
   formatCategory,
@@ -244,14 +259,10 @@ import {
 } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { TableItem } from "@/constants/table-item";
-
-interface DatasetItem {
-  label: string;
-  data: Array<number>;
-  fill: boolean;
-  borderColor: string;
-  backgroundColor: string;
-}
+import { DatasetItem } from "@/models/dataset";
+import { UserSettingsService } from "@/services/api/user-settings-service";
+import { hexToRGBA } from "@/helpers/helpers";
+import { UserSettings } from "@/models/user-settings";
 
 interface GraphData {
   labels: Array<string>;
@@ -270,13 +281,6 @@ interface Account {
   checking: boolean;
 }
 
-interface HistoryItem {
-  gyro: string;
-  checking: string;
-  pocket: string;
-  date: Timestamp;
-}
-
 interface State {
   currentAmount: CurrentAmount;
   amountHistoryService: AmountHistoryService;
@@ -288,6 +292,8 @@ interface State {
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
+  userSettingsService: UserSettingsService;
+  settings: UserSettings;
 }
 
 export default defineComponent({
@@ -297,6 +303,12 @@ export default defineComponent({
       refresh: inject("refresh"),
       cardView: true,
       expensesAndGains: [],
+      settings: {
+        gyroColor: "",
+        checkingColor: "",
+        totalColor: "",
+        pocketColor: ""
+      },
       account: {
         gyro: true,
         pocket: true,
@@ -320,44 +332,46 @@ export default defineComponent({
         }
       },
       graphData: null,
-      totalAmount: "0,00HRK"
+      totalAmount: "0,00HRK",
+      userSettingsService: new UserSettingsService()
     });
 
     async function updateData() {
       state.loading = true;
 
       const history = await (state.amountHistoryService as AmountHistoryService).getHistory();
+      state.settings = await state.userSettingsService.getSettings();
 
       const totalDataset: DatasetItem = {
         label: "Ukupno",
         data: [],
         fill: true,
-        borderColor: "#43A047",
-        backgroundColor: "rgba(67, 160, 71, 0.2)"
+        borderColor: state.settings.totalColor,
+        backgroundColor: hexToRGBA(state.settings.totalColor, 0.3)
       };
 
       const gyroDataset: DatasetItem = {
         label: "Žiro račun",
         data: [],
         fill: true,
-        borderColor: "#c71e12",
-        backgroundColor: "rgba(150, 24, 15, 0.2)"
+        borderColor: state.settings.gyroColor,
+        backgroundColor: hexToRGBA(state.settings.gyroColor, 0.3)
       };
 
       const checkingDataset: DatasetItem = {
         label: "Tekući račun",
         data: [],
         fill: true,
-        borderColor: "#1565C0",
-        backgroundColor: "rgba(21, 101, 192, 0.2)"
+        borderColor: state.settings.checkingColor,
+        backgroundColor: hexToRGBA(state.settings.checkingColor, 0.3)
       };
 
       const pocketDataset: DatasetItem = {
         label: "Džep",
         data: [],
         fill: true,
-        borderColor: "#fdd835",
-        backgroundColor: "rgba(253, 216, 53, 0.2)"
+        borderColor: state.settings.pocketColor,
+        backgroundColor: hexToRGBA(state.settings.pocketColor, 0.3)
       };
 
       const graphData: GraphData = {
