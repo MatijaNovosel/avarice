@@ -9,21 +9,47 @@
     <template #header>
       <h3>Postavke</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-mb-2 p-px-3">
-      Bruh
-    </div>
+    <group-box
+      icon="palette"
+      title="Boje grafova"
+      class="p-my-5 p-shadow-6"
+      style="position: relative"
+    >
+      <div class="p-grid p-formgrid p-mt-3">
+        <div class="p-field p-col-12">
+          <p-color-picker v-model="state.settings.gyroColor" />
+          <span class="p-ml-3">Žiro račun</span>
+        </div>
+        <div class="p-field p-col-12">
+          <p-color-picker v-model="state.settings.checkingColor" />
+          <span class="p-ml-3">Tekući račun</span>
+        </div>
+        <div class="p-field p-col-12">
+          <p-color-picker v-model="state.settings.pocketColor" />
+          <span class="p-ml-3">Džep (novčanik)</span>
+        </div>
+        <div class="p-field p-col-12">
+          <p-color-picker v-model="state.settings.totalColor" />
+          <span class="p-ml-3">Ukupno</span>
+        </div>
+      </div>
+    </group-box>
   </p-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch } from "vue";
+import { defineComponent, reactive, SetupContext, watch, onMounted } from "vue";
+import { UserSettingsService } from "@/services/api/user-settings-service";
+import { UserSettingsDto } from "@/models/user-settings";
 
 interface Props {
   dialog: boolean;
 }
 
 interface State {
+  settings: UserSettingsDto;
   dialog: boolean;
+  userSettingsService: UserSettingsService;
 }
 
 export default defineComponent({
@@ -33,7 +59,14 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
-      dialog: props.dialog
+      dialog: props.dialog,
+      settings: {
+        gyroColor: "",
+        checkingColor: "",
+        totalColor: "",
+        pocketColor: ""
+      },
+      userSettingsService: new UserSettingsService()
     });
 
     watch(
@@ -45,6 +78,10 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
+    onMounted(async () => {
+      state.settings = await state.userSettingsService.getSettings();
+    });
+
     return {
       state,
       hideDialog
@@ -53,5 +90,5 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 </style>

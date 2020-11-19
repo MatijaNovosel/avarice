@@ -9,7 +9,7 @@
       >
         <chip text-color="white" color="#f44336" class="p-my-2">
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.gyro }}
@@ -29,7 +29,7 @@
       >
         <chip text-color="white" color="#2790f2" class="p-my-2">
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.checking }}
@@ -49,7 +49,7 @@
       >
         <chip text-color="white" color="#FFA726" class="p-my-2">
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
           </span>
           <span v-else>
             {{ state.currentAmount.pocket }}
@@ -69,7 +69,7 @@
       >
         <chip text-color="white" color="#43A047" class="p-my-2">
           <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+            <i class="pi pi-spin pi-spinner" style="fontsize: 1rem"></i>
           </span>
           <span v-else>
             {{ state.totalAmount }}
@@ -78,7 +78,7 @@
       </group-box>
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
-      <group-box icon="dollar" title="Stanje kroz vrijeme" class="shadow">
+      <group-box icon="chart-line" title="Stanje kroz vrijeme" class="shadow">
         <chart
           type="line"
           :data="state.graphData"
@@ -87,7 +87,7 @@
       </group-box>
     </div>
     <div class="p-col-12 p-px-5 p-mt-6">
-      <group-box icon="dollar" title="Troškovi/Dobitci" class="shadow">
+      <group-box icon="chart-bar" title="Troškovi/Dobitci" class="shadow">
         <div class="p-grid">
           <div class="p-col-12 p-my-3">
             <input-switch v-model="state.cardView" id="input-switch" />
@@ -111,7 +111,21 @@
               <template #loading> Učitavam troškove. Pričekajte. </template>
               <column field="amount" header="Iznos">
                 <template #body="slotProps">
-                  {{ slotProps.data.amount }}
+                  <span
+                    :class="{
+                      'expense-text': slotProps.data.expense,
+                      'gain-text': !slotProps.data.expense
+                    }"
+                    >{{ slotProps.data.amount }}
+                    <i
+                      class="pi currency-change-caret-table"
+                      :class="{
+                        'pi-caret-up': !slotProps.data.expense,
+                        'pi-caret-down': slotProps.data.expense
+                      }"
+                      style="fontsize: 1rem"
+                    />
+                  </span>
                 </template>
               </column>
               <column field="description" header="Opis">
@@ -126,7 +140,7 @@
               </column>
               <column field="category" header="Kategorija">
                 <template #body="slotProps">
-                  {{ formatCategory(slotProps.data.category) }}
+                  {{ formatCategory(slotProps.data.category) || "Dobitak" }}
                 </template>
               </column>
               <column field="date" header="Datum">
@@ -139,7 +153,13 @@
             </data-table>
           </div>
           <div class="p-col-12" v-else>
-            <div class="p-grid">
+            <div class="p-grid p-justify-center" v-if="state.loading">
+              <i
+                class="pi pi-spin pi-spinner"
+                style="fontsize: 5rem; color: grey"
+              ></i>
+            </div>
+            <div class="p-grid" v-else>
               <div
                 class="p-col-4"
                 v-for="(expense, i) in state.expensesAndGains"
@@ -153,8 +173,16 @@
                           'expense-text': expense.expense,
                           'gain-text': !expense.expense
                         }"
-                        >{{ expense.amount }}</span
-                      >
+                        >{{ expense.amount }}
+                        <i
+                          class="pi currency-change-caret"
+                          :class="{
+                            'pi-caret-up': !expense.expense,
+                            'pi-caret-down': expense.expense
+                          }"
+                          style="fontsize: 1rem"
+                        />
+                      </span>
                       <span class="expense-description">{{
                         formatCategory(expense.category) || "Dobitak"
                       }}</span>
@@ -170,6 +198,29 @@
                           expense.description
                         }}</span>
                       </div>
+                    </div>
+                  </template>
+                  <template #footer>
+                    <div class="p-grid p-justify-end p-nogutter">
+                      <btn
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-text p-button-danger p-button-lg"
+                        v-tooltip.bottom="
+                          'Izbriši unos i vrati stanje kakvo je bilo u ovome trenutku'
+                        "
+                      />
+                      <btn
+                        icon="pi pi-list"
+                        class="p-button-rounded p-button-text p-button-info p-button-lg p-mx-2"
+                        v-tooltip.bottom="'Vidi detalje'"
+                      />
+                      <btn
+                        icon="pi pi-copy"
+                        class="p-button-rounded p-button-text p-button-success p-button-lg"
+                        v-tooltip.bottom="
+                          'Otvori dijalog s jednakim podatcima unosa'
+                        "
+                      />
                     </div>
                   </template>
                 </card>
@@ -401,5 +452,49 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.p-card-footer {
+  border-top: 1px solid var(--color-dark);
+  padding: 15px 10px 15px 10px !important;
+}
+.currency-change-caret {
+  -webkit-animation: up-and-down 0.5s infinite alternate;
+  animation: up-and-down 0.5s infinite alternate;
+}
+.currency-change-caret-table {
+  -webkit-animation: up-and-down-table 0.5s infinite alternate;
+  animation: up-and-down-table 0.5s infinite alternate;
+}
+@-webkit-keyframes up-and-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes up-and-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-4px);
+  }
+}
+@-webkit-keyframes up-and-down-table {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-2px);
+  }
+}
+@keyframes up-and-down-table {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-2px);
+  }
 }
 </style>

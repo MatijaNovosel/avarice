@@ -11,7 +11,7 @@
     <btn
       @click="state.settingsDialog = true"
       icon="pi pi-cog"
-      class="p-button-rounded p-button-text settings-button p-button-lg pb-button-secondary"
+      class="p-button-rounded p-button-text settings-button p-button-lg"
       v-tooltip.bottom="'Postavke'"
     />
     <div class="drawer-header">

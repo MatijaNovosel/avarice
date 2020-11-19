@@ -28,6 +28,7 @@ import Tooltip from "primevue/tooltip";
 import Card from "primevue/card";
 import InputSwitch from "primevue/inputswitch";
 import Checkbox from "primevue/checkbox";
+import ColorPicker from 'primevue/colorpicker';
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -77,6 +78,7 @@ app.component("field-set", Fieldset);
 app.component("card", Card);
 app.component("input-switch", InputSwitch);
 app.component("p-checkbox", Checkbox);
+app.component("p-color-picker", ColorPicker);
 
 // Directives
 app.directive("tooltip", Tooltip);
