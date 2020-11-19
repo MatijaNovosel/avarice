@@ -261,7 +261,7 @@ import { format } from "date-fns";
 import { TableItem } from "@/constants/table-item";
 import { DatasetItem } from "@/models/dataset";
 import { UserSettingsService } from "@/services/api/user-settings-service";
-import { hexToRGBA } from "@/helpers/helpers";
+import { hexToRGBA, adjustHexColor } from "@/helpers/helpers";
 import { UserSettings } from "@/models/user-settings";
 
 interface GraphData {
@@ -346,32 +346,44 @@ export default defineComponent({
         label: "Ukupno",
         data: [],
         fill: true,
-        borderColor: state.settings.totalColor,
-        backgroundColor: hexToRGBA(state.settings.totalColor, 0.3)
+        borderColor: `#${state.settings.totalColor}`,
+        backgroundColor: hexToRGBA(
+          adjustHexColor(state.settings.totalColor, -10),
+          0.4
+        )
       };
 
       const gyroDataset: DatasetItem = {
         label: "Žiro račun",
         data: [],
         fill: true,
-        borderColor: state.settings.gyroColor,
-        backgroundColor: hexToRGBA(state.settings.gyroColor, 0.3)
+        borderColor: `#${state.settings.gyroColor}`,
+        backgroundColor: hexToRGBA(
+          adjustHexColor(state.settings.gyroColor, -10),
+          0.4
+        )
       };
 
       const checkingDataset: DatasetItem = {
         label: "Tekući račun",
         data: [],
         fill: true,
-        borderColor: state.settings.checkingColor,
-        backgroundColor: hexToRGBA(state.settings.checkingColor, 0.3)
+        borderColor: `#${state.settings.checkingColor}`,
+        backgroundColor: hexToRGBA(
+          adjustHexColor(state.settings.checkingColor, -10),
+          0.4
+        )
       };
 
       const pocketDataset: DatasetItem = {
         label: "Džep",
         data: [],
         fill: true,
-        borderColor: state.settings.pocketColor,
-        backgroundColor: hexToRGBA(state.settings.pocketColor, 0.3)
+        borderColor: `#${state.settings.pocketColor}`,
+        backgroundColor: hexToRGBA(
+          adjustHexColor(state.settings.pocketColor, -10),
+          0.4
+        )
       };
 
       const graphData: GraphData = {
