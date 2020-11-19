@@ -87,7 +87,7 @@
       </group-box>
     </div>
     <div class="p-col-12 p-px-5 p-mt-6">
-      <group-box icon="dollar" title="Troškovi" class="shadow">
+      <group-box icon="dollar" title="Troškovi/Dobitci" class="shadow">
         <div class="p-grid">
           <div class="p-col-12 p-my-3">
             <input-switch v-model="state.cardView" id="input-switch" />
@@ -244,7 +244,7 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       refresh: inject("refresh"),
-      cardView: false,
+      cardView: true,
       expensesAndGains: [],
       account: {
         gyro: true,
@@ -321,9 +321,11 @@ export default defineComponent({
       checkingDataset.data = history.map((x) => parseCurrency(x.checking));
       totalDataset.data = history.map(
         (x) =>
-          parseCurrency(x.gyro) +
-          parseCurrency(x.pocket) +
-          parseCurrency(x.checking)
+          +(
+            parseCurrency(x.gyro) +
+            parseCurrency(x.pocket) +
+            parseCurrency(x.checking)
+          ).toFixed(2)
       );
 
       state.currentAmount.gyro =
