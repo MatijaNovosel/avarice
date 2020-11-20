@@ -89,5 +89,8 @@ body {
 .p-fieldset .p-fieldset-legend {
   border: 1px solid var(--tarkov-brown) !important;
   border-radius: 6px;
-  box-shadow: 10px 10px 8px #181818 !important;
+}
+
+.p-fieldset {
+  border-radius: 0px;
 }

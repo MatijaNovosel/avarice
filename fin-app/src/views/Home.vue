@@ -4,7 +4,7 @@
       <group-box
         icon="dollar"
         title="Žiro račun"
-        class="p-text-center shadow"
+        class="p-text-center p-shadow-6"
         style="position: relative"
       >
         <chip
@@ -28,7 +28,7 @@
       <group-box
         icon="dollar"
         title="Tekući račun"
-        class="p-text-center p-my-5 shadow"
+        class="p-text-center p-my-5 p-shadow-6"
         style="position: relative"
       >
         <chip
@@ -52,7 +52,7 @@
       <group-box
         icon="dollar"
         title="Džep"
-        class="p-text-center shadow"
+        class="p-text-center p-shadow-6"
         style="position: relative"
       >
         <chip
@@ -76,7 +76,7 @@
       <group-box
         icon="dollar"
         title="Ukupno"
-        class="p-text-center shadow p-my-5"
+        class="p-text-center p-shadow-6 p-my-5"
         style="position: relative"
       >
         <chip
@@ -94,7 +94,11 @@
       </group-box>
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
-      <group-box icon="chart-line" title="Stanje kroz vrijeme" class="shadow">
+      <group-box
+        icon="chart-line"
+        title="Stanje kroz vrijeme"
+        class="p-shadow-6"
+      >
         <chart
           type="line"
           :data="state.graphData"
@@ -103,7 +107,7 @@
       </group-box>
     </div>
     <div class="p-col-12 p-px-5 p-mt-6">
-      <group-box icon="chart-bar" title="Troškovi/Dobitci" class="shadow">
+      <group-box icon="chart-bar" title="Troškovi/Dobitci" class="p-shadow-6">
         <div class="p-grid">
           <div class="p-col-12 p-my-3">
             <input-switch v-model="state.cardView" id="input-switch" />
@@ -181,7 +185,7 @@
                 v-for="(expense, i) in state.expensesAndGains"
                 :key="i"
               >
-                <card class="p-shadow-5 card-bg">
+                <card class="p-shadow-6 card-bg">
                   <template #title>
                     <div class="expense-title p-px-3">
                       <span
@@ -329,6 +333,10 @@ export default defineComponent({
           line: {
             tension: 0.2
           }
+        },
+        responsive: true,
+        chartArea: {
+          backgroundColor: "rgba(251, 85, 85, 0.4)"
         }
       },
       graphData: null,
