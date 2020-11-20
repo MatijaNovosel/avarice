@@ -87,7 +87,6 @@ import { SelectItem } from "@/constants/select-item";
 import { CategoryEnum } from "@/constants/category-enum";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { ExpenseItem } from "@/models/expense-item";
-import { parseCurrency } from "@/helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -97,7 +96,7 @@ interface Props {
 interface State {
   dialog: boolean;
   input?: ExpenseItem;
-  amountHistoryService: AmountHistoryService | null;
+  amountHistoryService: AmountHistoryService;
   // eslint-disable-next-line
   refresh: any;
 }
@@ -115,9 +114,9 @@ export default defineComponent({
       input: {
         paymentSource: PaymentSourceEnum.GyroAccount,
         category: CategoryEnum.Food,
-        description: null,
-        amount: null,
-        date: null
+        description: "",
+        amount: 0,
+        date: new Date()
       },
       refresh: inject("refresh")
     });
@@ -175,9 +174,9 @@ export default defineComponent({
       state.input = {
         paymentSource: PaymentSourceEnum.GyroAccount,
         category: CategoryEnum.Food,
-        description: null,
-        amount: null,
-        date: null
+        description: "",
+        amount: 0,
+        date: new Date()
       };
     }
 
@@ -186,33 +185,23 @@ export default defineComponent({
         ...state.input
       } as ExpenseItem;
 
-      payload.amount = payload.amount?.toString() + "HRK";
       payload.date = new Date();
 
-      const currentAmount = await state.amountHistoryService?.getCurrentAmount();
+      const currentAmount = await state.amountHistoryService.getCurrentAmount();
 
-      const gyroVal = parseCurrency(currentAmount?.gyro as string);
-      const checkingVal = parseCurrency(currentAmount?.checking as string);
-      const pocketVal = parseCurrency(currentAmount?.pocket as string);
-
-      state.amountHistoryService?.addHistory({
+      state.amountHistoryService.addHistory({
         gyro:
           state.input?.paymentSource == PaymentSourceEnum.GyroAccount
-            ? (gyroVal - parseFloat(state.input.amount as string)).toString() +
-              "HRK"
-            : gyroVal.toString() + "HRK",
+            ? ((currentAmount?.gyro - state.input.amount) as number)
+            : currentAmount?.gyro,
         checking:
           state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
-            ? (
-                checkingVal - parseFloat(state.input.amount as string)
-              ).toString() + "HRK"
-            : checkingVal.toString() + "HRK",
+            ? ((currentAmount?.checking - state.input.amount) as number)
+            : currentAmount?.checking,
         pocket:
           state.input?.paymentSource == PaymentSourceEnum.Pocket
-            ? (
-                pocketVal - parseFloat(state.input.amount as string)
-              ).toString() + "HRK"
-            : pocketVal.toString() + "HRK",
+            ? ((currentAmount?.pocket - state.input.amount) as number)
+            : currentAmount?.pocket,
         date: new Date()
       });
 

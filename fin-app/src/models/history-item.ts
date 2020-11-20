@@ -1,15 +1,15 @@
 import { Timestamp } from "@firebase/firestore-types";
 
 export interface HistoryItem {
-  gyro: string;
-  checking: string;
-  pocket: string;
+  gyro: number;
+  checking: number;
+  pocket: number;
   date: Date;
-};
+}
 
 export interface HistoryItemDto {
-  gyro: string;
-  checking: string;
-  pocket: string;
+  gyro: number;
+  checking: number;
+  pocket: number;
   date: Timestamp;
-};
+}

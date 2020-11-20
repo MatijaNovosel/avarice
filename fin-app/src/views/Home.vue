@@ -136,7 +136,7 @@
                       'expense-text': slotProps.data.expense,
                       'gain-text': !slotProps.data.expense
                     }"
-                    >{{ slotProps.data.amount }}
+                    >{{ `${slotProps.data.amount}HRK` }}
                     <i
                       class="pi currency-change-caret-table p-ml-1"
                       :class="{
@@ -193,7 +193,7 @@
                           'expense-text': expense.expense,
                           'gain-text': !expense.expense
                         }"
-                        >{{ expense.amount }}
+                        >{{ `${expense.amount}HRK` }}
                         <i
                           class="pi currency-change-caret p-ml-1"
                           :class="{
@@ -256,11 +256,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject } from "vue";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
-import {
-  parseCurrency,
-  formatCategory,
-  formatPaymentSource
-} from "@/helpers/helpers";
+import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { TableItem } from "@/constants/table-item";
 import { DatasetItem } from "@/models/dataset";
@@ -401,27 +397,25 @@ export default defineComponent({
         datasets: []
       };
 
-      gyroDataset.data = history.map((x) => +parseCurrency(x.gyro).toFixed(2));
-      pocketDataset.data = history.map((x) => +parseCurrency(x.pocket).toFixed(2));
-      checkingDataset.data = history.map((x) => +parseCurrency(x.checking).toFixed(2));
+      gyroDataset.data = history.map((x) => +x.gyro.toFixed(2));
+      pocketDataset.data = history.map((x) => +x.pocket.toFixed(2));
+      checkingDataset.data = history.map((x) => +x.checking.toFixed(2));
       totalDataset.data = history.map(
-        (x) =>
-          +(
-            parseCurrency(x.gyro) +
-            parseCurrency(x.pocket) +
-            parseCurrency(x.checking)
-          ).toFixed(2)
+        (x) => +(x.gyro + x.pocket + x.checking).toFixed(2)
       );
 
-      state.currentAmount.gyro =
-        gyroDataset.data[gyroDataset.data.length - 1].toString() + "HRK";
-      state.currentAmount.pocket =
-        pocketDataset.data[pocketDataset.data.length - 1].toString() + "HRK";
-      state.currentAmount.checking =
-        checkingDataset.data[checkingDataset.data.length - 1].toString() +
-        "HRK";
-      state.totalAmount =
-        totalDataset.data[totalDataset.data.length - 1].toString() + "HRK";
+      state.currentAmount.gyro = `${
+        gyroDataset.data[gyroDataset.data.length - 1]
+      }HRK`;
+      state.currentAmount.pocket = `${
+        pocketDataset.data[pocketDataset.data.length - 1]
+      }HRK`;
+      state.currentAmount.checking = `${
+        checkingDataset.data[checkingDataset.data.length - 1]
+      }HRK`;
+      state.totalAmount = `${
+        totalDataset.data[totalDataset.data.length - 1]
+      }HRK`;
 
       if (
         state.account.gyro &&
