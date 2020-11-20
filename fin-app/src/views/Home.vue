@@ -401,9 +401,9 @@ export default defineComponent({
         datasets: []
       };
 
-      gyroDataset.data = history.map((x) => parseCurrency(x.gyro));
-      pocketDataset.data = history.map((x) => parseCurrency(x.pocket));
-      checkingDataset.data = history.map((x) => parseCurrency(x.checking));
+      gyroDataset.data = history.map((x) => +parseCurrency(x.gyro).toFixed(2));
+      pocketDataset.data = history.map((x) => +parseCurrency(x.pocket).toFixed(2));
+      checkingDataset.data = history.map((x) => +parseCurrency(x.checking).toFixed(2));
       totalDataset.data = history.map(
         (x) =>
           +(
