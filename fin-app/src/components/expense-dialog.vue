@@ -190,6 +190,7 @@ export default defineComponent({
       const currentAmount = await state.amountHistoryService.getCurrentAmount();
 
       state.amountHistoryService.addHistory({
+        euros: currentAmount.euros,
         gyro:
           state.input?.paymentSource == PaymentSourceEnum.GyroAccount
             ? ((currentAmount?.gyro - state.input.amount) as number)

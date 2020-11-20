@@ -2,7 +2,7 @@
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col-12 p-md-4 p-pl-5">
       <group-box
-        icon="dollar"
+        icon="id-card"
         title="Žiro račun"
         class="p-text-center p-shadow-6"
         style="position: relative"
@@ -50,7 +50,7 @@
         />
       </group-box>
       <group-box
-        icon="dollar"
+        icon="briefcase"
         title="Džep"
         class="p-text-center p-shadow-6"
         style="position: relative"
@@ -74,7 +74,22 @@
         />
       </group-box>
       <group-box
-        icon="dollar"
+        icon="globe"
+        title="Euri"
+        class="p-text-center p-shadow-6 p-my-5"
+        style="position: relative"
+      >
+        <chip text-color="white" color="#eda81f" class="p-my-2">
+          <span v-if="state.loading">
+            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
+          </span>
+          <span v-else>
+            {{ state.currentAmount.euros }}
+          </span>
+        </chip>
+      </group-box>
+      <group-box
+        icon="table"
         title="Ukupno"
         class="p-text-center p-shadow-6 p-my-5"
         style="position: relative"
@@ -263,6 +278,7 @@ import { DatasetItem } from "@/models/dataset";
 import { UserSettingsService } from "@/services/api/user-settings-service";
 import { hexToRGBA, adjustHexColor } from "@/helpers/helpers";
 import { UserSettings } from "@/models/user-settings";
+import { euroRate } from "@/constants/app-constants";
 
 interface GraphData {
   labels: Array<string>;
@@ -273,6 +289,7 @@ interface CurrentAmount {
   gyro: string;
   checking: string;
   pocket: string;
+  euros: string;
 }
 
 interface Account {
@@ -317,7 +334,8 @@ export default defineComponent({
       currentAmount: {
         gyro: "",
         checking: "",
-        pocket: ""
+        pocket: "",
+        euros: ""
       },
       loading: false,
       amountHistoryService: new AmountHistoryService(),
@@ -401,7 +419,13 @@ export default defineComponent({
       pocketDataset.data = history.map((x) => +x.pocket.toFixed(2));
       checkingDataset.data = history.map((x) => +x.checking.toFixed(2));
       totalDataset.data = history.map(
-        (x) => +(x.gyro + x.pocket + x.checking).toFixed(2)
+        (x) =>
+          +(
+            x.gyro +
+            x.pocket +
+            x.checking +
+            ((x.euros as number) * euroRate || 0)
+          ).toFixed(2)
       );
 
       state.currentAmount.gyro = `${
@@ -413,6 +437,8 @@ export default defineComponent({
       state.currentAmount.checking = `${
         checkingDataset.data[checkingDataset.data.length - 1]
       }HRK`;
+      state.currentAmount.euros = `${history[history.length - 1].euros}€`;
+
       state.totalAmount = `${
         totalDataset.data[totalDataset.data.length - 1]
       }HRK`;
