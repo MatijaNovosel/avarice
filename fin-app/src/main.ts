@@ -28,7 +28,9 @@ import Tooltip from "primevue/tooltip";
 import Card from "primevue/card";
 import InputSwitch from "primevue/inputswitch";
 import Checkbox from "primevue/checkbox";
-import ColorPicker from 'primevue/colorpicker';
+import ColorPicker from "primevue/colorpicker";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -79,6 +81,8 @@ app.component("card", Card);
 app.component("input-switch", InputSwitch);
 app.component("p-checkbox", Checkbox);
 app.component("p-color-picker", ColorPicker);
+app.component("accordion", Accordion);
+app.component("accordion-tab", AccordionTab);
 
 // Directives
 app.directive("tooltip", Tooltip);

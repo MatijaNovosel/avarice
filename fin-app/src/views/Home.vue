@@ -1,6 +1,6 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-12 p-md-4 p-pl-5">
+    <div class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0">
       <group-box
         icon="id-card"
         title="Žiro račun"
@@ -121,14 +121,26 @@
         />
       </group-box>
     </div>
-    <div class="p-col-12 p-px-5 p-mt-6">
+    <div class="p-col-12 p-px-5 p-mt-3">
       <group-box icon="chart-bar" title="Troškovi/Dobitci" class="p-shadow-6">
         <div class="p-grid">
-          <div class="p-col-12 p-my-3">
-            <input-switch v-model="state.cardView" id="input-switch" />
-            <label for="input-switch" class="p-ml-2">
-              Prikaz u obliku kartica</label
-            >
+          <div class="p-col-12 p-my-2">
+            <accordion>
+              <accordion-tab>
+                <template #header>
+                  <icon class="p-pr-3" name="filter" />
+                  <span>Filtriranje i ostale mogućnosti</span>
+                </template>
+                <div class="p-grid p-my-3">
+                  <div class="p-col-12">
+                    <input-switch v-model="state.cardView" id="input-switch" />
+                    <label for="input-switch" class="p-ml-2">
+                      Prikaz u obliku kartica</label
+                    >
+                  </div>
+                </div>
+              </accordion-tab>
+            </accordion>
           </div>
           <div class="p-col-12" v-if="!state.cardView">
             <data-table
@@ -190,13 +202,13 @@
           <div class="p-col-12" v-else>
             <div class="p-grid p-justify-center" v-if="state.loading">
               <i
-                class="pi pi-spin pi-spinner"
+                class="pi pi-spin pi-spinner p-mb-5"
                 style="font-size: 5rem; color: grey"
               ></i>
             </div>
             <div class="p-grid" v-else>
               <div
-                class="p-col-4"
+                class="p-col-12 p-md-4"
                 v-for="(expense, i) in state.expensesAndGains"
                 :key="i"
               >
@@ -550,5 +562,8 @@ export default defineComponent({
   100% {
     transform: translateY(-2px);
   }
+}
+.p-accordion-header-link {
+  background-color: rgba(255, 255, 255, 0.04) !important;
 }
 </style>
