@@ -144,7 +144,7 @@
           </div>
           <div class="p-col-12" v-if="!state.cardView">
             <data-table
-              :value="state.expensesAndGains"
+              :value="state.changes"
               :paginator="true"
               :rows="10"
               :rowHover="true"
@@ -200,77 +200,82 @@
           <div class="p-col-12" v-else>
             <div class="p-grid p-justify-center" v-if="state.loading">
               <i
-                class="pi pi-spin pi-spinner p-mb-5"
+                class="pi pi-spin pi-spinner p-my-5"
                 style="font-size: 5rem; color: grey"
               ></i>
             </div>
-            <div class="p-grid" v-else>
-              <div
-                class="p-col-12 p-md-4"
-                v-for="(expense, i) in state.expensesAndGains"
-                :key="i"
-              >
-                <card class="p-shadow-6 card-bg">
-                  <template #title>
-                    <div class="expense-title p-px-3">
-                      <span
-                        :class="{
-                          'expense-text': expense.expense,
-                          'gain-text': !expense.expense
-                        }"
-                        >{{ `${expense.amount}HRK` }}
-                        <i
-                          class="pi currency-change-caret p-ml-1"
+            <data-view
+              v-else
+              layout="grid"
+              :paginator="true"
+              :rows="9"
+              :value="state.changes"
+              paginatorPosition="bottom"
+            >
+              <template #grid="slotProps">
+                <div class="p-col-12 p-md-4">
+                  <card class="p-shadow-6 card-bg">
+                    <template #title>
+                      <div class="expense-title p-px-3">
+                        <span
                           :class="{
-                            'pi-caret-up': !expense.expense,
-                            'pi-caret-down': expense.expense
+                            'expense-text': slotProps.data.expense,
+                            'gain-text': !slotProps.data.expense
                           }"
-                          style="font-size: 1rem"
-                        />
-                      </span>
-                      <span class="expense-description">{{
-                        formatCategory(expense.category) || "Dobitak"
-                      }}</span>
-                    </div>
-                  </template>
-                  <template #content>
-                    <div class="p-grid p-px-3">
-                      <div class="p-col-12">
-                        {{ format(expense.date, "dd.MM.yyyy. HH:mm") }}
-                      </div>
-                      <div class="p-col-12">
+                          >{{ `${slotProps.data.amount}HRK` }}
+                          <i
+                            class="pi currency-change-caret p-ml-1"
+                            :class="{
+                              'pi-caret-up': !slotProps.data.expense,
+                              'pi-caret-down': slotProps.data.expense
+                            }"
+                            style="font-size: 1rem"
+                          />
+                        </span>
                         <span class="expense-description">{{
-                          expense.description
+                          formatCategory(slotProps.data.category) || "Dobitak"
                         }}</span>
                       </div>
-                    </div>
-                  </template>
-                  <template #footer>
-                    <div class="p-grid p-justify-end p-nogutter">
-                      <btn
-                        icon="pi pi-trash"
-                        class="p-button-rounded p-button-text p-button-danger p-button-lg"
-                        v-tooltip.bottom="
-                          'Izbriši unos i vrati stanje kakvo je bilo u ovome trenutku'
-                        "
-                      />
-                      <btn
-                        icon="pi pi-list"
-                        class="p-button-rounded p-button-text p-button-info p-button-lg p-mx-2"
-                        v-tooltip.bottom="'Vidi detalje'"
-                      />
-                      <btn
-                        icon="pi pi-copy"
-                        class="p-button-rounded p-button-text p-button-success p-button-lg"
-                        v-tooltip.bottom="
-                          'Otvori dijalog s jednakim podatcima unosa'
-                        "
-                      />
-                    </div>
-                  </template>
-                </card>
-              </div>
-            </div>
+                    </template>
+                    <template #content>
+                      <div class="p-grid p-px-3">
+                        <div class="p-col-12">
+                          {{ format(slotProps.data.date, "dd.MM.yyyy. HH:mm") }}
+                        </div>
+                        <div class="p-col-12">
+                          <span class="expense-description">{{
+                            slotProps.data.description
+                          }}</span>
+                        </div>
+                      </div>
+                    </template>
+                    <template #footer>
+                      <div class="p-grid p-justify-end p-nogutter">
+                        <btn
+                          icon="pi pi-trash"
+                          class="p-button-rounded p-button-text p-button-danger p-button-lg"
+                          v-tooltip.bottom="
+                            'Izbriši unos i vrati stanje kakvo je bilo u ovome trenutku'
+                          "
+                        />
+                        <btn
+                          icon="pi pi-list"
+                          class="p-button-rounded p-button-text p-button-info p-button-lg p-mx-2"
+                          v-tooltip.bottom="'Vidi detalje'"
+                        />
+                        <btn
+                          icon="pi pi-copy"
+                          class="p-button-rounded p-button-text p-button-success p-button-lg"
+                          v-tooltip.bottom="
+                            'Otvori dijalog s jednakim podatcima unosa'
+                          "
+                        />
+                      </div>
+                    </template>
+                  </card>
+                </div>
+              </template>
+            </data-view>
           </div>
         </div>
       </group-box>
@@ -320,7 +325,7 @@ interface State {
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
-  expensesAndGains: ChangeItem[];
+  changes: ChangeItem[];
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
@@ -334,7 +339,7 @@ export default defineComponent({
     const state: State = reactive({
       refresh: inject("refresh"),
       cardView: true,
-      expensesAndGains: [],
+      changes: [],
       settings: {
         gyroColor: "",
         checkingColor: "",
@@ -477,7 +482,7 @@ export default defineComponent({
       }
 
       state.graphData = graphData;
-      state.expensesAndGains = await state.amountHistoryService.getChanges();
+      state.changes = await state.amountHistoryService.getChanges();
       state.loading = false;
     }
 
@@ -500,6 +505,7 @@ export default defineComponent({
 }
 .card-bg {
   background-color: #7673731a !important;
+  margin: 0.75rem;
 }
 .expense-text {
   color: rgb(197, 38, 38);
@@ -568,5 +574,8 @@ export default defineComponent({
 }
 .p-accordion-header-link {
   background-color: rgba(255, 255, 255, 0.04) !important;
+}
+.p-paginator {
+  justify-content: center !important;
 }
 </style>

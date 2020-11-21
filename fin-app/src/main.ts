@@ -31,6 +31,8 @@ import Checkbox from "primevue/checkbox";
 import ColorPicker from "primevue/colorpicker";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
+import Paginator from "primevue/paginator";
+import DataView from "primevue/dataview";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -83,6 +85,8 @@ app.component("p-checkbox", Checkbox);
 app.component("p-color-picker", ColorPicker);
 app.component("accordion", Accordion);
 app.component("accordion-tab", AccordionTab);
+app.component("paginator", Paginator);
+app.component("data-view", DataView);
 
 // Directives
 app.directive("tooltip", Tooltip);
