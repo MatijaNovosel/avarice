@@ -1,41 +1,52 @@
+import { ChangeItemDto } from "./../../models/change-item";
+import { CategoryEnum } from "./../../constants/category-enum";
 import { db } from "../firebase";
-import { ExpenseItem } from "@/models/expense-item";
-import { GainItem } from "@/models/gain-item";
+import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
-import { TableItem } from "@/constants/table-item";
-import { compareDesc } from "date-fns";
+
+interface ChangeFilterOptions {
+  category: CategoryEnum[];
+}
 
 export class AmountHistoryService {
-  async addExpense(payload: ExpenseItem): Promise<void> {
-    await db.collection("expense").add(payload);
+  async addChange(payload: ChangeItem): Promise<void> {
+    await db.collection("changes").add(payload);
   }
   async addHistory(payload: HistoryItem): Promise<void> {
     await db.collection("history").add(payload);
   }
-  async addGain(payload: GainItem): Promise<void> {
-    await db.collection("gain").add(payload);
-  }
-  async getGainsAndExpenses(): Promise<Array<TableItem>> {
-    const res: Array<TableItem> = [];
-
-    // Expenses
-    let data = await db.collection("expense").get();
+  async getChanges(filterOptions?: ChangeFilterOptions): Promise<ChangeItem[]> {
+    const res: ChangeItem[] = [];
+    const data = await db
+      .collection("changes")
+      .orderBy("date", "desc")
+      .where(
+        "category",
+        "in",
+        filterOptions?.category || [
+          CategoryEnum.Food,
+          CategoryEnum.Games,
+          CategoryEnum.Gifts,
+          CategoryEnum.Other,
+          CategoryEnum.PublicTransport
+        ]
+      )
+      .get();
     data.forEach(document => {
-      res.push({ ...document.data(), expense: true } as TableItem);
+      const doc = document.data() as ChangeItemDto;
+      res.push({
+        amount: doc.amount,
+        category: doc.category,
+        date: doc.date.toDate(),
+        description: doc.description,
+        expense: doc.expense,
+        paymentSource: doc.paymentSource
+      });
     });
-
-    // Gains
-    data = await db.collection("gain").get();
-    data.forEach(document => {
-      res.push({ ...document.data(), expense: false } as TableItem);
-    });
-
-    return res.sort((x, y) => {
-      return compareDesc(x.date.toDate(), y.date.toDate());
-    });
+    return res;
   }
-  async getHistory(): Promise<Array<HistoryItemDto>> {
-    const res: Array<HistoryItemDto> = [];
+  async getHistory(): Promise<HistoryItemDto[]> {
+    const res: HistoryItemDto[] = [];
     const data = await db
       .collection("history")
       .orderBy("date", "asc")

@@ -86,16 +86,16 @@ import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { CategoryEnum } from "@/constants/category-enum";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
-import { ExpenseItem } from "@/models/expense-item";
+import { ChangeItem } from "@/models/change-item";
 
 interface Props {
   dialog: boolean;
-  input?: ExpenseItem;
+  input?: ChangeItem;
 }
 
 interface State {
   dialog: boolean;
-  input?: ExpenseItem;
+  input?: ChangeItem;
   amountHistoryService: AmountHistoryService;
   // eslint-disable-next-line
   refresh: any;
@@ -116,7 +116,8 @@ export default defineComponent({
         category: CategoryEnum.Food,
         description: "",
         amount: 0,
-        date: new Date()
+        date: new Date(),
+        expense: true
       },
       refresh: inject("refresh")
     });
@@ -131,7 +132,7 @@ export default defineComponent({
       (val) => (state.input = val)
     );
 
-    const paymentSources: Array<SelectItem<PaymentSourceEnum>> = [
+    const paymentSources: SelectItem<PaymentSourceEnum>[] = [
       {
         text: "Žiro račun",
         val: PaymentSourceEnum.GyroAccount
@@ -146,7 +147,7 @@ export default defineComponent({
       }
     ];
 
-    const categories: Array<SelectItem<CategoryEnum>> = [
+    const categories: SelectItem<CategoryEnum>[] = [
       {
         text: "Hrana",
         val: CategoryEnum.Food
@@ -176,14 +177,15 @@ export default defineComponent({
         category: CategoryEnum.Food,
         description: "",
         amount: 0,
-        date: new Date()
+        date: new Date(),
+        expense: true
       };
     }
 
     async function addExpense() {
       const payload = {
         ...state.input
-      } as ExpenseItem;
+      } as ChangeItem;
 
       payload.date = new Date();
 
@@ -206,7 +208,7 @@ export default defineComponent({
         date: new Date()
       });
 
-      state.amountHistoryService?.addExpense(payload);
+      state.amountHistoryService.addChange(payload);
 
       resetDialog();
       state.refresh.refresh();

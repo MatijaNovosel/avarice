@@ -1,6 +1,6 @@
 export interface DatasetItem {
   label: string;
-  data: Array<number>;
+  data: number[];
   fill: boolean;
   borderColor: string;
   backgroundColor: string;

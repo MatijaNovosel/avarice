@@ -192,9 +192,7 @@
               </column>
               <column field="date" header="Datum">
                 <template #body="slotProps">
-                  {{
-                    format(slotProps.data.date.toDate(), "dd/MM/yyyy - HH:mm")
-                  }}
+                  {{ format(slotProps.data.date, "dd/MM/yyyy - HH:mm") }}
                 </template>
               </column>
             </data-table>
@@ -238,7 +236,7 @@
                   <template #content>
                     <div class="p-grid p-px-3">
                       <div class="p-col-12">
-                        {{ format(expense.date.toDate(), "dd.MM.yyyy. HH:mm") }}
+                        {{ format(expense.date, "dd.MM.yyyy. HH:mm") }}
                       </div>
                       <div class="p-col-12">
                         <span class="expense-description">{{
@@ -285,16 +283,21 @@ import { defineComponent, reactive, onMounted, watch, inject } from "vue";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
-import { TableItem } from "@/constants/table-item";
 import { DatasetItem } from "@/models/dataset";
 import { UserSettingsService } from "@/services/api/user-settings-service";
 import { hexToRGBA, adjustHexColor } from "@/helpers/helpers";
 import { UserSettings } from "@/models/user-settings";
 import { euroRate } from "@/constants/app-constants";
+import { CategoryEnum } from "@/constants/category-enum";
+import { ChangeItem } from "@/models/change-item";
+
+interface ChangeFilterOptions {
+  category: CategoryEnum[];
+}
 
 interface GraphData {
-  labels: Array<string>;
-  datasets: Array<DatasetItem>;
+  labels: string[];
+  datasets: DatasetItem[];
 }
 
 interface CurrentAmount {
@@ -317,7 +320,7 @@ interface State {
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
-  expensesAndGains: Array<TableItem>;
+  expensesAndGains: ChangeItem[];
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
@@ -474,7 +477,7 @@ export default defineComponent({
       }
 
       state.graphData = graphData;
-      state.expensesAndGains = await state.amountHistoryService.getGainsAndExpenses();
+      state.expensesAndGains = await state.amountHistoryService.getChanges();
       state.loading = false;
     }
 

@@ -41,7 +41,7 @@ interface Props {
 }
 
 interface State {
-  menuItems: Array<MenuItem>;
+  menuItems: MenuItem[];
   visible: boolean;
   expenseDialog: boolean;
   gainDialog: boolean;

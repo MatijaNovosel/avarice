@@ -61,16 +61,16 @@ import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
-import { GainItem } from "@/models/gain-item";
+import { ChangeItem } from "@/models/change-item";
 
 interface Props {
   dialog: boolean;
-  input?: GainItem;
+  input?: ChangeItem;
 }
 
 interface State {
   dialog: boolean;
-  input?: GainItem;
+  input?: ChangeItem;
   amountHistoryService: AmountHistoryService;
   // eslint-disable-next-line
   refresh: any;
@@ -90,7 +90,9 @@ export default defineComponent({
         paymentSource: PaymentSourceEnum.GyroAccount,
         description: "",
         amount: 0,
-        date: new Date()
+        expense: false,
+        date: new Date(),
+        category: 1
       },
       refresh: inject("refresh")
     });
@@ -105,7 +107,7 @@ export default defineComponent({
       (val) => (state.input = val)
     );
 
-    const paymentSources: Array<SelectItem<PaymentSourceEnum>> = [
+    const paymentSources: SelectItem<PaymentSourceEnum>[] = [
       {
         text: "Žiro račun",
         val: PaymentSourceEnum.GyroAccount
@@ -126,7 +128,9 @@ export default defineComponent({
         paymentSource: PaymentSourceEnum.GyroAccount,
         description: "",
         amount: 0,
-        date: new Date()
+        date: new Date(),
+        category: 1,
+        expense: false
       };
     }
 
@@ -137,7 +141,7 @@ export default defineComponent({
     async function addExpense() {
       const payload = {
         ...state.input
-      } as GainItem;
+      } as ChangeItem;
 
       payload.date = new Date();
       const currentAmount = await state.amountHistoryService?.getCurrentAmount();
@@ -159,7 +163,7 @@ export default defineComponent({
         date: new Date()
       });
 
-      state.amountHistoryService.addGain(payload);
+      state.amountHistoryService.addChange(payload);
 
       resetDialog();
       refresh();

@@ -1,6 +1,6 @@
 export default interface MenuItem {
   label?: string | null;
   icon?: string | null;
-  items?: Array<MenuItem> | null;
+  items?: MenuItem[] | null;
   command?: Function;
-};
+}
