@@ -1,5 +1,9 @@
+import { stringFormatCollection } from "./../constants/string-format-collection";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { CategoryEnum } from "@/constants/category-enum";
+import { SelectItem } from "@/constants/select-item";
+import { IndexableCollectionByString } from "@/constants/indexable-collection-by-string";
+
 export function parseCurrency(val: string): number {
   if (val == "" || !val) {
     return 0;
@@ -8,26 +12,12 @@ export function parseCurrency(val: string): number {
   return parseFloat(formattedString);
 }
 
-const categoryTranslation = {
-  [CategoryEnum.Food]: "Hrana",
-  [CategoryEnum.Games]: "Igre",
-  [CategoryEnum.Gifts]: "Darovi",
-  [CategoryEnum.PublicTransport]: "Javni prijevoz",
-  [CategoryEnum.Other]: "Ostalo"
-};
-
 export function formatCategory(val: CategoryEnum): string {
-  return categoryTranslation[val];
+  return stringFormatCollection["category"][CategoryEnum[val]];
 }
 
-const paymentSourceTranslation = {
-  [PaymentSourceEnum.CheckingAccount]: "Tekući račun",
-  [PaymentSourceEnum.GyroAccount]: "Žiro račun",
-  [PaymentSourceEnum.Pocket]: "Džep"
-};
-
 export function formatPaymentSource(val: PaymentSourceEnum): string {
-  return paymentSourceTranslation[val];
+  return stringFormatCollection["paymentSource"][PaymentSourceEnum[val]];
 }
 
 export function hexToRGBA(hex: string, opacity: number): string {
@@ -54,4 +44,20 @@ export function adjustHexColor(color: string, amount: number): string {
         Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)
       ).substr(-2)
     );
+}
+
+export function createSelectFromEnum<T extends IndexableCollectionByString>(
+  inVal: T,
+  formatKey: string
+): SelectItem<T>[] {
+  const returnVal: SelectItem<T>[] = [];
+  const names = Object.keys(inVal).filter(x => isNaN(Number(x)));
+  names.forEach(x => {
+    returnVal.push({
+      text: stringFormatCollection[formatKey][x],
+      val: inVal[x]
+    });
+  });
+
+  return returnVal;
 }

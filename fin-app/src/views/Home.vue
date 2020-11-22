@@ -138,6 +138,32 @@
                       Prikaz u obliku kartica</label
                     >
                   </div>
+                  <div class="p-col-12 p-mt-2">
+                    <group-box icon="tag" title="Kategorija">
+                      <list-box
+                        :multiple="true"
+                        :filter="true"
+                        v-model="state.filter.category"
+                        :options="categories"
+                        dataKey="val"
+                        listStyle="max-height: 250px"
+                        optionValue="val"
+                        optionLabel="text"
+                      >
+                        <template #option="slotProps">
+                          <div>
+                            <i
+                              v-if="
+                                state.filter.category == slotProps.option.val
+                              "
+                              class="pi pi-check p-mr-2"
+                              style="fontsize: 1rem"
+                            />{{ slotProps.option.text }}
+                          </div>
+                        </template>
+                      </list-box>
+                    </group-box>
+                  </div>
                 </div>
               </accordion-tab>
             </accordion>
@@ -187,7 +213,7 @@
               </column>
               <column field="category" header="Kategorija">
                 <template #body="slotProps">
-                  {{ formatCategory(slotProps.data.category) || "Dobitak" }}
+                  {{ formatCategory(slotProps.data.category) }}
                 </template>
               </column>
               <column field="date" header="Datum">
@@ -290,13 +316,21 @@ import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
 import { UserSettingsService } from "@/services/api/user-settings-service";
-import { hexToRGBA, adjustHexColor } from "@/helpers/helpers";
+import {
+  hexToRGBA,
+  adjustHexColor,
+  createSelectFromEnum
+} from "@/helpers/helpers";
 import { UserSettings } from "@/models/user-settings";
 import { euroRate } from "@/constants/app-constants";
 import { CategoryEnum } from "@/constants/category-enum";
 import { ChangeItem } from "@/models/change-item";
 
 interface ChangeFilterOptions {
+  category: CategoryEnum[];
+}
+
+interface Filter {
   category: CategoryEnum[];
 }
 
@@ -331,6 +365,7 @@ interface State {
   refresh: any;
   userSettingsService: UserSettingsService;
   settings: UserSettings;
+  filter: Filter;
 }
 
 export default defineComponent({
@@ -340,6 +375,9 @@ export default defineComponent({
       refresh: inject("refresh"),
       cardView: true,
       changes: [],
+      filter: {
+        category: []
+      },
       settings: {
         gyroColor: "",
         checkingColor: "",
@@ -492,7 +530,9 @@ export default defineComponent({
 
     watch([state.account, state.refresh], () => updateData());
 
-    return { state, format, formatCategory, formatPaymentSource };
+    const categories = createSelectFromEnum(CategoryEnum, "category");
+
+    return { state, format, formatCategory, formatPaymentSource, categories };
   }
 });
 </script>

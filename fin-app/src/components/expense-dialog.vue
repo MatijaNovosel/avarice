@@ -83,10 +83,10 @@
 <script lang="ts">
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { SelectItem } from "@/constants/select-item";
 import { CategoryEnum } from "@/constants/category-enum";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { ChangeItem } from "@/models/change-item";
+import { createSelectFromEnum } from "@/helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -132,43 +132,11 @@ export default defineComponent({
       (val) => (state.input = val)
     );
 
-    const paymentSources: SelectItem<PaymentSourceEnum>[] = [
-      {
-        text: "Žiro račun",
-        val: PaymentSourceEnum.GyroAccount
-      },
-      {
-        text: "Tekući račun",
-        val: PaymentSourceEnum.CheckingAccount
-      },
-      {
-        text: "Džep (novčanik)",
-        val: PaymentSourceEnum.Pocket
-      }
-    ];
-
-    const categories: SelectItem<CategoryEnum>[] = [
-      {
-        text: "Hrana",
-        val: CategoryEnum.Food
-      },
-      {
-        text: "Darovi",
-        val: CategoryEnum.Gifts
-      },
-      {
-        text: "Igre",
-        val: CategoryEnum.Games
-      },
-      {
-        text: "Javni prijevoz",
-        val: CategoryEnum.PublicTransport
-      },
-      {
-        text: "Ostalo",
-        val: CategoryEnum.Other
-      }
-    ];
+    const paymentSources = createSelectFromEnum(
+      PaymentSourceEnum,
+      "paymentSource"
+    );
+    const categories = createSelectFromEnum(CategoryEnum, "category");
 
     function resetDialog() {
       state.dialog = false;
