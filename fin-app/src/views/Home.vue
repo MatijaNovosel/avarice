@@ -142,7 +142,6 @@
                     <group-box icon="tag" title="Kategorija">
                       <list-box
                         :multiple="true"
-                        :filter="true"
                         v-model="state.filter.category"
                         :options="categories"
                         dataKey="val"
@@ -151,18 +150,24 @@
                         optionLabel="text"
                       >
                         <template #option="slotProps">
-                          <div>
-                            <i
-                              v-if="
-                                state.filter.category == slotProps.option.val
-                              "
-                              class="pi pi-check p-mr-2"
-                              style="fontsize: 1rem"
-                            />{{ slotProps.option.text }}
-                          </div>
+                          {{ slotProps.option.text }}
                         </template>
                       </list-box>
                     </group-box>
+                  </div>
+                  <div class="p-col-12 p-mt-2 p-text-right">
+                    <btn
+                      @click="getChanges"
+                      label="Filtriraj"
+                      icon="pi pi-filter"
+                      class="p-button-raised p-button-info"
+                    />
+                    <btn
+                      @click="resetFilter"
+                      label="Poništi filtriranje"
+                      icon="pi pi-ban"
+                      class="p-button-raised p-button-danger p-ml-2"
+                    />
                   </div>
                 </div>
               </accordion-tab>
@@ -175,7 +180,7 @@
               :rows="10"
               :rowHover="true"
               class="p-datatable-striped p-datatable-sm"
-              :loading="state.loading"
+              :loading="state.changesLoading"
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               :rowsPerPageOptions="[10, 25, 50]"
               currentPageReportTemplate="Prikazujem {first} od {last} ({totalRecords} ukupnih zapisa)"
@@ -224,7 +229,7 @@
             </data-table>
           </div>
           <div class="p-col-12" v-else>
-            <div class="p-grid p-justify-center" v-if="state.loading">
+            <div class="p-grid p-justify-center" v-if="state.changesLoading">
               <i
                 class="pi pi-spin pi-spinner p-my-5"
                 style="font-size: 5rem; color: grey"
@@ -259,7 +264,7 @@
                           />
                         </span>
                         <span class="expense-description">{{
-                          formatCategory(slotProps.data.category) || "Dobitak"
+                          formatCategory(slotProps.data.category)
                         }}</span>
                       </div>
                     </template>
@@ -356,6 +361,7 @@ interface State {
   currentAmount: CurrentAmount;
   amountHistoryService: AmountHistoryService;
   loading: boolean;
+  changesLoading: boolean;
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
@@ -396,6 +402,7 @@ export default defineComponent({
         euros: ""
       },
       loading: false,
+      changesLoading: false,
       amountHistoryService: new AmountHistoryService(),
       graphOptions: {
         legend: {
@@ -416,8 +423,20 @@ export default defineComponent({
       userSettingsService: new UserSettingsService()
     });
 
+    async function getChanges() {
+      state.changesLoading = true;
+      state.changes = await state.amountHistoryService.getChanges();
+      state.changesLoading = false;
+    }
+
+    function resetFilter() {
+      state.filter.category = [];
+      getChanges();
+    }
+
     async function updateData() {
       state.loading = true;
+      getChanges();
 
       const history = await (state.amountHistoryService as AmountHistoryService).getHistory();
       state.settings = await state.userSettingsService.getSettings();
@@ -520,7 +539,6 @@ export default defineComponent({
       }
 
       state.graphData = graphData;
-      state.changes = await state.amountHistoryService.getChanges();
       state.loading = false;
     }
 
@@ -532,7 +550,15 @@ export default defineComponent({
 
     const categories = createSelectFromEnum(CategoryEnum, "category");
 
-    return { state, format, formatCategory, formatPaymentSource, categories };
+    return {
+      state,
+      format,
+      formatCategory,
+      formatPaymentSource,
+      categories,
+      resetFilter,
+      getChanges
+    };
   }
 });
 </script>
