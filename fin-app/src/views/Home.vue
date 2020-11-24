@@ -12,9 +12,11 @@
           :color="`#${state.settings.gyroColor}`"
           class="p-my-2"
         >
-          <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
-          </span>
+          <progress-spinner
+            strokeWidth="10"
+            class="spinner-accounts"
+            v-if="state.loading"
+          />
           <span v-else>
             {{ state.currentAmount.gyro }}
           </span>
@@ -36,9 +38,11 @@
           :color="`#${state.settings.checkingColor}`"
           class="p-my-2"
         >
-          <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
-          </span>
+          <progress-spinner
+            strokeWidth="10"
+            class="spinner-accounts"
+            v-if="state.loading"
+          />
           <span v-else>
             {{ state.currentAmount.checking }}
           </span>
@@ -60,9 +64,11 @@
           :color="`#${state.settings.pocketColor}`"
           class="p-my-2"
         >
-          <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
-          </span>
+          <progress-spinner
+            strokeWidth="10"
+            class="spinner-accounts"
+            v-if="state.loading"
+          />
           <span v-else>
             {{ state.currentAmount.pocket }}
           </span>
@@ -79,10 +85,16 @@
         class="p-text-center p-shadow-6 p-my-5"
         style="position: relative"
       >
-        <chip text-color="white" color="#eda81f" class="p-my-2">
-          <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
-          </span>
+        <chip
+          text-color="white"
+          :color="`#${state.settings.totalColor}`"
+          class="p-my-2"
+        >
+          <progress-spinner
+            strokeWidth="10"
+            class="spinner-accounts"
+            v-if="state.loading"
+          />
           <span v-else>
             {{ state.currentAmount.euros }}
           </span>
@@ -99,9 +111,11 @@
           :color="`#${state.settings.totalColor}`"
           class="p-my-2"
         >
-          <span v-if="state.loading">
-            <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
-          </span>
+          <progress-spinner
+            strokeWidth="10"
+            class="spinner-accounts"
+            v-if="state.loading"
+          />
           <span v-else>
             {{ state.totalAmount }}
           </span>
@@ -132,33 +146,41 @@
                   <span>Filtriranje i ostale mogućnosti</span>
                 </template>
                 <div class="p-grid">
-                  <div class="p-col-12 p-mt-2">
-                    <group-box icon="tag" title="Kategorija">
-                      <list-box
-                        :multiple="true"
-                        v-model="state.filter.category"
-                        :options="categories"
-                        dataKey="val"
-                        listStyle="max-height: 250px"
-                        optionValue="val"
-                        optionLabel="text"
-                      >
-                        <template #option="slotProps">
-                          {{ slotProps.option.text }}
-                        </template>
-                      </list-box>
-                    </group-box>
+                  <div class="p-col-12 p-mt-2 filter-item-text">
+                    <icon name="tags" /> Kategorija
                   </div>
-                  <div class="p-col-12 p-mt-2 p-text-right">
-                    <div class="p-text-left p-ml-4">
-                      <input-switch
-                        v-model="state.cardView"
-                        id="input-switch"
-                      />
-                      <label for="input-switch" class="p-ml-2">
-                        Prikaz u obliku kartica</label
-                      >
-                    </div>
+                  <div class="p-col-12 p-my-2">
+                    <list-box
+                      :multiple="true"
+                      v-model="state.filter.category"
+                      :options="categories"
+                      dataKey="val"
+                      listStyle="max-height: 250px"
+                      optionValue="val"
+                      optionLabel="text"
+                    >
+                      <template #option="slotProps">
+                        {{ slotProps.option.text }}
+                      </template>
+                    </list-box>
+                  </div>
+                  <div class="p-col-12 p-my-2 filter-item-text">
+                    <icon name="sliders-v" />
+                    Raspon iznosa troška/dobitka
+                    <span style="color: white"
+                      >({{ state.filter.amountRange[0] }} do
+                      {{ state.filter.amountRange[1] }} HRK)</span
+                    >
+                  </div>
+                  <div class="p-col-12 p-my-2">
+                    <slider :range="true" v-model="state.filter.amountRange" />
+                  </div>
+                  <div class="p-col-12 p-my-2">
+                    <input-switch v-model="state.cardView" id="input-switch" />
+                    <label for="input-switch"> Prikaz u obliku kartica</label>
+                  </div>
+                  <div class="p-col-12 filter-divider"></div>
+                  <div class="p-col-12 p-mt-3 p-text-right">
                     <btn
                       @click="resetFilter"
                       label="Poništi filtriranje"
@@ -232,11 +254,11 @@
             </data-table>
           </div>
           <div class="p-col-12" v-else>
-            <div class="p-grid p-justify-center" v-if="state.changesLoading">
-              <i
-                class="pi pi-spin pi-spinner p-my-5"
-                style="font-size: 5rem; color: grey"
-              ></i>
+            <div class="p-grid p-justify-center p-my-6" v-if="state.changesLoading">
+              <progress-spinner
+                strokeWidth="10"
+                style="height: 100px; width: 100px"
+              />
             </div>
             <data-view
               v-else
@@ -340,6 +362,7 @@ interface ChangeFilterOptions {
 
 interface Filter {
   category: CategoryEnum[];
+  amountRange: number[];
 }
 
 interface GraphData {
@@ -385,7 +408,8 @@ export default defineComponent({
       cardView: true,
       changes: [],
       filter: {
-        category: []
+        category: [],
+        amountRange: [1, 100]
       },
       settings: {
         gyroColor: "",
@@ -643,8 +667,20 @@ export default defineComponent({
 }
 .p-accordion-header-link {
   background-color: rgba(255, 255, 255, 0.04) !important;
+  z-index: 0 !important;
 }
 .p-paginator {
   justify-content: center !important;
+}
+.filter-item-text {
+  color: #b6b3b3;
+  font-size: 14px;
+}
+.filter-divider {
+  border-bottom: 1px solid var(--color-dark);
+}
+.spinner-accounts {
+  width: 25px !important;
+  height: 25px !important;
 }
 </style>

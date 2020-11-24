@@ -33,6 +33,8 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import Paginator from "primevue/paginator";
 import DataView from "primevue/dataview";
+import Slider from 'primevue/slider';
+import ProgressSpinner from 'primevue/progressspinner';
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -87,6 +89,8 @@ app.component("accordion", Accordion);
 app.component("accordion-tab", AccordionTab);
 app.component("paginator", Paginator);
 app.component("data-view", DataView);
+app.component("slider", Slider);
+app.component("progress-spinner", ProgressSpinner);
 
 // Directives
 app.directive("tooltip", Tooltip);
