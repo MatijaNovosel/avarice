@@ -124,20 +124,14 @@
     <div class="p-col-12 p-px-5 p-mt-3">
       <group-box icon="chart-bar" title="Troškovi/Dobitci" class="p-shadow-6">
         <div class="p-grid">
-          <div class="p-col-12 p-my-2">
+          <div class="p-col-12">
             <accordion>
               <accordion-tab>
                 <template #header>
                   <icon class="p-pr-3" name="filter" />
                   <span>Filtriranje i ostale mogućnosti</span>
                 </template>
-                <div class="p-grid p-my-3">
-                  <div class="p-col-12">
-                    <input-switch v-model="state.cardView" id="input-switch" />
-                    <label for="input-switch" class="p-ml-2">
-                      Prikaz u obliku kartica</label
-                    >
-                  </div>
+                <div class="p-grid">
                   <div class="p-col-12 p-mt-2">
                     <group-box icon="tag" title="Kategorija">
                       <list-box
@@ -156,17 +150,26 @@
                     </group-box>
                   </div>
                   <div class="p-col-12 p-mt-2 p-text-right">
-                    <btn
-                      @click="getChanges"
-                      label="Filtriraj"
-                      icon="pi pi-filter"
-                      class="p-button-raised p-button-info"
-                    />
+                    <div class="p-text-left p-ml-4">
+                      <input-switch
+                        v-model="state.cardView"
+                        id="input-switch"
+                      />
+                      <label for="input-switch" class="p-ml-2">
+                        Prikaz u obliku kartica</label
+                      >
+                    </div>
                     <btn
                       @click="resetFilter"
                       label="Poništi filtriranje"
                       icon="pi pi-ban"
-                      class="p-button-raised p-button-danger p-ml-2"
+                      class="p-button-raised p-button-danger"
+                    />
+                    <btn
+                      @click="getChanges"
+                      label="Filtriraj"
+                      icon="pi pi-filter"
+                      class="p-button-raised p-button-info p-ml-3"
                     />
                   </div>
                 </div>
@@ -425,7 +428,7 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
-      state.changes = await state.amountHistoryService.getChanges();
+      state.changes = await state.amountHistoryService.getChanges(state.filter);
       state.changesLoading = false;
     }
 

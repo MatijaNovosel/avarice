@@ -23,13 +23,16 @@ export class AmountHistoryService {
       .where(
         "category",
         "in",
-        filterOptions?.category || [
-          CategoryEnum.Food,
-          CategoryEnum.Games,
-          CategoryEnum.Gifts,
-          CategoryEnum.Other,
-          CategoryEnum.PublicTransport
-        ]
+        filterOptions?.category != undefined &&
+          filterOptions?.category.length != 0
+          ? filterOptions?.category
+          : [
+              CategoryEnum.Food,
+              CategoryEnum.Games,
+              CategoryEnum.Gifts,
+              CategoryEnum.Other,
+              CategoryEnum.PublicTransport
+            ]
       )
       .get();
     data.forEach(document => {

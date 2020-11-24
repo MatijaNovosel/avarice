@@ -14,6 +14,7 @@
         <div class="p-field p-col-12">
           <span class="p-float-label">
             <input-number
+              filled
               locale="hr-HR"
               mode="currency"
               currency="HRK"
