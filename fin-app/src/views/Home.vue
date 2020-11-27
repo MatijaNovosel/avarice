@@ -1,126 +1,48 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0">
-      <group-box
+      <dashboard-amount-card
         icon="id-card"
         title="Žiro račun"
-        class="p-text-center p-shadow-6"
-        style="position: relative"
-      >
-        <chip
-          text-color="white"
-          :color="`#${state.loading ? '' : state.settings.gyroColor}`"
-          class="p-my-2"
-        >
-          <progress-spinner
-            strokeWidth="10"
-            class="spinner-accounts"
-            v-if="state.loading"
-          />
-          <span v-else>
-            {{ state.currentAmount.gyro }}
-          </span>
-        </chip>
-        <p-checkbox
-          v-model="state.account.gyro"
-          class="aside-reverse"
-          :binary="true"
-        />
-      </group-box>
-      <group-box
+        :loading="state.loading"
+        :color="`#${state.settings.gyroColor}`"
+        :amount="state.currentAmount.gyro"
+        v-model:enabled="state.account.gyro"
+      />
+      <dashboard-amount-card
+        class="p-my-4"
         icon="dollar"
         title="Tekući račun"
-        class="p-text-center p-my-5 p-shadow-6"
-        style="position: relative"
-      >
-        <chip
-          text-color="white"
-          :color="`#${state.loading ? '' : state.settings.checkingColor}`"
-          class="p-my-2"
-        >
-          <progress-spinner
-            strokeWidth="10"
-            class="spinner-accounts"
-            v-if="state.loading"
-          />
-          <span v-else>
-            {{ state.currentAmount.checking }}
-          </span>
-        </chip>
-        <p-checkbox
-          v-model="state.account.checking"
-          class="aside-reverse"
-          :binary="true"
-        />
-      </group-box>
-      <group-box
+        :loading="state.loading"
+        :color="`#${state.settings.checkingColor}`"
+        :amount="state.currentAmount.checking"
+        v-model:enabled="state.account.checking"
+      />
+      <dashboard-amount-card
         icon="briefcase"
         title="Džep"
-        class="p-text-center p-shadow-6"
-        style="position: relative"
-      >
-        <chip
-          text-color="white"
-          :color="`#${state.loading ? '' : state.settings.pocketColor}`"
-          class="p-my-2"
-        >
-          <progress-spinner
-            strokeWidth="10"
-            class="spinner-accounts"
-            v-if="state.loading"
-          />
-          <span v-else>
-            {{ state.currentAmount.pocket }}
-          </span>
-        </chip>
-        <p-checkbox
-          v-model="state.account.pocket"
-          class="aside-reverse"
-          :binary="true"
-        />
-      </group-box>
-      <group-box
+        :loading="state.loading"
+        :color="`#${state.settings.pocketColor}`"
+        :amount="state.currentAmount.pocket"
+        v-model:enabled="state.account.pocket"
+      />
+      <dashboard-amount-card
+        class="p-my-4"
         icon="globe"
         title="Euri"
-        class="p-text-center p-shadow-6 p-my-5"
-        style="position: relative"
-      >
-        <chip
-          text-color="white"
-          :color="`#${state.loading ? '' : state.settings.totalColor}`"
-          class="p-my-2"
-        >
-          <progress-spinner
-            strokeWidth="10"
-            class="spinner-accounts"
-            v-if="state.loading"
-          />
-          <span v-else>
-            {{ state.currentAmount.euros }}
-          </span>
-        </chip>
-      </group-box>
-      <group-box
+        :loading="state.loading"
+        :color="`#${state.settings.totalColor}`"
+        :amount="state.currentAmount.euros"
+        no-checkbox
+      />
+      <dashboard-amount-card
         icon="table"
         title="Ukupno"
-        class="p-text-center p-shadow-6 p-my-5"
-        style="position: relative"
-      >
-        <chip
-          text-color="white"
-          :color="`#${state.loading ? '' : state.settings.totalColor}`"
-          class="p-my-2"
-        >
-          <progress-spinner
-            strokeWidth="10"
-            class="spinner-accounts"
-            v-if="state.loading"
-          />
-          <span v-else>
-            {{ state.totalAmount }}
-          </span>
-        </chip>
-      </group-box>
+        :loading="state.loading"
+        :color="`#${state.settings.totalColor}`"
+        :amount="state.totalAmount"
+        no-checkbox
+      />
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
       <group-box
@@ -358,6 +280,7 @@ import { UserSettings } from "@/models/user-settings";
 import { euroRate } from "@/constants/app-constants";
 import { CategoryEnum } from "@/constants/category-enum";
 import { ChangeItem } from "@/models/change-item";
+import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 
 interface ChangeFilterOptions {
   category: CategoryEnum[];
@@ -405,6 +328,9 @@ interface State {
 
 export default defineComponent({
   name: "Home",
+  components: {
+    DashboardAmountCard
+  },
   setup() {
     const state: State = reactive({
       refresh: inject("refresh"),
