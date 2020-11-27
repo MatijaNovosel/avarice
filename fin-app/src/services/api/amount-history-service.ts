@@ -4,8 +4,9 @@ import { db } from "../firebase";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
-interface ChangeFilterOptions {
+interface Filter {
   category: CategoryEnum[];
+  amountRange: number[];
 }
 
 export class AmountHistoryService {
@@ -15,11 +16,10 @@ export class AmountHistoryService {
   async addHistory(payload: HistoryItem): Promise<void> {
     await db.collection("history").add(payload);
   }
-  async getChanges(filterOptions?: ChangeFilterOptions): Promise<ChangeItem[]> {
+  async getChanges(filterOptions?: Filter): Promise<ChangeItem[]> {
     const res: ChangeItem[] = [];
     const data = await db
       .collection("changes")
-      .orderBy("date", "desc")
       .where(
         "category",
         "in",
@@ -34,6 +34,10 @@ export class AmountHistoryService {
               CategoryEnum.PublicTransport
             ]
       )
+      .where("amount", ">", filterOptions?.amountRange[0])
+      .where("amount", "<", filterOptions?.amountRange[1])
+      .orderBy("amount", "desc")
+      .orderBy("date", "desc")
       .get();
     data.forEach(document => {
       const doc = document.data() as ChangeItemDto;

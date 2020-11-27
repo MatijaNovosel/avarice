@@ -95,7 +95,11 @@
                     >
                   </div>
                   <div class="p-col-12 p-my-2">
-                    <slider :range="true" v-model="state.filter.amountRange" />
+                    <slider
+                      :max="state.maxValue"
+                      :range="true"
+                      v-model="state.filter.amountRange"
+                    />
                   </div>
                   <div class="p-col-12 p-my-2">
                     <input-switch v-model="state.cardView" id="input-switch" />
@@ -324,6 +328,7 @@ interface State {
   userSettingsService: UserSettingsService;
   settings: UserSettings;
   filter: Filter;
+  maxValue: number;
 }
 
 export default defineComponent({
@@ -336,9 +341,10 @@ export default defineComponent({
       refresh: inject("refresh"),
       cardView: true,
       changes: [],
+      maxValue: 0,
       filter: {
         category: [],
-        amountRange: [1, 100]
+        amountRange: [1, 9999]
       },
       settings: {
         gyroColor: "",
@@ -381,7 +387,14 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
+
       state.changes = await state.amountHistoryService.getChanges(state.filter);
+      state.filter.amountRange[1] = state.maxValue = JSON.parse(
+        JSON.stringify(state.changes)
+      )
+        .filter((x: ChangeItem) => x.expense == true)
+        .sort((a: ChangeItem, b: ChangeItem) => b.amount - a.amount)[0].amount;
+
       state.changesLoading = false;
     }
 
