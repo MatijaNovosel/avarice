@@ -9,7 +9,7 @@
       >
         <chip
           text-color="white"
-          :color="`#${state.settings.gyroColor}`"
+          :color="`#${state.loading ? '' : state.settings.gyroColor}`"
           class="p-my-2"
         >
           <progress-spinner
@@ -35,7 +35,7 @@
       >
         <chip
           text-color="white"
-          :color="`#${state.settings.checkingColor}`"
+          :color="`#${state.loading ? '' : state.settings.checkingColor}`"
           class="p-my-2"
         >
           <progress-spinner
@@ -61,7 +61,7 @@
       >
         <chip
           text-color="white"
-          :color="`#${state.settings.pocketColor}`"
+          :color="`#${state.loading ? '' : state.settings.pocketColor}`"
           class="p-my-2"
         >
           <progress-spinner
@@ -87,7 +87,7 @@
       >
         <chip
           text-color="white"
-          :color="`#${state.settings.totalColor}`"
+          :color="`#${state.loading ? '' : state.settings.totalColor}`"
           class="p-my-2"
         >
           <progress-spinner
@@ -108,7 +108,7 @@
       >
         <chip
           text-color="white"
-          :color="`#${state.settings.totalColor}`"
+          :color="`#${state.loading ? '' : state.settings.totalColor}`"
           class="p-my-2"
         >
           <progress-spinner
@@ -254,7 +254,10 @@
             </data-table>
           </div>
           <div class="p-col-12" v-else>
-            <div class="p-grid p-justify-center p-my-6" v-if="state.changesLoading">
+            <div
+              class="p-grid p-justify-center p-my-6"
+              v-if="state.changesLoading"
+            >
               <progress-spinner
                 strokeWidth="10"
                 style="height: 100px; width: 100px"
