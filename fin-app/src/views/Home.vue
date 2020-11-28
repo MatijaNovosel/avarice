@@ -329,6 +329,7 @@ interface State {
   settings: UserSettings;
   filter: Filter;
   maxValue: number;
+  entry: number;
 }
 
 export default defineComponent({
@@ -338,6 +339,7 @@ export default defineComponent({
   },
   setup() {
     const state: State = reactive({
+      entry: 0,
       refresh: inject("refresh"),
       cardView: true,
       changes: [],

@@ -1,9 +1,9 @@
 import { createApp } from "vue";
-import { Field, Form } from "vee-validate";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import ToastService from "primevue/toastservice";
+import { VuelidatePlugin } from "@vuelidate/core";
 
 // PrimeVue component import
 import DataTable from "primevue/datatable";
@@ -33,8 +33,8 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import Paginator from "primevue/paginator";
 import DataView from "primevue/dataview";
-import Slider from 'primevue/slider';
-import ProgressSpinner from 'primevue/progressspinner';
+import Slider from "primevue/slider";
+import ProgressSpinner from "primevue/progressspinner";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -53,6 +53,7 @@ const app = createApp(App);
 // Plugins
 app.use(store);
 app.use(router);
+app.use(VuelidatePlugin);
 app.use(ToastService);
 
 // Custom components
@@ -61,8 +62,6 @@ app.component("group-box", GroupBox);
 app.component("icon", Icon);
 
 // PrimeVue components
-app.component("vee-field", Field);
-app.component("vee-form", Form);
 app.component("data-table", DataTable);
 app.component("column", Column);
 app.component("column-group", ColumnGroup);

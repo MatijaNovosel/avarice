@@ -9,67 +9,65 @@
     <template #header>
       <h3>Unos novog troška</h3>
     </template>
-    <vee-form>
-      <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
-        <div class="p-field p-col-12">
-          <span class="p-float-label">
-            <input-number
-              filled
-              locale="hr-HR"
-              mode="currency"
-              currency="HRK"
-              id="amount"
-              v-model="state.input.amount"
-            />
-            <label for="amount"
-              ><icon class="p-pr-1" name="dollar" /> Iznos troška</label
-            >
-          </span>
-        </div>
-        <div class="p-field p-col-12">
-          <span class="p-float-label">
-            <text-area v-model="state.input.description" id="text-area" />
-            <label for="text-area"
-              ><icon class="p-pr-1" name="comments" /> Opis</label
-            >
-          </span>
-        </div>
-        <div class="p-field p-col-12">
-          <group-box icon="id-card" title="Izvor plaćanja">
-            <select-button
-              v-model="state.input.paymentSource"
-              :options="paymentSources"
-              optionLabel="text"
-              optionValue="val"
-            />
-          </group-box>
-        </div>
-        <div class="p-field p-col-12">
-          <group-box icon="tag" title="Kategorija">
-            <list-box
-              :multiple="false"
-              :filter="true"
-              v-model="state.input.category"
-              :options="categories"
-              dataKey="val"
-              listStyle="max-height: 250px"
-              optionValue="val"
-              optionLabel="text"
-            >
-              <template #option="slotProps">
-                <div>
-                  <i
-                    v-if="state.input.category == slotProps.option.val"
-                    class="pi pi-check p-mr-2"
-                    style="fontsize: 1rem"
-                  />{{ slotProps.option.text }}
-                </div>
-              </template>
-            </list-box>
-          </group-box>
-        </div>
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
+      <div class="p-field p-col-12">
+        <span class="p-float-label">
+          <input-number
+            filled
+            locale="hr-HR"
+            mode="currency"
+            currency="HRK"
+            id="amount"
+            v-model="state.input.amount"
+          />
+          <label for="amount"
+            ><icon class="p-pr-1" name="dollar" /> Iznos troška</label
+          >
+        </span>
       </div>
-    </vee-form>
+      <div class="p-field p-col-12">
+        <span class="p-float-label">
+          <text-area v-model="state.input.description" id="text-area" />
+          <label for="text-area"
+            ><icon class="p-pr-1" name="comments" /> Opis</label
+          >
+        </span>
+      </div>
+      <div class="p-field p-col-12">
+        <group-box icon="id-card" title="Izvor plaćanja">
+          <select-button
+            v-model="state.input.paymentSource"
+            :options="paymentSources"
+            optionLabel="text"
+            optionValue="val"
+          />
+        </group-box>
+      </div>
+      <div class="p-field p-col-12">
+        <group-box icon="tag" title="Kategorija">
+          <list-box
+            :multiple="false"
+            :filter="true"
+            v-model="state.input.category"
+            :options="categories"
+            dataKey="val"
+            listStyle="max-height: 250px"
+            optionValue="val"
+            optionLabel="text"
+          >
+            <template #option="slotProps">
+              <div>
+                <i
+                  v-if="state.input.category == slotProps.option.val"
+                  class="pi pi-check p-mr-2"
+                  style="fontsize: 1rem"
+                />{{ slotProps.option.text }}
+              </div>
+            </template>
+          </list-box>
+        </group-box>
+      </div>
+    </div>
     <template #footer>
       <btn
         @click="addExpense"

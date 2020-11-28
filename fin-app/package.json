@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.8",
+    "@vuelidate/validators": "^2.0.0-alpha.5",
     "axios": "^0.21.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
@@ -17,7 +19,6 @@
     "primeflex": "^2.0.0",
     "primeicons": "^4.0.0",
     "primevue": "^3.0.0",
-    "vee-validate": "^4.0.0-beta.16",
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0-beta.6",
     "vue-router": "^4.0.0-0",

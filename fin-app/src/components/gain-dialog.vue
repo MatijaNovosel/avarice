@@ -9,42 +9,41 @@
     <template #header>
       <h3>Unos novog dobitka</h3>
     </template>
-    <vee-form>
-      <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
-        <div class="p-field p-col-12">
-          <span class="p-float-label">
-            <input-number
-              locale="hr-HR"
-              mode="currency"
-              currency="HRK"
-              id="amount"
-              v-model="state.input.amount"
-            />
-            <label for="amount"
-              ><icon class="p-pr-1" name="dollar" /> Iznos dobitka</label
-            >
-          </span>
-        </div>
-        <div class="p-field p-col-12">
-          <span class="p-float-label">
-            <text-area v-model="state.input.description" id="text-area" />
-            <label for="text-area"
-              ><icon class="p-pr-1" name="comments" /> Opis</label
-            >
-          </span>
-        </div>
-        <div class="p-field p-col-12">
-          <group-box icon="id-card" title="Račun na koji ide dobitak">
-            <select-button
-              v-model="state.input.paymentSource"
-              :options="paymentSources"
-              optionLabel="text"
-              optionValue="val"
-            />
-          </group-box>
-        </div>
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
+      <div class="p-field p-col-12">
+        <span class="p-float-label">
+          <input-number
+            :class="{ 'is-invalid': model.amount.$invalid }"
+            locale="hr-HR"
+            mode="currency"
+            currency="HRK"
+            id="amount"
+            v-model="model.amount.$model"
+          />
+          <label for="amount"
+            ><icon class="p-pr-1" name="dollar" /> Iznos dobitka</label
+          >
+        </span>
       </div>
-    </vee-form>
+      <div class="p-field p-col-12">
+        <span class="p-float-label">
+          <text-area v-model="state.input.description" id="text-area" />
+          <label for="text-area"
+            ><icon class="p-pr-1" name="comments" /> Opis</label
+          >
+        </span>
+      </div>
+      <div class="p-field p-col-12">
+        <group-box icon="id-card" title="Račun na koji ide dobitak">
+          <select-button
+            v-model="state.input.paymentSource"
+            :options="paymentSources"
+            optionLabel="text"
+            optionValue="val"
+          />
+        </group-box>
+      </div>
+    </div>
     <template #footer>
       <btn
         @click="addExpense"
@@ -62,6 +61,9 @@ import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { ChangeItem } from "@/models/change-item";
+import { required, numeric } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
+import { CategoryEnum } from "@/constants/category-enum";
 
 interface Props {
   dialog: boolean;
@@ -83,6 +85,19 @@ export default defineComponent({
     input: null
   },
   setup(props: Props, context: SetupContext) {
+    const entry = reactive({
+      paymentSource: PaymentSourceEnum.GyroAccount,
+      category: CategoryEnum.Food,
+      description: "",
+      amount: 0,
+      date: new Date(),
+      expense: true
+    } as ChangeItem);
+    const rules = {
+      amount: { required, numeric }
+    };
+    const model = useVuelidate(rules, entry);
+
     const state: State = reactive({
       amountHistoryService: new AmountHistoryService(),
       dialog: props.dialog,
@@ -178,11 +193,15 @@ export default defineComponent({
       state,
       addExpense,
       paymentSources,
-      hideDialog
+      hideDialog,
+      model
     };
   }
 });
 </script>
 
-<style scoped>
+<style>
+.is-invalid {
+  border: 2px solid rgb(138, 20, 20);
+}
 </style>
