@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import ToastService from "primevue/toastservice";
 import { VuelidatePlugin } from "@vuelidate/core";
+import { createI18n } from "vue-i18n";
 
 // PrimeVue component import
 import DataTable from "primevue/datatable";
@@ -50,11 +51,26 @@ import "@/assets/css/site.css";
 
 const app = createApp(App);
 
+const messages = {
+  en: {
+    message: {
+      hello: "hello world"
+    }
+  }
+};
+
+const i18n = createI18n({
+  locale: "en",
+  fallbackLocale: "en",
+  messages
+});
+
 // Plugins
 app.use(store);
 app.use(router);
 app.use(VuelidatePlugin);
 app.use(ToastService);
+app.use(i18n);
 
 // Custom components
 app.component("chip", Chip);
