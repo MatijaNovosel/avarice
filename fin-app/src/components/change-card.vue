@@ -1,8 +1,5 @@
 <template>
   <div
-    @click="state.details = !state.details"
-    @mouseup.right="onRightClick"
-    @contextmenu.prevent
     v-ripple
     class="amount-container p-shadow-6 p-ripple"
     :class="{
@@ -34,7 +31,6 @@ interface State {
   title?: string | null;
   date?: string | null;
   expense?: boolean | null;
-  details: boolean;
   category?: string | null;
 }
 
@@ -49,7 +45,6 @@ export default defineComponent({
   },
   setup(props: Props) {
     const state: State = reactive({
-      details: false,
       amount: props.amount,
       title: props.title,
       date: props.date,

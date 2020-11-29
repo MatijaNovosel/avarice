@@ -15,10 +15,7 @@
       v-tooltip.bottom="'Postavke'"
     />
     <div class="drawer-header">
-      <img
-        class="avatar"
-        :src="require('@/assets/avatar.jpg')"
-      />
+      <img class="avatar" :src="require('@/assets/avatar.jpg')" />
       <span class="header-title">Matija Novosel</span>
       <span class="header-subtitle">Admin</span>
     </div>
