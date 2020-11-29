@@ -114,7 +114,6 @@ export default defineComponent({
 }
 .amount-text {
   font-size: 1.5rem;
-  font-weight: 700;
 }
 .amount-circle {
   border-radius: 50%;
