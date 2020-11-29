@@ -1,32 +1,26 @@
 <template>
-  <group-box
-    :icon="state.icon"
-    :title="state.title"
-    class="p-text-center p-shadow-6"
-    style="position: relative"
+  <div
+    :style="{
+      borderLeft: `10px solid ${state.color}`
+    }"
+    class="amount-container p-shadow-6"
+    style="width: 100%"
   >
-    <chip
-      text-color="white"
-      :color="state.loading ? '' : state.color"
-      class="p-my-2"
-    >
-      <progress-spinner
-        strokeWidth="10"
-        class="spinner-accounts"
-        v-if="state.loading"
-      />
-      <span v-else>
-        {{ state.amount }}
-      </span>
-    </chip>
-    <p-checkbox
-      v-if="!state.noCheckbox"
-      @change="checkboxClicked"
-      v-model="state.enabled"
-      class="aside-reverse"
-      :binary="true"
+    <span class="amount-title p-mb-1">{{ state.title }}</span>
+    <progress-spinner
+      strokeWidth="10"
+      class="spinner-accounts"
+      v-if="state.loading"
     />
-  </group-box>
+    <span
+      v-else
+      :style="{
+        color: state.color
+      }"
+      class="amount-text"
+      >{{ state.amount }}</span
+    >
+  </div>
 </template>
 
 <script lang="ts">
@@ -107,4 +101,24 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.amount-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+  background-color: #1e1e1e;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.amount-title {
+  color: #927d7d;
+}
+.amount-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.amount-circle {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
 </style>

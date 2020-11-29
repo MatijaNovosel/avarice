@@ -1,6 +1,8 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
-    <div class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0">
+    <div
+      class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 amount-cards-container"
+    >
       <dashboard-amount-card
         icon="id-card"
         title="Žiro račun"
@@ -45,17 +47,13 @@
       />
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
-      <group-box
-        icon="chart-line"
-        title="Stanje kroz vrijeme"
-        class="p-shadow-6"
-      >
+      <div class="p-shadow-6 chart-container">
         <chart
           type="line"
           :data="state.graphData"
           :options="state.graphOptions"
         />
-      </group-box>
+      </div>
     </div>
     <div class="p-col-12 p-px-5 p-mt-3">
       <group-box icon="chart-bar" title="Troškovi/Dobitci" class="p-shadow-6">
@@ -285,6 +283,7 @@ import { euroRate } from "@/constants/app-constants";
 import { CategoryEnum } from "@/constants/category-enum";
 import { ChangeItem } from "@/models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
+import { useI18n } from "vue-i18n";
 
 interface ChangeFilterOptions {
   category: CategoryEnum[];
@@ -338,6 +337,8 @@ export default defineComponent({
     DashboardAmountCard
   },
   setup() {
+    const { t } = useI18n();
+
     const state: State = reactive({
       entry: 0,
       refresh: inject("refresh"),
@@ -446,7 +447,7 @@ export default defineComponent({
       };
 
       const pocketDataset: DatasetItem = {
-        label: "Džep",
+        label: t("account.pocket"),
         data: [],
         fill: true,
         borderColor: `#${state.settings.pocketColor}`,
@@ -576,6 +577,16 @@ export default defineComponent({
 .currency-change-caret-table {
   -webkit-animation: up-and-down-table 0.5s infinite alternate;
   animation: up-and-down-table 0.5s infinite alternate;
+}
+.amount-cards-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.chart-container {
+  padding: 1.5rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
 }
 @-webkit-keyframes up-and-down {
   0% {

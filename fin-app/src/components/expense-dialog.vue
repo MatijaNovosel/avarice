@@ -9,34 +9,49 @@
     <template #header>
       <h3>Unos novog troška</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3 p-input-filled">
       <div class="p-field p-col-12">
-        <span class="p-float-label">
+        <span class="p-float-label p-mb-1">
           <input-number
             filled
             locale="hr-HR"
             mode="currency"
             currency="HRK"
             id="amount"
-            v-model="state.input.amount"
+            :class="{
+              'p-invalid': model.amount.$invalid
+            }"
+            v-model="model.amount.$model"
           />
           <label for="amount"
             ><icon class="p-pr-1" name="dollar" /> Iznos troška</label
           >
         </span>
+        <span class="p-invalid" v-if="model.amount.required.$invalid">{{
+          model.amount.required.$message
+        }}</span>
       </div>
       <div class="p-field p-col-12">
         <span class="p-float-label">
-          <text-area v-model="state.input.description" id="text-area" />
-          <label for="text-area"
+          <text-area
+            :class="{
+              'p-invalid': model.description.$invalid
+            }"
+            v-model="model.description.$model"
+            id="description"
+          />
+          <label for="description"
             ><icon class="p-pr-1" name="comments" /> Opis</label
           >
         </span>
+        <span class="p-invalid" v-if="model.description.required.$invalid">{{
+          model.description.required.$message
+        }}</span>
       </div>
       <div class="p-field p-col-12">
         <group-box icon="id-card" title="Izvor plaćanja">
           <select-button
-            v-model="state.input.paymentSource"
+            v-model="entry.paymentSource"
             :options="paymentSources"
             optionLabel="text"
             optionValue="val"
@@ -48,7 +63,7 @@
           <list-box
             :multiple="false"
             :filter="true"
-            v-model="state.input.category"
+            v-model="entry.category"
             :options="categories"
             dataKey="val"
             listStyle="max-height: 250px"
@@ -56,13 +71,7 @@
             optionLabel="text"
           >
             <template #option="slotProps">
-              <div>
-                <i
-                  v-if="state.input.category == slotProps.option.val"
-                  class="pi pi-check p-mr-2"
-                  style="fontsize: 1rem"
-                />{{ slotProps.option.text }}
-              </div>
+              {{ slotProps.option.text }}
             </template>
           </list-box>
         </group-box>
@@ -71,6 +80,7 @@
     <template #footer>
       <btn
         @click="addExpense"
+        :disabled="model.$invalid"
         label="Spremi"
         icon="pi pi-save"
         class="p-button-raised p-button-success"
@@ -86,6 +96,8 @@ import { CategoryEnum } from "@/constants/category-enum";
 import { AmountHistoryService } from "@/services/api/amount-history-service";
 import { ChangeItem } from "@/models/change-item";
 import { createSelectFromEnum } from "@/helpers/helpers";
+import { required, numeric } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
 
 interface Props {
   dialog: boolean;
@@ -94,7 +106,6 @@ interface Props {
 
 interface State {
   dialog: boolean;
-  input?: ChangeItem;
   amountHistoryService: AmountHistoryService;
   // eslint-disable-next-line
   refresh: any;
@@ -107,28 +118,33 @@ export default defineComponent({
     input: null
   },
   setup(props: Props, context: SetupContext) {
+    const entry = reactive({
+      paymentSource: PaymentSourceEnum.GyroAccount,
+      category: CategoryEnum.Food,
+      description: "",
+      amount: 0,
+      date: new Date(),
+      expense: true
+    } as ChangeItem);
+
+    const rules = {
+      amount: { required, numeric },
+      paymentSource: { required },
+      category: { required },
+      description: { required }
+    };
+
+    const model = useVuelidate(rules, entry);
+
     const state: State = reactive({
       amountHistoryService: new AmountHistoryService(),
       dialog: props.dialog,
-      input: {
-        paymentSource: PaymentSourceEnum.GyroAccount,
-        category: CategoryEnum.Food,
-        description: "",
-        amount: 0,
-        date: new Date(),
-        expense: true
-      },
       refresh: inject("refresh")
     });
 
     watch(
       () => props.dialog,
       (val) => (state.dialog = val)
-    );
-
-    watch(
-      () => props.input,
-      (val) => (state.input = val)
     );
 
     const paymentSources = createSelectFromEnum(
@@ -139,19 +155,16 @@ export default defineComponent({
 
     function resetDialog() {
       state.dialog = false;
-      state.input = {
-        paymentSource: PaymentSourceEnum.GyroAccount,
-        category: CategoryEnum.Food,
-        description: "",
-        amount: 0,
-        date: new Date(),
-        expense: true
-      };
+      entry.amount = 0;
+      entry.description = "";
+      entry.paymentSource = PaymentSourceEnum.GyroAccount;
+      entry.category = CategoryEnum.Food;
+      model.value.$reset;
     }
 
     async function addExpense() {
       const payload = {
-        ...state.input
+        ...entry
       } as ChangeItem;
 
       payload.date = new Date();
@@ -161,16 +174,16 @@ export default defineComponent({
       state.amountHistoryService.addHistory({
         euros: currentAmount.euros,
         gyro:
-          state.input?.paymentSource == PaymentSourceEnum.GyroAccount
-            ? ((currentAmount?.gyro - state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.GyroAccount
+            ? ((currentAmount?.gyro - entry.amount) as number)
             : currentAmount?.gyro,
         checking:
-          state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
-            ? ((currentAmount?.checking - state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.CheckingAccount
+            ? ((currentAmount?.checking - entry.amount) as number)
             : currentAmount?.checking,
         pocket:
-          state.input?.paymentSource == PaymentSourceEnum.Pocket
-            ? ((currentAmount?.pocket - state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.Pocket
+            ? ((currentAmount?.pocket - entry.amount) as number)
             : currentAmount?.pocket,
         date: new Date()
       });
@@ -191,7 +204,9 @@ export default defineComponent({
       addExpense,
       categories,
       paymentSources,
-      hideDialog
+      hideDialog,
+      model,
+      entry
     };
   }
 });

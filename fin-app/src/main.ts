@@ -1,10 +1,10 @@
 import { createApp } from "vue";
+import { VuelidatePlugin } from "@vuelidate/core";
+import { createI18n } from "vue-i18n";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import ToastService from "primevue/toastservice";
-import { VuelidatePlugin } from "@vuelidate/core";
-import { createI18n } from "vue-i18n";
 
 // PrimeVue component import
 import DataTable from "primevue/datatable";
@@ -49,19 +49,21 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import "@/assets/css/site.css";
 
+// Translations
+import en from "@/translations/en";
+import hr from "@/translations/hr";
+
 const app = createApp(App);
 
 const messages = {
-  en: {
-    message: {
-      hello: "hello world"
-    }
-  }
+  en,
+  hr
 };
 
 const i18n = createI18n({
   locale: "en",
-  fallbackLocale: "en",
+  fallbackLocale: "hr",
+  legacy: false,
   messages
 });
 

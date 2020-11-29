@@ -17,6 +17,7 @@
   --color-dark-gradient-1: #ffffff42;
   --tarkov-brown: #9a8866;
   --tarkov-grey: #aeaeb0;
+  --color-dark-bg: #1e1e1c;
 }
 
 ::-webkit-scrollbar {
@@ -92,7 +93,8 @@ body {
 }
 
 .p-fieldset {
-  border-radius: 0px;
+  border: none !important;
+  border-radius: 12px;
 }
 
 @media screen and (max-width: 960px) {

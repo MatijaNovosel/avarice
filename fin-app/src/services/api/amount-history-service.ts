@@ -34,9 +34,6 @@ export class AmountHistoryService {
               CategoryEnum.PublicTransport
             ]
       )
-      .where("amount", ">", filterOptions?.amountRange[0])
-      .where("amount", "<", filterOptions?.amountRange[1])
-      .orderBy("amount", "desc")
       .orderBy("date", "desc")
       .get();
     data.forEach(document => {

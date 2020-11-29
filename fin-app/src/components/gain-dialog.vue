@@ -67,12 +67,10 @@ import { CategoryEnum } from "@/constants/category-enum";
 
 interface Props {
   dialog: boolean;
-  input?: ChangeItem;
 }
 
 interface State {
   dialog: boolean;
-  input?: ChangeItem;
   amountHistoryService: AmountHistoryService;
   // eslint-disable-next-line
   refresh: any;
@@ -101,25 +99,12 @@ export default defineComponent({
     const state: State = reactive({
       amountHistoryService: new AmountHistoryService(),
       dialog: props.dialog,
-      input: {
-        paymentSource: PaymentSourceEnum.GyroAccount,
-        description: "",
-        amount: 0,
-        expense: false,
-        date: new Date(),
-        category: 1
-      },
       refresh: inject("refresh")
     });
 
     watch(
       () => props.dialog,
       (val) => (state.dialog = val)
-    );
-
-    watch(
-      () => props.input,
-      (val) => (state.input = val)
     );
 
     const paymentSources: SelectItem<PaymentSourceEnum>[] = [
@@ -139,14 +124,6 @@ export default defineComponent({
 
     function resetDialog() {
       state.dialog = false;
-      state.input = {
-        paymentSource: PaymentSourceEnum.GyroAccount,
-        description: "",
-        amount: 0,
-        date: new Date(),
-        category: 1,
-        expense: false
-      };
     }
 
     function refresh() {
@@ -155,7 +132,7 @@ export default defineComponent({
 
     async function addExpense() {
       const payload = {
-        ...state.input
+        ...entry
       } as ChangeItem;
 
       payload.date = new Date();
@@ -164,16 +141,16 @@ export default defineComponent({
       state.amountHistoryService?.addHistory({
         euros: currentAmount.euros,
         gyro:
-          state.input?.paymentSource == PaymentSourceEnum.GyroAccount
-            ? ((currentAmount?.gyro + state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.GyroAccount
+            ? ((currentAmount?.gyro + entry.amount) as number)
             : currentAmount?.gyro,
         checking:
-          state.input?.paymentSource == PaymentSourceEnum.CheckingAccount
-            ? ((currentAmount?.checking + state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.CheckingAccount
+            ? ((currentAmount?.checking + entry.amount) as number)
             : currentAmount?.checking,
         pocket:
-          state.input?.paymentSource == PaymentSourceEnum.Pocket
-            ? ((currentAmount?.pocket + state.input.amount) as number)
+          entry.paymentSource == PaymentSourceEnum.Pocket
+            ? ((currentAmount?.pocket + entry.amount) as number)
             : currentAmount?.pocket,
         date: new Date()
       });
