@@ -184,6 +184,8 @@
                     :expense="slotProps.data.expense"
                     :title="slotProps.data.description"
                     :amount="slotProps.data.amount"
+                    :category="formatCategory(slotProps.data.category)"
+                    :date="format(slotProps.data.date, 'dd/MM/yyyy - HH:mm')"
                   />
                 </div>
               </template>
@@ -221,7 +223,6 @@ interface ChangeFilterOptions {
 
 interface Filter {
   category: CategoryEnum[];
-  amountRange: number[];
 }
 
 interface GraphData {
@@ -277,8 +278,7 @@ export default defineComponent({
       changes: [],
       maxValue: 0,
       filter: {
-        category: [],
-        amountRange: [1, 9999]
+        category: []
       },
       settings: {
         gyroColor: "",
@@ -321,14 +321,7 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
-
       state.changes = await state.amountHistoryService.getChanges(state.filter);
-      state.filter.amountRange[1] = state.maxValue = JSON.parse(
-        JSON.stringify(state.changes)
-      )
-        .filter((x: ChangeItem) => x.expense == true)
-        .sort((a: ChangeItem, b: ChangeItem) => b.amount - a.amount)[0].amount;
-
       state.changesLoading = false;
     }
 

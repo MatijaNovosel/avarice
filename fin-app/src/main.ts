@@ -37,6 +37,8 @@ import Paginator from "primevue/paginator";
 import DataView from "primevue/dataview";
 import Slider from "primevue/slider";
 import ProgressSpinner from "primevue/progressspinner";
+import OverlayPanel from "primevue/overlaypanel";
+import ContextMenu from "primevue/contextmenu";
 
 // Custom component import
 import Chip from "@/components/chip.vue";
@@ -109,6 +111,8 @@ app.component("paginator", Paginator);
 app.component("data-view", DataView);
 app.component("slider", Slider);
 app.component("progress-spinner", ProgressSpinner);
+app.component("overlay-panel", OverlayPanel);
+app.component("context-menu", ContextMenu);
 
 // Directives
 app.directive("tooltip", Tooltip);

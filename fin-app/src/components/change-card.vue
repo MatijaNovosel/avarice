@@ -1,5 +1,8 @@
 <template>
   <div
+    @click="state.details = !state.details"
+    @mouseup.right="onRightClick"
+    @contextmenu.prevent
     v-ripple
     class="amount-container p-shadow-6 p-ripple"
     :class="{
@@ -9,6 +12,9 @@
   >
     <span class="amount-title p-mb-1">{{ state.title }}</span>
     <span class="amount-text">{{ `${state.amount}HRK` }}</span>
+    <span class="amount-action">
+      {{ `${state.category} • ${state.date}` }}
+    </span>
   </div>
 </template>
 
@@ -18,13 +24,18 @@ import { defineComponent, reactive } from "vue";
 interface Props {
   amount?: number | null;
   title?: string | null;
+  date?: string | null;
   expense?: boolean | null;
+  category?: string | null;
 }
 
 interface State {
   amount?: number | null;
   title?: string | null;
+  date?: string | null;
   expense?: boolean | null;
+  details: boolean;
+  category?: string | null;
 }
 
 export default defineComponent({
@@ -32,12 +43,17 @@ export default defineComponent({
   props: {
     amount: Number,
     title: String,
+    category: String,
+    date: String,
     expense: Boolean
   },
   setup(props: Props) {
     const state: State = reactive({
+      details: false,
       amount: props.amount,
       title: props.title,
+      date: props.date,
+      category: props.category,
       expense: props.expense
     });
 
@@ -74,9 +90,8 @@ export default defineComponent({
 .amount-text {
   font-size: 1.5rem;
 }
-.amount-circle {
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
+.amount-action {
+  align-self: flex-end;
+  color: #bfb4b4;
 }
 </style>

@@ -6,7 +6,6 @@ import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
 interface Filter {
   category: CategoryEnum[];
-  amountRange: number[];
 }
 
 export class AmountHistoryService {
