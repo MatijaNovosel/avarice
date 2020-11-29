@@ -4,7 +4,6 @@
       borderLeft: `10px solid ${state.color}`
     }"
     class="amount-container p-shadow-6"
-    style="width: 100%"
   >
     <span class="amount-title p-mb-1">{{ state.title }}</span>
     <progress-spinner
@@ -104,6 +103,7 @@ export default defineComponent({
 .amount-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding: 1.2rem;
   background-color: #1e1e1e;
   border-top-right-radius: 12px;

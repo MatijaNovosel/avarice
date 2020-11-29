@@ -12,7 +12,6 @@
         v-model:enabled="state.account.gyro"
       />
       <dashboard-amount-card
-        class="p-my-4"
         icon="dollar"
         title="Tekući račun"
         :loading="state.loading"
@@ -29,7 +28,6 @@
         v-model:enabled="state.account.pocket"
       />
       <dashboard-amount-card
-        class="p-my-4"
         icon="globe"
         title="Euri"
         :loading="state.loading"
@@ -580,9 +578,9 @@ export default defineComponent({
   animation: up-and-down-table 0.5s infinite alternate;
 }
 .amount-cards-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 100%);
+  grid-gap: 1em;
 }
 .changes-container {
   padding: 1.5rem;
@@ -590,7 +588,7 @@ export default defineComponent({
   border-radius: 12px;
 }
 .chart-container {
-  padding: 1.5rem;
+  padding: 2rem;
   background-color: #1e1e1e;
   border-radius: 12px;
 }
