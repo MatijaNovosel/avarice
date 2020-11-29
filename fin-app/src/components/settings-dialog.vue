@@ -9,12 +9,7 @@
     <template #header>
       <h3>Postavke</h3>
     </template>
-    <group-box
-      icon="palette"
-      title="Boje grafova"
-      class="p-my-5 p-shadow-6"
-      style="position: relative"
-    >
+    <div class="p-my-5 p-shadow-6 graph-settings-container">
       <div class="p-grid p-formgrid p-mt-3">
         <div class="p-field p-col-12">
           <p-color-picker v-model="state.settings.gyroColor" />
@@ -33,9 +28,16 @@
           <span class="p-ml-3">Ukupno</span>
         </div>
       </div>
-    </group-box>
+    </div>
     <template #footer>
+      <progress-spinner
+        strokeWidth="10"
+        style="width: 25px; height: 25px"
+        class="p-mr-4"
+        v-if="state.loading"
+      />
       <btn
+        v-else
         @click="save"
         label="Spremi"
         icon="pi pi-save"
@@ -64,6 +66,7 @@ interface Props {
 interface State {
   settings: UserSettings;
   dialog: boolean;
+  loading: boolean;
   userSettingsService: UserSettingsService;
   // eslint-disable-next-line
   refresh: any;
@@ -77,6 +80,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       dialog: props.dialog,
+      loading: false,
       settings: {
         gyroColor: "",
         checkingColor: "",
@@ -97,9 +101,11 @@ export default defineComponent({
     }
 
     async function save() {
+      state.loading = true;
       await state.userSettingsService.saveSettings(state.settings);
       state.dialog = false;
       state.refresh.refresh();
+      state.loading = false;
     }
 
     onMounted(async () => {
@@ -116,4 +122,9 @@ export default defineComponent({
 </script>
 
 <style>
+.graph-settings-container {
+  padding: 1.5em;
+  border-radius: 12px;
+  background-color: #1e1e1e;
+}
 </style>

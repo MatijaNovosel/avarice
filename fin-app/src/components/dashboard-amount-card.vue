@@ -5,20 +5,21 @@
     }"
     class="amount-container p-shadow-6"
   >
-    <span class="amount-title p-mb-1">{{ state.title }}</span>
     <progress-spinner
       strokeWidth="10"
       class="spinner-accounts"
       v-if="state.loading"
     />
-    <span
-      v-else
-      :style="{
-        color: state.color
-      }"
-      class="amount-text"
-      >{{ state.amount }}</span
-    >
+    <template v-else>
+      <span class="amount-title p-mb-1">{{ state.title }}</span>
+      <span
+        :style="{
+          color: state.color
+        }"
+        class="amount-text"
+        >{{ state.amount }}</span
+      >
+    </template>
   </div>
 </template>
 

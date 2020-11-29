@@ -47,6 +47,7 @@
     <div class="p-col-12 p-md-8 p-px-5">
       <div class="p-shadow-6 chart-container">
         <chart
+          height="100"
           type="line"
           :data="state.graphData"
           :options="state.graphOptions"
@@ -56,7 +57,7 @@
     <div class="p-col-12 p-pl-4 p-pr-5 p-mt-5">
       <div class="p-shadow-6 changes-container">
         <div class="p-grid">
-          <div class="p-col-12 p-px-3">
+          <div class="p-col-12">
             <accordion>
               <accordion-tab>
                 <template #header>
@@ -173,71 +174,17 @@
               v-else
               layout="grid"
               :paginator="true"
-              :rows="9"
+              :rows="16"
               :value="state.changes"
               paginatorPosition="bottom"
             >
               <template #grid="slotProps">
-                <div class="p-col-12 p-md-4">
-                  <card class="p-shadow-6 amount-card">
-                    <template #title>
-                      <div class="expense-title p-px-3">
-                        <span
-                          :class="{
-                            'expense-text': slotProps.data.expense,
-                            'gain-text': !slotProps.data.expense
-                          }"
-                          >{{ `${slotProps.data.amount}HRK` }}
-                          <i
-                            class="pi currency-change-caret p-ml-1"
-                            :class="{
-                              'pi-caret-up': !slotProps.data.expense,
-                              'pi-caret-down': slotProps.data.expense
-                            }"
-                            style="font-size: 1rem"
-                          />
-                        </span>
-                        <span class="expense-description">{{
-                          formatCategory(slotProps.data.category)
-                        }}</span>
-                      </div>
-                    </template>
-                    <template #content>
-                      <div class="p-grid p-px-3">
-                        <div class="p-col-12">
-                          {{ format(slotProps.data.date, "dd.MM.yyyy. HH:mm") }}
-                        </div>
-                        <div class="p-col-12">
-                          <span class="expense-description">{{
-                            slotProps.data.description
-                          }}</span>
-                        </div>
-                      </div>
-                    </template>
-                    <template #footer>
-                      <div class="p-grid p-justify-end p-nogutter">
-                        <btn
-                          icon="pi pi-trash"
-                          class="p-button-rounded p-button-text p-button-danger p-button-lg"
-                          v-tooltip.bottom="
-                            'Izbriši unos i vrati stanje kakvo je bilo u ovome trenutku'
-                          "
-                        />
-                        <btn
-                          icon="pi pi-list"
-                          class="p-button-rounded p-button-text p-button-info p-button-lg p-mx-2"
-                          v-tooltip.bottom="'Vidi detalje'"
-                        />
-                        <btn
-                          icon="pi pi-copy"
-                          class="p-button-rounded p-button-text p-button-success p-button-lg"
-                          v-tooltip.bottom="
-                            'Otvori dijalog s jednakim podatcima unosa'
-                          "
-                        />
-                      </div>
-                    </template>
-                  </card>
+                <div class="p-col-12 p-md-3 p-p-2">
+                  <change-card
+                    :expense="slotProps.data.expense"
+                    :title="slotProps.data.description"
+                    :amount="slotProps.data.amount"
+                  />
                 </div>
               </template>
             </data-view>
@@ -265,6 +212,7 @@ import { euroRate } from "@/constants/app-constants";
 import { CategoryEnum } from "@/constants/category-enum";
 import { ChangeItem } from "@/models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
+import ChangeCard from "@/components/change-card.vue";
 import { useI18n } from "vue-i18n";
 
 interface ChangeFilterOptions {
@@ -316,7 +264,8 @@ interface State {
 export default defineComponent({
   name: "Home",
   components: {
-    DashboardAmountCard
+    DashboardAmountCard,
+    ChangeCard
   },
   setup() {
     const { t } = useI18n();
