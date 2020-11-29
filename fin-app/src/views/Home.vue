@@ -55,8 +55,8 @@
         />
       </div>
     </div>
-    <div class="p-col-12 p-px-5 p-mt-3">
-      <group-box icon="chart-bar" title="Troškovi/Dobitci" class="p-shadow-6">
+    <div class="p-col-12 p-px-5 p-mt-5">
+      <div class="p-shadow-6 changes-container">
         <div class="p-grid">
           <div class="p-col-12">
             <accordion>
@@ -261,7 +261,7 @@
             </data-view>
           </div>
         </div>
-      </group-box>
+      </div>
     </div>
   </div>
 </template>
@@ -583,6 +583,11 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.changes-container {
+  padding: 1.5rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
 }
 .chart-container {
   padding: 1.5rem;
