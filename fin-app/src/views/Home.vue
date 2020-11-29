@@ -1,7 +1,7 @@
 <template>
   <div class="p-grid p-mt-5 p-nogutter p-justify-center">
     <div
-      class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 amount-cards-container"
+      class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 p-pb-5 p-pb-md-0 amount-cards-container"
     >
       <dashboard-amount-card
         icon="id-card"
@@ -53,10 +53,10 @@
         />
       </div>
     </div>
-    <div class="p-col-12 p-px-5 p-mt-5">
+    <div class="p-col-12 p-pl-4 p-pr-5 p-mt-5">
       <div class="p-shadow-6 changes-container">
         <div class="p-grid">
-          <div class="p-col-12">
+          <div class="p-col-12 p-px-3">
             <accordion>
               <accordion-tab>
                 <template #header>
@@ -82,26 +82,10 @@
                       </template>
                     </list-box>
                   </div>
-                  <div class="p-col-12 p-my-2 filter-item-text">
-                    <icon name="sliders-v" />
-                    Raspon iznosa troška/dobitka
-                    <span style="color: white"
-                      >({{ state.filter.amountRange[0] }} do
-                      {{ state.filter.amountRange[1] }} HRK)</span
-                    >
-                  </div>
-                  <div class="p-col-12 p-my-2">
-                    <slider
-                      :max="state.maxValue"
-                      :range="true"
-                      v-model="state.filter.amountRange"
-                    />
-                  </div>
                   <div class="p-col-12 p-my-2">
                     <input-switch v-model="state.cardView" id="input-switch" />
                     <label for="input-switch"> Prikaz u obliku kartica</label>
                   </div>
-                  <div class="p-col-12 filter-divider"></div>
                   <div class="p-col-12 p-mt-3 p-text-right">
                     <btn
                       @click="resetFilter"
@@ -195,7 +179,7 @@
             >
               <template #grid="slotProps">
                 <div class="p-col-12 p-md-4">
-                  <card class="p-shadow-6 card-bg">
+                  <card class="p-shadow-6 amount-card">
                     <template #title>
                       <div class="expense-title p-px-3">
                         <span
@@ -539,10 +523,10 @@ export default defineComponent({
   right: 45px;
   top: 55px;
 }
-.card-bg {
+.amount-card {
   background-color: #7673731a !important;
-  margin: 0.75rem;
   border-radius: 12px !important;
+  margin: 0.5em;
 }
 .expense-text {
   color: rgb(197, 38, 38);
@@ -580,7 +564,7 @@ export default defineComponent({
 .amount-cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, 100%);
-  grid-gap: 1em;
+  grid-gap: 1.5em;
 }
 .changes-container {
   padding: 1.5rem;
@@ -641,5 +625,8 @@ export default defineComponent({
 .spinner-accounts {
   width: 25px !important;
   height: 25px !important;
+}
+.p-dataview .p-dataview-content {
+  padding: 0px !important;
 }
 </style>
