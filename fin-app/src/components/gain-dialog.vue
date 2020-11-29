@@ -9,7 +9,7 @@
     <template #header>
       <h3>Unos novog dobitka</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3 p-input-filled">
       <div class="p-field p-col-12">
         <span class="p-float-label">
           <input-number
@@ -27,7 +27,7 @@
       </div>
       <div class="p-field p-col-12">
         <span class="p-float-label">
-          <text-area v-model="state.input.description" id="text-area" />
+          <text-area v-model="model.description.$model" id="text-area" />
           <label for="text-area"
             ><icon class="p-pr-1" name="comments" /> Opis</label
           >
@@ -36,7 +36,7 @@
       <div class="p-field p-col-12">
         <group-box icon="id-card" title="Račun na koji ide dobitak">
           <select-button
-            v-model="state.input.paymentSource"
+            v-model="model.paymentSource.$model"
             :options="paymentSources"
             optionLabel="text"
             optionValue="val"
@@ -92,7 +92,9 @@ export default defineComponent({
       expense: true
     } as ChangeItem);
     const rules = {
-      amount: { required, numeric }
+      amount: { required, numeric },
+      paymentSource: { required },
+      description: { required }
     };
     const model = useVuelidate(rules, entry);
 
