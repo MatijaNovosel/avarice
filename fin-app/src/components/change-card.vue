@@ -1,9 +1,10 @@
 <template>
   <div
-    class="amount-container p-shadow-6"
+    v-ripple
+    class="amount-container p-shadow-6 p-ripple"
     :class="{
-      expense: state.expense,
-      gain: !state.expense
+      'expense red': state.expense,
+      'gain green': !state.expense
     }"
   >
     <span class="amount-title p-mb-1">{{ state.title }}</span>
@@ -15,13 +16,13 @@
 import { defineComponent, reactive } from "vue";
 
 interface Props {
-  amount?: string | null;
+  amount?: number | null;
   title?: string | null;
   expense?: boolean | null;
 }
 
 interface State {
-  amount?: string | null;
+  amount?: number | null;
   title?: string | null;
   expense?: boolean | null;
 }
@@ -29,7 +30,7 @@ interface State {
 export default defineComponent({
   name: "change-card",
   props: {
-    amount: String,
+    amount: Number,
     title: String,
     expense: Boolean
   },
@@ -65,6 +66,7 @@ export default defineComponent({
   padding: 1.2rem;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
+  user-select: none;
 }
 .amount-title {
   color: #927d7d;

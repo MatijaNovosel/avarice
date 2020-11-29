@@ -5,6 +5,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import ToastService from "primevue/toastservice";
+import Ripple from "primevue/ripple";
 
 // PrimeVue component import
 import DataTable from "primevue/datatable";
@@ -111,6 +112,7 @@ app.component("progress-spinner", ProgressSpinner);
 
 // Directives
 app.directive("tooltip", Tooltip);
+app.directive("ripple", Ripple);
 
 // Config
 app.config.globalProperties.$primevue = { ripple: true };

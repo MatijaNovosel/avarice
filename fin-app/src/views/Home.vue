@@ -47,7 +47,7 @@
     <div class="p-col-12 p-md-8 p-px-5">
       <div class="p-shadow-6 chart-container">
         <chart
-          height="100"
+          :height="100"
           type="line"
           :data="state.graphData"
           :options="state.graphOptions"

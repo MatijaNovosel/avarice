@@ -105,3 +105,11 @@ body {
     margin: 0px;
   }
 }
+
+.p-ripple.red .p-ink {
+  background: rgba(197, 38, 38, 0.3);
+}
+
+.p-ripple.green .p-ink {
+  background: rgba(66, 135, 51, 0.3);
+}
