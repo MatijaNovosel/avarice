@@ -1,15 +1,17 @@
 <template>
   <menubar class="no-border-radius no-border navbar navbar-shadow">
     <template #start>
-      <btn
-        icon="pi pi-bars"
-        class="p-button-rounded p-button-text p-mx-2"
-        style="color: white"
-        @click="changeSiderbarState"
-      />
-      <div class="top-left">
-        <span class="leading-text">FinApp</span
-        ><span class="following-text">Matija Novosel</span>
+      <div class="header">
+        <btn
+          icon="pi pi-bars"
+          class="p-button-rounded p-button-text p-mx-2"
+          style="color: white"
+          @click="changeSiderbarState"
+        />
+        <div class="top-left">
+          <span class="leading-text">FinApp</span
+          ><span class="following-text">Matija Novosel</span>
+        </div>
       </div>
     </template>
     <template #end>
@@ -83,13 +85,14 @@ export default defineComponent({
   z-index: 1;
   height: var(--navbar-height);
 }
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+}
 .p-panelmenu-content {
   background-color: var(--color-dark-gradient-3) !important;
-}
-.top-left {
-  position: absolute;
-  top: 17px;
-  left: 55px;
 }
 .leading-text {
   font-size: 16px;

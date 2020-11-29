@@ -544,6 +544,7 @@ export default defineComponent({
 .card-bg {
   background-color: #7673731a !important;
   margin: 0.75rem;
+  border-radius: 12px !important;
 }
 .expense-text {
   color: rgb(197, 38, 38);
