@@ -126,6 +126,11 @@ export default defineComponent({
 
     function resetDialog() {
       state.dialog = false;
+      entry.amount = 0;
+      entry.description = "";
+      entry.paymentSource = PaymentSourceEnum.GyroAccount;
+      entry.category = CategoryEnum.Other;
+      model.value.$reset;
     }
 
     function refresh() {
