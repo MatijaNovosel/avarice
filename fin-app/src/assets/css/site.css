@@ -113,3 +113,20 @@ body {
 .p-ripple.green .p-ink {
   background: rgba(66, 135, 51, 0.3);
 }
+
+@-webkit-keyframes up-and-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes up-and-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-4px);
+  }
+}

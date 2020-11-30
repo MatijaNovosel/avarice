@@ -213,13 +213,10 @@ import { UserSettings } from "@/models/user-settings";
 import { euroRate } from "@/constants/app-constants";
 import { CategoryEnum } from "@/constants/category-enum";
 import { ChangeItem } from "@/models/change-item";
+import { useI18n } from "vue-i18n";
+import { Account } from "@/models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import ChangeCard from "@/components/change-card.vue";
-import { useI18n } from "vue-i18n";
-
-interface ChangeFilterOptions {
-  category: CategoryEnum[];
-}
 
 interface Filter {
   category: CategoryEnum[];
@@ -235,12 +232,6 @@ interface CurrentAmount {
   checking: string;
   pocket: string;
   euros: string;
-}
-
-interface Account {
-  gyro: boolean;
-  pocket: boolean;
-  checking: boolean;
 }
 
 interface State {
@@ -339,7 +330,15 @@ export default defineComponent({
 
       const totalDataset: DatasetItem = {
         label: t("account.total"),
-        data: [],
+        data: history.map(
+          (x) =>
+            +(
+              x.gyro +
+              x.pocket +
+              x.checking +
+              ((x.euros as number) * euroRate || 0)
+            ).toFixed(2)
+        ),
         fill: true,
         borderColor: `#${state.settings.totalColor}`,
         backgroundColor: hexToRgba(
@@ -350,7 +349,7 @@ export default defineComponent({
 
       const gyroDataset: DatasetItem = {
         label: t("account.gyro"),
-        data: [],
+        data: history.map((x) => +x.gyro.toFixed(2)),
         fill: true,
         borderColor: `#${state.settings.gyroColor}`,
         backgroundColor: hexToRgba(
@@ -361,7 +360,7 @@ export default defineComponent({
 
       const checkingDataset: DatasetItem = {
         label: t("account.checking"),
-        data: [],
+        data: history.map((x) => +x.checking.toFixed(2)),
         fill: true,
         borderColor: `#${state.settings.checkingColor}`,
         backgroundColor: hexToRgba(
@@ -372,7 +371,7 @@ export default defineComponent({
 
       const pocketDataset: DatasetItem = {
         label: t("account.pocket"),
-        data: [],
+        data: history.map((x) => +x.pocket.toFixed(2)),
         fill: true,
         borderColor: `#${state.settings.pocketColor}`,
         backgroundColor: hexToRgba(
@@ -387,19 +386,6 @@ export default defineComponent({
         ),
         datasets: []
       };
-
-      gyroDataset.data = history.map((x) => +x.gyro.toFixed(2));
-      pocketDataset.data = history.map((x) => +x.pocket.toFixed(2));
-      checkingDataset.data = history.map((x) => +x.checking.toFixed(2));
-      totalDataset.data = history.map(
-        (x) =>
-          +(
-            x.gyro +
-            x.pocket +
-            x.checking +
-            ((x.euros as number) * euroRate || 0)
-          ).toFixed(2)
-      );
 
       state.currentAmount.gyro = `${
         gyroDataset.data[gyroDataset.data.length - 1]
@@ -517,22 +503,6 @@ export default defineComponent({
   padding: 2rem;
   background-color: #1e1e1e;
   border-radius: 12px;
-}
-@-webkit-keyframes up-and-down {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-4px);
-  }
-}
-@keyframes up-and-down {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-4px);
-  }
 }
 @-webkit-keyframes up-and-down-table {
   0% {
