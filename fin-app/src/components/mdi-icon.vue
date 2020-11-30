@@ -5,14 +5,10 @@
 <script lang="ts">
 import { hexToCssFilter } from "@/helpers/helpers";
 import { defineComponent, reactive, watch } from "vue";
+import { MDIIcon } from "@/types/index";
 
 interface Props {
-  name?:
-    | "credit-card"
-    | "wallet"
-    | "credit-card-outline"
-    | "currency-eur"
-    | "sigma";
+  name?: MDIIcon;
   color?: string;
 }
 

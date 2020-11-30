@@ -31,15 +31,11 @@
 <script lang="ts">
 import { defineComponent, reactive, SetupContext, watch } from "vue";
 import mdiIcon from "@/components/mdi-icon.vue";
+import { MDIIcon } from "@/types/index";
 
 interface Props {
   amount?: string | null;
-  icon?:
-    | "credit-card"
-    | "wallet"
-    | "credit-card-outline"
-    | "currency-eur"
-    | "sigma";
+  icon?: MDIIcon;
   title?: string | null;
   color?: string | null;
   loading?: boolean;
