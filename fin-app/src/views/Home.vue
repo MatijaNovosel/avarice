@@ -1,5 +1,5 @@
 <template>
-  <div class="p-grid p-mt-5 p-nogutter p-justify-center">
+  <div class="p-grid p-nogutter p-justify-center">
     <div
       class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 p-pb-5 p-pb-md-0 amount-cards-container"
     >

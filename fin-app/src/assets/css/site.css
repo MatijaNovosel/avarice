@@ -37,7 +37,7 @@
 }
 
 body {
-  margin: calc(var(--navbar-height) * 1.5) 0px 20px 0px;
+  margin: calc(var(--navbar-height) * 1.4) 0px 20px 0px;
   background-color: var(--color-dark-gradient-3);
 }
 
