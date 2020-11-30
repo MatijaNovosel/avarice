@@ -3,6 +3,10 @@ export default {
     hello: "Pozdrav svijete!"
   },
   account: {
-    pocket: "Džep"
+    pocket: "Džep",
+    checking: "Tekući račun",
+    gyro: "Žiro račun",
+    total: "Ukupno",
+    euros: "Euri"
   }
 };

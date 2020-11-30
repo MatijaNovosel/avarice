@@ -5,7 +5,7 @@
     >
       <dashboard-amount-card
         icon="id-card"
-        title="Žiro račun"
+        :title="$t('account.gyro')"
         :loading="state.loading"
         :color="`#${state.settings.gyroColor}`"
         :amount="state.currentAmount.gyro"
@@ -13,7 +13,7 @@
       />
       <dashboard-amount-card
         icon="dollar"
-        title="Tekući račun"
+        :title="$t('account.checking')"
         :loading="state.loading"
         :color="`#${state.settings.checkingColor}`"
         :amount="state.currentAmount.checking"
@@ -21,7 +21,7 @@
       />
       <dashboard-amount-card
         icon="briefcase"
-        title="Džep"
+        :title="$t('account.pocket')"
         :loading="state.loading"
         :color="`#${state.settings.pocketColor}`"
         :amount="state.currentAmount.pocket"
@@ -29,7 +29,7 @@
       />
       <dashboard-amount-card
         icon="globe"
-        title="Euri"
+        :title="$t('account.euros')"
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.currentAmount.euros"
@@ -37,7 +37,7 @@
       />
       <dashboard-amount-card
         icon="table"
-        title="Ukupno"
+        :title="$t('account.total')"
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.totalAmount"
@@ -338,7 +338,7 @@ export default defineComponent({
       state.settings = await state.userSettingsService.getSettings();
 
       const totalDataset: DatasetItem = {
-        label: "Ukupno",
+        label: t("account.total"),
         data: [],
         fill: true,
         borderColor: `#${state.settings.totalColor}`,
@@ -349,7 +349,7 @@ export default defineComponent({
       };
 
       const gyroDataset: DatasetItem = {
-        label: "Žiro račun",
+        label: t("account.gyro"),
         data: [],
         fill: true,
         borderColor: `#${state.settings.gyroColor}`,
@@ -360,7 +360,7 @@ export default defineComponent({
       };
 
       const checkingDataset: DatasetItem = {
-        label: "Tekući račun",
+        label: t("account.checking"),
         data: [],
         fill: true,
         borderColor: `#${state.settings.checkingColor}`,

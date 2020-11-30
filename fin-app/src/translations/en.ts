@@ -3,6 +3,10 @@ export default {
     hello: "Hello world!"
   },
   account: {
-    pocket: "Pocket"
+    pocket: "Pocket",
+    checking: "Checking account",
+    gyro: "Gyro account",
+    total: "Total",
+    euros: "Euros"
   }
 };
