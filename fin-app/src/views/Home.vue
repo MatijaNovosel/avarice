@@ -4,7 +4,7 @@
       class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 p-pb-5 p-pb-md-0 amount-cards-container"
     >
       <dashboard-amount-card
-        icon="id-card"
+        icon="credit-card-outline"
         :title="$t('account.gyro')"
         :loading="state.loading"
         :color="`#${state.settings.gyroColor}`"
@@ -12,7 +12,7 @@
         v-model:enabled="state.account.gyro"
       />
       <dashboard-amount-card
-        icon="dollar"
+        icon="credit-card"
         :title="$t('account.checking')"
         :loading="state.loading"
         :color="`#${state.settings.checkingColor}`"
@@ -20,7 +20,7 @@
         v-model:enabled="state.account.checking"
       />
       <dashboard-amount-card
-        icon="briefcase"
+        icon="wallet"
         :title="$t('account.pocket')"
         :loading="state.loading"
         :color="`#${state.settings.pocketColor}`"
@@ -28,7 +28,7 @@
         v-model:enabled="state.account.pocket"
       />
       <dashboard-amount-card
-        icon="globe"
+        icon="currency-eur"
         :title="$t('account.euros')"
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
@@ -36,7 +36,7 @@
         no-checkbox
       />
       <dashboard-amount-card
-        icon="table"
+        icon="sigma"
         :title="$t('account.total')"
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
@@ -205,7 +205,7 @@ import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
 import { UserSettingsService } from "@/services/api/user-settings-service";
 import {
-  hexToRGBA,
+  hexToRgba,
   adjustHexColor,
   createSelectFromEnum
 } from "@/helpers/helpers";
@@ -342,10 +342,10 @@ export default defineComponent({
         data: [],
         fill: true,
         borderColor: `#${state.settings.totalColor}`,
-        backgroundColor: hexToRGBA(
+        backgroundColor: hexToRgba(
           adjustHexColor(state.settings.totalColor, -10),
           0.4
-        )
+        ) as string
       };
 
       const gyroDataset: DatasetItem = {
@@ -353,10 +353,10 @@ export default defineComponent({
         data: [],
         fill: true,
         borderColor: `#${state.settings.gyroColor}`,
-        backgroundColor: hexToRGBA(
+        backgroundColor: hexToRgba(
           adjustHexColor(state.settings.gyroColor, -10),
           0.4
-        )
+        ) as string
       };
 
       const checkingDataset: DatasetItem = {
@@ -364,10 +364,10 @@ export default defineComponent({
         data: [],
         fill: true,
         borderColor: `#${state.settings.checkingColor}`,
-        backgroundColor: hexToRGBA(
+        backgroundColor: hexToRgba(
           adjustHexColor(state.settings.checkingColor, -10),
           0.4
-        )
+        ) as string
       };
 
       const pocketDataset: DatasetItem = {
@@ -375,10 +375,10 @@ export default defineComponent({
         data: [],
         fill: true,
         borderColor: `#${state.settings.pocketColor}`,
-        backgroundColor: hexToRGBA(
+        backgroundColor: hexToRgba(
           adjustHexColor(state.settings.pocketColor, -10),
           0.4
-        )
+        ) as string
       };
 
       const graphData: GraphData = {

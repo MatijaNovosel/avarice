@@ -11,24 +11,35 @@
       v-if="state.loading"
     />
     <template v-else>
-      <span class="amount-title p-mb-1">{{ state.title }}</span>
-      <span
-        :style="{
-          color: state.color
-        }"
-        class="amount-text"
-        >{{ state.amount }}</span
-      >
+      <div class="icon p-pr-2">
+        <mdi-icon class="p-mx-2" :color="state.color" :name="state.icon" />
+      </div>
+      <div class="content">
+        <span class="amount-title p-mb-1">{{ state.title }}</span>
+        <span
+          :style="{
+            color: state.color
+          }"
+          class="amount-text"
+          >{{ state.amount }}</span
+        >
+      </div>
     </template>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, SetupContext, watch } from "vue";
+import mdiIcon from "@/components/mdi-icon.vue";
 
 interface Props {
   amount?: string | null;
-  icon?: string | null;
+  icon?:
+    | "credit-card"
+    | "wallet"
+    | "credit-card-outline"
+    | "currency-eur"
+    | "sigma";
   title?: string | null;
   color?: string | null;
   loading?: boolean;
@@ -38,7 +49,12 @@ interface Props {
 
 interface State {
   amount?: string | null;
-  icon?: string | null;
+  icon?:
+    | "credit-card"
+    | "wallet"
+    | "credit-card-outline"
+    | "currency-eur"
+    | "sigma";
   title?: string | null;
   color?: string | null;
   loading?: boolean;
@@ -48,9 +64,12 @@ interface State {
 
 export default defineComponent({
   name: "dashboard-amount-card",
+  components: {
+    mdiIcon
+  },
   props: {
     amount: String,
-    icon: String,
+    icon: null,
     title: String,
     color: String,
     loading: Boolean,
@@ -103,12 +122,18 @@ export default defineComponent({
 <style scoped>
 .amount-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.2rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1.2rem 0 1.2rem 0.6rem;
   background-color: #1e1e1e;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .amount-title {
   color: #927d7d;
