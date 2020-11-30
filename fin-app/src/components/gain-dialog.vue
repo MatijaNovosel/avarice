@@ -89,7 +89,7 @@ export default defineComponent({
       description: "",
       amount: 0,
       date: new Date(),
-      expense: true
+      expense: false
     } as ChangeItem);
     const rules = {
       amount: { required, numeric },
