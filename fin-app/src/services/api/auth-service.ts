@@ -26,7 +26,7 @@ export class AuthService {
     const userData = await this.updateUser(credential.user as User);
     return userData;
   }
-  signOut() {
-    //
+  async signOut(): Promise<void> {
+    await firebase.auth().signOut();
   }
 }

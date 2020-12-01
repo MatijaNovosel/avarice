@@ -81,8 +81,9 @@ export default defineComponent({
       (val) => (state.sidebar = val)
     );
 
-    function logout() {
-      console.log("Click!");
+    async function logout() {
+      await state.authService.signOut();
+      store.dispatch("unsetUser");
     }
 
     function changeSiderbarState() {
