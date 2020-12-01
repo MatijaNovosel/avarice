@@ -16,8 +16,8 @@
     />
     <div class="drawer-header">
       <img class="avatar" :src="require('@/assets/avatar.jpg')" />
-      <span class="header-title">Matija Novosel</span>
-      <span class="header-subtitle">Admin</span>
+      <span class="header-title">{{ store.getters.user.displayName }}</span>
+      <span class="header-subtitle">{{ store.getters.user.email }}</span>
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
@@ -32,6 +32,7 @@ import MenuItem from "@/constants/menu-item";
 import ExpenseDialog from "@/components/expense-dialog.vue";
 import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
+import { useStore } from "vuex";
 
 interface Props {
   visible: boolean;
@@ -56,6 +57,7 @@ export default defineComponent({
     GainDialog
   },
   setup(props: Props) {
+    const store = useStore();
     const state: State = reactive({
       visible: props.visible,
       settingsDialog: false,
@@ -90,7 +92,8 @@ export default defineComponent({
     );
 
     return {
-      state
+      state,
+      store
     };
   }
 });

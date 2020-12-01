@@ -164,11 +164,14 @@ export default defineComponent({
     }
 
     async function addExpense() {
-      const payload = {
-        ...entry
-      } as ChangeItem;
-
-      payload.date = new Date();
+      const payload: ChangeItem = {
+        paymentSource: entry.paymentSource,
+        category: entry.category,
+        description: entry.description,
+        amount: entry.amount,
+        date: new Date(),
+        expense: true
+      };
 
       const currentAmount = await state.amountHistoryService.getCurrentAmount();
 

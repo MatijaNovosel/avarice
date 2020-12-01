@@ -93,15 +93,14 @@ export default defineComponent({
     async function login() {
       const user = await state.authService.signIn();
       store.dispatch("setUser", user);
-      console.log(user);
-      console.log(store.getters.user);
     }
 
     return {
       state,
       logout,
       changeSiderbarState,
-      login
+      login,
+      store
     };
   }
 });

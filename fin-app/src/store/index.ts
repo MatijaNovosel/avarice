@@ -1,5 +1,6 @@
 import { AppUser } from "./../models/user";
 import { createStore, ActionContext } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 interface State {
   user: AppUser;
@@ -33,5 +34,6 @@ export default createStore({
   state,
   getters,
   actions,
-  mutations
+  mutations,
+  plugins: [createPersistedState()]
 });
