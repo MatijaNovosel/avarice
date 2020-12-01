@@ -43,6 +43,7 @@
 <script lang="ts">
 import { defineComponent, reactive, watch, SetupContext } from "vue";
 import { AuthService } from "@/services/api/auth-service";
+import { useStore } from "vuex";
 
 interface Props {
   title?: string | null;
@@ -63,6 +64,7 @@ export default defineComponent({
     sidebar: Boolean
   },
   setup(props: Props, context: SetupContext) {
+    const store = useStore();
     const state: State = reactive({
       sidebar: props.sidebar,
       title: props.title,
@@ -88,8 +90,11 @@ export default defineComponent({
       context.emit("update:sidebar", state.sidebar);
     }
 
-    function login() {
-      state.authService.signIn();
+    async function login() {
+      const user = await state.authService.signIn();
+      store.dispatch("setUser", user);
+      console.log(user);
+      console.log(store.getters.user);
     }
 
     return {

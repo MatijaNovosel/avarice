@@ -4,7 +4,12 @@ import { db } from "../firebase";
 import { User } from "@firebase/auth-types";
 
 export class AuthService {
-  updateUser({ uid, email, displayName, photoURL }: User) {
+  async updateUser({
+    uid,
+    email,
+    displayName,
+    photoURL
+  }: User): Promise<AppUser> {
     const userRef = db.doc(`users/${uid}`);
     const data: AppUser = {
       uid,
@@ -12,12 +17,14 @@ export class AuthService {
       displayName,
       photoURL
     };
-    return userRef.set(data, { merge: true });
+    await userRef.set(data, { merge: true });
+    return data;
   }
-  async signIn() {
+  async signIn(): Promise<AppUser> {
     const provider = new firebase.auth.GoogleAuthProvider();
     const credential = await firebase.auth().signInWithPopup(provider);
-    this.updateUser(credential.user as User);
+    const userData = await this.updateUser(credential.user as User);
+    return userData;
   }
   signOut() {
     //
