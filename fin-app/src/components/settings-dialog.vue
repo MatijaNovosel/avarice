@@ -74,6 +74,7 @@ interface State {
 
 export default defineComponent({
   name: "settings-dialog",
+  emits: ["update:dialog"],
   props: {
     dialog: Boolean
   },

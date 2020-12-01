@@ -47,6 +47,7 @@ interface State {
 
 export default defineComponent({
   name: "navbar",
+  emits: ["update:sidebar"],
   props: {
     title: String,
     sidebar: Boolean

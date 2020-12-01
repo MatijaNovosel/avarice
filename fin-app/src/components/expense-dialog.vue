@@ -113,6 +113,7 @@ interface State {
 
 export default defineComponent({
   name: "expense-dialog",
+  emits: ["update:dialog"],
   props: {
     dialog: Boolean,
     input: null
