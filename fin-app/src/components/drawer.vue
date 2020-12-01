@@ -15,7 +15,7 @@
       v-tooltip.bottom="'Postavke'"
     />
     <div class="drawer-header">
-      <img class="avatar" :src="require('@/assets/avatar.jpg')" />
+      <img class="avatar" :src="store.getters.user.photoURL" />
       <span class="header-title">{{ store.getters.user.displayName }}</span>
       <span class="header-subtitle">{{ store.getters.user.email }}</span>
     </div>
