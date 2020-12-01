@@ -25,14 +25,8 @@
     <template #end>
       <div class="end">
         <btn
-          icon="pi pi-user"
-          class="p-mr-3 p-button-warning"
-          label="Sign in"
-          @click="login"
-        />
-        <btn
           icon="pi pi-power-off"
-          class="p-button-rounded p-mr-2 logout-button"
+          class="p-button-rounded p-mr-4 logout-button"
           @click="logout"
         />
       </div>
@@ -91,16 +85,10 @@ export default defineComponent({
       context.emit("update:sidebar", state.sidebar);
     }
 
-    async function login() {
-      const user = await state.authService.signIn();
-      store.dispatch("setUser", user);
-    }
-
     return {
       state,
       logout,
       changeSiderbarState,
-      login,
       store
     };
   }

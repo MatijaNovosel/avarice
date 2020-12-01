@@ -34,7 +34,8 @@ const actions = {
 };
 
 const getters = {
-  user: (state: State) => state.user
+  user: (state: State) => state.user,
+  isAuthenticated: (state: State) => state.user.uid != null
 };
 
 export default createStore({
