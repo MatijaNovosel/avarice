@@ -38,6 +38,7 @@
 import { defineComponent, reactive, watch, SetupContext } from "vue";
 import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 interface Props {
   title?: string | null;
@@ -59,6 +60,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const store = useStore();
+    const router = useRouter();
     const state: State = reactive({
       sidebar: props.sidebar,
       title: props.title,
@@ -78,6 +80,7 @@ export default defineComponent({
     async function logout() {
       await state.authService.signOut();
       store.dispatch("unsetUser");
+      router.push({ name: "login" });
     }
 
     function changeSiderbarState() {

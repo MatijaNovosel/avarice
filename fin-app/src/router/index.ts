@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { useStore } from "vuex";
-
-const store = useStore();
+import store from "@/store/index";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () => import("../views/Login.vue"),
     meta: {
       auth: false
@@ -14,7 +12,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    name: "Home",
+    name: "home",
     component: () => import("../views/Home.vue"),
     meta: {
       auth: true
@@ -22,7 +20,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/about",
-    name: "About",
+    name: "about",
     component: () => import("../views/About.vue"),
     meta: {
       auth: true

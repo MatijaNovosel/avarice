@@ -1,11 +1,14 @@
 <template>
-  <navbar v-model:sidebar="state.visible" />
-  <drawer v-model:visible="state.visible" />
+  <template v-if="store.getters.isAuthenticated">
+    <navbar v-model:sidebar="state.visible" />
+    <drawer v-model:visible="state.visible" />
+  </template>
   <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
+import { useStore } from "vuex";
 import navbar from "@/components/navbar.vue";
 import drawer from "@/components/drawer.vue";
 import refresh from "@/helpers/refresh";
@@ -23,12 +26,14 @@ export default defineComponent({
     refresh
   },
   setup() {
+    const store = useStore();
     const state: State = reactive({
       visible: false
     });
 
     return {
-      state
+      state,
+      store
     };
   }
 });
