@@ -174,10 +174,12 @@
               @page="pageChanged"
               layout="grid"
               :paginator="true"
-              :rows="16"
+              :rows="state.numberOfRows"
               :value="state.changes"
-              paginatorPosition="bottom"
               :alwaysShowPaginator="false"
+              :pageLinkSize="state.changesNumberOfPages"
+              :totalRecords="state.changesTotalItems"
+              paginatorPosition="bottom"
             >
               <template #grid="slotProps">
                 <div class="p-col-12 p-md-3 p-p-2">
@@ -260,6 +262,9 @@ interface State {
   filter: Filter;
   maxValue: number;
   entry: number;
+  changesNumberOfPages: number;
+  changesTotalItems: number;
+  numberOfRows: number;
 }
 
 export default defineComponent({
@@ -273,6 +278,9 @@ export default defineComponent({
 
     const state: State = reactive({
       entry: 0,
+      changesNumberOfPages: 0,
+      changesTotalItems: 0,
+      numberOfRows: 16,
       refresh: inject("refresh"),
       cardView: true,
       changes: [],
@@ -323,7 +331,11 @@ export default defineComponent({
     async function getChanges() {
       state.changesLoading = true;
       state.changes = await state.amountHistoryService.getChanges(state.filter);
-      state.baseChanges = JSON.parse(JSON.stringify(state.changes));
+      state.baseChanges = [...state.changes];
+      state.changesTotalItems = state.baseChanges.length;
+      state.changesNumberOfPages = Math.floor(
+        state.baseChanges.length / state.numberOfRows
+      );
       state.changesLoading = false;
     }
 
@@ -436,8 +448,10 @@ export default defineComponent({
     }
 
     function pageChanged(paginationInfo: PaginatorInfo) {
-      const { page, first } = { ...paginationInfo };
-      state.changes = state.baseChanges.slice();
+      const { page, first, rows } = { ...paginationInfo };
+      console.log(page, first, rows);
+      console.log(state.baseChanges.slice(page * first, rows * 2));
+      state.changes = state.baseChanges.slice(page * first, rows * 2);
     }
 
     onMounted(async () => {
