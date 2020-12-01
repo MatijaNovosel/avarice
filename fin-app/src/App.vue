@@ -1,13 +1,13 @@
 <template>
-  <template v-if="store.getters.isAuthenticated">
+  <template v-if="state.isAuthenticated">
     <navbar v-model:sidebar="state.visible" />
     <drawer v-model:visible="state.visible" />
   </template>
-  <router-view :class="{ 'offset-top': store.getters.isAuthenticated }" />
+  <router-view :class="{ 'offset-top': state.isAuthenticated }" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 import navbar from "@/components/navbar.vue";
 import drawer from "@/components/drawer.vue";
@@ -28,7 +28,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const state: State = reactive({
-      visible: false
+      visible: false,
+      isAuthenticated: computed(() => store.getters.isAuthenticated)
     });
 
     return {

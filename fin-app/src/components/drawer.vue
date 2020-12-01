@@ -15,13 +15,11 @@
       v-tooltip.bottom="'Postavke'"
     />
     <div class="drawer-header">
-      <img class="avatar" :src="store.getters.user.photoURL" />
+      <img class="avatar" :src="state.user.photoURL" />
       <span class="header-title">{{
-        store.getters.user.displayName ?? "Unknown"
+        state.user.displayName ?? "Unknown"
       }}</span>
-      <span class="header-subtitle">{{
-        store.getters.user.email ?? "Unknown"
-      }}</span>
+      <span class="header-subtitle">{{ state.user.email ?? "Unknown" }}</span>
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
@@ -31,12 +29,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "vue";
+import { computed, defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/constants/menu-item";
 import ExpenseDialog from "@/components/expense-dialog.vue";
 import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
+import { AppUser } from "@/models/user";
 
 interface Props {
   visible: boolean;
@@ -48,6 +47,7 @@ interface State {
   expenseDialog: boolean;
   gainDialog: boolean;
   settingsDialog: boolean;
+  user: AppUser;
 }
 
 export default defineComponent({
@@ -67,6 +67,7 @@ export default defineComponent({
       settingsDialog: false,
       expenseDialog: false,
       gainDialog: false,
+      user: computed(() => store.getters.user),
       menuItems: [
         {
           label: "Financijske akcije",
