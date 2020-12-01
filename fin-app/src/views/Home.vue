@@ -169,30 +169,32 @@
                 style="height: 100px; width: 100px"
               />
             </div>
-            <data-view
-              v-else
-              @page="pageChanged"
-              layout="grid"
-              :paginator="true"
-              :rows="state.numberOfRows"
-              :value="state.changes"
-              :alwaysShowPaginator="false"
-              :pageLinkSize="state.changesNumberOfPages"
-              :totalRecords="state.changesTotalItems"
-              paginatorPosition="bottom"
-            >
-              <template #grid="slotProps">
-                <div class="p-col-12 p-md-3 p-p-2">
-                  <change-card
-                    :expense="slotProps.data.expense"
-                    :title="slotProps.data.description"
-                    :amount="slotProps.data.amount"
-                    :category="formatCategory(slotProps.data.category)"
-                    :date="format(slotProps.data.date, 'dd/MM/yyyy - HH:mm')"
-                  />
-                </div>
-              </template>
-            </data-view>
+            <div v-else class="p-grid">
+              <div
+                class="p-col-12 p-md-3 p-p-2"
+                v-for="change in state.changes"
+                :key="change.uid"
+              >
+                <change-card
+                  :expense="change.expense"
+                  :title="change.description"
+                  :amount="change.amount"
+                  :category="formatCategory(change.category)"
+                  :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
+                />
+              </div>
+              <div class="p-col-12">
+                <paginator
+                  v-model:first="state.changesOffset"
+                  v-model:rows="state.numberOfRows"
+                  :totalRecords="state.changesTotalItems"
+                  :rowsPerPageOptions="[16, 32]"
+                  :pageLinkSize="state.changesNumberOfPages"
+                  @page="pageChanged"
+                  :alwaysShow="true"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -265,6 +267,7 @@ interface State {
   changesNumberOfPages: number;
   changesTotalItems: number;
   numberOfRows: number;
+  changesOffset: number;
 }
 
 export default defineComponent({
@@ -279,6 +282,7 @@ export default defineComponent({
     const state: State = reactive({
       entry: 0,
       changesNumberOfPages: 0,
+      changesOffset: 0,
       changesTotalItems: 0,
       numberOfRows: 16,
       refresh: inject("refresh"),
@@ -330,8 +334,10 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
-      state.changes = await state.amountHistoryService.getChanges(state.filter);
-      state.baseChanges = [...state.changes];
+      state.baseChanges = await state.amountHistoryService.getChanges(
+        state.filter
+      );
+      state.changes = state.baseChanges.slice(0, state.numberOfRows);
       state.changesTotalItems = state.baseChanges.length;
       state.changesNumberOfPages = Math.floor(
         state.baseChanges.length / state.numberOfRows
@@ -449,9 +455,7 @@ export default defineComponent({
 
     function pageChanged(paginationInfo: PaginatorInfo) {
       const { page, first, rows } = { ...paginationInfo };
-      console.log(page, first, rows);
-      console.log(state.baseChanges.slice(page * first, rows * 2));
-      state.changes = state.baseChanges.slice(page * first, rows * 2);
+      state.changes = state.baseChanges.slice(page * rows, first + rows);
     }
 
     onMounted(async () => {

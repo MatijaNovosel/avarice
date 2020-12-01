@@ -38,6 +38,7 @@ export class AmountHistoryService {
     data.forEach(document => {
       const doc = document.data() as ChangeItemDto;
       res.push({
+        uid: document.id,
         amount: doc.amount,
         category: doc.category,
         date: doc.date.toDate(),
