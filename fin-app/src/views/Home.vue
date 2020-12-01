@@ -171,11 +171,13 @@
             </div>
             <data-view
               v-else
+              @page="pageChanged"
               layout="grid"
               :paginator="true"
               :rows="16"
               :value="state.changes"
               paginatorPosition="bottom"
+              :alwaysShowPaginator="false"
             >
               <template #grid="slotProps">
                 <div class="p-col-12 p-md-3 p-p-2">
@@ -233,6 +235,13 @@ interface CurrentAmount {
   euros: string;
 }
 
+interface PaginatorInfo {
+  page: number;
+  first: number;
+  rows: number;
+  pageCount: number;
+}
+
 interface State {
   currentAmount: CurrentAmount;
   amountHistoryService: AmountHistoryService;
@@ -242,6 +251,7 @@ interface State {
   graphData: GraphData | null;
   totalAmount: string;
   changes: ChangeItem[];
+  baseChanges: ChangeItem[];
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
@@ -266,6 +276,7 @@ export default defineComponent({
       refresh: inject("refresh"),
       cardView: true,
       changes: [],
+      baseChanges: [],
       maxValue: 0,
       filter: {
         category: []
@@ -312,6 +323,7 @@ export default defineComponent({
     async function getChanges() {
       state.changesLoading = true;
       state.changes = await state.amountHistoryService.getChanges(state.filter);
+      state.baseChanges = JSON.parse(JSON.stringify(state.changes));
       state.changesLoading = false;
     }
 
@@ -423,6 +435,11 @@ export default defineComponent({
       state.loading = false;
     }
 
+    function pageChanged(paginationInfo: PaginatorInfo) {
+      const { page, first } = { ...paginationInfo };
+      state.changes = state.baseChanges.slice();
+    }
+
     onMounted(async () => {
       updateData();
     });
@@ -438,7 +455,8 @@ export default defineComponent({
       formatPaymentSource,
       categories,
       resetFilter,
-      getChanges
+      getChanges,
+      pageChanged
     };
   }
 });
