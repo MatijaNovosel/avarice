@@ -23,17 +23,26 @@
       </div>
     </template>
     <template #end>
-      <btn
-        icon="pi pi-power-off"
-        class="p-button-rounded p-mr-2 logout-button"
-        @click="logout"
-      />
+      <div class="end">
+        <btn
+          icon="pi pi-user"
+          class="p-mr-3 p-button-warning"
+          label="Sign in"
+          @click="login"
+        />
+        <btn
+          icon="pi pi-power-off"
+          class="p-button-rounded p-mr-2 logout-button"
+          @click="logout"
+        />
+      </div>
     </template>
   </menubar>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, watch, SetupContext } from "vue";
+import { AuthService } from "@/services/api/auth-service";
 
 interface Props {
   title?: string | null;
@@ -43,6 +52,7 @@ interface Props {
 interface State {
   title?: string | null;
   sidebar: boolean;
+  authService: AuthService;
 }
 
 export default defineComponent({
@@ -55,7 +65,8 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       sidebar: props.sidebar,
-      title: props.title
+      title: props.title,
+      authService: new AuthService()
     });
 
     watch(
@@ -77,10 +88,15 @@ export default defineComponent({
       context.emit("update:sidebar", state.sidebar);
     }
 
+    function login() {
+      state.authService.signIn();
+    }
+
     return {
       state,
       logout,
-      changeSiderbarState
+      changeSiderbarState,
+      login
     };
   }
 });
@@ -101,6 +117,12 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  align-content: center;
+}
+.end {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   align-content: center;
 }
 .p-panelmenu-content {
