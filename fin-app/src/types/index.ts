@@ -3,7 +3,8 @@ const mdiIcons = [
   "wallet",
   "credit-card-outline",
   "currency-eur",
-  "sigma"
+  "sigma",
+  "google"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];

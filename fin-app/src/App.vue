@@ -3,7 +3,7 @@
     <navbar v-model:sidebar="state.visible" />
     <drawer v-model:visible="state.visible" />
   </template>
-  <router-view />
+  <router-view :class="{ 'offset-top': store.getters.isAuthenticated }" />
 </template>
 
 <script lang="ts">
@@ -41,6 +41,9 @@ export default defineComponent({
 
 <style>
 .navbar-offset {
-  margin-top: var(--navbar-height);
+  margin-top: var(--navbar-height) !important;
+}
+.offset-top {
+  margin-top: calc(var(--navbar-height) * 1.4) !important;
 }
 </style>
