@@ -45,12 +45,7 @@ interface Props {
 
 interface State {
   amount?: string | null;
-  icon?:
-    | "credit-card"
-    | "wallet"
-    | "credit-card-outline"
-    | "currency-eur"
-    | "sigma";
+  icon?: MDIIcon;
   title?: string | null;
   color?: string | null;
   loading?: boolean;

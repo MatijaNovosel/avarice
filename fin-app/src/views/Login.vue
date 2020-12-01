@@ -5,7 +5,7 @@
         <mdi-icon color="#fc9219" name="google" />
       </div>
       <div class="login-content">
-        <span class="login-content-title">Sign in with Google</span>
+        <span class="login-content-title">Google OAuth</span>
         <span class="login-content-subtitle p-pt-2">Sign in with Google</span>
       </div>
     </div>
@@ -18,6 +18,7 @@ import MdiIcon from "@/components/mdi-icon.vue";
 import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
 
 interface State {
   authService: AuthService;
@@ -31,6 +32,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const toast = useToast();
+
     const state: State = reactive({
       authService: new AuthService()
     });
@@ -38,6 +41,12 @@ export default defineComponent({
     async function login() {
       const userData = await state.authService.signIn();
       store.dispatch("setUser", userData);
+      toast.add({
+        severity: "success",
+        summary: "Login successful!",
+        detail: "You have been successfully authenticated!",
+        life: 3000
+      });
       router.push({ name: "home" });
     }
 

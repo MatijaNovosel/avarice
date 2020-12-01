@@ -1,4 +1,5 @@
 <template>
+  <toast position="top-right" />
   <template v-if="state.isAuthenticated">
     <navbar v-model:sidebar="state.visible" />
     <drawer v-model:visible="state.visible" />
