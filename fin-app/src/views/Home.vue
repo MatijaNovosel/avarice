@@ -204,7 +204,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject } from "vue";
-import { AmountHistoryService } from "@/services/api/amount-history-service";
+import { ChangeService } from "@/services/api/change-service";
 import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
@@ -248,7 +248,7 @@ interface PaginatorInfo {
 
 interface State {
   currentAmount: CurrentAmount;
-  amountHistoryService: AmountHistoryService;
+  ChangeService: ChangeService;
   loading: boolean;
   changesLoading: boolean;
   account: Account;
@@ -312,7 +312,7 @@ export default defineComponent({
       },
       loading: false,
       changesLoading: false,
-      amountHistoryService: new AmountHistoryService(),
+      ChangeService: new ChangeService(),
       graphOptions: {
         legend: {
           display: true
@@ -334,9 +334,7 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
-      state.baseChanges = await state.amountHistoryService.getChanges(
-        state.filter
-      );
+      state.baseChanges = await state.ChangeService.getChanges(state.filter);
       state.changes = state.baseChanges.slice(0, state.numberOfRows);
       state.changesTotalItems = state.baseChanges.length;
       state.changesNumberOfPages = Math.floor(
@@ -354,7 +352,7 @@ export default defineComponent({
       state.loading = true;
       getChanges();
 
-      const history = await (state.amountHistoryService as AmountHistoryService).getHistory();
+      const history = await (state.ChangeService as ChangeService).getHistory();
       state.settings = await state.userSettingsService.getSettings();
 
       const totalDataset: DatasetItem = {
@@ -481,7 +479,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-@import "../assets/css/variables"
+@use "../assets/css/variables"
 
 .amount-card
   background-color: #7673731a !important
@@ -495,7 +493,7 @@ export default defineComponent({
   color: rgb(69, 170, 98)
 
 .p-card .p-card-title
-  border-bottom: 1px solid $color-dark
+  border-bottom: 1px solid variables.$color-dark
   padding-bottom: 10px
 
 .expense-description
@@ -545,7 +543,7 @@ export default defineComponent({
   font-size: 14px
 
 .filter-divider
-  border-bottom: 1px solid $color-dark
+  border-bottom: 1px solid variables.$color-dark
 
 .spinner-accounts
   width: 25px !important

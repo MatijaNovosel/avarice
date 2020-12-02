@@ -59,7 +59,7 @@
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
-import { AmountHistoryService } from "@/services/api/amount-history-service";
+import { ChangeService } from "@/services/api/change-service";
 import { ChangeItem } from "@/models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -71,7 +71,7 @@ interface Props {
 
 interface State {
   dialog: boolean;
-  amountHistoryService: AmountHistoryService;
+  ChangeService: ChangeService;
   // eslint-disable-next-line
   refresh: any;
 }
@@ -100,7 +100,7 @@ export default defineComponent({
     const model = useVuelidate(rules, entry);
 
     const state: State = reactive({
-      amountHistoryService: new AmountHistoryService(),
+      ChangeService: new ChangeService(),
       dialog: props.dialog,
       refresh: inject("refresh")
     });
@@ -144,9 +144,9 @@ export default defineComponent({
       } as ChangeItem;
 
       payload.date = new Date();
-      const currentAmount = await state.amountHistoryService?.getCurrentAmount();
+      const currentAmount = await state.ChangeService?.getCurrentAmount();
 
-      state.amountHistoryService?.addHistory({
+      state.ChangeService?.addHistory({
         euros: currentAmount.euros,
         gyro:
           entry.paymentSource == PaymentSourceEnum.GyroAccount
@@ -163,7 +163,7 @@ export default defineComponent({
         date: new Date()
       });
 
-      state.amountHistoryService.addChange(payload);
+      state.ChangeService.addChange(payload);
 
       resetDialog();
       refresh();

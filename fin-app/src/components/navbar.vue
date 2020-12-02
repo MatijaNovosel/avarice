@@ -8,16 +8,7 @@
           style="color: white"
           @click="changeSiderbarState"
         />
-        <svg
-          class="p-mr-2 p-ml-2 logo"
-          style="width: 24px; height: 24px"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="white"
-            d="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H12C10.89,6 10,6.9 10,8V16A2,2 0 0,0 12,18M12,16H22V8H12M16,13.5A1.5,1.5 0 0,1 14.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,12A1.5,1.5 0 0,1 16,13.5Z"
-          />
-        </svg>
+        <mdi-icon class="logo p-mx-2" color="#ffffff" name="wallet" />
         <span class="leading-text">FinApp</span>
         <span class="following-text">Matija Novosel</span>
       </div>
@@ -39,6 +30,9 @@ import { defineComponent, reactive, watch, SetupContext } from "vue";
 import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { getService, Types } from "@/di-container";
+import { IAuthService } from "@/services/interfaces/auth-service";
+import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
   title?: string | null;
@@ -54,6 +48,9 @@ interface State {
 export default defineComponent({
   name: "navbar",
   emits: ["update:sidebar"],
+  components: {
+    mdiIcon
+  },
   props: {
     title: String,
     sidebar: Boolean
@@ -78,7 +75,7 @@ export default defineComponent({
     );
 
     async function logout() {
-      await state.authService.signOut();
+      await getService<IAuthService>(Types.AuthService).signOut();
       store.dispatch("unsetUser");
       router.push({ name: "login" });
     }
@@ -106,26 +103,33 @@ export default defineComponent({
   width: 100%
   z-index: 1
   height: variables.$navbar-height
+
 .logo
   align-self: center
+
 .header
   display: flex
   flex-direction: row
   align-items: baseline
   align-content: center
+
 .end
   display: flex
   flex-direction: row
   align-items: center
   align-content: center
+
 .p-panelmenu-content
   background-color: variables.$color-dark-gradient-3 !important
+
 .leading-text
   font-size: 16px
   color: variables.$tarkov-brown
+
 .following-text
   margin-left: 5px
   color: white
+
 .logout-button
   background-color: variables.$tarkov-brown !important
 </style>

@@ -119,14 +119,18 @@ export default defineComponent({
   background-color: #1e1e1e
   border-top-right-radius: 12px
   border-bottom-right-radius: 12px
+
 .content
   display: flex
   flex-direction: column
   justify-content: center
+
 .amount-title
   color: #927d7d
+
 .amount-text
   font-size: 1.5rem
+
 .amount-circle
   border-radius: 50%
   width: 25px

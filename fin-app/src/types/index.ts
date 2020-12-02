@@ -4,7 +4,10 @@ const mdiIcons = [
   "credit-card-outline",
   "currency-eur",
   "sigma",
-  "google"
+  "google",
+  "eye",
+  "eye-off",
+  "dots-horizontal"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];

@@ -1,5 +1,6 @@
-import { ChangeItemDto } from "./../../models/change-item";
-import { CategoryEnum } from "./../../constants/category-enum";
+import { IChangeService } from "./../interfaces/change-service";
+import { ChangeItemDto } from "../../models/change-item";
+import { CategoryEnum } from "../../constants/category-enum";
 import { db } from "../firebase";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
@@ -8,7 +9,7 @@ interface Filter {
   category: CategoryEnum[];
 }
 
-export class AmountHistoryService {
+export class ChangeService implements IChangeService {
   async addChange(payload: ChangeItem): Promise<void> {
     await db.collection("changes").add(payload);
   }

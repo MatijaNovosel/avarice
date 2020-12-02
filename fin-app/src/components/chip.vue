@@ -56,6 +56,7 @@ export default defineComponent({
   border-radius: 16px
   font-size: 14px
   height: 32px
+
 .chip
   align-items: center
   cursor: default
@@ -72,6 +73,7 @@ export default defineComponent({
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
   vertical-align: middle
   white-space: nowrap
+
   & .chip-content
     align-items: center
     display: inline-flex
