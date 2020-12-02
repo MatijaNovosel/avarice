@@ -8,7 +8,7 @@
           style="color: white"
           @click="changeSiderbarState"
         />
-        <mdi-icon class="logo p-mx-2" color="#ffffff" name="wallet" />
+        <mdi-icon class="logo p-mx-2" name="wallet" />
         <span class="leading-text">FinApp</span>
         <span class="following-text">Matija Novosel</span>
       </div>

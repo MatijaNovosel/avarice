@@ -24,7 +24,7 @@ export default defineComponent({
     name: null,
     color: {
       type: String,
-      default: "white"
+      default: "#ffffff"
     }
   },
   setup(props: Props) {

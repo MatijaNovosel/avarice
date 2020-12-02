@@ -5,24 +5,27 @@
     }"
     class="amount-container p-shadow-6"
   >
-    <progress-spinner
-      strokeWidth="10"
-      class="spinner-accounts"
-      v-if="state.loading"
-    />
+    <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
-      <div class="icon p-pr-2">
-        <mdi-icon class="p-mx-2" :color="state.color" :name="state.icon" />
-      </div>
       <div class="content">
-        <span class="amount-title p-mb-1">{{ state.title }}</span>
-        <span
-          :style="{
-            color: state.color
-          }"
-          class="amount-text"
-          >{{ state.amount }}</span
-        >
+        <div class="left-side">
+          <div class="p-pr-2">
+            <mdi-icon class="p-mx-2" :color="state.color" :name="state.icon" />
+          </div>
+          <div class="amount-info">
+            <span class="amount-title p-mb-1">{{ state.title }}</span>
+            <span
+              :style="{
+                color: state.color
+              }"
+              class="amount-text"
+              >{{ state.amount }}</span
+            >
+          </div>
+        </div>
+        <div class="actions">
+          <mdi-icon :name="state.enabled ? 'eye' : 'eye-off'" />
+        </div>
       </div>
     </template>
   </div>
@@ -111,16 +114,32 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
-.amount-container
+.spinner
+  width: 25px
+  height: 25px
+
+.left-side
   display: flex
-  justify-content: flex-start
+  flex-direction: row
   align-items: center
-  padding: 1.2rem 0 1.2rem 0.6rem
+
+.amount-container
+  flex-direction: row
+  display: flex
+  align-items: center
+  padding: 1.2rem 2.4rem 1.2rem 0.6rem
   background-color: #1e1e1e
   border-top-right-radius: 12px
   border-bottom-right-radius: 12px
 
 .content
+  width: 100%
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+
+.amount-info
   display: flex
   flex-direction: column
   justify-content: center
