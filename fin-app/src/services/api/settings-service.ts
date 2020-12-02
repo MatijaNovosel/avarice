@@ -1,7 +1,8 @@
+import { ISettingsService } from "./../interfaces/settings-service";
 import { UserSettings } from "@/models/user-settings";
 import { db } from "../firebase";
 
-export class UserSettingsService {
+export class SettingsService implements ISettingsService {
   async getSettings(): Promise<UserSettings> {
     const data = await db
       .collection("settings")

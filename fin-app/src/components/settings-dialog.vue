@@ -56,8 +56,9 @@ import {
   onMounted,
   inject
 } from "vue";
-import { UserSettingsService } from "@/services/api/user-settings-service";
 import { UserSettings } from "@/models/user-settings";
+import { getService, Types } from "@/di-container";
+import { ISettingsService } from "@/services/interfaces/settings-service";
 
 interface Props {
   dialog: boolean;
@@ -67,7 +68,6 @@ interface State {
   settings: UserSettings;
   dialog: boolean;
   loading: boolean;
-  userSettingsService: UserSettingsService;
   // eslint-disable-next-line
   refresh: any;
 }
@@ -88,7 +88,6 @@ export default defineComponent({
         totalColor: "",
         pocketColor: ""
       },
-      userSettingsService: new UserSettingsService(),
       refresh: inject("refresh")
     });
 
@@ -103,14 +102,18 @@ export default defineComponent({
 
     async function save() {
       state.loading = true;
-      await state.userSettingsService.saveSettings(state.settings);
+      await getService<ISettingsService>(Types.SettingsService).saveSettings(
+        state.settings
+      );
       state.dialog = false;
       state.refresh.refresh();
       state.loading = false;
     }
 
     onMounted(async () => {
-      state.settings = await state.userSettingsService.getSettings();
+      state.settings = await getService<ISettingsService>(
+        Types.SettingsService
+      ).getSettings();
     });
 
     return {

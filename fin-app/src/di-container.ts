@@ -1,3 +1,5 @@
+import { SettingsService } from "./services/api/settings-service";
+import { ISettingsService } from "./services/interfaces/settings-service";
 import { Container } from "inversify";
 import "reflect-metadata";
 import { AuthService } from "./services/api/auth-service";
@@ -8,6 +10,7 @@ import { ChangeService } from "./services/api/change-service";
 export class Types {
   static readonly AuthService = Symbol("IAuthService");
   static readonly ChangeService = Symbol("IChangeService");
+  static readonly SettingsService = Symbol("ISettingsService");
 }
 
 const DIContainer = new Container();
@@ -18,6 +21,9 @@ DIContainer.bind<IAuthService>(Types.AuthService).toConstantValue(
 );
 DIContainer.bind<IChangeService>(Types.ChangeService).toConstantValue(
   new ChangeService()
+);
+DIContainer.bind<ISettingsService>(Types.SettingsService).toConstantValue(
+  new SettingsService()
 );
 
 export function getService<T>(symbol: symbol): T {

@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, SetupContext } from "vue";
-import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -42,7 +41,6 @@ interface Props {
 interface State {
   title?: string | null;
   sidebar: boolean;
-  authService: AuthService;
 }
 
 export default defineComponent({
@@ -60,8 +58,7 @@ export default defineComponent({
     const router = useRouter();
     const state: State = reactive({
       sidebar: props.sidebar,
-      title: props.title,
-      authService: new AuthService()
+      title: props.title
     });
 
     watch(

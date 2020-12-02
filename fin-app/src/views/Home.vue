@@ -204,11 +204,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject } from "vue";
-import { ChangeService } from "@/services/api/change-service";
 import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
-import { UserSettingsService } from "@/services/api/user-settings-service";
 import {
   hexToRgba,
   adjustHexColor,
@@ -222,6 +220,9 @@ import { useI18n } from "vue-i18n";
 import { Account } from "@/models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import ChangeCard from "@/components/change-card.vue";
+import { getService, Types } from "@/di-container";
+import { IChangeService } from "@/services/interfaces/change-service";
+import { ISettingsService } from "@/services/interfaces/settings-service";
 
 interface Filter {
   category: CategoryEnum[];
@@ -248,7 +249,6 @@ interface PaginatorInfo {
 
 interface State {
   currentAmount: CurrentAmount;
-  ChangeService: ChangeService;
   loading: boolean;
   changesLoading: boolean;
   account: Account;
@@ -259,7 +259,6 @@ interface State {
   cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
-  userSettingsService: UserSettingsService;
   settings: UserSettings;
   filter: Filter;
   maxValue: number;
@@ -312,7 +311,6 @@ export default defineComponent({
       },
       loading: false,
       changesLoading: false,
-      ChangeService: new ChangeService(),
       graphOptions: {
         legend: {
           display: true
@@ -328,13 +326,14 @@ export default defineComponent({
         }
       },
       graphData: null,
-      totalAmount: "0,00HRK",
-      userSettingsService: new UserSettingsService()
+      totalAmount: "0,00HRK"
     });
 
     async function getChanges() {
       state.changesLoading = true;
-      state.baseChanges = await state.ChangeService.getChanges(state.filter);
+      state.baseChanges = await getService<IChangeService>(
+        Types.ChangeService
+      ).getChanges(state.filter);
       state.changes = state.baseChanges.slice(0, state.numberOfRows);
       state.changesTotalItems = state.baseChanges.length;
       state.changesNumberOfPages = Math.floor(
@@ -352,8 +351,13 @@ export default defineComponent({
       state.loading = true;
       getChanges();
 
-      const history = await (state.ChangeService as ChangeService).getHistory();
-      state.settings = await state.userSettingsService.getSettings();
+      const history = await getService<IChangeService>(
+        Types.ChangeService
+      ).getHistory();
+
+      state.settings = await getService<ISettingsService>(
+        Types.SettingsService
+      ).getSettings();
 
       const totalDataset: DatasetItem = {
         label: t("account.total"),

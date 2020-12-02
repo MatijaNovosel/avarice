@@ -13,18 +13,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent } from "vue";
 import MdiIcon from "@/components/mdi-icon.vue";
-import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
-
-interface State {
-  authService: AuthService;
-}
 
 export default defineComponent({
   name: "login",
@@ -35,11 +30,6 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const toast = useToast();
-
-    const state: State = reactive({
-      authService: new AuthService()
-    });
-
     async function login() {
       const userData = await getService<IAuthService>(
         Types.AuthService
@@ -55,7 +45,6 @@ export default defineComponent({
     }
 
     return {
-      state,
       login
     };
   }
