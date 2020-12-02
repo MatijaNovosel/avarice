@@ -35,6 +35,7 @@
             class="p-mr-3 graph-enable-btn"
             :size="20"
             :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
+            v-tooltip.bottom="'Prikaži na grafu'"
           />
           <mdi-icon
             class="display-btn"
@@ -42,6 +43,7 @@
             :size="20"
             :name="state.amountVisible ? 'eye' : 'eye-off'"
             @click="amountVisibleChanged"
+            v-tooltip.bottom="'Sakrij iznos'"
           />
         </div>
       </div>
