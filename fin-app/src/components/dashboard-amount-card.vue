@@ -10,7 +10,7 @@
       <div class="content">
         <div class="left-side">
           <div class="p-pr-2">
-            <mdi-icon class="p-mx-2" :color="state.color" :name="state.icon" />
+            <mdi-icon class="p-mx-3" :color="state.color" :name="state.icon" />
           </div>
           <div class="amount-info">
             <span class="amount-title p-mb-1">{{ state.title }}</span>
@@ -163,6 +163,7 @@ export default defineComponent({
 
 .amount-text
   font-size: 1.5rem
+  font-weight: bold
 
 .amount-circle
   border-radius: 50%

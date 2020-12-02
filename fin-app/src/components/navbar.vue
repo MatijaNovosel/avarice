@@ -8,9 +8,9 @@
           style="color: white"
           @click="changeSiderbarState"
         />
-        <mdi-icon class="logo p-mx-2" name="wallet" />
+        <mdi-icon color="#ff8a00" class="logo p-mx-2" name="wallet" />
         <span class="leading-text gradient-text">FinApp</span>
-        <span class="following-text">Matija Novosel</span>
+        <span class="following-text">by Matija Novosel</span>
       </div>
     </template>
     <template #end>
@@ -94,6 +94,7 @@ export default defineComponent({
 
 <style lang="sass">
 @use "../assets/css/variables"
+
 .navbar
   position: fixed
   top: 0
@@ -118,8 +119,10 @@ export default defineComponent({
   background-color: variables.$color-dark-gradient-3 !important
 
 .leading-text
-  font-size: 1.5rem
-  font-family: "Proxima Nova Bold", Georgia, sans-serif !important
+  font-size: 1.7rem
+  font-family: "ProximaNovaBold" !important
+  font-weight: bold
+  align-self: center
 
 .following-text
   margin-left: 5px
