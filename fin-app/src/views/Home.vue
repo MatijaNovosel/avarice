@@ -33,7 +33,7 @@
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.currentAmount.euros"
-        no-checkbox
+        no-enabling
       />
       <dashboard-amount-card
         icon="sigma"
@@ -41,7 +41,7 @@
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.totalAmount"
-        no-checkbox
+        no-enabling
       />
     </div>
     <div class="p-col-12 p-md-8 p-px-5">

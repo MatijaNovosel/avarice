@@ -24,7 +24,18 @@
           </div>
         </div>
         <div class="actions">
-          <mdi-icon :name="state.enabled ? 'eye' : 'eye-off'" />
+          <mdi-icon
+            v-if="!state.noEnabling"
+            :color="state.color"
+            class="p-mr-3"
+            :size="20"
+            :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
+          />
+          <mdi-icon
+            :color="state.color"
+            :size="20"
+            :name="state.amountVisible ? 'eye' : 'eye-off'"
+          />
         </div>
       </div>
     </template>
@@ -43,7 +54,7 @@ interface Props {
   color?: string | null;
   loading?: boolean;
   enabled?: boolean;
-  noCheckbox?: boolean;
+  noEnabling?: boolean;
 }
 
 interface State {
@@ -53,7 +64,8 @@ interface State {
   color?: string | null;
   loading?: boolean;
   enabled?: boolean;
-  noCheckbox?: boolean;
+  noEnabling?: boolean;
+  amountVisible?: boolean;
 }
 
 export default defineComponent({
@@ -68,7 +80,7 @@ export default defineComponent({
     color: String,
     loading: Boolean,
     enabled: Boolean,
-    noCheckbox: Boolean
+    noEnabling: Boolean
   },
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
@@ -78,7 +90,8 @@ export default defineComponent({
       color: props.color,
       loading: props.loading,
       enabled: props.enabled,
-      noCheckbox: props.noCheckbox
+      noEnabling: props.noEnabling,
+      amountVisible: false
     });
 
     function checkboxClicked() {

@@ -1,5 +1,5 @@
 <template>
-  <img :src="state.svgDefinition" :style="{ filter: state.filter }" />
+  <img :style="state.style" :src="state.svgDefinition" />
 </template>
 
 <script lang="ts">
@@ -7,21 +7,32 @@ import { hexToCssFilter } from "@/helpers/helpers";
 import { defineComponent, reactive, watch } from "vue";
 import { MDIIcon } from "@/types/index";
 
+interface Style {
+  filter: string;
+  width: string;
+  height: string;
+}
+
 interface Props {
   name?: MDIIcon;
+  size?: number;
   color?: string;
 }
 
 interface State {
   color?: string;
   svgDefinition: string;
-  filter: string;
+  style: Style;
 }
 
 export default defineComponent({
   name: "mdi-icon",
   props: {
     name: null,
+    size: {
+      type: Number,
+      default: 24
+    },
     color: {
       type: String,
       default: "#ffffff"
@@ -30,8 +41,12 @@ export default defineComponent({
   setup(props: Props) {
     const state: State = reactive({
       color: props.color,
-      filter: "",
-      svgDefinition: ""
+      svgDefinition: "",
+      style: {
+        filter: "",
+        width: "",
+        height: ""
+      }
     });
 
     watch(
@@ -45,10 +60,21 @@ export default defineComponent({
     );
 
     watch(
+      () => props.size,
+      (val) => {
+        state.style.width = `${val}px`;
+        state.style.height = `${val}px`;
+      },
+      {
+        immediate: true
+      }
+    );
+
+    watch(
       () => props.color,
       (val) => {
         if (val == "#") return;
-        state.filter = hexToCssFilter(val as string);
+        state.style.filter = hexToCssFilter(val as string);
       },
       {
         immediate: true

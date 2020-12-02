@@ -7,7 +7,9 @@ const mdiIcons = [
   "google",
   "eye",
   "eye-off",
-  "dots-horizontal"
+  "dots-horizontal",
+  "signal-cellular-3",
+  "signal-off"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];
