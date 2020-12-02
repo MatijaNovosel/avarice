@@ -47,4 +47,5 @@ export default defineComponent({
   margin-top: variables.$navbar-height !important
 .offset-top
   margin-top: variables.$navbar-height * 1.4 !important
+  margin-bottom: variables.$navbar-height !important
 </style>
