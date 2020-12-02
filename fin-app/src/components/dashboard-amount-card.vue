@@ -19,12 +19,17 @@
                 color: state.color
               }"
               class="amount-text"
-              >{{ state.amount }}</span
+              >{{
+                state.amountVisible
+                  ? state.amount
+                  : state.amount.replace(/[0-9]/gi, "*")
+              }}</span
             >
           </div>
         </div>
         <div class="actions">
           <mdi-icon
+            @click="graphEnabled"
             v-if="!state.noEnabling"
             :color="state.color"
             class="p-mr-3 graph-enable-btn"
@@ -36,7 +41,7 @@
             :color="state.color"
             :size="20"
             :name="state.amountVisible ? 'eye' : 'eye-off'"
-            @click="state.amountVisible = !state.amountVisible"
+            @click="amountVisibleChanged"
           />
         </div>
       </div>
@@ -57,6 +62,7 @@ interface Props {
   loading?: boolean;
   enabled?: boolean;
   noEnabling?: boolean;
+  amountVisible?: boolean;
 }
 
 interface State {
@@ -72,6 +78,7 @@ interface State {
 
 export default defineComponent({
   name: "dashboard-amount-card",
+  emits: ["update:enabled", "update:amountVisible"],
   components: {
     mdiIcon
   },
@@ -82,7 +89,8 @@ export default defineComponent({
     color: String,
     loading: Boolean,
     enabled: Boolean,
-    noEnabling: Boolean
+    noEnabling: Boolean,
+    amountVisible: Boolean
   },
   setup(props: Props, context: SetupContext) {
     const state: State = reactive({
@@ -93,11 +101,17 @@ export default defineComponent({
       loading: props.loading,
       enabled: props.enabled,
       noEnabling: props.noEnabling,
-      amountVisible: false
+      amountVisible: props.amountVisible
     });
 
-    function checkboxClicked() {
+    function graphEnabled() {
+      state.enabled = !state.enabled;
       context.emit("update:enabled", state.enabled);
+    }
+
+    function amountVisibleChanged() {
+      state.amountVisible = !state.amountVisible;
+      context.emit("update:amountVisible", state.amountVisible);
     }
 
     watch(
@@ -122,7 +136,8 @@ export default defineComponent({
 
     return {
       state,
-      checkboxClicked
+      graphEnabled,
+      amountVisibleChanged
     };
   }
 });

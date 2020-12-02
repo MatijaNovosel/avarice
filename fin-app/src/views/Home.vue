@@ -9,6 +9,7 @@
         :loading="state.loading"
         :color="`#${state.settings.gyroColor}`"
         :amount="state.currentAmount.gyro"
+        :amount-visible="state.amountVisible.gyro"
         v-model:enabled="state.account.gyro"
       />
       <dashboard-amount-card
@@ -17,6 +18,7 @@
         :loading="state.loading"
         :color="`#${state.settings.checkingColor}`"
         :amount="state.currentAmount.checking"
+        :amount-visible="state.amountVisible.checking"
         v-model:enabled="state.account.checking"
       />
       <dashboard-amount-card
@@ -25,6 +27,7 @@
         :loading="state.loading"
         :color="`#${state.settings.pocketColor}`"
         :amount="state.currentAmount.pocket"
+        :amount-visible="state.amountVisible.pocket"
         v-model:enabled="state.account.pocket"
       />
       <dashboard-amount-card
@@ -33,6 +36,7 @@
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.currentAmount.euros"
+        :amount-visible="state.amountVisible.euros"
         no-enabling
       />
       <dashboard-amount-card
@@ -41,6 +45,7 @@
         :loading="state.loading"
         :color="`#${state.settings.totalColor}`"
         :amount="state.totalAmount"
+        :amount-visible="state.amountVisible.total"
         no-enabling
       />
     </div>
@@ -247,6 +252,14 @@ interface PaginatorInfo {
   pageCount: number;
 }
 
+interface AmountVisible {
+  gyro: boolean;
+  checking: boolean;
+  pocket: boolean;
+  euros: boolean;
+  total: boolean;
+}
+
 interface State {
   currentAmount: CurrentAmount;
   loading: boolean;
@@ -267,6 +280,7 @@ interface State {
   changesTotalItems: number;
   numberOfRows: number;
   changesOffset: number;
+  amountVisible: AmountVisible;
 }
 
 export default defineComponent({
@@ -279,6 +293,13 @@ export default defineComponent({
     const { t } = useI18n();
 
     const state: State = reactive({
+      amountVisible: {
+        gyro: false,
+        checking: false,
+        pocket: false,
+        euros: true,
+        total: true
+      },
       entry: 0,
       changesNumberOfPages: 0,
       changesOffset: 0,
