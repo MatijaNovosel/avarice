@@ -98,41 +98,34 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  height: var(--navbar-height);
-}
-.logo {
-  align-self: center;
-}
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  align-content: center;
-}
-.end {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-}
-.p-panelmenu-content {
-  background-color: var(--color-dark-gradient-3) !important;
-}
-.leading-text {
-  font-size: 16px;
-  color: var(--tarkov-brown);
-}
-.following-text {
-  margin-left: 5px;
-  color: white;
-}
-.logout-button {
-  background-color: var(--tarkov-brown) !important;
-}
+<style lang="sass">
+@use "../assets/css/variables"
+.navbar
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 1
+  height: variables.$navbar-height
+.logo
+  align-self: center
+.header
+  display: flex
+  flex-direction: row
+  align-items: baseline
+  align-content: center
+.end
+  display: flex
+  flex-direction: row
+  align-items: center
+  align-content: center
+.p-panelmenu-content
+  background-color: variables.$color-dark-gradient-3 !important
+.leading-text
+  font-size: 16px
+  color: variables.$tarkov-brown
+.following-text
+  margin-left: 5px
+  color: white
+.logout-button
+  background-color: variables.$tarkov-brown !important
 </style>

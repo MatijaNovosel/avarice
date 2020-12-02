@@ -59,34 +59,28 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.expense {
-  border-left: 10px solid rgb(197, 38, 38);
-  color: rgb(197, 38, 38);
-  background-color: rgb(94, 33, 33);
-}
-.gain {
-  border-left: 10px solid rgb(66, 135, 51);
-  color: rgb(66, 135, 51);
-  background-color: rgb(46, 84, 37);
-}
-.amount-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.2rem;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-  user-select: none;
-}
-.amount-title {
-  color: #927d7d;
-}
-.amount-text {
-  font-size: 1.5rem;
-}
-.amount-action {
-  align-self: flex-end;
-  color: #bfb4b4;
-}
+<style scoped lang="sass">
+.expense
+  border-left: 10px solid rgb(197, 38, 38)
+  color: rgb(197, 38, 38)
+  background-color: rgb(94, 33, 33)
+.gain
+  border-left: 10px solid rgb(66, 135, 51)
+  color: rgb(66, 135, 51)
+  background-color: rgb(46, 84, 37)
+.amount-container
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 1.2rem
+  border-top-right-radius: 6px
+  border-bottom-right-radius: 6px
+  user-select: none
+.amount-title
+  color: #927d7d
+.amount-text
+  font-size: 1.5rem
+.amount-action
+  align-self: flex-end
+  color: #bfb4b4
 </style>

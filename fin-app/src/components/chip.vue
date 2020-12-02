@@ -51,33 +51,30 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.chip.size-default {
-  border-radius: 16px;
-  font-size: 14px;
-  height: 32px;
-}
-.chip {
-  align-items: center;
-  cursor: default;
-  display: inline-flex;
-  line-height: 20px;
-  max-width: 100%;
-  outline: none;
-  overflow: hidden;
-  padding: 0 12px;
-  position: relative;
-  text-decoration: none;
-  transition-duration: 0.28s;
-  transition-property: box-shadow, opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  vertical-align: middle;
-  white-space: nowrap;
-}
-.chip .chip-content {
-  align-items: center;
-  display: inline-flex;
-  height: 100%;
-  max-width: 100%;
-}
+<style lang="sass">
+.chip.size-default
+  border-radius: 16px
+  font-size: 14px
+  height: 32px
+.chip
+  align-items: center
+  cursor: default
+  display: inline-flex
+  line-height: 20px
+  max-width: 100%
+  outline: none
+  overflow: hidden
+  padding: 0 12px
+  position: relative
+  text-decoration: none
+  transition-duration: 0.28s
+  transition-property: box-shadow, opacity
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  vertical-align: middle
+  white-space: nowrap
+  & .chip-content
+    align-items: center
+    display: inline-flex
+    height: 100%
+    max-width: 100%
 </style>

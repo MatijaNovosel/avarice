@@ -58,37 +58,30 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.login-form:hover {
-  cursor: pointer;
-}
-.login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-.login-icon {
-  align-self: center;
-}
-.login-form {
-  padding: 2rem 1.8rem;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: row;
-}
-.login-content {
-  display: flex;
-  flex-direction: column;
-}
-.login-content-title {
-  user-select: none;
-  font-size: 1.3em;
-  color: white;
-}
-.login-content-subtitle {
-  user-select: none;
-  color: rgb(170, 170, 170);
-}
+<style lang="sass">
+.login-form:hover
+  cursor: pointer
+.login-container
+  min-height: 100vh
+  display: flex
+  align-items: center
+  justify-content: space-around
+.login-icon
+  align-self: center
+.login-form
+  padding: 2rem 1.8rem
+  background-color: #1e1e1e
+  border-radius: 12px
+  display: flex
+  flex-direction: row
+.login-content
+  display: flex
+  flex-direction: column
+  &-title
+    user-select: none
+    font-size: 1.3em
+    color: white
+  &-subtitle
+    user-select: none
+    color: rgb(170, 170, 170)
 </style>

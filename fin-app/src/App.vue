@@ -41,11 +41,10 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.navbar-offset {
-  margin-top: var(--navbar-height) !important;
-}
-.offset-top {
-  margin-top: calc(var(--navbar-height) * 1.4) !important;
-}
+<style lang="sass">
+@use "assets/css/variables"
+.navbar-offset
+  margin-top: variables.$navbar-height !important
+.offset-top
+  margin-top: variables.$navbar-height * 1.4 !important
 </style>

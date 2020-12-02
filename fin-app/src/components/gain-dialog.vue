@@ -186,7 +186,4 @@ export default defineComponent({
 </script>
 
 <style>
-.is-invalid {
-  border: 2px solid rgb(138, 20, 20);
-}
 </style>

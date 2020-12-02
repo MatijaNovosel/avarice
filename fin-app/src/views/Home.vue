@@ -480,100 +480,77 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.aside-reverse {
-  position: absolute;
-  right: 45px;
-  top: 55px;
-}
-.amount-card {
-  background-color: #7673731a !important;
-  border-radius: 12px !important;
-  margin: 0.5em;
-}
-.expense-text {
-  color: rgb(197, 38, 38);
-}
-.gain-text {
-  color: rgb(69, 170, 98);
-}
-.p-card .p-card-body {
-  padding: 10px 0px 0px 0px !important;
-}
-.p-card .p-card-title {
-  border-bottom: 1px solid var(--color-dark);
-  padding-bottom: 10px;
-}
-.expense-description {
-  color: rgb(155, 154, 154);
-}
-.expense-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.p-card-footer {
-  border-top: 1px solid var(--color-dark);
-  padding: 15px 10px 15px 10px !important;
-}
-.currency-change-caret {
-  -webkit-animation: up-and-down 0.5s infinite alternate;
-  animation: up-and-down 0.5s infinite alternate;
-}
-.currency-change-caret-table {
-  -webkit-animation: up-and-down-table 0.5s infinite alternate;
-  animation: up-and-down-table 0.5s infinite alternate;
-}
-.amount-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 100%);
-  grid-gap: 1.5em;
-}
-.changes-container {
-  padding: 1.5rem;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-}
-.chart-container {
-  padding: 2rem;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-}
-@-webkit-keyframes up-and-down-table {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-2px);
-  }
-}
-@keyframes up-and-down-table {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-2px);
-  }
-}
-.p-accordion-header-link {
-  background-color: rgba(255, 255, 255, 0.04) !important;
-  z-index: 0 !important;
-}
-.p-paginator {
-  justify-content: center !important;
-}
-.filter-item-text {
-  color: #b6b3b3;
-  font-size: 14px;
-}
-.filter-divider {
-  border-bottom: 1px solid var(--color-dark);
-}
-.spinner-accounts {
-  width: 25px !important;
-  height: 25px !important;
-}
-.p-dataview .p-dataview-content {
-  padding: 0px !important;
-}
+<style lang="sass">
+@import "../assets/css/variables"
+
+.amount-card
+  background-color: #7673731a !important
+  border-radius: 12px !important
+  margin: 0.5em
+
+.expense-text
+  color: rgb(197, 38, 38)
+
+.gain-text
+  color: rgb(69, 170, 98)
+
+.p-card .p-card-title
+  border-bottom: 1px solid $color-dark
+  padding-bottom: 10px
+
+.expense-description
+  color: rgb(155, 154, 154)
+
+.expense-title
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+
+.currency-change-caret
+  animation: up-and-down 0.5s infinite alternate
+
+  &-table
+    animation: up-and-down-table 0.5s infinite alternate
+
+.amount-cards-container
+  display: grid
+  grid-template-columns: repeat(auto-fit, 100%)
+  grid-gap: 1.5em
+
+.changes-container
+  padding: 1.5rem
+  background-color: #1e1e1e
+  border-radius: 12px
+
+.chart-container
+  padding: 2rem
+  background-color: #1e1e1e
+  border-radius: 12px
+
+@keyframes up-and-down-table
+  0%
+    transform: translateY(0)
+  100%
+    transform: translateY(-2px)
+
+.p-accordion-header-link
+  background-color: rgba(255, 255, 255, 0.04) !important
+  z-index: 0 !important
+
+.p-paginator
+  justify-content: center !important
+
+.filter-item-text
+  color: #b6b3b3
+  font-size: 14px
+
+.filter-divider
+  border-bottom: 1px solid $color-dark
+
+.spinner-accounts
+  width: 25px !important
+  height: 25px !important
+
+.p-dataview .p-dataview-content
+  padding: 0px !important
 </style>

@@ -50,7 +50,7 @@ import "primevue/resources/themes/mdc-dark-deeppurple/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
-import "@/assets/css/site.css";
+import "@/assets/css/site.sass";
 
 // Translations
 import en from "@/translations/en";

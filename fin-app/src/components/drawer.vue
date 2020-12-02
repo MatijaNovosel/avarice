@@ -104,37 +104,31 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.drawer-header {
-  margin: 10px 0px 15px 0px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.navbar-height {
-  height: var(--navbar-height);
-}
-.header-title {
-  margin: 10px 0px 5px 0px;
-  font-size: 16px;
-  color: var(--tarkov-brown);
-}
-.header-subtitle {
-  font-size: 12px;
-}
-.avatar {
-  border-radius: 50%;
-  width: 100px;
-}
-.settings-button {
-  position: absolute;
-  top: -10px;
-  right: 0px;
-  color: grey !important;
-}
-.sidebar {
-  outline: none;
-}
+<style lang="sass">
+@use "../assets/css/variables"
+.drawer-header
+  margin: 10px 0px 15px 0px
+  text-align: center
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+.navbar-height
+  height: variables.$navbar-height
+.header-title
+  margin: 10px 0px 5px 0px
+  font-size: 16px
+  color: variables.$tarkov-brown
+.header-subtitle
+  font-size: 12px
+.avatar
+  border-radius: 50%
+  width: 100px
+.settings-button
+  position: absolute !important
+  top: -10px
+  right: 0px
+  color: grey !important
+.sidebar
+  outline: none
 </style>
