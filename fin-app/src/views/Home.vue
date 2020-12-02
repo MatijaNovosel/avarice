@@ -56,7 +56,7 @@
     <div class="p-col-12 p-pl-4 p-pr-5 p-mt-5">
       <div class="p-shadow-6 changes-container">
         <div class="p-grid">
-          <div class="p-col-12">
+          <div class="p-col-12 p-mb-5">
             <accordion>
               <accordion-tab>
                 <template #header>
@@ -183,7 +183,7 @@
                   :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
                 />
               </div>
-              <div class="p-col-12">
+              <div class="p-col-12 p-mt-5">
                 <paginator
                   v-model:first="state.changesOffset"
                   v-model:rows="state.numberOfRows"
