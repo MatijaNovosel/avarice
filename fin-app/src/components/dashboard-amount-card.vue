@@ -27,14 +27,16 @@
           <mdi-icon
             v-if="!state.noEnabling"
             :color="state.color"
-            class="p-mr-3"
+            class="p-mr-3 graph-enable-btn"
             :size="20"
             :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
           />
           <mdi-icon
+            class="display-btn"
             :color="state.color"
             :size="20"
             :name="state.amountVisible ? 'eye' : 'eye-off'"
+            @click="state.amountVisible = !state.amountVisible"
           />
         </div>
       </div>
@@ -127,17 +129,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
+@import "../assets/css/helpers"
+
 .spinner
   width: 25px
   height: 25px
 
 .left-side
   display: flex
-  flex-direction: row
   align-items: center
 
 .amount-container
-  flex-direction: row
   display: flex
   align-items: center
   padding: 1.2rem 2.4rem 1.2rem 0.6rem
@@ -148,7 +150,6 @@ export default defineComponent({
 .content
   width: 100%
   display: flex
-  flex-direction: row
   justify-content: space-between
   align-items: center
 
@@ -167,4 +168,10 @@ export default defineComponent({
   border-radius: 50%
   width: 25px
   height: 25px
+
+.graph-enable-btn
+  @extend .cursor-pointer
+
+.display-btn
+  @extend .cursor-pointer
 </style>

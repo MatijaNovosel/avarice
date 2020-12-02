@@ -9,7 +9,7 @@
           @click="changeSiderbarState"
         />
         <mdi-icon class="logo p-mx-2" name="wallet" />
-        <span class="leading-text">FinApp</span>
+        <span class="leading-text gradient-text">FinApp</span>
         <span class="following-text">Matija Novosel</span>
       </div>
     </template>
@@ -121,7 +121,7 @@ export default defineComponent({
 
 .leading-text
   font-size: 16px
-  color: variables.$tarkov-brown
+  font-weight: bold
 
 .following-text
   margin-left: 5px
