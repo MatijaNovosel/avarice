@@ -19,6 +19,8 @@ import { AuthService } from "@/services/api/auth-service";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
+import { getService, Types } from "@/di-container";
+import { IAuthService } from "@/services/interfaces/auth-service";
 
 interface State {
   authService: AuthService;
@@ -39,7 +41,9 @@ export default defineComponent({
     });
 
     async function login() {
-      const userData = await state.authService.signIn();
+      const userData = await getService<IAuthService>(
+        Types.AuthService
+      ).signIn();
       store.dispatch("setUser", userData);
       toast.add({
         severity: "success",

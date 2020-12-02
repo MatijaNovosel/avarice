@@ -1,15 +1,18 @@
+import { IAuthService } from "./../interfaces/auth-service";
 import { AppUser } from "./../../models/user";
 import firebase from "firebase";
 import { db } from "../firebase";
 import { User } from "@firebase/auth-types";
 
-export class AuthService {
-  async updateUser({
-    uid,
-    email,
-    displayName,
-    photoURL
-  }: User): Promise<AppUser> {
+export class AuthService implements IAuthService {
+  async signIn(): Promise<AppUser> {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const credential = await firebase.auth().signInWithPopup(provider);
+
+    const { uid, email, displayName, photoURL } = {
+      ...(credential.user as User)
+    };
+
     const userRef = db.doc(`users/${uid}`);
     const data: AppUser = {
       uid,
@@ -18,13 +21,8 @@ export class AuthService {
       photoURL
     };
     await userRef.set(data, { merge: true });
-    return data;
-  }
-  async signIn(): Promise<AppUser> {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const credential = await firebase.auth().signInWithPopup(provider);
-    const userData = await this.updateUser(credential.user as User);
-    return userData;
+
+    return { uid, email, displayName, photoURL } as AppUser;
   }
   async signOut(): Promise<void> {
     await firebase.auth().signOut();
