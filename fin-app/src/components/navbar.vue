@@ -106,13 +106,11 @@ export default defineComponent({
 
 .header
   display: flex
-  flex-direction: row
   align-items: baseline
   align-content: center
 
 .end
   display: flex
-  flex-direction: row
   align-items: center
   align-content: center
 
@@ -120,8 +118,8 @@ export default defineComponent({
   background-color: variables.$color-dark-gradient-3 !important
 
 .leading-text
-  font-size: 16px
-  font-weight: bold
+  font-size: 1.5rem
+  font-family: "Proxima Nova Bold", Georgia, sans-serif !important
 
 .following-text
   margin-left: 5px
