@@ -120,11 +120,13 @@ export default defineComponent({
 
 .header-title
   margin: 10px 0px 5px 0px
-  font-size: 16px
-  color: variables.$tarkov-brown
+  font-size: 1.5rem
+  font-family: "ProximaNovaBold" !important
 
 .header-subtitle
   font-size: 12px
+  color: #7e7e7e
+  font-family: "ProximaNovaBold" !important
 
 .avatar
   border-radius: 50%
