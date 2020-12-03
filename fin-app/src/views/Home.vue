@@ -85,12 +85,6 @@
                       </template>
                     </list-box>
                   </div>
-                  <div class="p-col-12 p-my-2">
-                    <input-switch v-model="state.cardView" id="input-switch" />
-                    <label class="p-ml-2" for="input-switch">
-                      Prikaz u obliku kartica</label
-                    >
-                  </div>
                   <div class="p-col-12 p-mt-3 p-text-right">
                     <btn
                       @click="resetFilter"
@@ -109,62 +103,7 @@
               </accordion-tab>
             </accordion>
           </div>
-          <div class="p-col-12" v-if="!state.cardView">
-            <data-table
-              :value="state.changes"
-              :paginator="true"
-              :rows="10"
-              :rowHover="true"
-              class="p-datatable-striped p-datatable-sm"
-              :loading="state.changesLoading"
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              :rowsPerPageOptions="[10, 25, 50]"
-              currentPageReportTemplate="Prikazujem {first} od {last} ({totalRecords} ukupnih zapisa)"
-            >
-              <template #empty> Nema ni jednog troška. </template>
-              <template #loading> Učitavam troškove. Pričekajte. </template>
-              <column field="amount" header="Iznos">
-                <template #body="slotProps">
-                  <span
-                    :class="{
-                      'expense-text': slotProps.data.expense,
-                      'gain-text': !slotProps.data.expense
-                    }"
-                    >{{ `${slotProps.data.amount}HRK` }}
-                    <i
-                      class="pi currency-change-caret-table p-ml-1"
-                      :class="{
-                        'pi-caret-up': !slotProps.data.expense,
-                        'pi-caret-down': slotProps.data.expense
-                      }"
-                      style="font-size: 1rem"
-                    />
-                  </span>
-                </template>
-              </column>
-              <column field="description" header="Opis">
-                <template #body="slotProps">
-                  {{ slotProps.data.description }}
-                </template>
-              </column>
-              <column field="paymentSource" header="Izvor plaćanja">
-                <template #body="slotProps">
-                  {{ formatPaymentSource(slotProps.data.paymentSource) }}
-                </template>
-              </column>
-              <column field="tag" header="Kategorija">
-                <template #body="slotProps">
-                  {{ formatTag(slotProps.data.tag) }}
-                </template>
-              </column>
-              <column field="date" header="Datum">
-                <template #body="slotProps">
-                  {{ format(slotProps.data.date, "dd/MM/yyyy - HH:mm") }}
-                </template>
-              </column>
-            </data-table>
-          </div>
-          <div class="p-col-12" v-else>
+          <div class="p-col-12">
             <div
               class="p-grid p-justify-center p-my-6"
               v-if="state.changesLoading"
@@ -269,7 +208,6 @@ interface State {
   totalAmount: string;
   changes: ChangeItem[];
   baseChanges: ChangeItem[];
-  cardView: boolean;
   // eslint-disable-next-line
   refresh: any;
   settings: UserSettings;
@@ -306,7 +244,6 @@ export default defineComponent({
       changesTotalItems: 0,
       numberOfRows: 16,
       refresh: inject("refresh"),
-      cardView: true,
       changes: [],
       baseChanges: [],
       maxValue: 0,
