@@ -11,6 +11,7 @@
     <mdi-icon
       @click="state.settingsDialog = true"
       name="cog"
+      color="#7e7e7e"
       class="settings-button cursor-pointer"
       v-tooltip.bottom="'Postavke'"
     />
@@ -125,6 +126,7 @@ export default defineComponent({
   margin: 10px 0px 5px 0px
   font-size: 1.3rem
   font-family: "ProximaNovaBold" !important
+  color: var(--primary-color)
 
 .header-subtitle
   font-size: 12px
