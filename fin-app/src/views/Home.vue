@@ -89,7 +89,7 @@
                   </div>
                   <div class="p-col-12 p-my-2">
                     <input-switch v-model="state.cardView" id="input-switch" />
-                    <label for="input-switch"> Prikaz u obliku kartica</label>
+                    <label class="p-ml-2" for="input-switch"> Prikaz u obliku kartica</label>
                   </div>
                   <div class="p-col-12 p-mt-3 p-text-right">
                     <btn

@@ -813,14 +813,14 @@
   background: rgba(255, 255, 255, 0.3);
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-  background: rgba(103, 58, 183, 0.5);
+  background: rgba(255, 138, 0, 0.5);
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
   background: #ff8a00;
 }
 .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover
   .p-inputswitch-slider {
-  background: rgba(103, 58, 183, 0.5);
+  background: rgba(255, 138, 0, 0.5);
 }
 .p-inputswitch.p-error,
 .p-inputswitch.p-invalid {
