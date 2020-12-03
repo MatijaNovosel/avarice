@@ -108,7 +108,7 @@ export default defineComponent({
 @use "../assets/css/variables"
 
 .drawer-header
-  margin: 10px 0px 15px 0px
+  margin: 25px 0px 25px 0px
   text-align: center
   display: flex
   flex-direction: column

@@ -159,13 +159,6 @@ export default defineComponent({
 .login-btn
   background: linear-gradient(90deg, #ff8a00, #e52e71)
 
-.p-inputtext:enabled:focus
-  box-shadow: inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00
-  border-color: #ff8a00
-
-.p-float-label input:focus ~ label, .p-float-label .p-inputwrapper-focus ~ label
-  color: #ff8a00
-
 .login-content
   display: flex
   flex-direction: column

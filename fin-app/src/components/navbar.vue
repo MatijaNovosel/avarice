@@ -129,5 +129,5 @@ export default defineComponent({
   color: white
 
 .logout-button
-  background-color: variables.$tarkov-brown !important
+  background: linear-gradient(90deg, #ff8a00, #e52e71) !important
 </style>
