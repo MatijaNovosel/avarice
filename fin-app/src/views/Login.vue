@@ -4,10 +4,10 @@
       <div class="app-title p-pb-3">
         <span
           ><span class="app-title-text gradient-text p-pr-2">FinApp</span>
-          <span class="author-text">by MatijaNovosel</span></span
+          <span class="author-text">by Matija Novosel</span></span
         >
       </div>
-      <div class="login-form p-shadow-6 expand" @click="login">
+      <div class="login-form cursor-pointer p-shadow-6 expand" @click="login">
         <div class="login-icon p-mr-4">
           <mdi-icon color="#fc9219" name="google" />
         </div>
@@ -16,7 +16,7 @@
           <span class="login-content-subtitle p-pt-2">Sign in with Google</span>
         </div>
       </div>
-      <div class="login-form p-shadow-6 expand p-mt-3" @click="login">
+      <div class="login-form cursor-pointer p-shadow-6 expand p-mt-3">
         <div class="login-icon p-mr-4">
           <mdi-icon color="#4267b2" name="facebook" />
         </div>
@@ -26,6 +26,18 @@
             >Sign in with Facebook</span
           >
         </div>
+      </div>
+      <div class="login-form-standard p-shadow-6 p-mt-3">
+        <span class="login-title p-mb-4">Sign in with email</span>
+        <span class="p-float-label">
+          <input-text class="login-input" name="email" id="email" />
+          <label for="email">Email</label>
+        </span>
+        <span class="p-float-label p-my-3">
+          <input-text class="login-input" name="password" id="password" />
+          <label for="password">Password</label>
+        </span>
+        <btn class="p-my-2 login-btn" label="Sign in" />
       </div>
     </div>
   </div>
@@ -70,7 +82,9 @@ export default defineComponent({
 });
 </script>
 
-<style lang="sass">
+<style scoped lang="sass">
+@import "../assets/css/helpers"
+
 .author-text
   color: white
 
@@ -78,12 +92,10 @@ export default defineComponent({
   font-size: 3.2rem
   font-family: "ProximaNovaBold" !important
 
-.login-form:hover
-  cursor: pointer
-
 .login-screen
   display: flex
   flex-direction: column
+  align-content: center
 
 .login-container
   min-height: 100vh
@@ -100,6 +112,32 @@ export default defineComponent({
   background-color: #1e1e1e
   border-radius: 12px
   display: flex
+
+.login-input
+  width: 100%
+
+.login-title
+  font-size: 1.2rem
+  text-align: center
+  color: white
+  font-family: "ProximaNovaBold" !important
+
+.login-form-standard
+  padding: 1.4rem 1.8rem
+  background-color: #1e1e1e
+  border-radius: 12px
+  display: flex
+  flex-direction: column
+
+.login-btn
+  background: linear-gradient(90deg, #ff8a00, #e52e71)
+
+.p-inputtext:enabled:focus
+  box-shadow: inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00, inset 0 0 0 1px #ff8a00
+  border-color: #ff8a00
+
+.p-float-label input:focus ~ label, .p-float-label .p-inputwrapper-focus ~ label
+  color: #ff8a00
 
 .login-content
   display: flex
