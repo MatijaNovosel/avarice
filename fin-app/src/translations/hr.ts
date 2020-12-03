@@ -8,5 +8,13 @@ export default {
     gyro: "Žiro račun",
     total: "Ukupno",
     euros: "Euri"
-  }
+  },
+  months: {
+    november: "Studeni",
+    december: "Prosinac"
+  },
+  tag: "Kategorija",
+  filterAndOtherOptions: "Filtriranje i ostale mogućnosti",
+  filter: "Filtriraj",
+  removeFilter: "Ukloni filtrirnaje"
 };

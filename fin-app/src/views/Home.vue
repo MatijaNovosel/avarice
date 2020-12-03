@@ -53,10 +53,10 @@
       <div class="p-shadow-6 chart-container">
         <div class="month-select-container">
           <div v-ripple class="p-ripple month-select-item cursor-pointer">
-            November
+            {{ $t("months.november") }}
           </div>
           <div v-ripple class="p-ripple month-select-item cursor-pointer">
-            December
+            {{ $t("months.december") }}
           </div>
         </div>
         <chart
@@ -75,10 +75,12 @@
               <accordion-tab>
                 <template #header>
                   <icon class="p-pr-3" name="filter" />
-                  <span>Filtriranje i ostale mogućnosti</span>
+                  <span>{{ $t("filterAndOtherOptions") }}</span>
                 </template>
                 <div class="p-grid">
-                  <div class="p-col-12 p-mt-2 filter-item-text">Kategorija</div>
+                  <div class="p-col-12 p-mt-2 filter-item-text">
+                    {{ $t("tag") }}
+                  </div>
                   <div class="p-col-12 p-my-2">
                     <list-box
                       :multiple="true"
@@ -97,13 +99,13 @@
                   <div class="p-col-12 p-mt-3 p-text-right">
                     <btn
                       @click="resetFilter"
-                      label="Poništi filtriranje"
+                      :label="$t('removeFilter')"
                       icon="pi pi-ban"
                       class="p-button-raised p-button-danger"
                     />
                     <btn
                       @click="getChanges"
-                      label="Filtriraj"
+                      :label="$t('filter')"
                       icon="pi pi-filter"
                       class="p-button-raised p-button-info p-ml-3"
                     />
