@@ -8,10 +8,10 @@
     style="z-index: 1"
     class="navbar-offset sidebar"
   >
-    <btn
+    <mdi-icon
       @click="state.settingsDialog = true"
-      icon="pi pi-cog"
-      class="p-button-rounded p-button-text settings-button p-button-lg"
+      name="cog"
+      class="settings-button cursor-pointer"
       v-tooltip.bottom="'Postavke'"
     />
     <div class="drawer-header">
@@ -36,6 +36,7 @@ import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
+import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
   visible: boolean;
@@ -58,7 +59,8 @@ export default defineComponent({
   components: {
     ExpenseDialog,
     SettingsDialog,
-    GainDialog
+    GainDialog,
+    mdiIcon
   },
   setup(props: Props) {
     const store = useStore();
@@ -106,6 +108,7 @@ export default defineComponent({
 
 <style lang="sass">
 @use "../assets/css/variables"
+@import "../assets/css/helpers"
 
 .drawer-header
   margin: 25px 0px 25px 0px
@@ -120,7 +123,7 @@ export default defineComponent({
 
 .header-title
   margin: 10px 0px 5px 0px
-  font-size: 1.5rem
+  font-size: 1.3rem
   font-family: "ProximaNovaBold" !important
 
 .header-subtitle
@@ -135,7 +138,7 @@ export default defineComponent({
 .settings-button
   position: absolute !important
   top: -10px
-  right: 0px
+  right: 10px
   color: grey !important
 
 .sidebar
