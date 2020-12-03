@@ -333,6 +333,13 @@ export default defineComponent({
       loading: false,
       changesLoading: false,
       graphOptions: {
+        scales: {
+          yAxes: [
+            {
+              display: false
+            }
+          ]
+        },
         legend: {
           display: true
         },

@@ -46,7 +46,7 @@ import GroupBox from "@/components/group-box.vue";
 import Icon from "@/components/icon.vue";
 
 // CSS
-import "primevue/resources/themes/mdc-dark-deeppurple/theme.css";
+import "@/assets/css/themes/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";

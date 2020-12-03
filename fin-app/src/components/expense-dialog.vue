@@ -9,7 +9,7 @@
     <template #header>
       <h3>Unos novog troška</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3 p-input-filled">
+    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
       <div class="p-field p-col-12">
         <span class="p-float-label p-mb-1">
           <input-number
@@ -49,20 +49,21 @@
         }}</span>
       </div>
       <div class="p-field p-col-12">
-        <group-box icon="id-card" title="Izvor plaćanja">
+        <div class="container">
+          <span class="container-label">Izvor plaćanja</span>
           <select-button
             v-model="entry.paymentSource"
             :options="paymentSources"
             optionLabel="text"
             optionValue="val"
           />
-        </group-box>
+        </div>
       </div>
       <div class="p-field p-col-12">
-        <group-box icon="tag" title="Kategorija">
+        <div class="container">
+          <span class="container-label">Kategorija</span>
           <list-box
             :multiple="false"
-            :filter="true"
             v-model="entry.tag"
             :options="categories"
             dataKey="val"
@@ -74,7 +75,7 @@
               {{ slotProps.option.text }}
             </template>
           </list-box>
-        </group-box>
+        </div>
       </div>
     </div>
     <template #footer>
@@ -216,5 +217,15 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped lang="sass">
+.container-label
+  color: whtie
+  margin-bottom: 1.2rem
+
+.container
+  padding: 1.5em
+  border-radius: 12px
+  background-color: #1e1e1e
+  display: flex
+  flex-direction: column
 </style>
