@@ -1,6 +1,10 @@
 <template>
   <div class="login-container">
-    <div class="login-screen">
+    <div class="loading-screen" v-if="state.loading">
+      <progress-spinner strokeWidth="10" style="height: 100px; width: 100px" />
+      <span class="loading-title p-mt-5 gradient-text">Signing you in ...</span>
+    </div>
+    <div class="login-screen" v-else>
       <div class="app-title p-pb-3">
         <span
           ><span class="app-title-text gradient-text p-pr-2">FinApp</span>
@@ -38,19 +42,24 @@
           <label for="password">Password</label>
         </span>
         <btn class="p-my-2 login-btn" label="Sign in" />
+        <btn class="p-my-2 login-btn" label="Register" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import MdiIcon from "@/components/mdi-icon.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
+
+interface State {
+  loading: boolean;
+}
 
 export default defineComponent({
   name: "login",
@@ -61,7 +70,13 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const toast = useToast();
+
+    const state: State = reactive({
+      loading: false
+    });
+
     async function login() {
+      state.loading = true;
       const userData = await getService<IAuthService>(
         Types.AuthService
       ).signIn();
@@ -72,11 +87,13 @@ export default defineComponent({
         detail: "You have been successfully authenticated!",
         life: 3000
       });
+      state.loading = false;
       router.push({ name: "home" });
     }
 
     return {
-      login
+      login,
+      state
     };
   }
 });
@@ -87,6 +104,16 @@ export default defineComponent({
 
 .author-text
   color: white
+
+.loading-screen
+  display: flex
+  flex-direction: column
+
+.loading-title
+  font-size: 1.6rem
+  text-align: center
+  color: white
+  font-family: "ProximaNovaBold" !important
 
 .app-title-text
   font-size: 3.2rem
