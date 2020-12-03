@@ -9,9 +9,14 @@
   >
     <span class="amount-title p-mb-1">{{ state.title }}</span>
     <span class="amount-text">{{ `${state.amount}HRK` }}</span>
-    <span class="amount-action">
-      {{ `${state.tag} • ${state.date}` }}
-    </span>
+    <div class="amount-end">
+      <div class="amount-tags">
+        <tag :color="state.expense ? '#c52626' : '#428733'">{{
+          state.tag ?? "Bruh"
+        }}</tag>
+      </div>
+      {{ state.date }}
+    </div>
   </div>
 </template>
 
@@ -85,7 +90,12 @@ export default defineComponent({
 .amount-text
   font-size: 1.5rem
 
-.amount-action
+.amount-tags
+  margin-right: 0.7em
+
+.amount-end
+  display: flex
+  align-items: center
   align-self: flex-end
   color: #bfb4b4
 </style>

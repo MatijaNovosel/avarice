@@ -10,7 +10,12 @@
       <div class="content">
         <div class="left-side">
           <div class="p-pr-2">
-            <mdi-icon :size="28" class="p-mx-3" :color="state.color" :name="state.icon" />
+            <mdi-icon
+              :size="28"
+              class="p-mx-3"
+              :color="state.color"
+              :name="state.icon"
+            />
           </div>
           <div class="amount-info">
             <span class="amount-title p-mb-1">{{ state.title }}</span>

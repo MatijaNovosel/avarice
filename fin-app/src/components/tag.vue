@@ -25,8 +25,14 @@ interface State {
 export default defineComponent({
   name: "tag",
   props: {
-    color: String,
-    textColor: String
+    color: {
+      type: String,
+      default: "#000000"
+    },
+    textColor: {
+      type: String,
+      default: "#ffffff"
+    }
   },
   setup(props: Props) {
     const state: State = reactive({
@@ -54,8 +60,7 @@ export default defineComponent({
 <style lang="sass">
 .tag.size-default
   border-radius: 16px
-  font-size: 14px
-  height: 32px
+  font-size: 0.75rem
 
 .tag
   align-items: center
