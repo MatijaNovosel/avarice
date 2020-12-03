@@ -58,13 +58,13 @@
 <script lang="ts">
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { SelectItem } from "@/constants/select-item";
 import { ChangeItem } from "@/models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { TagEnum } from "@/constants/tag-enum";
 import { getService, Types } from "@/di-container";
 import { IChangeService } from "@/services/interfaces/change-service";
+import { createSelectFromEnum } from "@/helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -109,20 +109,10 @@ export default defineComponent({
       (val) => (state.dialog = val)
     );
 
-    const paymentSources: SelectItem<PaymentSourceEnum>[] = [
-      {
-        text: "Žiro račun",
-        val: PaymentSourceEnum.GyroAccount
-      },
-      {
-        text: "Tekući račun",
-        val: PaymentSourceEnum.CheckingAccount
-      },
-      {
-        text: "Džep (novčanik)",
-        val: PaymentSourceEnum.Pocket
-      }
-    ];
+    const paymentSources = createSelectFromEnum(
+      PaymentSourceEnum,
+      "paymentSource"
+    );
 
     function resetDialog() {
       state.dialog = false;

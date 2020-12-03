@@ -11,6 +11,8 @@ export const stringFormatCollection: IndexableCollectionByString = {
     Games: "Igre",
     Gifts: "Darovi",
     PublicTransport: "Javni prijevoz",
-    Other: "Ostalo"
+    Other: "Ostalo",
+    Drink: "Piće",
+    Groceries: "Namirnice"
   }
 };
