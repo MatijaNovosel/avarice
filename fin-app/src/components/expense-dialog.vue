@@ -158,9 +158,10 @@ export default defineComponent({
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
-      entry.description = "";
+      entry.description = "Description";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
       entry.tag = TagEnum.Other;
+      console.log(model.value);
       model.value.$reset;
     }
 
