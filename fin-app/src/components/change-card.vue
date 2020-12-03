@@ -7,7 +7,10 @@
       'gain green': !state.expense
     }"
   >
-    <span class="amount-title p-mb-1">{{ state.title }}</span>
+    <span class="amount-title p-mb-1"
+      >{{ state.title }} •
+      <span class="amount-date p-mb-1">{{ state.date }}</span>
+    </span>
     <span class="amount-text">{{ `${state.amount}HRK` }}</span>
     <div class="amount-end">
       <div class="amount-tags">
@@ -15,7 +18,6 @@
           state.tag ?? "Bruh"
         }}</tag>
       </div>
-      {{ state.date }}
     </div>
   </div>
 </template>
@@ -87,6 +89,9 @@ export default defineComponent({
 .amount-title
   color: #927d7d
 
+.amount-date
+  color: #bfb4b4
+
 .amount-text
   font-size: 1.5rem
 
@@ -97,5 +102,4 @@ export default defineComponent({
   display: flex
   align-items: center
   align-self: flex-end
-  color: #bfb4b4
 </style>
