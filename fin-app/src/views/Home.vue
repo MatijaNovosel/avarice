@@ -51,6 +51,10 @@
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
       <div class="p-shadow-6 chart-container">
+        <div class="month-select-container">
+          <div class="month-select-item cursor-pointer">November</div>
+          <div class="month-select-item cursor-pointer">December</div>
+        </div>
         <chart
           type="line"
           :data="state.graphData"
@@ -282,7 +286,7 @@ export default defineComponent({
         },
         elements: {
           line: {
-            tension: 0.2
+            tension: 0.3
           }
         },
         responsive: true,
@@ -449,6 +453,7 @@ export default defineComponent({
 
 <style lang="sass">
 @use "../assets/css/variables"
+@import "../assets/css/helpers"
 
 .amount-card
   background-color: #7673731a !important
@@ -493,6 +498,20 @@ export default defineComponent({
   padding: 2rem
   background-color: #1e1e1e
   border-radius: 12px
+  display: flex
+  flex-direction: column
+
+.month-select-container
+  display: flex
+
+.month-select-item
+  font-size: 0.8em
+  margin: 0.2em 0.5em
+  padding: 1.2em
+  background-color: #191515
+  border-radius: 12px
+  color: white
+  font-family: "ProximaNovaBold" !important
 
 @keyframes up-and-down-table
   0%
