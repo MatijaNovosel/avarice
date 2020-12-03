@@ -14,23 +14,28 @@
     <span class="amount-text">{{ `${state.amount}HRK` }}</span>
     <div class="amount-end">
       <div class="amount-tags">
-        <tag :color="state.expense ? '#c52626' : '#428733'">{{
-          state.tag ?? "Bruh"
-        }}</tag>
+        <tag
+          v-for="(tag, i) in state.tags"
+          :key="i"
+          :color="state.expense ? '#c52626' : '#428733'"
+          >{{ formatTag(tag) }}</tag
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { TagEnum } from "@/constants/tag-enum";
+import { defineComponent, reactive, watch } from "vue";
+import { formatTag } from "@/helpers/helpers";
 
 interface Props {
   amount?: number | null;
   title?: string | null;
   date?: string | null;
   expense?: boolean | null;
-  tag?: string | null;
+  tags?: TagEnum[] | null;
 }
 
 interface State {
@@ -38,7 +43,7 @@ interface State {
   title?: string | null;
   date?: string | null;
   expense?: boolean | null;
-  tag?: string | null;
+  tags?: TagEnum[] | null;
 }
 
 export default defineComponent({
@@ -46,7 +51,7 @@ export default defineComponent({
   props: {
     amount: Number,
     title: String,
-    tag: String,
+    tags: null,
     date: String,
     expense: Boolean
   },
@@ -55,12 +60,18 @@ export default defineComponent({
       amount: props.amount,
       title: props.title,
       date: props.date,
-      tag: props.tag,
+      tags: props.tags,
       expense: props.expense
     });
 
+    watch(
+      () => props.tags,
+      (val) => (state.tags = val)
+    );
+
     return {
-      state
+      state,
+      formatTag
     };
   }
 });

@@ -46,7 +46,7 @@
     </div>
     <template #footer>
       <btn
-        @click="addExpense"
+        @click="addGain"
         label="Spremi"
         icon="pi pi-save"
         class="p-button-raised p-button-success"
@@ -59,11 +59,12 @@
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { SelectItem } from "@/constants/select-item";
-import { ChangeService } from "@/services/api/change-service";
 import { ChangeItem } from "@/models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { TagEnum } from "@/constants/tag-enum";
+import { getService, Types } from "@/di-container";
+import { IChangeService } from "@/services/interfaces/change-service";
 
 interface Props {
   dialog: boolean;
@@ -71,7 +72,6 @@ interface Props {
 
 interface State {
   dialog: boolean;
-  ChangeService: ChangeService;
   // eslint-disable-next-line
   refresh: any;
 }
@@ -86,7 +86,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       paymentSource: PaymentSourceEnum.GyroAccount,
-      tag: TagEnum.Food,
+      tags: [TagEnum.Food],
       description: "",
       amount: 0,
       date: new Date(),
@@ -100,7 +100,6 @@ export default defineComponent({
     const model = useVuelidate(rules, entry);
 
     const state: State = reactive({
-      ChangeService: new ChangeService(),
       dialog: props.dialog,
       refresh: inject("refresh")
     });
@@ -130,7 +129,7 @@ export default defineComponent({
       entry.amount = 0;
       entry.description = "";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.tag = TagEnum.Other;
+      entry.tags = [TagEnum.Other];
       model.value.$reset;
     }
 
@@ -138,15 +137,20 @@ export default defineComponent({
       state.refresh.refresh();
     }
 
-    async function addExpense() {
+    async function addGain() {
       const payload = {
         ...entry
       } as ChangeItem;
 
       payload.date = new Date();
-      const currentAmount = await state.ChangeService?.getCurrentAmount();
 
-      state.ChangeService?.addHistory({
+      const changeService = await getService<IChangeService>(
+        Types.ChangeService
+      );
+
+      const currentAmount = await changeService.getCurrentAmount();
+
+      await changeService.addHistory({
         euros: currentAmount.euros,
         gyro:
           entry.paymentSource == PaymentSourceEnum.GyroAccount
@@ -163,7 +167,7 @@ export default defineComponent({
         date: new Date()
       });
 
-      state.ChangeService.addChange(payload);
+      changeService.addChange(payload);
 
       resetDialog();
       refresh();
@@ -176,7 +180,7 @@ export default defineComponent({
 
     return {
       state,
-      addExpense,
+      addGain,
       paymentSources,
       hideDialog,
       model

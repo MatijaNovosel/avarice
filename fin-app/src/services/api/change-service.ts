@@ -1,25 +1,39 @@
 import { IChangeService } from "./../interfaces/change-service";
 import { ChangeItemDto } from "../../models/change-item";
-import { TagEnum } from "../../constants/tag-enum";
 import { db } from "../firebase";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
-interface Filter {
-  tag: TagEnum[];
-}
-
 export class ChangeService implements IChangeService {
+  async funkcija() {
+    const res: ChangeItem[] = [];
+    const data = await db
+      .collection("changges")
+      .orderBy("date", "desc")
+      .get();
+    data.forEach(async document => {
+      const doc = document.data() as ChangeItemDto;
+      res.push({
+        uid: document.id,
+        amount: doc.amount,
+        tags: doc.tags,
+        date: doc.date.toDate(),
+        description: doc.description,
+        expense: doc.expense,
+        paymentSource: doc.paymentSource
+      });
+    });
+  }
   async addChange(payload: ChangeItem): Promise<void> {
-    await db.collection("changes").add(payload);
+    await db.collection("changges").add(payload);
   }
   async addHistory(payload: HistoryItem): Promise<void> {
     await db.collection("history").add(payload);
   }
-  async getChanges(filterOptions?: Filter): Promise<ChangeItem[]> {
+  async getChanges(): Promise<ChangeItem[]> {
     const res: ChangeItem[] = [];
     const data = await db
-      .collection("changes")
+      .collection("changges")
       .orderBy("date", "desc")
       .get();
     data.forEach(document => {
@@ -27,7 +41,7 @@ export class ChangeService implements IChangeService {
       res.push({
         uid: document.id,
         amount: doc.amount,
-        tag: doc.tag,
+        tags: doc.tags,
         date: doc.date.toDate(),
         description: doc.description,
         expense: doc.expense,

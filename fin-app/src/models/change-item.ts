@@ -5,7 +5,7 @@ import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 export interface ChangeItem {
   uid?: string;
   paymentSource: PaymentSourceEnum;
-  tag: TagEnum;
+  tags: TagEnum[];
   description: string;
   amount: number;
   date: Date;
@@ -13,8 +13,9 @@ export interface ChangeItem {
 }
 
 export interface ChangeItemDto {
+  uid?: string;
   paymentSource: PaymentSourceEnum;
-  tag: TagEnum;
+  tags: TagEnum[];
   description: string;
   amount: number;
   date: Timestamp;

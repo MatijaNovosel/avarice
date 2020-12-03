@@ -63,9 +63,9 @@
         <div class="container">
           <span class="container-label">Kategorija</span>
           <list-box
-            :multiple="false"
-            v-model="entry.tag"
-            :options="categories"
+            :multiple="true"
+            v-model="entry.tags"
+            :options="tags"
             dataKey="val"
             listStyle="max-height: 250px"
             optionValue="val"
@@ -94,20 +94,19 @@
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { TagEnum } from "@/constants/tag-enum";
-import { ChangeService } from "@/services/api/change-service";
 import { ChangeItem } from "@/models/change-item";
 import { createSelectFromEnum } from "@/helpers/helpers";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import { getService, Types } from "@/di-container";
+import { IChangeService } from "@/services/interfaces/change-service";
 
 interface Props {
   dialog: boolean;
-  input?: ChangeItem;
 }
 
 interface State {
   dialog: boolean;
-  ChangeService: ChangeService;
   // eslint-disable-next-line
   refresh: any;
 }
@@ -116,13 +115,12 @@ export default defineComponent({
   name: "expense-dialog",
   emits: ["update:dialog"],
   props: {
-    dialog: Boolean,
-    input: null
+    dialog: Boolean
   },
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       paymentSource: PaymentSourceEnum.GyroAccount,
-      tag: TagEnum.Food,
+      tags: [TagEnum.Food],
       description: "",
       amount: 0,
       date: new Date(),
@@ -139,7 +137,6 @@ export default defineComponent({
     const model = useVuelidate(rules, entry);
 
     const state: State = reactive({
-      ChangeService: new ChangeService(),
       dialog: props.dialog,
       refresh: inject("refresh")
     });
@@ -153,31 +150,39 @@ export default defineComponent({
       PaymentSourceEnum,
       "paymentSource"
     );
-    const categories = createSelectFromEnum(TagEnum, "tag");
+    const tags = createSelectFromEnum(TagEnum, "tag");
 
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
       entry.description = "Description";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.tag = TagEnum.Other;
-      console.log(model.value);
+      entry.tags = [TagEnum.Other];
       model.value.$reset;
+    }
+
+    function hideDialog() {
+      resetDialog();
+      context.emit("update:dialog", state.dialog);
     }
 
     async function addExpense() {
       const payload: ChangeItem = {
         paymentSource: entry.paymentSource,
-        tag: entry.tag,
+        tags: entry.tags,
         description: entry.description,
         amount: entry.amount,
         date: new Date(),
         expense: true
       };
 
-      const currentAmount = await state.ChangeService.getCurrentAmount();
+      const changeService = await getService<IChangeService>(
+        Types.ChangeService
+      );
 
-      state.ChangeService.addHistory({
+      const currentAmount = await changeService.getCurrentAmount();
+
+      await changeService.addHistory({
         euros: currentAmount.euros,
         gyro:
           entry.paymentSource == PaymentSourceEnum.GyroAccount
@@ -194,21 +199,15 @@ export default defineComponent({
         date: new Date()
       });
 
-      state.ChangeService.addChange(payload);
-
-      resetDialog();
+      changeService.addChange(payload);
+      hideDialog();
       state.refresh.refresh();
-    }
-
-    function hideDialog() {
-      resetDialog();
-      context.emit("update:dialog", state.dialog);
     }
 
     return {
       state,
       addExpense,
-      categories,
+      tags,
       paymentSources,
       hideDialog,
       model,

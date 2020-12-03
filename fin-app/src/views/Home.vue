@@ -184,7 +184,7 @@
                   :expense="change.expense"
                   :title="change.description"
                   :amount="change.amount"
-                  :tag="formatTag(change.tag)"
+                  :tags="change.tags"
                   :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
                 />
               </div>

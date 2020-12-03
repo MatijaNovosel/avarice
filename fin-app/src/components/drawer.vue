@@ -32,7 +32,6 @@ import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
-import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
   visible: boolean;
