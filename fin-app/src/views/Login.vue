@@ -34,14 +34,36 @@
       <div class="login-form-standard p-shadow-6 p-mt-3">
         <span class="login-title p-mb-4">Sign in with email</span>
         <span class="p-float-label">
-          <input-text class="login-input" name="email" id="email" />
+          <input-text
+            v-model="model.email.$model"
+            class="login-input"
+            name="email"
+            :class="{
+              'p-invalid': model.email.$invalid
+            }"
+            id="email"
+          />
           <label for="email">Email</label>
         </span>
-        <span class="p-float-label p-my-3">
-          <input-text class="login-input" name="password" id="password" />
+        <span class="p-invalid p-pt-2 p-pl-2" v-if="model.email.$invalid">{{
+          model.email.$errors.map((x) => x.$message).join(" • ")
+        }}</span>
+        <span class="p-float-label p-mt-3">
+          <input-text
+            v-model="model.password.$model"
+            class="login-input"
+            name="password"
+            :class="{
+              'p-invalid': model.password.$invalid
+            }"
+            id="password"
+          />
           <label for="password">Password</label>
         </span>
-        <btn class="p-my-2 login-btn" label="Sign in" />
+        <span class="p-invalid p-pt-2 p-pl-2" v-if="model.password.$invalid">{{
+          model.password.$errors.map((x) => x.$message).join(" • ")
+        }}</span>
+        <btn class="p-mb-2 login-btn p-mt-4" label="Sign in" />
         <btn class="p-my-2 login-btn" label="Register" />
       </div>
     </div>
@@ -56,6 +78,13 @@ import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength } from "@vuelidate/validators";
+
+interface Input {
+  email: string;
+  password: string;
+}
 
 interface State {
   loading: boolean;
@@ -70,6 +99,18 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const toast = useToast();
+
+    const entry = reactive({
+      email: "",
+      password: ""
+    } as Input);
+
+    const rules = {
+      email: { required, email },
+      password: { required, minLength: minLength(8) }
+    };
+
+    const model = useVuelidate(rules, entry);
 
     const state: State = reactive({
       loading: false
@@ -93,7 +134,8 @@ export default defineComponent({
 
     return {
       login,
-      state
+      state,
+      model
     };
   }
 });
