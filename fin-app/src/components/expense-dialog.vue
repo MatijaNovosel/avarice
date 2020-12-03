@@ -9,74 +9,67 @@
     <template #header>
       <h3>Unos novog troška</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3">
-      <div class="p-field p-col-12">
-        <span class="p-float-label p-mb-1">
-          <input-number
-            filled
-            locale="hr-HR"
-            mode="currency"
-            currency="HRK"
-            id="amount"
-            :class="{
-              'p-invalid': model.amount.$invalid
-            }"
-            v-model="model.amount.$model"
-          />
-          <label for="amount"
-            ><icon class="p-pr-1" name="dollar" /> Iznos troška</label
-          >
-        </span>
-        <span class="p-invalid" v-if="model.amount.required.$invalid">{{
-          model.amount.required.$message
-        }}</span>
+    <div class="expense-form p-mt-5 p-px-3">
+      <span class="p-float-label">
+        <input-number
+          filled
+          locale="hr-HR"
+          mode="currency"
+          currency="HRK"
+          id="amount"
+          :class="{
+            'p-invalid': model.amount.$invalid
+          }"
+          v-model="model.amount.$model"
+          class="expense-input"
+        />
+        <label for="amount"> Iznos troška</label>
+      </span>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.amount.$invalid">{{
+        model.amount.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
+      <span class="p-float-label p-mt-3">
+        <text-area
+          :class="{
+            'p-invalid': model.description.$invalid
+          }"
+          v-model="model.description.$model"
+          id="description"
+          class="expense-input"
+        />
+        <label for="description"> Opis</label>
+      </span>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.description.$invalid">{{
+        model.description.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
+      <div class="container p-mt-3">
+        <span class="container-label">Izvor plaćanja</span>
+        <select-button
+          v-model="model.paymentSource.$model"
+          :options="paymentSources"
+          optionLabel="text"
+          optionValue="val"
+        />
       </div>
-      <div class="p-field p-col-12">
-        <span class="p-float-label">
-          <text-area
-            :class="{
-              'p-invalid': model.description.$invalid
-            }"
-            v-model="model.description.$model"
-            id="description"
-          />
-          <label for="description"
-            ><icon class="p-pr-1" name="comments" /> Opis</label
-          >
-        </span>
-        <span class="p-invalid" v-if="model.description.required.$invalid">{{
-          model.description.required.$message
-        }}</span>
+      <div class="container p-mt-3">
+        <span class="container-label">Kategorija</span>
+        <list-box
+          :multiple="true"
+          v-model="model.tags.$model"
+          :options="tags"
+          dataKey="val"
+          listStyle="max-height: 250px"
+          optionValue="val"
+          optionLabel="text"
+        >
+          <template #option="slotProps">
+            {{ slotProps.option.text }}
+          </template>
+        </list-box>
       </div>
-      <div class="p-field p-col-12">
-        <div class="container">
-          <span class="container-label">Izvor plaćanja</span>
-          <select-button
-            v-model="entry.paymentSource"
-            :options="paymentSources"
-            optionLabel="text"
-            optionValue="val"
-          />
-        </div>
-      </div>
-      <div class="p-field p-col-12">
-        <div class="container">
-          <span class="container-label">Kategorija</span>
-          <list-box
-            :multiple="true"
-            v-model="entry.tags"
-            :options="tags"
-            dataKey="val"
-            listStyle="max-height: 250px"
-            optionValue="val"
-            optionLabel="text"
-          >
-            <template #option="slotProps">
-              {{ slotProps.option.text }}
-            </template>
-          </list-box>
-        </div>
-      </div>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.tags.$invalid">{{
+        model.tags.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
     </div>
     <template #footer>
       <btn
@@ -130,7 +123,7 @@ export default defineComponent({
     const rules = {
       amount: { required, numeric },
       paymentSource: { required },
-      tag: { required },
+      tags: { required },
       description: { required }
     };
 
@@ -222,10 +215,17 @@ export default defineComponent({
   color: whtie
   margin-bottom: 1.2rem
 
+.expense-input
+  width: 100%
+
 .container
   padding: 1.5em
   border-radius: 12px
   background-color: #1e1e1e
+  display: flex
+  flex-direction: column
+
+.expense-form
   display: flex
   flex-direction: column
 </style>

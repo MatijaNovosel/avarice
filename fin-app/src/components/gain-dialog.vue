@@ -9,39 +9,47 @@
     <template #header>
       <h3>Unos novog dobitka</h3>
     </template>
-    <div class="p-fluid p-grid p-formgrid p-mt-5 p-px-3 p-input-filled">
-      <div class="p-field p-col-12">
-        <span class="p-float-label">
-          <input-number
-            :class="{ 'is-invalid': model.amount.$invalid }"
-            locale="hr-HR"
-            mode="currency"
-            currency="HRK"
-            id="amount"
-            v-model="model.amount.$model"
-          />
-          <label for="amount"
-            ><icon class="p-pr-1" name="dollar" /> Iznos dobitka</label
-          >
-        </span>
-      </div>
-      <div class="p-field p-col-12">
-        <span class="p-float-label">
-          <text-area v-model="model.description.$model" id="text-area" />
-          <label for="text-area"
-            ><icon class="p-pr-1" name="comments" /> Opis</label
-          >
-        </span>
-      </div>
-      <div class="p-field p-col-12">
-        <group-box icon="id-card" title="Račun na koji ide dobitak">
-          <select-button
-            v-model="model.paymentSource.$model"
-            :options="paymentSources"
-            optionLabel="text"
-            optionValue="val"
-          />
-        </group-box>
+    <div class="expense-form p-mt-5 p-px-3">
+      <span class="p-float-label">
+        <input-number
+          filled
+          locale="hr-HR"
+          mode="currency"
+          currency="HRK"
+          id="amount"
+          :class="{
+            'p-invalid': model.amount.$invalid
+          }"
+          v-model="model.amount.$model"
+          class="expense-input"
+        />
+        <label for="amount"> Iznos troška</label>
+      </span>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.amount.$invalid">{{
+        model.amount.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
+      <span class="p-float-label p-mt-3">
+        <text-area
+          :class="{
+            'p-invalid': model.description.$invalid
+          }"
+          v-model="model.description.$model"
+          id="description"
+          class="expense-input"
+        />
+        <label for="description"> Opis</label>
+      </span>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.description.$invalid">{{
+        model.description.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
+      <div class="container p-mt-3">
+        <span class="container-label">Izvor plaćanja</span>
+        <select-button
+          v-model="model.paymentSource.$model"
+          :options="paymentSources"
+          optionLabel="text"
+          optionValue="val"
+        />
       </div>
     </div>
     <template #footer>
@@ -86,7 +94,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       paymentSource: PaymentSourceEnum.GyroAccount,
-      tags: [TagEnum.Food],
+      tags: [TagEnum.Other],
       description: "",
       amount: 0,
       date: new Date(),
@@ -95,7 +103,8 @@ export default defineComponent({
     const rules = {
       amount: { required, numeric },
       paymentSource: { required },
-      description: { required }
+      description: { required },
+      tags: { required }
     };
     const model = useVuelidate(rules, entry);
 
@@ -117,7 +126,7 @@ export default defineComponent({
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
-      entry.description = "";
+      entry.description = "Description";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
       entry.tags = [TagEnum.Other];
       model.value.$reset;
@@ -179,5 +188,22 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped lang="sass">
+.container-label
+  color: whtie
+  margin-bottom: 1.2rem
+
+.expense-form
+  display: flex
+  flex-direction: column
+
+.expense-input
+  width: 100%
+
+.container
+  padding: 1.5em
+  border-radius: 12px
+  background-color: #1e1e1e
+  display: flex
+  flex-direction: column
 </style>
