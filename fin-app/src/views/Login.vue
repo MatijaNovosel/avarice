@@ -159,6 +159,12 @@ export default defineComponent({
 
 .login-btn
   background: linear-gradient(90deg, #ff8a00, #e52e71)
+  &:hover
+    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
+  &:active
+    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
+  &:focus
+    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
 
 .login-content
   display: flex
