@@ -6,7 +6,7 @@ export const stringFormatCollection: IndexableCollectionByString = {
     GyroAccount: "Žiro račun",
     Pocket: "Džep"
   },
-  category: {
+  tag: {
     Food: "Hrana",
     Games: "Igre",
     Gifts: "Darovi",

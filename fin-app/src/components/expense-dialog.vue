@@ -63,7 +63,7 @@
           <list-box
             :multiple="false"
             :filter="true"
-            v-model="entry.category"
+            v-model="entry.tag"
             :options="categories"
             dataKey="val"
             listStyle="max-height: 250px"
@@ -92,7 +92,7 @@
 <script lang="ts">
 import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 import { ChangeService } from "@/services/api/change-service";
 import { ChangeItem } from "@/models/change-item";
 import { createSelectFromEnum } from "@/helpers/helpers";
@@ -121,7 +121,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       paymentSource: PaymentSourceEnum.GyroAccount,
-      category: CategoryEnum.Food,
+      tag: TagEnum.Food,
       description: "",
       amount: 0,
       date: new Date(),
@@ -131,7 +131,7 @@ export default defineComponent({
     const rules = {
       amount: { required, numeric },
       paymentSource: { required },
-      category: { required },
+      tag: { required },
       description: { required }
     };
 
@@ -152,21 +152,21 @@ export default defineComponent({
       PaymentSourceEnum,
       "paymentSource"
     );
-    const categories = createSelectFromEnum(CategoryEnum, "category");
+    const categories = createSelectFromEnum(TagEnum, "tag");
 
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
       entry.description = "";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.category = CategoryEnum.Other;
+      entry.tag = TagEnum.Other;
       model.value.$reset;
     }
 
     async function addExpense() {
       const payload: ChangeItem = {
         paymentSource: entry.paymentSource,
-        category: entry.category,
+        tag: entry.tag,
         description: entry.description,
         amount: entry.amount,
         date: new Date(),

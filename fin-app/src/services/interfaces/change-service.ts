@@ -1,9 +1,9 @@
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItem, HistoryItemDto } from "@/models/history-item";
 
 interface Filter {
-  category: CategoryEnum[];
+  tag: TagEnum[];
 }
 
 export interface IChangeService {

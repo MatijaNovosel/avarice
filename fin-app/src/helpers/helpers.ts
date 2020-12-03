@@ -1,6 +1,6 @@
 import { stringFormatCollection } from "./../constants/string-format-collection";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 import { SelectItem } from "@/constants/select-item";
 import { IndexableCollectionByString } from "@/constants/indexable-collection-by-string";
 import { Color } from "./color";
@@ -60,8 +60,8 @@ export function hexToCssFilter(hex: string) {
   return solver.solve().filter;
 }
 
-export function formatCategory(val: CategoryEnum): string {
-  return stringFormatCollection["category"][CategoryEnum[val]];
+export function formatTag(val: TagEnum): string {
+  return stringFormatCollection["tag"][TagEnum[val]];
 }
 
 export function formatPaymentSource(val: PaymentSourceEnum): string {

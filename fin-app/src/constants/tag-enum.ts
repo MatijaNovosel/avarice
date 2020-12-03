@@ -1,4 +1,4 @@
-export enum CategoryEnum {
+export enum TagEnum {
   Food = 1,
   Gifts = 2,
   Games = 3,

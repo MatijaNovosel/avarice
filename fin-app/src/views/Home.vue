@@ -75,7 +75,7 @@
                   <div class="p-col-12 p-my-2">
                     <list-box
                       :multiple="true"
-                      v-model="state.filter.category"
+                      v-model="state.filter.tag"
                       :options="categories"
                       dataKey="val"
                       listStyle="max-height: 250px"
@@ -152,9 +152,9 @@
                   {{ formatPaymentSource(slotProps.data.paymentSource) }}
                 </template>
               </column>
-              <column field="category" header="Kategorija">
+              <column field="tag" header="Kategorija">
                 <template #body="slotProps">
-                  {{ formatCategory(slotProps.data.category) }}
+                  {{ formatTag(slotProps.data.tag) }}
                 </template>
               </column>
               <column field="date" header="Datum">
@@ -184,7 +184,7 @@
                   :expense="change.expense"
                   :title="change.description"
                   :amount="change.amount"
-                  :category="formatCategory(change.category)"
+                  :tag="formatTag(change.tag)"
                   :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
                 />
               </div>
@@ -209,7 +209,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject } from "vue";
-import { formatCategory, formatPaymentSource } from "@/helpers/helpers";
+import { formatTag, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
 import {
@@ -219,7 +219,7 @@ import {
 } from "@/helpers/helpers";
 import { UserSettings } from "@/models/user-settings";
 import { euroRate } from "@/constants/app-constants";
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 import { ChangeItem } from "@/models/change-item";
 import { useI18n } from "vue-i18n";
 import { Account } from "@/models/account";
@@ -230,7 +230,7 @@ import { IChangeService } from "@/services/interfaces/change-service";
 import { ISettingsService } from "@/services/interfaces/settings-service";
 
 interface Filter {
-  category: CategoryEnum[];
+  tag: TagEnum[];
 }
 
 interface GraphData {
@@ -311,7 +311,7 @@ export default defineComponent({
       baseChanges: [],
       maxValue: 0,
       filter: {
-        category: []
+        tag: []
       },
       settings: {
         gyroColor: "",
@@ -364,7 +364,7 @@ export default defineComponent({
     }
 
     function resetFilter() {
-      state.filter.category = [];
+      state.filter.tag = [];
       getChanges();
     }
 
@@ -487,12 +487,12 @@ export default defineComponent({
 
     watch([state.account, state.refresh], () => updateData());
 
-    const categories = createSelectFromEnum(CategoryEnum, "category");
+    const categories = createSelectFromEnum(TagEnum, "tag");
 
     return {
       state,
       format,
-      formatCategory,
+      formatTag,
       formatPaymentSource,
       categories,
       resetFilter,

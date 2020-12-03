@@ -1,11 +1,11 @@
 import { Timestamp } from "@firebase/firestore-types";
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 
 export interface ChangeItem {
   uid?: string;
   paymentSource: PaymentSourceEnum;
-  category: CategoryEnum;
+  tag: TagEnum;
   description: string;
   amount: number;
   date: Date;
@@ -14,7 +14,7 @@ export interface ChangeItem {
 
 export interface ChangeItemDto {
   paymentSource: PaymentSourceEnum;
-  category: CategoryEnum;
+  tag: TagEnum;
   description: string;
   amount: number;
   date: Timestamp;

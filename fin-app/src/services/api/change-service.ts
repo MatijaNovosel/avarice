@@ -1,12 +1,12 @@
 import { IChangeService } from "./../interfaces/change-service";
 import { ChangeItemDto } from "../../models/change-item";
-import { CategoryEnum } from "../../constants/category-enum";
+import { TagEnum } from "../../constants/tag-enum";
 import { db } from "../firebase";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
 interface Filter {
-  category: CategoryEnum[];
+  tag: TagEnum[];
 }
 
 export class ChangeService implements IChangeService {
@@ -20,20 +20,6 @@ export class ChangeService implements IChangeService {
     const res: ChangeItem[] = [];
     const data = await db
       .collection("changes")
-      .where(
-        "category",
-        "in",
-        filterOptions?.category != undefined &&
-          filterOptions?.category.length != 0
-          ? filterOptions?.category
-          : [
-              CategoryEnum.Food,
-              CategoryEnum.Games,
-              CategoryEnum.Gifts,
-              CategoryEnum.Other,
-              CategoryEnum.PublicTransport
-            ]
-      )
       .orderBy("date", "desc")
       .get();
     data.forEach(document => {
@@ -41,7 +27,7 @@ export class ChangeService implements IChangeService {
       res.push({
         uid: document.id,
         amount: doc.amount,
-        category: doc.category,
+        tag: doc.tag,
         date: doc.date.toDate(),
         description: doc.description,
         expense: doc.expense,

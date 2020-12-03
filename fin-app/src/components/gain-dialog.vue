@@ -63,7 +63,7 @@ import { ChangeService } from "@/services/api/change-service";
 import { ChangeItem } from "@/models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { CategoryEnum } from "@/constants/category-enum";
+import { TagEnum } from "@/constants/tag-enum";
 
 interface Props {
   dialog: boolean;
@@ -86,7 +86,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       paymentSource: PaymentSourceEnum.GyroAccount,
-      category: CategoryEnum.Food,
+      tag: TagEnum.Food,
       description: "",
       amount: 0,
       date: new Date(),
@@ -130,7 +130,7 @@ export default defineComponent({
       entry.amount = 0;
       entry.description = "";
       entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.category = CategoryEnum.Other;
+      entry.tag = TagEnum.Other;
       model.value.$reset;
     }
 

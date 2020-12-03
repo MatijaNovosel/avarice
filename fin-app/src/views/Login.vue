@@ -1,12 +1,31 @@
 <template>
   <div class="login-container">
-    <div class="login-form p-shadow-6 expand" @click="login">
-      <div class="login-icon p-mr-4">
-        <mdi-icon color="#fc9219" name="google" />
+    <div class="login-screen">
+      <div class="app-title p-pb-3">
+        <span
+          ><span class="app-title-text gradient-text p-pr-2">FinApp</span>
+          <span class="author-text">by MatijaNovosel</span></span
+        >
       </div>
-      <div class="login-content">
-        <span class="login-content-title">Google OAuth</span>
-        <span class="login-content-subtitle p-pt-2">Sign in with Google</span>
+      <div class="login-form p-shadow-6 expand" @click="login">
+        <div class="login-icon p-mr-4">
+          <mdi-icon color="#fc9219" name="google" />
+        </div>
+        <div class="login-content">
+          <span class="login-content-title">Google OAuth</span>
+          <span class="login-content-subtitle p-pt-2">Sign in with Google</span>
+        </div>
+      </div>
+      <div class="login-form p-shadow-6 expand p-mt-3" @click="login">
+        <div class="login-icon p-mr-4">
+          <mdi-icon color="#4267b2" name="facebook" />
+        </div>
+        <div class="login-content">
+          <span class="login-content-title">Facebook</span>
+          <span class="login-content-subtitle p-pt-2"
+            >Sign in with Facebook</span
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -52,12 +71,24 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
+.author-text
+  color: white
+
+.app-title-text
+  font-size: 3.2rem
+  font-family: "ProximaNovaBold" !important
+
 .login-form:hover
   cursor: pointer
+
+.login-screen
+  display: flex
+  flex-direction: column
 
 .login-container
   min-height: 100vh
   display: flex
+  flex-direction: column
   align-items: center
   justify-content: space-around
 
@@ -65,11 +96,10 @@ export default defineComponent({
   align-self: center
 
 .login-form
-  padding: 2rem 1.8rem
+  padding: 1.4rem 1.8rem
   background-color: #1e1e1e
   border-radius: 12px
   display: flex
-  flex-direction: row
 
 .login-content
   display: flex

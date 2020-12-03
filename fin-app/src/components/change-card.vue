@@ -10,7 +10,7 @@
     <span class="amount-title p-mb-1">{{ state.title }}</span>
     <span class="amount-text">{{ `${state.amount}HRK` }}</span>
     <span class="amount-action">
-      {{ `${state.category} • ${state.date}` }}
+      {{ `${state.tag} • ${state.date}` }}
     </span>
   </div>
 </template>
@@ -23,7 +23,7 @@ interface Props {
   title?: string | null;
   date?: string | null;
   expense?: boolean | null;
-  category?: string | null;
+  tag?: string | null;
 }
 
 interface State {
@@ -31,7 +31,7 @@ interface State {
   title?: string | null;
   date?: string | null;
   expense?: boolean | null;
-  category?: string | null;
+  tag?: string | null;
 }
 
 export default defineComponent({
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {
     amount: Number,
     title: String,
-    category: String,
+    tag: String,
     date: String,
     expense: Boolean
   },
@@ -48,7 +48,7 @@ export default defineComponent({
       amount: props.amount,
       title: props.title,
       date: props.date,
-      category: props.category,
+      tag: props.tag,
       expense: props.expense
     });
 
