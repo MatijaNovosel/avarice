@@ -8,19 +8,14 @@
     style="z-index: 1"
     class="navbar-offset sidebar"
   >
-    <mdi-icon
-      @click="state.settingsDialog = true"
-      name="cog"
-      color="#7e7e7e"
-      class="settings-button cursor-pointer"
-      v-tooltip.bottom="'Postavke'"
-    />
     <div class="drawer-header">
       <img class="avatar" :src="state.user.photoURL" />
-      <span class="header-title">{{
-        state.user.displayName ?? "Unknown"
-      }}</span>
-      <span class="header-subtitle">{{ state.user.email ?? "Unknown" }}</span>
+      <div class="header-content">
+        <span class="header-title">{{
+          state.user.displayName ?? "Unknown"
+        }}</span>
+        <span class="header-subtitle">{{ state.user.email ?? "Unknown" }}</span>
+      </div>
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
@@ -60,8 +55,7 @@ export default defineComponent({
   components: {
     ExpenseDialog,
     SettingsDialog,
-    GainDialog,
-    mdiIcon
+    GainDialog
   },
   setup(props: Props) {
     const store = useStore();
@@ -113,17 +107,21 @@ export default defineComponent({
 
 .drawer-header
   margin: 25px 0px 25px 0px
-  text-align: center
   display: flex
-  flex-direction: column
   justify-content: center
   align-items: center
+
+.header-content
+  padding-left: 1.3rem
+  text-align: left
+  display: flex
+  flex-direction: column
 
 .navbar-height
   height: variables.$navbar-height
 
 .header-title
-  margin: 10px 0px 5px 0px
+  margin: 0px 0px 5px 0px
   font-size: 1.3rem
   font-family: "ProximaNovaBold" !important
   color: var(--primary-color)
@@ -135,7 +133,7 @@ export default defineComponent({
 
 .avatar
   border-radius: 50%
-  width: 100px
+  width: 65px
 
 .settings-button
   position: absolute !important
