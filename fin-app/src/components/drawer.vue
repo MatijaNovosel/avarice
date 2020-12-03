@@ -84,6 +84,12 @@ export default defineComponent({
               }
             }
           ]
+        },
+        {
+          label: "Postavke",
+          command: () => {
+            state.settingsDialog = true;
+          }
         }
       ]
     });
