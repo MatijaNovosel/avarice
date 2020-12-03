@@ -52,10 +52,15 @@
     <div class="p-col-12 p-md-8 p-px-5">
       <div class="p-shadow-6 chart-container">
         <div class="month-select-container">
-          <div class="month-select-item cursor-pointer">November</div>
-          <div class="month-select-item cursor-pointer">December</div>
+          <div v-ripple class="p-ripple month-select-item cursor-pointer">
+            November
+          </div>
+          <div v-ripple class="p-ripple month-select-item cursor-pointer">
+            December
+          </div>
         </div>
         <chart
+          ref="graph"
           type="line"
           :data="state.graphData"
           :options="state.graphOptions"
@@ -151,7 +156,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch, inject } from "vue";
+import { defineComponent, reactive, onMounted, watch, inject, ref } from "vue";
 import { formatTag, formatPaymentSource } from "@/helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "@/models/dataset";
@@ -195,6 +200,13 @@ interface PaginatorInfo {
   pageCount: number;
 }
 
+interface DataSets {
+  gyro: DatasetItem | null;
+  checking: DatasetItem | null;
+  pocket: DatasetItem | null;
+  total: DatasetItem | null;
+}
+
 interface AmountVisible {
   gyro: boolean;
   checking: boolean;
@@ -223,6 +235,7 @@ interface State {
   numberOfRows: number;
   changesOffset: number;
   amountVisible: AmountVisible;
+  dataSets: DataSets;
 }
 
 export default defineComponent({
@@ -233,8 +246,16 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n();
+    // eslint-disable-next-line
+    const graph: any = ref(null);
 
     const state: State = reactive({
+      dataSets: {
+        gyro: null,
+        checking: null,
+        pocket: null,
+        total: null
+      },
       amountVisible: {
         gyro: false,
         checking: false,
@@ -316,6 +337,31 @@ export default defineComponent({
       getChanges();
     }
 
+    function updateGraph() {
+      const dataSets: DatasetItem[] = [];
+
+      if (
+        state.account.gyro &&
+        state.account.pocket &&
+        state.account.checking
+      ) {
+        dataSets.push(state.dataSets.total as DatasetItem);
+      } else {
+        if (state.account.gyro) {
+          dataSets.push(state.dataSets.gyro as DatasetItem);
+        }
+        if (state.account.pocket) {
+          dataSets.push(state.dataSets.pocket as DatasetItem);
+        }
+        if (state.account.checking) {
+          dataSets.push(state.dataSets.checking as DatasetItem);
+        }
+      }
+
+      (state.graphData as GraphData).datasets = dataSets;
+      graph.value.refresh();
+    }
+
     async function updateData() {
       state.loading = true;
       getChanges();
@@ -328,7 +374,7 @@ export default defineComponent({
         Types.SettingsService
       ).getSettings();
 
-      const totalDataset: DatasetItem = {
+      state.dataSets.total = {
         label: t("account.total"),
         data: history.map(
           (x) =>
@@ -347,7 +393,7 @@ export default defineComponent({
         ) as string
       };
 
-      const gyroDataset: DatasetItem = {
+      state.dataSets.gyro = {
         label: t("account.gyro"),
         data: history.map((x) => +x.gyro.toFixed(2)),
         fill: true,
@@ -358,7 +404,7 @@ export default defineComponent({
         ) as string
       };
 
-      const checkingDataset: DatasetItem = {
+      state.dataSets.checking = {
         label: t("account.checking"),
         data: history.map((x) => +x.checking.toFixed(2)),
         fill: true,
@@ -369,7 +415,7 @@ export default defineComponent({
         ) as string
       };
 
-      const pocketDataset: DatasetItem = {
+      state.dataSets.pocket = {
         label: t("account.pocket"),
         data: history.map((x) => +x.pocket.toFixed(2)),
         fill: true,
@@ -380,7 +426,7 @@ export default defineComponent({
         ) as string
       };
 
-      const graphData: GraphData = {
+      state.graphData = {
         labels: history.map((x) =>
           format(x.date.toDate(), "dd/MM/yyyy - HH:mm")
         ),
@@ -388,39 +434,22 @@ export default defineComponent({
       };
 
       state.currentAmount.gyro = `${
-        gyroDataset.data[gyroDataset.data.length - 1]
+        state.dataSets.gyro.data[state.dataSets.gyro.data.length - 1]
       }HRK`;
       state.currentAmount.pocket = `${
-        pocketDataset.data[pocketDataset.data.length - 1]
+        state.dataSets.pocket.data[state.dataSets.pocket.data.length - 1]
       }HRK`;
       state.currentAmount.checking = `${
-        checkingDataset.data[checkingDataset.data.length - 1]
+        state.dataSets.checking.data[state.dataSets.checking.data.length - 1]
       }HRK`;
       state.currentAmount.euros = `${history[history.length - 1].euros}€`;
 
       state.totalAmount = `${
-        totalDataset.data[totalDataset.data.length - 1]
+        state.dataSets.total.data[state.dataSets.total.data.length - 1]
       }HRK`;
 
-      if (
-        state.account.gyro &&
-        state.account.pocket &&
-        state.account.checking
-      ) {
-        graphData.datasets.push(totalDataset);
-      } else {
-        if (state.account.gyro) {
-          graphData.datasets.push(gyroDataset);
-        }
-        if (state.account.pocket) {
-          graphData.datasets.push(pocketDataset);
-        }
-        if (state.account.checking) {
-          graphData.datasets.push(checkingDataset);
-        }
-      }
+      updateGraph();
 
-      state.graphData = graphData;
       state.loading = false;
     }
 
@@ -433,7 +462,17 @@ export default defineComponent({
       updateData();
     });
 
-    watch([state.account, state.refresh], () => updateData());
+    watch(
+      () => state.account,
+      () => updateGraph(),
+      { deep: true }
+    );
+
+    watch(
+      () => state.refresh,
+      () => updateData(),
+      { deep: true }
+    );
 
     const categories = createSelectFromEnum(TagEnum, "tag");
 
@@ -445,7 +484,8 @@ export default defineComponent({
       categories,
       resetFilter,
       getChanges,
-      pageChanged
+      pageChanged,
+      graph
     };
   }
 });
@@ -512,6 +552,7 @@ export default defineComponent({
   border-radius: 12px
   color: white
   font-family: "ProximaNovaBold" !important
+  user-select: none
 
 @keyframes up-and-down-table
   0%
