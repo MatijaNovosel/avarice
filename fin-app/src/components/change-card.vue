@@ -102,4 +102,5 @@ export default defineComponent({
   display: flex
   align-items: center
   align-self: flex-end
+  margin: 0.4em 0
 </style>

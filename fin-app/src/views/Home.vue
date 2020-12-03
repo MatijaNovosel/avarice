@@ -69,9 +69,7 @@
                   <span>Filtriranje i ostale mogućnosti</span>
                 </template>
                 <div class="p-grid">
-                  <div class="p-col-12 p-mt-2 filter-item-text">
-                    <icon name="tags" /> Kategorija
-                  </div>
+                  <div class="p-col-12 p-mt-2 filter-item-text">Kategorija</div>
                   <div class="p-col-12 p-my-2">
                     <list-box
                       :multiple="true"
@@ -89,7 +87,9 @@
                   </div>
                   <div class="p-col-12 p-my-2">
                     <input-switch v-model="state.cardView" id="input-switch" />
-                    <label class="p-ml-2" for="input-switch"> Prikaz u obliku kartica</label>
+                    <label class="p-ml-2" for="input-switch">
+                      Prikaz u obliku kartica</label
+                    >
                   </div>
                   <div class="p-col-12 p-mt-3 p-text-right">
                     <btn
