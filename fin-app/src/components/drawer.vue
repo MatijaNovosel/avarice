@@ -116,7 +116,7 @@ export default defineComponent({
 @import "../assets/css/helpers"
 
 .drawer-header
-  margin: 2.2em 0px
+  margin: 1.6em 0px
   display: flex
   justify-content: center
   align-items: center
