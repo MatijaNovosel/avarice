@@ -123,6 +123,7 @@ export default defineComponent({
   display: flex
   flex-direction: column
   align-content: center
+  width: 50em
 
 .login-container
   min-height: 100vh
