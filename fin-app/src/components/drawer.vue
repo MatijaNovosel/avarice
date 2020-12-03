@@ -9,7 +9,12 @@
     class="navbar-offset sidebar"
   >
     <div class="drawer-header">
-      <img class="avatar" :src="state.user.photoURL" />
+      <div class="avatar-container">
+        <img class="avatar" :src="state.user.photoURL" />
+        <svg class="half-circle" viewBox="0 0 106 57">
+          <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+        </svg>
+      </div>
       <div class="header-content">
         <span class="header-title">{{
           state.user.displayName ?? "Unknown"
@@ -138,7 +143,22 @@ export default defineComponent({
 
 .avatar
   border-radius: 50%
-  width: 65px
+  width: 50px
+  display: block
+  overflow: hidden
+  margin: 16px 10px
+
+.half-circle
+  position: absolute
+  bottom: 0
+  left: 0
+  width: 71px
+  height: 48px
+  stroke: #ff8a00
+  stroke-width: 8
+  stroke-linecap: round
+  pointer-events: none
+  fill: none
 
 .settings-button
   position: absolute !important
@@ -148,4 +168,10 @@ export default defineComponent({
 
 .sidebar
   outline: none
+
+.avatar-container
+  position: relative
+  display: grid
+  grid-template-columns: 70px 0
+  align-items: center
 </style>

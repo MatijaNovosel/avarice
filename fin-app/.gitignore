@@ -3,7 +3,7 @@ node_modules
 /dist
 
 # CSS
-theme.css
+src/assets/css/themes/theme.css
 
 # Config
 firebase-config.ts
