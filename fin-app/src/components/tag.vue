@@ -1,9 +1,9 @@
 <template>
   <span
-    class="chip size-default"
+    class="tag size-default"
     :style="{ 'background-color': state.color, 'border-color': state.color }"
   >
-    <span class="chip-content" :style="{ color: state.textColor }">
+    <span class="tag-content" :style="{ color: state.textColor }">
       <slot />
     </span>
   </span>
@@ -23,7 +23,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "chip",
+  name: "tag",
   props: {
     color: String,
     textColor: String
@@ -52,12 +52,12 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.chip.size-default
+.tag.size-default
   border-radius: 16px
   font-size: 14px
   height: 32px
 
-.chip
+.tag
   align-items: center
   cursor: default
   display: inline-flex
@@ -74,7 +74,7 @@ export default defineComponent({
   vertical-align: middle
   white-space: nowrap
 
-  & .chip-content
+  & .tag-content
     align-items: center
     display: inline-flex
     height: 100%

@@ -41,7 +41,7 @@ import OverlayPanel from "primevue/overlaypanel";
 import ContextMenu from "primevue/contextmenu";
 
 // Custom component import
-import Chip from "@/components/chip.vue";
+import Tag from "@/components/tag.vue";
 import GroupBox from "@/components/group-box.vue";
 import Icon from "@/components/icon.vue";
 
@@ -78,7 +78,7 @@ app.use(ToastService);
 app.use(i18n);
 
 // Custom components
-app.component("chip", Chip);
+app.component("tag", Tag);
 app.component("group-box", GroupBox);
 app.component("icon", Icon);
 
