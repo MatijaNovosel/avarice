@@ -1,12 +1,14 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Appuser } from "./appuser";
 
+@Index("appUserId", ["appUserId"], {})
 @Entity("financialhistory", { schema: "finapp" })
 export class Financialhistory {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -26,6 +28,9 @@ export class Financialhistory {
 
   @Column("double", { name: "pocket", nullable: true, precision: 22 })
   public pocket?: number | null;
+
+  @Column("int", { name: "appUserId" })
+  public appUserId?: number;
 
   @ManyToOne(() => Appuser, (appuser) => appuser.financialhistories, {
     onDelete: "NO ACTION",

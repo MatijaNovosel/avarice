@@ -9,8 +9,4 @@ export class UsersController {
   findAll(): Promise<Appuser[]> {
     return this.userService.findAll();
   }
-  @Get(":id")
-  findOne(@Param("id") id: string): string {
-    return `This action returns a #${id} cat`;
-  }
 }

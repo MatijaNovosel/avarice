@@ -1,3 +1,4 @@
+import { FinancialChangeModule } from "./modules/financial-change.module";
 import { Tag } from "./entities/tag";
 import { Paymentsource } from "./entities/paymentsource";
 import { Financialhistory } from "./entities/financialhistory";
@@ -34,7 +35,8 @@ const { host, port, username, password, database } = { ...serverConfig };
       ],
       synchronize: true
     }),
-    UsersModule
+    UsersModule,
+    FinancialChangeModule
   ]
 })
 export class AppModule {}

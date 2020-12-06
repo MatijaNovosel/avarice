@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Appusersetting } from "./appusersetting";
+import { Appsetting } from "./appsetting";
 import { Financialhistory } from "./financialhistory";
 
 @Entity("appuser", { schema: "finapp" })
@@ -19,8 +19,8 @@ export class Appuser {
   @Column("varchar", { name: "displayName", nullable: true, length: 255 })
   public displayName?: string | null;
 
-  @OneToMany(() => Appusersetting, (appusersetting) => appusersetting.appUser)
-  public appusersettings?: Appusersetting[];
+  @OneToMany(() => Appsetting, (appsetting) => appsetting.appUser)
+  public appsettings?: Appsetting[];
 
   @OneToMany(
     () => Financialhistory,

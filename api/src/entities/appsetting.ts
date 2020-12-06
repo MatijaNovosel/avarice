@@ -1,6 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Appusersetting } from "./appusersetting";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Appuser } from "./appuser";
 
+@Index("appUserId", ["appUserId"], {})
 @Entity("appsetting", { schema: "finapp" })
 export class Appsetting {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -30,9 +38,13 @@ export class Appsetting {
   @Column("tinyint", { name: "totalGraphVisible", nullable: true, width: 1 })
   public totalGraphVisible?: boolean | null;
 
-  @OneToMany(
-    () => Appusersetting,
-    (appusersetting) => appusersetting.appSetting
-  )
-  public appusersettings?: Appusersetting[];
+  @Column("int", { name: "appUserId", nullable: true })
+  public appUserId?: number | null;
+
+  @ManyToOne(() => Appuser, (appuser) => appuser.appsettings, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
+  public appUser?: Appuser;
 }

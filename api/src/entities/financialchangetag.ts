@@ -1,11 +1,26 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Financialchange } from "./financialchange";
 import { Tag } from "./tag";
 
+@Index("financialChangeId", ["financialChangeId"], {})
+@Index("tagId", ["tagId"], {})
 @Entity("financialchangetag", { schema: "finapp" })
 export class Financialchangetag {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   public id?: number;
+
+  @Column("int", { name: "financialChangeId" })
+  public financialChangeId?: number;
+
+  @Column("int", { name: "tagId" })
+  public tagId?: number;
 
   @ManyToOne(
     () => Financialchange,

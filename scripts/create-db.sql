@@ -17,14 +17,9 @@ CREATE TABLE AppSetting (
   gyroGraphVisible BOOLEAN,
   checkingGraphVisible BOOLEAN,
   pocketGraphVisible BOOLEAN,
-  totalGraphVisible BOOLEAN
-);
-CREATE TABLE AppUserSetting (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  appUserId INT NOT NULL,
-  appSettingId INT NOT NULL,
-  FOREIGN KEY (appUserId) REFERENCES AppUser(id),
-  FOREIGN KEY (appSettingId) REFERENCES AppSetting(id)
+  totalGraphVisible BOOLEAN,
+  appUserId INT,
+  FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
 CREATE TABLE PaymentSource (
   id INT AUTO_INCREMENT PRIMARY KEY,

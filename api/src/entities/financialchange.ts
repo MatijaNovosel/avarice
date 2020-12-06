@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -9,6 +10,7 @@ import {
 import { Paymentsource } from "./paymentsource";
 import { Financialchangetag } from "./financialchangetag";
 
+@Index("paymentSourceId", ["paymentSourceId"], {})
 @Entity("financialchange", { schema: "finapp" })
 export class Financialchange {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -25,6 +27,9 @@ export class Financialchange {
 
   @Column("tinyint", { name: "expense", nullable: true, width: 1 })
   public expense?: boolean | null;
+
+  @Column("int", { name: "paymentSourceId", nullable: true })
+  public paymentSourceId?: number | null;
 
   @ManyToOne(
     () => Paymentsource,

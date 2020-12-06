@@ -5,25 +5,6 @@ import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
 
 export class ChangeService implements IChangeService {
-  async funkcija() {
-    const res: ChangeItem[] = [];
-    const data = await db
-      .collection("changges")
-      .orderBy("date", "desc")
-      .get();
-    data.forEach(async document => {
-      const doc = document.data() as ChangeItemDto;
-      res.push({
-        uid: document.id,
-        amount: doc.amount,
-        tags: doc.tags,
-        date: doc.date.toDate(),
-        description: doc.description,
-        expense: doc.expense,
-        paymentSource: doc.paymentSource
-      });
-    });
-  }
   async addChange(payload: ChangeItem): Promise<void> {
     await db.collection("changges").add(payload);
   }
