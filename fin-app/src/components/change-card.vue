@@ -17,6 +17,7 @@
         <tag
           v-for="(tag, i) in state.tags"
           :key="i"
+          class="p-mx-1"
           :color="state.expense ? '#c52626' : '#428733'"
           >{{ formatTag(tag) }}</tag
         >
