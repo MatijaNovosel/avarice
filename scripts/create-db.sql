@@ -20,6 +20,7 @@ CREATE TABLE AppSetting (
   totalGraphVisible BOOLEAN
 );
 CREATE TABLE AppUserSetting (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   appUserId INT NOT NULL,
   appSettingId INT NOT NULL,
   FOREIGN KEY (appUserId) REFERENCES AppUser(id),
@@ -43,6 +44,7 @@ CREATE TABLE Tag (
   description VARCHAR(255)
 );
 CREATE TABLE FinancialChangeTag (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   financialChangeId INT NOT NULL,
   tagId INT NOT NULL,
   FOREIGN KEY (financialChangeId) REFERENCES FinancialChange(id),
@@ -58,3 +60,5 @@ CREATE TABLE FinancialHistory (
   appUserId INT NOT NULL,
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
+
+INSERT INTO appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");

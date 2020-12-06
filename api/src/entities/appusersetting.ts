@@ -1,28 +1,23 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Appuser } from "./appuser";
 import { Appsetting } from "./appsetting";
 
-@Index("appUserId", ["AppUserId"], {})
-@Index("appSettingId", ["AppSettingId"], {})
 @Entity("appusersetting", { schema: "finapp" })
 export class Appusersetting {
-  @Column("int", { name: "appUserId" })
-  public AppUserId?: number;
+  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  public id?: number;
 
-  @Column("int", { name: "appSettingId" })
-  public AppSettingId?: number;
-
-  @ManyToOne(() => Appuser, (Appuser) => Appuser.Appusersettings, {
+  @ManyToOne(() => Appuser, (appuser) => appuser.appusersettings, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "appUserId", referencedColumnName: "Id" }])
-  public AppUser?: Appuser;
+  @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
+  public appUser?: Appuser;
 
-  @ManyToOne(() => Appsetting, (Appsetting) => Appsetting.Appusersettings, {
+  @ManyToOne(() => Appsetting, (appsetting) => appsetting.appusersettings, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "appSettingId", referencedColumnName: "Id" }])
-  public AppSetting?: Appsetting;
+  @JoinColumn([{ name: "appSettingId", referencedColumnName: "id" }])
+  public appSetting?: Appsetting;
 }

@@ -4,14 +4,14 @@ import { Financialchangetag } from "./financialchangetag";
 @Entity("tag", { schema: "finapp" })
 export class Tag {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  public Id?: number;
+  public id?: number;
 
   @Column("varchar", { name: "description", nullable: true, length: 255 })
-  public Description?: string | null;
+  public description?: string | null;
 
   @OneToMany(
     () => Financialchangetag,
-    (Financialchangetag) => Financialchangetag.Tag
+    (financialchangetag) => financialchangetag.tag
   )
-  public Financialchangetags?: Financialchangetag[];
+  public financialchangetags?: Financialchangetag[];
 }

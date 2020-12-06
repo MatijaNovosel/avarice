@@ -7,11 +7,9 @@ import { Appusersetting } from "./entities/appusersetting";
 import { Appuser } from "./entities/appuser";
 import { Appsetting } from "./entities/appsetting";
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { CatsController } from "./controllers/cats.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
+import { UsersModule } from "./modules/users.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -35,9 +33,8 @@ const { host, port, username, password, database } = { ...serverConfig };
         Tag
       ],
       synchronize: true
-    })
-  ],
-  controllers: [AppController, CatsController],
-  providers: [AppService]
+    }),
+    UsersModule
+  ]
 })
 export class AppModule {}

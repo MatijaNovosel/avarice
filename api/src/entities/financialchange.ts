@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -10,38 +9,34 @@ import {
 import { Paymentsource } from "./paymentsource";
 import { Financialchangetag } from "./financialchangetag";
 
-@Index("paymentSourceId", ["PaymentSourceId"], {})
 @Entity("financialchange", { schema: "finapp" })
 export class Financialchange {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  public Id?: number;
+  public id?: number;
 
   @Column("double", { name: "amount", nullable: true, precision: 22 })
-  public Amount?: number | null;
+  public amount?: number | null;
 
   @Column("date", { name: "createdAt", nullable: true })
-  public CreatedAt?: string | null;
+  public createdAt?: string | null;
 
   @Column("varchar", { name: "description", nullable: true, length: 255 })
-  public Description?: string | null;
+  public description?: string | null;
 
   @Column("tinyint", { name: "expense", nullable: true, width: 1 })
-  public Expense?: boolean | null;
-
-  @Column("int", { name: "paymentSourceId", nullable: true })
-  public PaymentSourceId?: number | null;
+  public expense?: boolean | null;
 
   @ManyToOne(
     () => Paymentsource,
-    (Paymentsource) => Paymentsource.Financialchanges,
+    (paymentsource) => paymentsource.financialchanges,
     { onDelete: "NO ACTION", onUpdate: "NO ACTION" }
   )
-  @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "Id" }])
-  public PaymentSource?: Paymentsource;
+  @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "id" }])
+  public paymentSource?: Paymentsource;
 
   @OneToMany(
     () => Financialchangetag,
-    (Financialchangetag) => Financialchangetag.FinancialChange
+    (financialchangetag) => financialchangetag.financialChange
   )
-  public Financialchangetags?: Financialchangetag[];
+  public financialchangetags?: Financialchangetag[];
 }

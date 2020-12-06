@@ -5,26 +5,26 @@ import { Financialhistory } from "./financialhistory";
 @Entity("appuser", { schema: "finapp" })
 export class Appuser {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
-  public Id?: number;
+  public id?: number;
 
   @Column("varchar", { name: "uid", nullable: true, length: 255 })
-  public Uid?: string | null;
+  public uid?: string | null;
 
   @Column("varchar", { name: "email", nullable: true, length: 255 })
-  public Email?: string | null;
+  public email?: string | null;
 
   @Column("varchar", { name: "photoURL", nullable: true, length: 255 })
-  public PhotoUrl?: string | null;
+  public photoUrl?: string | null;
 
   @Column("varchar", { name: "displayName", nullable: true, length: 255 })
-  public DisplayName?: string | null;
+  public displayName?: string | null;
 
-  @OneToMany(() => Appusersetting, (Appusersetting) => Appusersetting.AppUser)
-  public Appusersettings?: Appusersetting[];
+  @OneToMany(() => Appusersetting, (appusersetting) => appusersetting.appUser)
+  public appusersettings?: Appusersetting[];
 
   @OneToMany(
     () => Financialhistory,
-    (Financialhistory) => Financialhistory.AppUser
+    (financialhistory) => financialhistory.appUser
   )
-  public Financialhistories?: Financialhistory[];
+  public financialhistories?: Financialhistory[];
 }
