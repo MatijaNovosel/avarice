@@ -4,7 +4,6 @@ import { Paymentsource } from "./entities/paymentsource";
 import { Financialhistory } from "./entities/financialhistory";
 import { Financialchangetag } from "./entities/financialchangetag";
 import { Financialchange } from "./entities/financialchange";
-import { Appusersetting } from "./entities/appusersetting";
 import { Appuser } from "./entities/appuser";
 import { Appsetting } from "./entities/appsetting";
 import { Module } from "@nestjs/common";
@@ -26,7 +25,6 @@ const { host, port, username, password, database } = { ...serverConfig };
       entities: [
         Appsetting,
         Appuser,
-        Appusersetting,
         Financialchange,
         Financialchangetag,
         Financialhistory,
