@@ -10,11 +10,15 @@ export class TagService {
     private tagRepository: Repository<Tag>
   ) {}
 
-  findAll(): Promise<Tag[]> {
-    return this.tagRepository.find();
+  async findAll(): Promise<Tag[]> {
+    return await this.tagRepository.find();
   }
 
   async add(description: string): Promise<number> {
     return await (await this.tagRepository.save({ description })).id;
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.tagRepository.delete(id);
   }
 }

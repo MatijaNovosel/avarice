@@ -10,6 +10,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
 import { TagModule } from "./modules/tag.module";
+import { VoidScalar } from "./scalars/void";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -38,6 +39,7 @@ const { host, port, username, password, database } = { ...serverConfig };
       synchronize: true
     }),
     TagModule
-  ]
+  ],
+  providers: [VoidScalar]
 })
 export class AppModule {}

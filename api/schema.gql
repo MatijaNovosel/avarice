@@ -14,5 +14,9 @@ type Query {
 }
 
 type Mutation {
-  addTag(description: String!): Int!
+  create(description: String!): Int!
+  delete(id: Int!): Void
 }
+
+"""Represents no return value."""
+scalar Void
