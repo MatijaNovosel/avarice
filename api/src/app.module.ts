@@ -9,7 +9,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
-import { GTagModule } from "./modules/tag.module";
+import { TagModule } from "./modules/tag.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -37,7 +37,7 @@ const { host, port, username, password, database } = { ...serverConfig };
       ],
       synchronize: true
     }),
-    GTagModule
+    TagModule
   ]
 })
 export class AppModule {}
