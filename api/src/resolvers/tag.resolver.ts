@@ -1,6 +1,6 @@
 import { TagService } from "./../services/tag.service";
 import { GTag } from "./../entities/tag";
-import { Query, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 @Resolver(() => GTag)
 export class TagResolver {
@@ -9,5 +9,10 @@ export class TagResolver {
   @Query(() => [GTag], { name: "tags" })
   async getAll() {
     return this.tagService.findAll();
+  }
+
+  @Mutation(() => Int)
+  async addTag(@Args({ name: "description" }) description: string) {
+    return await this.tagService.add(description);
   }
 }

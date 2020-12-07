@@ -13,4 +13,8 @@ export class TagService {
   findAll(): Promise<Tag[]> {
     return this.tagRepository.find();
   }
+
+  async add(description: string): Promise<number> {
+    return await (await this.tagRepository.save({ description })).id;
+  }
 }

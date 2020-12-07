@@ -12,3 +12,7 @@ type GTag {
 type Query {
   tags: [GTag!]!
 }
+
+type Mutation {
+  addTag(description: String!): Int!
+}
