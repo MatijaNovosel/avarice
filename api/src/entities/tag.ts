@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Financialchangetag } from "./financialchangetag";
 
@@ -14,4 +15,13 @@ export class Tag {
     (financialchangetag) => financialchangetag.tag
   )
   public financialchangetags?: Financialchangetag[];
+}
+
+@ObjectType()
+export class GTag {
+  @Field(() => Int)
+  id?: number;
+
+  @Field({ description: "Tag description", nullable: true })
+  description?: string;
 }

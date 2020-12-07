@@ -10,11 +10,17 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
 import { UsersModule } from "./modules/users.module";
+import { GraphQLModule } from "@nestjs/graphql";
+import { GTagModule } from "./modules/tag.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
 @Module({
   imports: [
+    GraphQLModule.forRoot({
+      debug: false,
+      autoSchemaFile: "schema.gql"
+    }),
     TypeOrmModule.forRoot({
       type: "mysql",
       host,
@@ -34,7 +40,8 @@ const { host, port, username, password, database } = { ...serverConfig };
       synchronize: true
     }),
     UsersModule,
-    FinancialChangeModule
+    FinancialChangeModule,
+    GTagModule
   ]
 })
 export class AppModule {}

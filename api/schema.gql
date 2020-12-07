@@ -1,0 +1,14 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type GTag {
+  id: Int!
+
+  """Tag description"""
+  description: String
+}
+
+type Query {
+  tags: [GTag!]!
+}
