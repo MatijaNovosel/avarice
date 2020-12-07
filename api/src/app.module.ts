@@ -1,4 +1,3 @@
-import { FinancialChangeModule } from "./modules/financial-change.module";
 import { Tag } from "./entities/tag";
 import { Paymentsource } from "./entities/paymentsource";
 import { Financialhistory } from "./entities/financialhistory";
@@ -9,7 +8,6 @@ import { Appsetting } from "./entities/appsetting";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
-import { UsersModule } from "./modules/users.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { GTagModule } from "./modules/tag.module";
 
@@ -39,8 +37,6 @@ const { host, port, username, password, database } = { ...serverConfig };
       ],
       synchronize: true
     }),
-    UsersModule,
-    FinancialChangeModule,
     GTagModule
   ]
 })
