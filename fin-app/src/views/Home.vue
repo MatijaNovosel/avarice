@@ -52,6 +52,13 @@
     <div class="p-col-12 p-md-8 p-px-5">
       <div class="p-shadow-6 chart-container">
         <div class="month-select-container">
+          <mdi-icon
+            class="p-mr-3 cursor-pointer"
+            @click="state.graphValuesVisible = !state.graphValuesVisible"
+            :size="20"
+            :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
+            v-tooltip="'Prikaži vrijednosti'"
+          />
           <div v-ripple class="p-ripple month-select-item cursor-pointer">
             {{ $t("months.november") }}
           </div>
@@ -159,25 +166,26 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch, inject, ref } from "vue";
-import { formatTag, formatPaymentSource } from "@/helpers/helpers";
+import { formatTag, formatPaymentSource } from "../helpers/helpers";
 import { format } from "date-fns";
-import { DatasetItem } from "@/models/dataset";
+import { DatasetItem } from "../models/dataset";
 import {
   hexToRgba,
   adjustHexColor,
   createSelectFromEnum
-} from "@/helpers/helpers";
-import { UserSettings } from "@/models/user-settings";
-import { euroRate } from "@/constants/app-constants";
-import { TagEnum } from "@/constants/tag-enum";
-import { ChangeItem } from "@/models/change-item";
+} from "../helpers/helpers";
+import { UserSettings } from "../models/user-settings";
+import { euroRate } from "../constants/app-constants";
+import { TagEnum } from "../constants/tag-enum";
+import { ChangeItem } from "../models/change-item";
 import { useI18n } from "vue-i18n";
-import { Account } from "@/models/account";
+import { Account } from "../models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
-import ChangeCard from "@/components/change-card.vue";
-import { getService, Types } from "@/di-container";
-import { IChangeService } from "@/services/interfaces/change-service";
-import { ISettingsService } from "@/services/interfaces/settings-service";
+import ChangeCard from "../components/change-card.vue";
+import { getService, Types } from "../di-container";
+import { IChangeService } from "../services/interfaces/change-service";
+import { ISettingsService } from "../services/interfaces/settings-service";
+import MdiIcon from "../components/mdi-icon.vue";
 
 interface Filter {
   tag: TagEnum[];
@@ -238,13 +246,15 @@ interface State {
   changesOffset: number;
   amountVisible: AmountVisible;
   dataSets: DataSets;
+  graphValuesVisible: boolean;
 }
 
 export default defineComponent({
   name: "Home",
   components: {
     DashboardAmountCard,
-    ChangeCard
+    ChangeCard,
+    MdiIcon
   },
   setup() {
     const { t } = useI18n();
@@ -252,6 +262,7 @@ export default defineComponent({
     const graph: any = ref(null);
 
     const state: State = reactive({
+      graphValuesVisible: false,
       dataSets: {
         gyro: null,
         checking: null,
@@ -545,6 +556,7 @@ export default defineComponent({
 
 .month-select-container
   display: flex
+  align-items: center
 
 .month-select-item
   font-size: 0.8em

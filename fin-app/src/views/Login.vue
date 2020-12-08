@@ -72,12 +72,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import MdiIcon from "@/components/mdi-icon.vue";
+import MdiIcon from "../components/mdi-icon.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { getService, Types } from "@/di-container";
-import { IAuthService } from "@/services/interfaces/auth-service";
+import { getService, Types } from "../di-container";
+import { IAuthService } from "../services/interfaces/auth-service";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
 
