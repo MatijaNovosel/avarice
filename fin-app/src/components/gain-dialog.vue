@@ -53,7 +53,9 @@
       </div>
     </div>
     <template #footer>
+      <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
       <btn
+        v-else
         @click="addGain"
         label="Spremi"
         icon="pi pi-save"
@@ -64,15 +66,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
-import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { ChangeItem } from "@/models/change-item";
+import {
+  defineComponent,
+  reactive,
+  SetupContext,
+  watch,
+  inject,
+  Ref
+} from "vue";
+import { PaymentSourceEnum } from "../constants/payment-source-enum";
+import { ChangeItem } from "../models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { TagEnum } from "@/constants/tag-enum";
-import { getService, Types } from "@/di-container";
-import { IChangeService } from "@/services/interfaces/change-service";
-import { createSelectFromEnum } from "@/helpers/helpers";
+import { TagEnum } from "../constants/tag-enum";
+import { getService, Types } from "../di-container";
+import { IChangeService } from "../services/interfaces/change-service";
+import { createSelectFromEnum } from "../helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -82,6 +91,7 @@ interface State {
   dialog: boolean;
   // eslint-disable-next-line
   refresh: any;
+  saving: boolean;
 }
 
 export default defineComponent({
@@ -100,17 +110,21 @@ export default defineComponent({
       date: new Date(),
       expense: false
     } as ChangeItem);
+
     const rules = {
       amount: { required, numeric },
       paymentSource: { required },
       description: { required },
       tags: { required }
     };
-    const model = useVuelidate(rules, entry);
+
+    // eslint-disable-next-line
+    const model: Ref<any> = useVuelidate(rules, entry);
 
     const state: State = reactive({
       dialog: props.dialog,
-      refresh: inject("refresh")
+      refresh: inject("refresh"),
+      saving: false
     });
 
     watch(
@@ -132,14 +146,21 @@ export default defineComponent({
       model.value.$reset;
     }
 
+    function hideDialog() {
+      resetDialog();
+      context.emit("update:dialog", state.dialog);
+    }
+
     function refresh() {
       state.refresh.refresh();
     }
 
     async function addGain() {
-      const payload = {
+      state.saving = true;
+
+      const payload: ChangeItem = {
         ...entry
-      } as ChangeItem;
+      };
 
       payload.date = new Date();
 
@@ -167,14 +188,9 @@ export default defineComponent({
       });
 
       changeService.addChange(payload);
-
-      resetDialog();
+      hideDialog();
+      state.saving = false;
       refresh();
-    }
-
-    function hideDialog() {
-      resetDialog();
-      context.emit("update:dialog", state.dialog);
     }
 
     return {

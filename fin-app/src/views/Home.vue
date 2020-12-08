@@ -263,7 +263,7 @@ export default defineComponent({
         checking: false,
         pocket: false,
         euros: true,
-        total: true
+        total: false
       },
       entry: 0,
       changesNumberOfPages: 0,

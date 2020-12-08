@@ -72,7 +72,9 @@
       }}</span>
     </div>
     <template #footer>
+      <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
       <btn
+        v-else
         @click="addExpense"
         :disabled="model.$invalid"
         label="Spremi"
@@ -84,15 +86,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch, inject } from "vue";
-import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { TagEnum } from "@/constants/tag-enum";
-import { ChangeItem } from "@/models/change-item";
-import { createSelectFromEnum } from "@/helpers/helpers";
+import {
+  defineComponent,
+  reactive,
+  SetupContext,
+  watch,
+  inject,
+  Ref
+} from "vue";
+import { PaymentSourceEnum } from "../constants/payment-source-enum";
+import { TagEnum } from "../constants/tag-enum";
+import { ChangeItem } from "../models/change-item";
+import { createSelectFromEnum } from "../helpers/helpers";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { getService, Types } from "@/di-container";
-import { IChangeService } from "@/services/interfaces/change-service";
+import { getService, Types } from "../di-container";
+import { IChangeService } from "../services/interfaces/change-service";
 
 interface Props {
   dialog: boolean;
@@ -102,6 +111,7 @@ interface State {
   dialog: boolean;
   // eslint-disable-next-line
   refresh: any;
+  saving: boolean;
 }
 
 export default defineComponent({
@@ -127,11 +137,13 @@ export default defineComponent({
       description: { required }
     };
 
-    const model = useVuelidate(rules, entry);
+    // eslint-disable-next-line
+    const model: Ref<any> = useVuelidate(rules, entry);
 
     const state: State = reactive({
       dialog: props.dialog,
-      refresh: inject("refresh")
+      refresh: inject("refresh"),
+      saving: false
     });
 
     watch(
@@ -160,13 +172,10 @@ export default defineComponent({
     }
 
     async function addExpense() {
+      state.saving = true;
+
       const payload: ChangeItem = {
-        paymentSource: entry.paymentSource,
-        tags: entry.tags,
-        description: entry.description,
-        amount: entry.amount,
-        date: new Date(),
-        expense: true
+        ...entry
       };
 
       const changeService = await getService<IChangeService>(
@@ -194,6 +203,7 @@ export default defineComponent({
 
       changeService.addChange(payload);
       hideDialog();
+      state.saving = false;
       state.refresh.refresh();
     }
 
@@ -228,4 +238,8 @@ export default defineComponent({
 .expense-form
   display: flex
   flex-direction: column
+
+.spinner
+  width: 25px
+  height: 25px
 </style>
