@@ -1,5 +1,14 @@
+import { FinancialChangeInputType } from "./../input-types/financial-change.input-type";
+import { VoidScalar } from "./../scalars/void";
 import { GFinancialChange } from "./../entities/financialchange";
-import { Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver
+} from "@nestjs/graphql";
 import { FinancialChangeService } from "src/services/financial-change.service";
 
 @Resolver(() => GFinancialChange)
@@ -21,5 +30,12 @@ export class FinancialChangeResolver {
   async paymentSource(@Parent() financialChange: GFinancialChange) {
     const { id } = financialChange;
     return await this.financialChangeService.getPaymentSource(id);
+  }
+
+  @Mutation(() => VoidScalar)
+  async addFinancialChange(
+    @Args("financialChange") financialChange: FinancialChangeInputType
+  ) {
+    await this.financialChangeService.create(financialChange);
   }
 }

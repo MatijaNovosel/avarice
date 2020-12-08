@@ -5,6 +5,7 @@ import { Financialchange } from "./../entities/financialchange";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { getRepository, Repository } from "typeorm";
+import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 
 @Injectable()
 export class FinancialChangeService {
@@ -39,5 +40,9 @@ export class FinancialChangeService {
         where: { id }
       })
     ).paymentSource;
+  }
+
+  async create(payload: FinancialChangeInputType): Promise<void> {
+    await this.repository.save(payload);
   }
 }
