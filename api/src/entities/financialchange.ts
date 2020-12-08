@@ -3,11 +3,15 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
-import { Paymentsource } from "./paymentsource";
+import { GPaymentSource, Paymentsource } from "./paymentsource";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
+import { GTag, Tag } from "./tag";
 import { Financialchangetag } from "./financialchangetag";
 
 @Index("paymentSourceId", ["paymentSourceId"], {})
@@ -44,4 +48,25 @@ export class Financialchange {
     (financialchangetag) => financialchangetag.financialChange
   )
   public financialchangetags?: Financialchangetag[];
+}
+
+@ObjectType()
+export class GFinancialChange {
+  @Field(() => Int)
+  id?: number;
+
+  @Field(() => Float)
+  amount?: number;
+
+  @Field({ nullable: true })
+  date?: string;
+
+  @Field()
+  expense?: boolean;
+
+  @Field(() => GPaymentSource)
+  paymentSource?: GPaymentSource;
+
+  @Field(() => [GTag])
+  tags?: GTag[];
 }

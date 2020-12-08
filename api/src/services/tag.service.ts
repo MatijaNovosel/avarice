@@ -7,18 +7,18 @@ import { Repository } from "typeorm";
 export class TagService {
   constructor(
     @InjectRepository(Tag)
-    private tagRepository: Repository<Tag>
+    private repository: Repository<Tag>
   ) {}
 
   async findAll(): Promise<Tag[]> {
-    return await this.tagRepository.find();
+    return await this.repository.find();
   }
 
   async add(description: string): Promise<number> {
-    return await (await this.tagRepository.save({ description })).id;
+    return (await this.repository.save({ description })).id;
   }
 
   async delete(id: number): Promise<void> {
-    await this.tagRepository.delete(id);
+    await this.repository.delete(id);
   }
 }

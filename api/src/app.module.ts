@@ -11,6 +11,7 @@ import serverConfig from "./config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
 import { TagModule } from "./modules/tag.module";
 import { VoidScalar } from "./scalars/void";
+import { FinancialChangeModule } from "./modules/financial-change.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -38,7 +39,8 @@ const { host, port, username, password, database } = { ...serverConfig };
       ],
       synchronize: true
     }),
-    TagModule
+    TagModule,
+    FinancialChangeModule
   ],
   providers: [VoidScalar]
 })
