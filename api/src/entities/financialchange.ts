@@ -59,7 +59,7 @@ export class GFinancialChange {
   amount?: number;
 
   @Field({ nullable: true })
-  date?: string;
+  createdAt?: string;
 
   @Field()
   expense?: boolean;

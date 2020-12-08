@@ -12,7 +12,7 @@ type GPaymentSource {
 type GFinancialChange {
   id: Int!
   amount: Float!
-  date: String
+  createdAt: String
   expense: Boolean!
   paymentSource: GPaymentSource!
   tags: [GTag!]!
