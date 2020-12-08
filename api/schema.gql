@@ -12,7 +12,8 @@ type GPaymentSource {
 type GFinancialChange {
   id: Int!
   amount: Float!
-  createdAt: String
+  createdAt: String!
+  description: String!
   expense: Boolean!
   paymentSource: GPaymentSource!
   tags: [GTag!]!
@@ -41,6 +42,7 @@ scalar Void
 
 input FinancialChangeInputType {
   amount: Float!
+  description: String!
   expense: Boolean!
   paymentSource: PaymentSourceInputType!
   tags: [TagInputType!]!

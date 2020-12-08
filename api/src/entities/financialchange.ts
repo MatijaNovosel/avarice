@@ -58,8 +58,11 @@ export class GFinancialChange {
   @Field(() => Float)
   amount?: number;
 
-  @Field({ nullable: true })
+  @Field()
   createdAt?: string;
+
+  @Field()
+  description?: string;
 
   @Field()
   expense?: boolean;

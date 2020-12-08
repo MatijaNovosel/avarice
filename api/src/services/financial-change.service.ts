@@ -13,6 +13,7 @@ export class FinancialChangeService {
   constructor(
     @InjectRepository(Financialchange)
     private financialChangeRepository: Repository<Financialchange>,
+    @InjectRepository(Financialchangetag)
     private financialChangeTagRepository: Repository<Financialchangetag>
   ) {}
 
