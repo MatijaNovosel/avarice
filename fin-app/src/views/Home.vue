@@ -54,7 +54,7 @@
         <div class="month-select-container">
           <mdi-icon
             class="p-mr-3 cursor-pointer"
-            @click="state.graphValuesVisible = !state.graphValuesVisible"
+            @click="changeGraphVisibility"
             :size="20"
             :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
             v-tooltip="'Prikaži vrijednosti'"
@@ -225,6 +225,32 @@ interface AmountVisible {
   total: boolean;
 }
 
+interface GraphLineOptions {
+  tension: number;
+}
+
+interface GraphElementsOptions {
+  line: GraphLineOptions;
+}
+
+interface GraphLegendOptions {
+  display: boolean;
+}
+
+interface GraphYAxesOptions {
+  display: boolean;
+}
+
+interface GraphScalesOptions {
+  yAxes: GraphYAxesOptions[];
+}
+
+interface GraphOptions {
+  scales: GraphScalesOptions;
+  legend: GraphLegendOptions;
+  responsive: boolean;
+}
+
 interface State {
   currentAmount: CurrentAmount;
   loading: boolean;
@@ -247,6 +273,7 @@ interface State {
   amountVisible: AmountVisible;
   dataSets: DataSets;
   graphValuesVisible: boolean;
+  graphOptions: GraphOptions;
 }
 
 export default defineComponent({
@@ -323,10 +350,7 @@ export default defineComponent({
             tension: 0.3
           }
         },
-        responsive: true,
-        chartArea: {
-          backgroundColor: "rgba(251, 85, 85, 0.4)"
-        }
+        responsive: true
       },
       graphData: null,
       totalAmount: "0,00HRK"
@@ -372,7 +396,7 @@ export default defineComponent({
       }
 
       (state.graphData as GraphData).datasets = dataSets;
-      graph.value.refresh();
+      graph.value.reinit();
     }
 
     async function updateData() {
@@ -475,6 +499,12 @@ export default defineComponent({
       updateData();
     });
 
+    function changeGraphVisibility() {
+      state.graphValuesVisible = !state.graphValuesVisible;
+      state.graphOptions.scales.yAxes[0].display = state.graphValuesVisible;
+      updateGraph();
+    }
+
     watch(
       () => state.account,
       () => updateGraph(),
@@ -498,7 +528,8 @@ export default defineComponent({
       resetFilter,
       getChanges,
       pageChanged,
-      graph
+      graph,
+      changeGraphVisibility
     };
   }
 });
