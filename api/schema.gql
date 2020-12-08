@@ -33,7 +33,23 @@ type Query {
 type Mutation {
   create(description: String!): Int!
   delete(id: Int!): Void
+  addFinancialChange(financialChange: FinancialChangeInputType!): Void
 }
 
 """Represents no return value."""
 scalar Void
+
+input FinancialChangeInputType {
+  amount: Float!
+  expense: Boolean!
+  paymentSource: PaymentSourceInputType!
+  tags: [TagInputType!]!
+}
+
+input PaymentSourceInputType {
+  id: Int!
+}
+
+input TagInputType {
+  id: Int!
+}

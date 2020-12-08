@@ -32,7 +32,7 @@ export class FinancialChangeResolver {
     return await this.financialChangeService.getPaymentSource(id);
   }
 
-  @Mutation(() => VoidScalar)
+  @Mutation(() => VoidScalar, { nullable: true })
   async addFinancialChange(
     @Args("financialChange") financialChange: FinancialChangeInputType
   ) {

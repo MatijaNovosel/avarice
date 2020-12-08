@@ -6,16 +6,18 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { getRepository, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
+import { format } from "date-fns";
 
 @Injectable()
 export class FinancialChangeService {
   constructor(
     @InjectRepository(Financialchange)
-    private repository: Repository<Financialchange>
+    private financialChangeRepository: Repository<Financialchange>,
+    private financialChangeTagRepository: Repository<Financialchangetag>
   ) {}
 
   async findAll(): Promise<Financialchange[]> {
-    return await this.repository.find();
+    return await this.financialChangeRepository.find();
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {
@@ -35,7 +37,7 @@ export class FinancialChangeService {
 
   async getPaymentSource(id: number): Promise<Paymentsource> {
     return (
-      await this.repository.findOne({
+      await this.financialChangeRepository.findOne({
         relations: ["paymentSource"],
         where: { id }
       })
@@ -43,6 +45,18 @@ export class FinancialChangeService {
   }
 
   async create(payload: FinancialChangeInputType): Promise<void> {
-    await this.repository.save(payload);
+    const financialChange = await this.financialChangeRepository.save({
+      amount: payload.amount,
+      description: payload.description,
+      expense: payload.expense,
+      paymentSourceId: payload.paymentSource.id,
+      createdAt: format(new Date(), "yyyy-MM-dd")
+    });
+    payload.tags.forEach(async (tag) => {
+      await this.financialChangeTagRepository.save({
+        financialChangeId: financialChange.id,
+        tagId: tag.id
+      });
+    });
   }
 }

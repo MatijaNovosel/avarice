@@ -1,21 +1,21 @@
-import { InputType, Field } from "@nestjs/graphql";
-import { GPaymentSource } from "src/entities/paymentsource";
-import { GTag } from "src/entities/tag";
+import { InputType, Field, Float } from "@nestjs/graphql";
+import { PaymentSourceInputType } from "./payment-source.input-type";
+import { TagInputType } from "./tag.input-type";
 
 @InputType()
 export class FinancialChangeInputType {
-  @Field()
+  @Field(() => Float)
   amount: number;
 
   @Field()
-  createdAt?: string;
+  description?: string;
 
   @Field()
   expense?: boolean;
 
-  @Field()
-  paymentSource?: GPaymentSource;
+  @Field(() => PaymentSourceInputType)
+  paymentSource?: PaymentSourceInputType;
 
-  @Field()
-  tags?: GTag[];
+  @Field(() => [TagInputType])
+  tags?: TagInputType[];
 }
