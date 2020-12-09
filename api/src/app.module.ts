@@ -1,3 +1,4 @@
+import { AppUserHttpModule } from "./modules/http/app-user-http.module";
 import { AppSettingHttpModule } from "src/modules/http/app-setting-http.module";
 import { Tag } from "src/entities/tag";
 import { Paymentsource } from "src/entities/paymentsource";
@@ -42,7 +43,8 @@ const { host, port, username, password, database } = { ...serverConfig };
     }),
     TagHttpModule,
     FinancialChangeHttpModule,
-    AppSettingHttpModule
+    AppSettingHttpModule,
+    AppUserHttpModule
   ],
   providers: [VoidScalar]
 })

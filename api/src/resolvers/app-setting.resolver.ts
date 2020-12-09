@@ -1,4 +1,4 @@
-import { AppSettingService } from "./../services/app-setting.service";
+import { AppSettingService } from "src/services/app-setting.service";
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GAppsetting } from "src/entities/appsetting";
 import { VoidScalar } from "src/scalars/void";

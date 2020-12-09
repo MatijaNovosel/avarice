@@ -15,6 +15,14 @@ type GAppsetting {
   appUserId: Int!
 }
 
+type GAppUser {
+  id: Int!
+  uid: String!
+  email: String!
+  photoUrl: String!
+  displayName: String!
+}
+
 type GPaymentSource {
   id: Int!
 
@@ -40,6 +48,7 @@ type GTag {
 }
 
 type Query {
+  appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges: [GFinancialChange!]!
   tags: [GTag!]!

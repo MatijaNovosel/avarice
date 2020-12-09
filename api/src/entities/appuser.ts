@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Appsetting } from "./appsetting";
 import { Financialhistory } from "./financialhistory";
@@ -27,4 +28,22 @@ export class Appuser {
     (financialhistory) => financialhistory.appUser
   )
   public financialhistories?: Financialhistory[];
+}
+
+@ObjectType()
+export class GAppUser {
+  @Field(() => Int)
+  id?: number;
+
+  @Field()
+  uid?: string;
+
+  @Field()
+  email?: string;
+
+  @Field()
+  photoUrl?: string;
+
+  @Field()
+  displayName?: string;
 }

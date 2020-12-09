@@ -1,6 +1,6 @@
-import { FinancialChangeInputType } from "./../input-types/financial-change.input-type";
-import { VoidScalar } from "./../scalars/void";
-import { GFinancialChange } from "./../entities/financialchange";
+import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
+import { VoidScalar } from "src/scalars/void";
+import { GFinancialChange } from "src/entities/financialchange";
 import {
   Args,
   Mutation,
