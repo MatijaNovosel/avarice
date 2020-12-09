@@ -1,4 +1,4 @@
-import { Appsetting } from "../../entities/appsetting";
+import { Appsetting } from "src/entities/appsetting";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 

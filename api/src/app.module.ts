@@ -1,18 +1,18 @@
-import { AppSettingHttpModule } from "./modules/http/app-setting-http.module";
-import { Tag } from "./entities/tag";
-import { Paymentsource } from "./entities/paymentsource";
-import { Financialhistory } from "./entities/financialhistory";
-import { Financialchangetag } from "./entities/financialchangetag";
-import { Financialchange } from "./entities/financialchange";
-import { Appuser } from "./entities/appuser";
-import { Appsetting } from "./entities/appsetting";
+import { AppSettingHttpModule } from "src/modules/http/app-setting-http.module";
+import { Tag } from "src/entities/tag";
+import { Paymentsource } from "src/entities/paymentsource";
+import { Financialhistory } from "src/entities/financialhistory";
+import { Financialchangetag } from "src/entities/financialchangetag";
+import { Financialchange } from "src/entities/financialchange";
+import { Appuser } from "src/entities/appuser";
+import { Appsetting } from "src/entities/appsetting";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import serverConfig from "./config/server-config.json";
+import serverConfig from "src/config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
-import { VoidScalar } from "./scalars/void";
-import { FinancialChangeHttpModule } from "./modules/financial-change-http.module";
-import { TagHttpModule } from "./modules/tag-http.module";
+import { VoidScalar } from "src/scalars/void";
+import { FinancialChangeHttpModule } from "src/modules/http/financial-change-http.module";
+import { TagHttpModule } from "src/modules/http/tag-http.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 

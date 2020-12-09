@@ -1,5 +1,5 @@
-import { TagModule } from "./tag.module";
-import { TagService } from "../services/tag.service";
+import { TagModule } from "../repositories/tag.module";
+import { TagService } from "../../services/tag.service";
 import { Module } from "@nestjs/common";
 import { TagResolver } from "src/resolvers/tag.resolver";
 
