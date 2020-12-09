@@ -1,4 +1,4 @@
-import { AppSettingHttpModule } from "./modules/app-setting-http.module";
+import { AppSettingHttpModule } from "./modules/http/app-setting-http.module";
 import { Tag } from "./entities/tag";
 import { Paymentsource } from "./entities/paymentsource";
 import { Financialhistory } from "./entities/financialhistory";
