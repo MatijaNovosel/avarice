@@ -11,7 +11,7 @@ export class AuthService {
     private appUserRepository: Repository<Appuser>
   ) {}
 
-  async login(email: string, password: string): Promise<void> {
+  async login(email: string, password: string): Promise<Appuser> {
     const repoUser: Appuser = await this.appUserRepository.findOne({
       where: { email }
     });
@@ -26,8 +26,7 @@ export class AuthService {
         );
       }
     });
-    console.log(repoUser);
-    // Generate JWT here
+    return repoUser;
   }
 
   async register(email: string, password: string): Promise<number> {
