@@ -20,6 +20,7 @@ type GAppUser {
   uid: String!
   email: String!
   photoUrl: String!
+  password: String!
   displayName: String!
 }
 
@@ -55,26 +56,15 @@ type Query {
 }
 
 type Mutation {
-  updateUserAppSetting(appSetting: AppSettingInputType!): Void
+  login(password: String!, email: String!): GAppUser!
   addFinancialChange(financialChange: FinancialChangeInputType!): Void
+  updateUserAppSetting(appSetting: AppSettingInputType!): Void
   create(description: String!): Int!
   delete(id: Int!): Void
 }
 
 """Represents no return value."""
 scalar Void
-
-input AppSettingInputType {
-  checkingGraphColor: String
-  gyroGraphColor: String
-  pocketGraphColor: String
-  totalGraphColor: String
-  gyroGraphVisible: Boolean
-  checkingGraphVisible: Boolean
-  pocketGraphVisible: Boolean
-  totalGraphVisible: Boolean
-  appUserId: Int!
-}
 
 input FinancialChangeInputType {
   amount: Float!
@@ -90,4 +80,16 @@ input PaymentSourceInputType {
 
 input TagInputType {
   id: Int!
+}
+
+input AppSettingInputType {
+  checkingGraphColor: String
+  gyroGraphColor: String
+  pocketGraphColor: String
+  totalGraphColor: String
+  gyroGraphVisible: Boolean
+  checkingGraphVisible: Boolean
+  pocketGraphVisible: Boolean
+  totalGraphVisible: Boolean
+  appUserId: Int!
 }
