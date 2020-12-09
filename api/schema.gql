@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GAppsetting {
+  id: Int!
+  checkingGraphColor: String!
+  gyroGraphColor: String!
+  pocketGraphColor: String!
+  totalGraphColor: String!
+  gyroGraphVisible: Boolean!
+  checkingGraphVisible: Boolean!
+  pocketGraphVisible: Boolean!
+  totalGraphVisible: Boolean!
+  appUserId: Int!
+}
+
 type GPaymentSource {
   id: Int!
 
@@ -27,18 +40,32 @@ type GTag {
 }
 
 type Query {
-  tags: [GTag!]!
+  appSettings(userId: Int!): GAppsetting!
   financialChanges: [GFinancialChange!]!
+  tags: [GTag!]!
 }
 
 type Mutation {
+  updateUserAppSetting(appSetting: AppSettingInputType!): Void
+  addFinancialChange(financialChange: FinancialChangeInputType!): Void
   create(description: String!): Int!
   delete(id: Int!): Void
-  addFinancialChange(financialChange: FinancialChangeInputType!): Void
 }
 
 """Represents no return value."""
 scalar Void
+
+input AppSettingInputType {
+  checkingGraphColor: String
+  gyroGraphColor: String
+  pocketGraphColor: String
+  totalGraphColor: String
+  gyroGraphVisible: Boolean
+  checkingGraphVisible: Boolean
+  pocketGraphVisible: Boolean
+  totalGraphVisible: Boolean
+  appUserId: Int!
+}
 
 input FinancialChangeInputType {
   amount: Float!

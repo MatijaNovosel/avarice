@@ -1,10 +1,11 @@
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { Appuser } from "./appuser";
 
@@ -43,8 +44,41 @@ export class Appsetting {
 
   @ManyToOne(() => Appuser, (appuser) => appuser.appsettings, {
     onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
+    onUpdate: "NO ACTION"
   })
   @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
   public appUser?: Appuser;
+}
+
+@ObjectType()
+export class GAppsetting {
+  @Field(() => Int)
+  public id?: number;
+
+  @Field()
+  public checkingGraphColor?: string;
+
+  @Field()
+  public gyroGraphColor?: string;
+
+  @Field()
+  public pocketGraphColor?: string;
+
+  @Field()
+  public totalGraphColor?: string;
+
+  @Field()
+  public gyroGraphVisible?: boolean;
+
+  @Field()
+  public checkingGraphVisible?: boolean;
+
+  @Field()
+  public pocketGraphVisible?: boolean;
+
+  @Field()
+  public totalGraphVisible?: boolean;
+
+  @Field(() => Int)
+  public appUserId?: number;
 }

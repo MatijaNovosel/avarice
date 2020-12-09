@@ -1,3 +1,4 @@
+import { AppSettingHttpModule } from "./modules/app-setting-http.module";
 import { Tag } from "./entities/tag";
 import { Paymentsource } from "./entities/paymentsource";
 import { Financialhistory } from "./entities/financialhistory";
@@ -9,9 +10,9 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import serverConfig from "./config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
-import { TagModule } from "./modules/tag.module";
 import { VoidScalar } from "./scalars/void";
 import { FinancialChangeHttpModule } from "./modules/financial-change-http.module";
+import { TagHttpModule } from "./modules/tag-http.module";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -39,8 +40,9 @@ const { host, port, username, password, database } = { ...serverConfig };
       ],
       synchronize: true
     }),
-    TagModule,
-    FinancialChangeHttpModule
+    TagHttpModule,
+    FinancialChangeHttpModule,
+    AppSettingHttpModule
   ],
   providers: [VoidScalar]
 })
