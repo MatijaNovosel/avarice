@@ -20,6 +20,9 @@ export class Appuser {
   @Column("varchar", { name: "displayName", nullable: true, length: 255 })
   public displayName?: string | null;
 
+  @Column("varchar", { name: "password", nullable: true, length: 255 })
+  public password?: string | null;
+
   @OneToMany(() => Appsetting, (appsetting) => appsetting.appUser)
   public appsettings?: Appsetting[];
 
@@ -43,6 +46,9 @@ export class GAppUser {
 
   @Field()
   photoUrl?: string;
+
+  @Field()
+  password?: string;
 
   @Field()
   displayName?: string;

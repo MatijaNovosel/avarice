@@ -6,7 +6,8 @@ CREATE TABLE AppUser (
   uid VARCHAR(255),
   email VARCHAR(255),
   photoURL VARCHAR(255),
-  displayName VARCHAR(255)
+  displayName VARCHAR(255),
+  password VARCHAR(255)
 );
 CREATE TABLE AppSetting (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,4 +57,12 @@ CREATE TABLE FinancialHistory (
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
 
-INSERT INTO appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+INSERT INTO finapp.appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+
+INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Ostalo");
+
+INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
+
+INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId) VALUES (255.55, CURDATE(), "Testing", 1, 1);
+
+INSERT INTO finapp.financialchangetag (financialChangeId, tagId) VALUES (1, 1), (1, 2);
