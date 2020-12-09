@@ -2,16 +2,18 @@ import { Appuser } from "src/entities/appuser";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Appuser)
-    private appUserRepository: Repository<Appuser>
+    private appUserRepository: Repository<Appuser>,
+    private jwtService: JwtService
   ) {}
 
-  async login(email: string, password: string): Promise<Appuser> {
+  async validateUser(email: string, password: string): Promise<Appuser> {
     const repoUser: Appuser = await this.appUserRepository.findOne({
       where: { email }
     });
@@ -27,6 +29,18 @@ export class AuthService {
       }
     });
     return repoUser;
+  }
+
+  async login(user: Appuser): Promise<any> {
+    const payload = {
+      email: user.email,
+      sub: {
+        permissions: [1, 2, 3]
+      }
+    };
+    return {
+      accessToken: this.jwtService.sign(payload)
+    };
   }
 
   async register(email: string, password: string): Promise<number> {

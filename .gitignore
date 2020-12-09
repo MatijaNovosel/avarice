@@ -107,3 +107,4 @@ dist
 ormconfig.json
 .tomg-config
 server-config.json
+jwt-config.json
