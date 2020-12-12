@@ -222,4 +222,8 @@ export default defineComponent({
   background-color: #1e1e1e
   display: flex
   flex-direction: column
+
+.spinner
+  width: 25px
+  height: 25px
 </style>
