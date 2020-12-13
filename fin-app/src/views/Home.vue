@@ -165,7 +165,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch, inject, ref } from "vue";
+import { defineComponent, reactive, watch, inject, ref, onMounted } from "vue";
 import { formatTag, formatPaymentSource } from "../helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "../models/dataset";
@@ -495,15 +495,13 @@ export default defineComponent({
       state.changes = state.baseChanges.slice(page * rows, first + rows);
     }
 
-    onMounted(async () => {
-      updateData();
-    });
-
     function changeGraphVisibility() {
       state.graphValuesVisible = !state.graphValuesVisible;
       state.graphOptions.scales.yAxes[0].display = state.graphValuesVisible;
       updateGraph();
     }
+
+    onMounted(() => updateData());
 
     watch(
       () => state.account,
