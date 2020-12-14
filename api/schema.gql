@@ -56,7 +56,7 @@ type Query {
 }
 
 type Mutation {
-  login(password: String!, email: String!): GAppUser!
+  login(password: String!, email: String!): Void
   addFinancialChange(financialChange: FinancialChangeInputType!): Void
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
   create(description: String!): Int!
