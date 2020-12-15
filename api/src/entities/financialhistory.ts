@@ -17,7 +17,7 @@ export class Financialhistory {
   @Column("double", { name: "checking", nullable: true, precision: 22 })
   public checking?: number | null;
 
-  @Column("date", { name: "createdAt", nullable: true })
+  @Column("timestamp", { name: "createdAt", nullable: true })
   public createdAt?: string | null;
 
   @Column("double", { name: "euros", nullable: true, precision: 22 })

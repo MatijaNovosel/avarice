@@ -22,7 +22,7 @@ export class Financialchange {
   @Column("double", { name: "amount", nullable: true, precision: 22 })
   public amount?: number | null;
 
-  @Column("date", { name: "createdAt", nullable: true })
+  @Column("timestamp", { name: "createdAt", nullable: true })
   public createdAt?: string | null;
 
   @Column("varchar", { name: "description", nullable: true, length: 255 })
