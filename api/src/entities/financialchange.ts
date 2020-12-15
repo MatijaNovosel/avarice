@@ -1,3 +1,4 @@
+import { Appuser } from './appuser';
 import {
   Column,
   Entity,
@@ -42,6 +43,14 @@ export class Financialchange {
   )
   @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "id" }])
   public paymentSource?: Paymentsource;
+
+  @ManyToOne(
+    () => Appuser,
+    (appuser) => appuser.financialchanges,
+    { onDelete: "NO ACTION", onUpdate: "NO ACTION" }
+  )
+  @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
+  public appUser?: Appuser;
 
   @OneToMany(
     () => Financialchangetag,

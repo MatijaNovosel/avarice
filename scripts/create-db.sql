@@ -33,6 +33,8 @@ CREATE TABLE FinancialChange (
   description VARCHAR(255),
   expense BOOLEAN,
   paymentSourceId INT,
+  appUserId INT,
+  FOREIGN KEY (appUserId) REFERENCES AppUser(id),
   FOREIGN KEY (paymentSourceId) REFERENCES PaymentSource(id)
 );
 CREATE TABLE Tag (

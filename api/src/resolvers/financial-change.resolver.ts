@@ -3,6 +3,7 @@ import { VoidScalar } from "src/scalars/void";
 import { GFinancialChange } from "src/entities/financialchange";
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -16,8 +17,8 @@ export class FinancialChangeResolver {
   constructor(private financialChangeService: FinancialChangeService) {}
 
   @Query(() => [GFinancialChange], { name: "financialChanges" })
-  async getAll() {
-    return this.financialChangeService.findAll();
+  async getAllByUserId(@Args("id", { type: () => Int }) id: number) {
+    return this.financialChangeService.findAllByUserId(id);
   }
 
   @ResolveField()

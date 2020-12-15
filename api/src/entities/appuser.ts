@@ -1,3 +1,4 @@
+import { Financialchange } from "./financialchange";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Appsetting } from "./appsetting";
@@ -31,6 +32,12 @@ export class Appuser {
     (financialhistory) => financialhistory.appUser
   )
   public financialhistories?: Financialhistory[];
+
+  @OneToMany(
+    () => Financialchange,
+    (financialchange) => financialchange.appUser
+  )
+  public financialchanges?: Financialchange[];
 }
 
 @ObjectType()
