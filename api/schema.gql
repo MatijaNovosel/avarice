@@ -2,6 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GPaymentSource {
+  id: Int!
+
+  """Payment source description"""
+  description: String
+}
+
+type GTag {
+  id: Int!
+
+  """Tag description"""
+  description: String
+}
+
+type GFinancialChange {
+  id: Int!
+  amount: Float!
+  createdAt: String!
+  description: String!
+  expense: Boolean!
+  paymentSource: GPaymentSource!
+  tags: [GTag!]!
+}
+
 type GAppsetting {
   id: Int!
   checkingGraphColor: String!
@@ -24,34 +48,10 @@ type GAppUser {
   displayName: String!
 }
 
-type GPaymentSource {
-  id: Int!
-
-  """Payment source description"""
-  description: String
-}
-
-type GFinancialChange {
-  id: Int!
-  amount: Float!
-  createdAt: String!
-  description: String!
-  expense: Boolean!
-  paymentSource: GPaymentSource!
-  tags: [GTag!]!
-}
-
-type GTag {
-  id: Int!
-
-  """Tag description"""
-  description: String
-}
-
 type Query {
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
-  financialChanges: [GFinancialChange!]!
+  financialChanges(id: Int!): [GFinancialChange!]!
   tags: [GTag!]!
 }
 

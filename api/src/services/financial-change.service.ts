@@ -24,7 +24,7 @@ export class FinancialChangeService {
   async findAllByUserId(id: number): Promise<Financialchange[]> {
     return await getRepository(Financialchange)
       .createQueryBuilder("fc")
-      .where("fct.appUserId = :id", { id })
+      .where("fc.appUserId = :id", { id })
       .getMany();
   }
 

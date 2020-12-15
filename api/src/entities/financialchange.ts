@@ -1,18 +1,16 @@
-import { Appuser } from './appuser';
+import { Appuser } from "./appuser";
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { GPaymentSource, Paymentsource } from "./paymentsource";
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
-import { GTag, Tag } from "./tag";
+import { GTag } from "./tag";
 import { Financialchangetag } from "./financialchangetag";
 
 @Index("paymentSourceId", ["paymentSourceId"], {})
@@ -47,11 +45,10 @@ export class Financialchange {
   @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "id" }])
   public paymentSource?: Paymentsource;
 
-  @ManyToOne(
-    () => Appuser,
-    (appuser) => appuser.financialchanges,
-    { onDelete: "NO ACTION", onUpdate: "NO ACTION" }
-  )
+  @ManyToOne(() => Appuser, (appuser) => appuser.financialchanges, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION"
+  })
   @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
   public appUser?: Appuser;
 
