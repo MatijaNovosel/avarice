@@ -65,6 +65,6 @@ INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Ostalo");
 
 INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
 
-INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES (255.55, CURDATE(), "Testing", 1, 1, 1);
+INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES (255.55, NOW(), "Testing", 1, 1, 1);
 
 INSERT INTO finapp.financialchangetag (financialChangeId, tagId) VALUES (1, 1), (1, 2);
