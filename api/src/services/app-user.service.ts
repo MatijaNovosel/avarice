@@ -28,11 +28,11 @@ export class AppUserService {
     await this.appUserRepository.save(appUser);
     await this.financialHistoryRepository.save({
       checking: 0,
-      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
-      appUserId: appUser.id,
       pocket: 0,
       euros: 0,
-      gyro: 0
+      gyro: 0,
+      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
+      appUserId: appUser.id
     });
 
     return appUser.id;
