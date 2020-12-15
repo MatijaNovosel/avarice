@@ -22,10 +22,9 @@ export class FinancialChangeService {
   ) {}
 
   async findAllByUserId(id: number): Promise<Financialchange[]> {
-    return await getRepository(Financialchange)
-      .createQueryBuilder("fc")
-      .where("fc.appUserId = :id", { id })
-      .getMany();
+    return await this.financialChangeRepository.find({
+      where: { appUserId: id }
+    });
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {

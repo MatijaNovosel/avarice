@@ -4,7 +4,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { Appuser } from "./appuser";
 
@@ -17,7 +17,7 @@ export class Financialhistory {
   @Column("double", { name: "checking", nullable: true, precision: 22 })
   public checking?: number | null;
 
-  @Column("timestamp", { name: "createdAt", nullable: true })
+  @Column("timestamp", { name: "createdAt" })
   public createdAt?: string | null;
 
   @Column("double", { name: "euros", nullable: true, precision: 22 })
@@ -34,7 +34,7 @@ export class Financialhistory {
 
   @ManyToOne(() => Appuser, (appuser) => appuser.financialhistories, {
     onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
+    onUpdate: "NO ACTION"
   })
   @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
   public appUser?: Appuser;

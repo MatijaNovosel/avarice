@@ -29,7 +29,7 @@ CREATE TABLE PaymentSource (
 CREATE TABLE FinancialChange (
   id INT AUTO_INCREMENT PRIMARY KEY,
   amount DOUBLE,
-  createdAt DATETIME,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   description VARCHAR(255),
   expense BOOLEAN,
   paymentSourceId INT,
@@ -51,20 +51,53 @@ CREATE TABLE FinancialChangeTag (
 CREATE TABLE FinancialHistory (
   id INT AUTO_INCREMENT PRIMARY KEY,
   checking DOUBLE,
-  createdAt DATETIME,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   euros DOUBLE,
   gyro DOUBLE,
   pocket DOUBLE,
   appUserId INT NOT NULL,
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
-
-INSERT INTO finapp.appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
-
-INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Ostalo");
-
-INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
-
-INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES (255.55, NOW(), "Testing", 1, 1, 1);
-
-INSERT INTO finapp.financialchangetag (financialChangeId, tagId) VALUES (1, 1), (1, 2);
+INSERT INTO
+  finapp.appuser (displayName, email, photoURL, uid)
+VALUES
+  (
+    "Matija Novosel",
+    "mnovosel5@gmail.com",
+    "url.url",
+    "uid"
+  );
+INSERT INTO
+  finapp.tag (description)
+VALUES
+  ("Hrana"),
+  ("Ostalo");
+INSERT INTO
+  finapp.paymentsource (description)
+VALUES
+  ("Žiro račun"),
+  ("Tekući račun"),
+  ("Džep");
+INSERT INTO
+  finapp.financialchange (
+    amount,
+    createdAt,
+    description,
+    expense,
+    paymentSourceId,
+    appUserId
+  )
+VALUES
+  (
+    255.55,
+    CURRENT_TIMESTAMP(),
+    "Testing",
+    1,
+    1,
+    1
+  );
+INSERT INTO
+  finapp.financialchangetag (financialChangeId, tagId)
+VALUES
+  (1, 1),
+  (1, 2);
