@@ -14,6 +14,7 @@ import { GTag } from "./tag";
 import { Financialchangetag } from "./financialchangetag";
 
 @Index("paymentSourceId", ["paymentSourceId"], {})
+@Index("appUserId", ["appUserId"], {})
 @Entity("financialchange", { schema: "finapp" })
 export class Financialchange {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -23,7 +24,7 @@ export class Financialchange {
   public amount?: number | null;
 
   @Column("timestamp", { name: "createdAt" })
-  public createdAt?: string | null;
+  public createdAt?: string;
 
   @Column("varchar", { name: "description", nullable: true, length: 255 })
   public description?: string | null;
