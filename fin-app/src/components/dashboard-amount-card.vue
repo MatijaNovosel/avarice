@@ -8,7 +8,7 @@
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="content">
-        <div class="left-side">
+        <div class="left-side no-select">
           <div class="p-pr-2">
             <mdi-icon
               :size="28"
