@@ -29,7 +29,7 @@ CREATE TABLE PaymentSource (
 CREATE TABLE FinancialChange (
   id INT AUTO_INCREMENT PRIMARY KEY,
   amount DOUBLE,
-  createdAt DATE,
+  createdAt DATETIME,
   description VARCHAR(255),
   expense BOOLEAN,
   paymentSourceId INT,
@@ -49,7 +49,7 @@ CREATE TABLE FinancialChangeTag (
 CREATE TABLE FinancialHistory (
   id INT AUTO_INCREMENT PRIMARY KEY,
   checking DOUBLE,
-  createdAt DATE,
+  createdAt DATETIME,
   euros DOUBLE,
   gyro DOUBLE,
   pocket DOUBLE,

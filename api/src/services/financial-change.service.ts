@@ -1,4 +1,4 @@
-import { Financialhistory } from './../entities/financialhistory';
+import { Financialhistory } from "./../entities/financialhistory";
 import { Paymentsource } from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
 import { Tag } from "./../entities/tag";
@@ -8,7 +8,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { getRepository, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
-import { PaymentSourceEnum } from 'src/constants/payment-source';
+import { PaymentSourceEnum } from "src/constants/payment-source";
 
 @Injectable()
 export class FinancialChangeService {
@@ -16,7 +16,7 @@ export class FinancialChangeService {
     @InjectRepository(Financialchange)
     private financialChangeRepository: Repository<Financialchange>,
     @InjectRepository(Financialchangetag)
-    private financialChangeTagRepository: Repository<Financialchangetag>
+    private financialChangeTagRepository: Repository<Financialchangetag>,
     @InjectRepository(Financialchangetag)
     private financialChangeHistoryRepository: Repository<Financialhistory>
   ) {}
@@ -55,7 +55,7 @@ export class FinancialChangeService {
       description: payload.description,
       expense: payload.expense,
       paymentSourceId: payload.paymentSource.id,
-      createdAt: format(new Date(), "yyyy-MM-dd")
+      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")
     });
 
     payload.tags.forEach(async (tag) => {
@@ -65,17 +65,28 @@ export class FinancialChangeService {
       });
     });
 
-    const currentAmount: Financialhistory = await getRepository(Financialhistory)
-    .createQueryBuilder("fh")
-    .orderBy("fh.createdAt", "ASC")
-    .getOne();
+    const currentAmount: Financialhistory = await getRepository(
+      Financialhistory
+    )
+      .createQueryBuilder("fh")
+      .orderBy("fh.createdAt", "ASC")
+      .getOne();
 
     const historyEntry: Financialhistory = {
-      checking: payload.paymentSource.id == PaymentSourceEnum.Checking ? parseFloat((currentAmount.checking - payload.amount).toFixed(2)) : currentAmount.checking,
+      checking:
+        payload.paymentSource.id == PaymentSourceEnum.Checking
+          ? parseFloat((currentAmount.checking - payload.amount).toFixed(2))
+          : currentAmount.checking,
       euros: currentAmount.euros,
-      gyro: payload.paymentSource.id == PaymentSourceEnum.Gyro ? parseFloat((currentAmount.gyro - payload.amount).toFixed(2)) : currentAmount.gyro,
-      pocket: payload.paymentSource.id == PaymentSourceEnum.Pocket ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2)) : currentAmount.pocket,
-      createdAt: format(new Date(), "yyyy-MM-dd")
+      gyro:
+        payload.paymentSource.id == PaymentSourceEnum.Gyro
+          ? parseFloat((currentAmount.gyro - payload.amount).toFixed(2))
+          : currentAmount.gyro,
+      pocket:
+        payload.paymentSource.id == PaymentSourceEnum.Pocket
+          ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
+          : currentAmount.pocket,
+      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")
     };
 
     await this.financialChangeHistoryRepository.save(historyEntry);
