@@ -36,6 +36,9 @@ export class Financialchange {
   @Column("int", { name: "paymentSourceId", nullable: true })
   public paymentSourceId?: number | null;
 
+  @Column("int", { name: "appUserId", nullable: true })
+  public appUserId?: number | null;
+
   @ManyToOne(
     () => Paymentsource,
     (paymentsource) => paymentsource.financialchanges,
