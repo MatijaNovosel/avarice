@@ -76,6 +76,7 @@ export class FinancialChangeService {
       Financialhistory
     )
       .createQueryBuilder("fh")
+      .where("fh.appUserId = :id", { id: payload.appUserId })
       .orderBy("fh.createdAt", "ASC")
       .getOne();
 
