@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
+import { AuthGoogleLoginInputType } from "src/input-types/auth.input-type";
 
 @Injectable()
 export class AuthService {
@@ -41,6 +42,24 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload)
     };
+  }
+
+  async googleLogin(payload: AuthGoogleLoginInputType) {
+    const user = await this.appUserRepository.findOne({
+      where: { uid: payload.uid }
+    });
+
+    if (user != null) {
+      // Create JWT token
+    } else {
+      await this.appUserRepository.save({
+        displayName: payload.displayName,
+        email: payload.email,
+        photoUrl: payload.photoUrl,
+        uid: payload.uid
+      });
+      // Create JWT token
+    }
   }
 
   async register(email: string, password: string): Promise<number> {
