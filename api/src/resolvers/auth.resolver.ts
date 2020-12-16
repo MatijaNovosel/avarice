@@ -14,7 +14,9 @@ export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Mutation(() => AccessToken)
-  async login(@Args("input") input: AuthEmailLoginInputType) {
+  async login(
+    @Args("input", new ValidationPipe()) input: AuthEmailLoginInputType
+  ) {
     const res = await this.authService.login(input.email, input.password);
     return res;
   }

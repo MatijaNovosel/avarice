@@ -4,9 +4,12 @@ import { IsEmail, IsNotEmpty, Min } from "class-validator";
 @InputType()
 export class AuthEmailLoginInputType {
   @Field()
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @Field()
+  @IsNotEmpty()
   password: string;
 }
 
