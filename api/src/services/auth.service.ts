@@ -32,8 +32,12 @@ export class AuthService {
     return repoUser;
   }
 
-  async login(user: Appuser): Promise<any> {
+  async login({ email, password }): Promise<any> {
+    const user = await this.validateUser(email, password);
+
     const payload = {
+      id: user.id,
+      displayName: user.displayName,
       email: user.email,
       sub: {
         permissions: [1, 2, 3]

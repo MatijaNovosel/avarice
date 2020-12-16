@@ -56,17 +56,31 @@ type Query {
 }
 
 type Mutation {
-  login(password: String!, email: String!): GAppUser!
+  login(input: AuthEmailLoginInputType!): GAppUser!
+  googleLogin(input: AuthGoogleLoginInputType!): Void
   addFinancialChange(financialChange: FinancialChangeInputType!): Void
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
   create(description: String!): Int!
   delete(id: Int!): Void
 }
 
+input AuthEmailLoginInputType {
+  email: String!
+  password: String!
+}
+
 """Represents no return value."""
 scalar Void
 
+input AuthGoogleLoginInputType {
+  uid: String!
+  email: String!
+  photoUrl: String!
+  displayName: String!
+}
+
 input FinancialChangeInputType {
+  appUserId: Int!
   amount: Float!
   description: String!
   expense: Boolean!

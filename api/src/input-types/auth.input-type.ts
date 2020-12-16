@@ -1,16 +1,25 @@
 import { InputType, Field } from "@nestjs/graphql";
 
 @InputType()
+export class AuthEmailLoginInputType {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
+}
+
+@InputType()
 export class AuthGoogleLoginInputType {
-  @Field({ nullable: true })
-  uid?: string;
+  @Field()
+  uid: string;
 
   @Field()
-  email?: string;
-
-  @Field({ nullable: true })
-  photoUrl?: string;
+  email: string;
 
   @Field()
-  displayName?: string;
+  photoUrl: string;
+
+  @Field()
+  displayName: string;
 }
