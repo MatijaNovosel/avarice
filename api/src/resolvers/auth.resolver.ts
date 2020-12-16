@@ -1,6 +1,5 @@
 import { AuthRegisterInputType } from "./../input-types/auth.input-type";
 import { VoidScalar } from "./../scalars/void";
-import { GAppUser } from "./../entities/appuser";
 import { AuthService } from "./../services/auth.service";
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import {
@@ -8,6 +7,7 @@ import {
   AuthGoogleLoginInputType
 } from "src/input-types/auth.input-type";
 import { AccessToken } from "src/entities/auth";
+import { ValidationPipe } from "@nestjs/common";
 
 @Resolver()
 export class AuthResolver {
@@ -25,7 +25,9 @@ export class AuthResolver {
   }
 
   @Mutation(() => Int, { nullable: true })
-  async register(@Args("input") input: AuthRegisterInputType) {
+  async register(
+    @Args("input", new ValidationPipe()) input: AuthRegisterInputType
+  ) {
     return await this.authService.register(input.email, input.password);
   }
 }
