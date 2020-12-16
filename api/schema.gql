@@ -48,6 +48,10 @@ type GAppUser {
   displayName: String!
 }
 
+type AccessToken {
+  accessToken: String!
+}
+
 type Query {
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
@@ -56,10 +60,12 @@ type Query {
 }
 
 type Mutation {
-  login(input: AuthEmailLoginInputType!): GAppUser!
+  login(input: AuthEmailLoginInputType!): AccessToken!
   googleLogin(input: AuthGoogleLoginInputType!): Void
-  addFinancialChange(financialChange: FinancialChangeInputType!): Void
+  register(input: AuthRegisterInputType!): Int
+  addUser(user: AppUserInputType!): Int!
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
+  addFinancialChange(financialChange: FinancialChangeInputType!): Void
   create(description: String!): Int!
   delete(id: Int!): Void
 }
@@ -79,6 +85,30 @@ input AuthGoogleLoginInputType {
   displayName: String!
 }
 
+input AuthRegisterInputType {
+  email: String!
+  password: String!
+}
+
+input AppUserInputType {
+  uid: String
+  email: String!
+  photoUrl: String
+  displayName: String!
+}
+
+input AppSettingInputType {
+  checkingGraphColor: String
+  gyroGraphColor: String
+  pocketGraphColor: String
+  totalGraphColor: String
+  gyroGraphVisible: Boolean
+  checkingGraphVisible: Boolean
+  pocketGraphVisible: Boolean
+  totalGraphVisible: Boolean
+  appUserId: Int!
+}
+
 input FinancialChangeInputType {
   appUserId: Int!
   amount: Float!
@@ -94,16 +124,4 @@ input PaymentSourceInputType {
 
 input TagInputType {
   id: Int!
-}
-
-input AppSettingInputType {
-  checkingGraphColor: String
-  gyroGraphColor: String
-  pocketGraphColor: String
-  totalGraphColor: String
-  gyroGraphVisible: Boolean
-  checkingGraphVisible: Boolean
-  pocketGraphVisible: Boolean
-  totalGraphVisible: Boolean
-  appUserId: Int!
 }

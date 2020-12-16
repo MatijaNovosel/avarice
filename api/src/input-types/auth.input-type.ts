@@ -10,6 +10,15 @@ export class AuthEmailLoginInputType {
 }
 
 @InputType()
+export class AuthRegisterInputType {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
+}
+
+@InputType()
 export class AuthGoogleLoginInputType {
   @Field()
   uid: string;

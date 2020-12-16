@@ -18,21 +18,24 @@ export class AuthService {
     const repoUser: Appuser = await this.appUserRepository.findOne({
       where: { email }
     });
+
     if (!repoUser) {
       throw new HttpException("User was not found!", HttpStatus.NOT_FOUND);
     }
-    bcrypt.compare(password, repoUser.password, function (err, result) {
-      if (result == false) {
-        throw new HttpException(
-          "Passwords do not match!",
-          HttpStatus.BAD_REQUEST
-        );
-      }
-    });
+
+    const match = bcrypt.compare(password, repoUser.password);
+
+    if (!match) {
+      throw new HttpException(
+        "Passwords do not match!",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     return repoUser;
   }
 
-  async login({ email, password }): Promise<any> {
+  async login(email: string, password: string): Promise<any> {
     const user = await this.validateUser(email, password);
 
     const payload = {
@@ -67,13 +70,7 @@ export class AuthService {
   }
 
   async register(email: string, password: string): Promise<number> {
-    let passwordHash: string;
-    const saltRounds = 10;
-    bcrypt.genSalt(saltRounds, (saltError, salt) => {
-      bcrypt.hash(password, salt, (hashError, hash) => {
-        passwordHash = hash;
-      });
-    });
+    const passwordHash = await bcrypt.hash(password, 10);
     const user: Appuser = {
       email,
       password: passwordHash

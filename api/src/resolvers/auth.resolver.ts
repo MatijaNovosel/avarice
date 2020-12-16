@@ -1,24 +1,31 @@
+import { AuthRegisterInputType } from "./../input-types/auth.input-type";
 import { VoidScalar } from "./../scalars/void";
 import { GAppUser } from "./../entities/appuser";
 import { AuthService } from "./../services/auth.service";
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import {
   AuthEmailLoginInputType,
   AuthGoogleLoginInputType
 } from "src/input-types/auth.input-type";
+import { AccessToken } from "src/entities/auth";
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @Mutation(() => GAppUser)
+  @Mutation(() => AccessToken)
   async login(@Args("input") input: AuthEmailLoginInputType) {
-    const res = await this.authService.login({ ...input });
-    console.log(res);
+    const res = await this.authService.login(input.email, input.password);
+    return res;
   }
 
   @Mutation(() => VoidScalar, { nullable: true })
   async googleLogin(@Args("input") input: AuthGoogleLoginInputType) {
     this.authService.googleLogin(input);
+  }
+
+  @Mutation(() => Int, { nullable: true })
+  async register(@Args("input") input: AuthRegisterInputType) {
+    return await this.authService.register(input.email, input.password);
   }
 }

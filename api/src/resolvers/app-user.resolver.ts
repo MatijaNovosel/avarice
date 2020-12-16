@@ -13,7 +13,7 @@ export class AppUserResolver {
   }
 
   @Mutation(() => Int)
-  async addFinancialChange(@Args("user") user: AppUserInputType) {
+  async addUser(@Args("user") user: AppUserInputType) {
     await this.appUserService.create(user);
   }
 }
