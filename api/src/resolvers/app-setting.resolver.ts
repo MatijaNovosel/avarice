@@ -3,6 +3,7 @@ import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GAppsetting } from "src/entities/appsetting";
 import { VoidScalar } from "src/scalars/void";
 import { AppSettingInputType } from "src/input-types/app-setting.input-type";
+import { ValidationPipe } from "@nestjs/common";
 
 @Resolver(() => GAppsetting)
 export class AppSettingResolver {
@@ -15,7 +16,7 @@ export class AppSettingResolver {
 
   @Mutation(() => VoidScalar, { nullable: true })
   async updateUserAppSetting(
-    @Args("appSetting") appSetting: AppSettingInputType
+    @Args("appSetting", new ValidationPipe()) appSetting: AppSettingInputType
   ) {
     await this.appSettingService.update(appSetting);
   }

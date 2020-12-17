@@ -1,4 +1,5 @@
 import { InputType, Field, Int } from "@nestjs/graphql";
+import { IsNotEmpty } from "class-validator";
 
 @InputType()
 export class AppSettingInputType {
@@ -27,5 +28,6 @@ export class AppSettingInputType {
   public totalGraphVisible?: boolean;
 
   @Field(() => Int)
+  @IsNotEmpty()
   public appUserId?: number;
 }

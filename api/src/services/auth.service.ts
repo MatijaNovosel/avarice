@@ -57,25 +57,47 @@ export class AuthService {
     });
 
     if (user != null) {
-      // Create JWT token
+      const signValue = {
+        id: user.id,
+        displayName: user.displayName,
+        email: user.email,
+        sub: {
+          permissions: [1, 2, 3]
+        }
+      };
+      return {
+        accessToken: this.jwtService.sign(signValue)
+      };
     } else {
-      await this.appUserRepository.save({
+      const newUser: Appuser = {
         displayName: payload.displayName,
         email: payload.email,
         photoUrl: payload.photoUrl,
         uid: payload.uid
-      });
-      // Create JWT token
+      };
+      await this.appUserRepository.save(newUser);
+      const signValue = {
+        id: newUser.id,
+        displayName: newUser.displayName,
+        email: newUser.email,
+        sub: {
+          permissions: [1, 2, 3]
+        }
+      };
+      return {
+        accessToken: this.jwtService.sign(signValue)
+      };
     }
   }
 
   async register(email: string, password: string): Promise<number> {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
     const user: Appuser = {
       email,
       password: passwordHash
     };
-    this.appUserRepository.save(user);
+    await this.appUserRepository.save(user);
     return user.id;
   }
 }

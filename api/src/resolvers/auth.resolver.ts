@@ -26,7 +26,7 @@ export class AuthResolver {
     this.authService.googleLogin(input);
   }
 
-  @Mutation(() => Int, { nullable: true })
+  @Mutation(() => Int)
   async register(
     @Args("input", new ValidationPipe()) input: AuthRegisterInputType
   ) {
