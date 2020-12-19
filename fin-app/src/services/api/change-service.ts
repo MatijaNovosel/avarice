@@ -40,7 +40,7 @@ export class ChangeService implements IChangeService {
       financialHistoryInsertString += `(${doc.checking}, '${format(
         doc.date.toDate(),
         "yyyy-MM-dd HH:MM:ss"
-      )}', ${doc.euros || 200}, ${doc.gyro}, ${doc.pocket}, 1),`;
+      )}', ${doc.euros || 200}, ${doc.gyro}, ${doc.pocket.toFixed(2)}, 1),`;
     });
     console.log(financialChangeInsertString);
     console.log(manyToManyString);
