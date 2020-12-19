@@ -66,10 +66,6 @@ CREATE TABLE FinancialHistory (
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
 
-INSERT INTO finapp.appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
-INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Ostalo");
-INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
-
 DELIMITER $$ 
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
 CREATE TRIGGER appUserAfterInsertTrigger AFTER INSERT ON finapp.appuser FOR EACH ROW 
@@ -80,3 +76,7 @@ CREATE TRIGGER appUserAfterInsertTrigger AFTER INSERT ON finapp.appuser FOR EACH
     VALUES (NEW.id, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1);
 END $$ 
 DELIMITER;
+
+INSERT INTO finapp.appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Darovi"), ("Igre"), ("Javni prijevoz"), ("Ostalo"), ("Piće"), ("Namirnice");
+INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
