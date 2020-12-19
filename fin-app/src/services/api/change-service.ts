@@ -13,7 +13,7 @@ export class ChangeService implements IChangeService {
       .get();
     let id = 0;
     let manyToManyString =
-      "INSERT INTO finapp.financialchangetag VALUES (financialChangeId, tagId) VALUES ";
+      "INSERT INTO finapp.financialchangetag (financialChangeId, tagId) VALUES ";
     let insertString =
       "INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES ";
     data.forEach(document => {
