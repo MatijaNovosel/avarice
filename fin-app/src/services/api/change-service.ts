@@ -26,7 +26,7 @@ export class ChangeService implements IChangeService {
         doc.paymentSource
       }, 1), `;
       doc.tags.forEach(tagId => {
-        manyToManyString += `(${id}, ${tagId}), `;
+        manyToManyString += `(${id}, ${tagId || 5}), `;
       });
     });
     console.log(insertString);
