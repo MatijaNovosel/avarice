@@ -12,14 +12,16 @@ export class ChangeService implements IChangeService {
       .orderBy("date", "desc")
       .get();
     let id = 0;
+    let financialHistoryInsertString =
+      "INSERT INTO finapp.financialhistory (checking, createdAt, euros, gyro, pocket, appUserId) VALUES ";
     let manyToManyString =
       "INSERT INTO finapp.financialchangetag (financialChangeId, tagId) VALUES ";
-    let insertString =
+    let financialChangeInsertString =
       "INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES ";
     data.forEach(document => {
       id++;
       const doc = document.data() as ChangeItemDto;
-      insertString += `(${doc.amount}, '${format(
+      financialChangeInsertString += `(${doc.amount}, '${format(
         doc.date.toDate(),
         "yyyy-MM-dd HH:MM:ss"
       )}', '${doc.description}', ${doc.expense ? 1 : 0}, ${
@@ -29,8 +31,20 @@ export class ChangeService implements IChangeService {
         manyToManyString += `(${id}, ${tagId || 5}), `;
       });
     });
-    console.log(insertString);
+    const historyData = await db
+      .collection("history")
+      .orderBy("date", "asc")
+      .get();
+    historyData.forEach(document => {
+      const doc = document.data() as HistoryItemDto;
+      financialHistoryInsertString += `(${doc.checking}, '${format(
+        doc.date.toDate(),
+        "yyyy-MM-dd HH:MM:ss"
+      )}', ${doc.euros || 200}, ${doc.gyro}, ${doc.pocket}, 1),`;
+    });
+    console.log(financialChangeInsertString);
     console.log(manyToManyString);
+    console.log(financialHistoryInsertString);
   }
   async addChange(payload: ChangeItem): Promise<void> {
     await db.collection("changges").add(payload);
