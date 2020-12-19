@@ -62,7 +62,7 @@ type Query {
 type Mutation {
   login(input: AuthEmailLoginInputType!): AccessToken!
   googleLogin(input: AuthGoogleLoginInputType!): Void
-  register(input: AuthRegisterInputType!): Int
+  register(input: AuthRegisterInputType!): Int!
   addUser(user: AppUserInputType!): Int!
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
   addFinancialChange(financialChange: FinancialChangeInputType!): Void

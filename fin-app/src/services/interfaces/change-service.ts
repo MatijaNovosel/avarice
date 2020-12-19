@@ -12,4 +12,5 @@ export interface IChangeService {
   getChanges(filterOptions?: Filter): Promise<ChangeItem[]>;
   getHistory(): Promise<HistoryItemDto[]>;
   getCurrentAmount(): Promise<HistoryItemDto>;
+  function(): Promise<void>;
 }

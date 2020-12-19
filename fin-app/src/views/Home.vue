@@ -501,7 +501,10 @@ export default defineComponent({
       updateGraph();
     }
 
-    onMounted(() => updateData());
+    onMounted(async () => {
+      await getService<IChangeService>(Types.ChangeService).function();
+      updateData();
+    });
 
     watch(
       () => state.account,

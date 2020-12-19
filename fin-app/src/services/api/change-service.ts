@@ -3,8 +3,27 @@ import { ChangeItemDto } from "../../models/change-item";
 import { db } from "../firebase";
 import { ChangeItem } from "@/models/change-item";
 import { HistoryItemDto, HistoryItem } from "@/models/history-item";
+import { format } from "date-fns";
 
 export class ChangeService implements IChangeService {
+  async function() {
+    const data = await db
+      .collection("changges")
+      .orderBy("date", "desc")
+      .get();
+    let insertString =
+      "INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES ";
+    data.forEach(document => {
+      const doc = document.data() as ChangeItemDto;
+      insertString += `(${doc.amount}, '${format(
+        doc.date.toDate(),
+        "yyyy-MM-dd HH:MM:ss"
+      )}', '${doc.description}', ${doc.expense ? 1 : 0}, ${
+        doc.paymentSource
+      }, 1), `;
+    });
+    console.log(insertString);
+  }
   async addChange(payload: ChangeItem): Promise<void> {
     await db.collection("changges").add(payload);
   }

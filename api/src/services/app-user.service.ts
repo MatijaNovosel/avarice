@@ -10,9 +10,7 @@ import { format } from "date-fns";
 export class AppUserService {
   constructor(
     @InjectRepository(Appuser)
-    private appUserRepository: Repository<Appuser>,
-    @InjectRepository(Financialhistory)
-    private financialHistoryRepository: Repository<Financialhistory>
+    private appUserRepository: Repository<Appuser>
   ) {}
 
   async getUserById(id: number): Promise<Appuser> {
@@ -24,17 +22,7 @@ export class AppUserService {
       email: user.email,
       displayName: user.displayName
     };
-
     await this.appUserRepository.save(appUser);
-    await this.financialHistoryRepository.save({
-      checking: 0,
-      pocket: 0,
-      euros: 0,
-      gyro: 0,
-      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
-      appUserId: appUser.id
-    });
-
     return appUser.id;
   }
 }

@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS finapp;
 CREATE DATABASE finapp;
 USE finapp;
+
 CREATE TABLE AppUser (
   id INT AUTO_INCREMENT PRIMARY KEY,
   uid VARCHAR(255),
@@ -9,6 +10,7 @@ CREATE TABLE AppUser (
   displayName VARCHAR(255),
   password VARCHAR(255)
 );
+
 CREATE TABLE AppSetting (
   id INT AUTO_INCREMENT PRIMARY KEY,
   checkingGraphColor VARCHAR(50),
@@ -22,10 +24,12 @@ CREATE TABLE AppSetting (
   appUserId INT,
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
+
 CREATE TABLE PaymentSource (
   id INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(255)
 );
+
 CREATE TABLE FinancialChange (
   id INT AUTO_INCREMENT PRIMARY KEY,
   amount DOUBLE,
@@ -37,10 +41,12 @@ CREATE TABLE FinancialChange (
   FOREIGN KEY (appUserId) REFERENCES AppUser(id),
   FOREIGN KEY (paymentSourceId) REFERENCES PaymentSource(id)
 );
+
 CREATE TABLE Tag (
   id INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(255)
 );
+
 CREATE TABLE FinancialChangeTag (
   id INT AUTO_INCREMENT PRIMARY KEY,
   financialChangeId INT NOT NULL,
@@ -48,6 +54,7 @@ CREATE TABLE FinancialChangeTag (
   FOREIGN KEY (financialChangeId) REFERENCES FinancialChange(id),
   FOREIGN KEY (tagId) REFERENCES Tag(id)
 );
+
 CREATE TABLE FinancialHistory (
   id INT AUTO_INCREMENT PRIMARY KEY,
   checking DOUBLE,
@@ -58,46 +65,18 @@ CREATE TABLE FinancialHistory (
   appUserId INT NOT NULL,
   FOREIGN KEY (appUserId) REFERENCES AppUser(id)
 );
-INSERT INTO
-  finapp.appuser (displayName, email, photoURL, uid)
-VALUES
-  (
-    "Matija Novosel",
-    "mnovosel5@gmail.com",
-    "url.url",
-    "uid"
-  );
-INSERT INTO
-  finapp.tag (description)
-VALUES
-  ("Hrana"),
-  ("Ostalo");
-INSERT INTO
-  finapp.paymentsource (description)
-VALUES
-  ("Žiro račun"),
-  ("Tekući račun"),
-  ("Džep");
-INSERT INTO
-  finapp.financialchange (
-    amount,
-    createdAt,
-    description,
-    expense,
-    paymentSourceId,
-    appUserId
-  )
-VALUES
-  (
-    255.55,
-    CURRENT_TIMESTAMP(),
-    "Testing",
-    1,
-    1,
-    1
-  );
-INSERT INTO
-  finapp.financialchangetag (financialChangeId, tagId)
-VALUES
-  (1, 1),
-  (1, 2);
+
+INSERT INTO finapp.appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+INSERT INTO finapp.tag (description) VALUES ("Hrana"), ("Ostalo");
+INSERT INTO finapp.paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
+
+DELIMITER $$ 
+DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
+CREATE TRIGGER appUserAfterInsertTrigger AFTER INSERT ON finapp.appuser FOR EACH ROW 
+  BEGIN
+    INSERT INTO finapp.financialhistory (appUserId, checking, createdAt, euros, gyro, pocket) 
+    VALUES (NEW.id, 0, CURRENT_TIMESTAMP(), 0, 0, 0);
+    INSERT INTO finapp.appsetting (appUserId, checkingGraphColor, checkingGraphVisible, gyroGraphColor, gyroGraphVisible, pocketGraphColor, pocketGraphVisible, totalGraphColor, totalGraphVisible)
+    VALUES (NEW.id, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1);
+END $$ 
+DELIMITER;
