@@ -11,9 +11,13 @@ export class ChangeService implements IChangeService {
       .collection("changges")
       .orderBy("date", "desc")
       .get();
+    let id = 0;
+    let manyToManyString =
+      "INSERT INTO finapp.financialchangetag VALUES (financialChangeId, tagId) VALUES ";
     let insertString =
       "INSERT INTO finapp.financialchange (amount, createdAt, description, expense, paymentSourceId, appUserId) VALUES ";
     data.forEach(document => {
+      id++;
       const doc = document.data() as ChangeItemDto;
       insertString += `(${doc.amount}, '${format(
         doc.date.toDate(),
@@ -21,8 +25,12 @@ export class ChangeService implements IChangeService {
       )}', '${doc.description}', ${doc.expense ? 1 : 0}, ${
         doc.paymentSource
       }, 1), `;
+      doc.tags.forEach(tagId => {
+        manyToManyString += `(${id}, ${tagId}), `;
+      });
     });
     console.log(insertString);
+    console.log(manyToManyString);
   }
   async addChange(payload: ChangeItem): Promise<void> {
     await db.collection("changges").add(payload);
