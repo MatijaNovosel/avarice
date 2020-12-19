@@ -22,13 +22,8 @@ export class FinancialChangeService {
   ) {}
 
   async findAllByUserId(id: number): Promise<Financialchange[]> {
-    return (
-      await this.financialChangeRepository.find({
-        where: { appUserId: id }
-      })
-    ).map((x) => {
-      x.createdAt = format(new Date(x.createdAt), "yyyy-MM-dd HH:mm:ss");
-      return x;
+    return await this.financialChangeRepository.find({
+      where: { appUserId: id }
     });
   }
 

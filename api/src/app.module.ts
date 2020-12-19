@@ -1,3 +1,4 @@
+import { FinancialHistoryHttpModule } from "./modules/http/financial-history-http.module";
 import { AuthModule } from "./auth/auth.module";
 import { AppUserHttpModule } from "./modules/http/app-user-http.module";
 import { AppSettingHttpModule } from "src/modules/http/app-setting-http.module";
@@ -46,7 +47,8 @@ const { host, port, username, password, database } = { ...serverConfig };
     FinancialChangeHttpModule,
     AppSettingHttpModule,
     AppUserHttpModule,
-    AuthModule
+    AuthModule,
+    FinancialHistoryHttpModule
   ],
   providers: [VoidScalar]
 })

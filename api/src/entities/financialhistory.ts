@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
@@ -38,4 +39,28 @@ export class Financialhistory {
   })
   @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
   public appUser?: Appuser;
+}
+
+@ObjectType()
+export class GFinancialHistory {
+  @Field(() => Int)
+  id: number;
+
+  @Field()
+  createdAt: string;
+
+  @Field()
+  checking: number;
+
+  @Field()
+  gyro: number;
+
+  @Field()
+  pocket: number;
+
+  @Field()
+  euros: number;
+
+  @Field()
+  appUserId: number;
 }

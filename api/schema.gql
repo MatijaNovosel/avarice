@@ -48,11 +48,22 @@ type GAppUser {
   displayName: String!
 }
 
+type GFinancialHistory {
+  id: Int!
+  createdAt: String!
+  checking: Float!
+  gyro: Float!
+  pocket: Float!
+  euros: Float!
+  appUserId: Float!
+}
+
 type AccessToken {
   accessToken: String!
 }
 
 type Query {
+  financialHistory(id: Float!): [GFinancialHistory!]!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(id: Int!): [GFinancialChange!]!
