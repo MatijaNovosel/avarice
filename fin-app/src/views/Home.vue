@@ -502,7 +502,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await getService<IChangeService>(Types.ChangeService).function();
+      // await getService<IChangeService>(Types.ChangeService).function();
       updateData();
     });
 
