@@ -28,6 +28,10 @@ export class FinancialHistoryService {
         financialHistory.gyro +
         financialHistory.pocket +
         euroConversion;
+      financialHistory.createdAt = format(
+        new Date(financialHistory.createdAt),
+        "dd.MM.yyyy. HH:mm:ss"
+      );
     }
     return data;
   }

@@ -8,6 +8,7 @@
 import axios from "axios";
 import { format } from "date-fns";
 import { defineComponent, onMounted, reactive } from "vue";
+import environmentVariables from "@/constants/environment-variables.json";
 
 interface HistoryItem {
   id: number;
@@ -31,7 +32,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const id = 1;
-      const response = await axios.post("http://localhost:3000/graphql", {
+      const response = await axios.post(environmentVariables.apiUrl, {
         query: `
           query {
               financialHistory(id: ${id}) {
@@ -46,15 +47,7 @@ export default defineComponent({
           }
         `
       });
-      const data: HistoryItem[] = response.data.data.financialHistory.map(
-        (x: HistoryItem) => {
-          x.createdAt = format(
-            new Date(parseInt(x.createdAt)),
-            "dd.MM.yyyy. HH:mm:ss"
-          );
-          return x;
-        }
-      );
+      const data: HistoryItem[] = response.data.data.financialHistory;
       state.financialHistory = data;
     });
 
