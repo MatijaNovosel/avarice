@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import axios from "axios";
-import { format } from "date-fns";
 import { defineComponent, onMounted, reactive } from "vue";
 import environmentVariables from "@/constants/environment-variables.json";
 
@@ -47,8 +46,7 @@ export default defineComponent({
           }
         `
       });
-      const data: HistoryItem[] = response.data.data.financialHistory;
-      state.financialHistory = data;
+      state.financialHistory = response.data.data.financialHistory;
     });
 
     return {
