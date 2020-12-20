@@ -5,21 +5,13 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+import { getService, Types } from "@/di-container";
+import { GHistoryItem } from "@/models/history-item";
+import { IHistoryService } from "@/services/interfaces/history-service";
 import { defineComponent, onMounted, reactive } from "vue";
-import environmentVariables from "@/constants/environment-variables.json";
-
-interface HistoryItem {
-  id: number;
-  gyro: number;
-  checking: number;
-  pocket: number;
-  euros: number;
-  createdAt: string;
-}
 
 interface State {
-  financialHistory: HistoryItem[];
+  financialHistory: GHistoryItem[];
 }
 
 export default defineComponent({
@@ -30,23 +22,9 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      const id = 1;
-      const response = await axios.post(environmentVariables.apiUrl, {
-        query: `
-          query {
-              financialHistory(id: ${id}) {
-                id,
-                createdAt,
-                checking,
-                gyro,
-                pocket,
-                euros,
-                appUserId
-            }
-          }
-        `
-      });
-      state.financialHistory = response.data.data.financialHistory;
+      state.financialHistory = await getService<IHistoryService>(
+        Types.HistoryService
+      ).getHistoryByUserId();
     });
 
     return {
