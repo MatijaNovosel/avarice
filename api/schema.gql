@@ -126,14 +126,6 @@ input FinancialChangeInputType {
   amount: Float!
   description: String!
   expense: Boolean!
-  paymentSource: PaymentSourceInputType!
-  tags: [TagInputType!]!
-}
-
-input PaymentSourceInputType {
-  id: Int!
-}
-
-input TagInputType {
-  id: Int!
+  paymentSourceId: Int!
+  tagIds: [Int!]!
 }

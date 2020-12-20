@@ -13,8 +13,8 @@ import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 import { GTag } from "./tag";
 import { Financialchangetag } from "./financialchangetag";
 
-@Index("paymentSourceId", ["paymentSourceId"], {})
 @Index("appUserId", ["appUserId"], {})
+@Index("paymentSourceId", ["paymentSourceId"], {})
 @Entity("financialchange", { schema: "finapp" })
 export class Financialchange {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -23,8 +23,8 @@ export class Financialchange {
   @Column("double", { name: "amount", nullable: true, precision: 22 })
   public amount?: number | null;
 
-  @Column({ name: "createdAt", type: "datetime" })
-  public createdAt?: string;
+  @Column("datetime", { name: "createdAt", default: () => "CURRENT_TIMESTAMP" })
+  public createdAt?: Date;
 
   @Column("varchar", { name: "description", nullable: true, length: 255 })
   public description?: string | null;
@@ -38,6 +38,13 @@ export class Financialchange {
   @Column("int", { name: "appUserId", nullable: true })
   public appUserId?: number | null;
 
+  @ManyToOne(() => Appuser, (appuser) => appuser.financialchanges, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION"
+  })
+  @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
+  public appUser?: Appuser;
+
   @ManyToOne(
     () => Paymentsource,
     (paymentsource) => paymentsource.financialchanges,
@@ -45,13 +52,6 @@ export class Financialchange {
   )
   @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "id" }])
   public paymentSource?: Paymentsource;
-
-  @ManyToOne(() => Appuser, (appuser) => appuser.financialchanges, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION"
-  })
-  @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
-  public appUser?: Appuser;
 
   @OneToMany(
     () => Financialchangetag,

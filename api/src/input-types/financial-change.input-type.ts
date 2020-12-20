@@ -1,6 +1,4 @@
 import { InputType, Field, Float, Int } from "@nestjs/graphql";
-import { PaymentSourceInputType } from "./payment-source.input-type";
-import { TagInputType } from "./tag.input-type";
 
 @InputType()
 export class FinancialChangeInputType {
@@ -16,9 +14,9 @@ export class FinancialChangeInputType {
   @Field()
   expense?: boolean;
 
-  @Field(() => PaymentSourceInputType)
-  paymentSource?: PaymentSourceInputType;
+  @Field(() => Int)
+  paymentSourceId: number;
 
-  @Field(() => [TagInputType])
-  tags?: TagInputType[];
+  @Field(() => [Int])
+  tagIds?: number[];
 }

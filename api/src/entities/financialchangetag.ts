@@ -4,7 +4,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { Financialchange } from "./financialchange";
 import { Tag } from "./tag";
@@ -16,11 +16,11 @@ export class Financialchangetag {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   public id?: number;
 
-  @Column("int", { name: "financialChangeId" })
-  public financialChangeId?: number;
+  @Column("int", { name: "financialChangeId", nullable: true })
+  public financialChangeId?: number | null;
 
-  @Column("int", { name: "tagId" })
-  public tagId?: number;
+  @Column("int", { name: "tagId", nullable: true })
+  public tagId?: number | null;
 
   @ManyToOne(
     () => Financialchange,
@@ -32,7 +32,7 @@ export class Financialchangetag {
 
   @ManyToOne(() => Tag, (tag) => tag.financialchangetags, {
     onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
+    onUpdate: "NO ACTION"
   })
   @JoinColumn([{ name: "tagId", referencedColumnName: "id" }])
   public tag?: Tag;

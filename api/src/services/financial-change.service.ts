@@ -56,14 +56,15 @@ export class FinancialChangeService {
       amount: payload.amount,
       description: payload.description,
       expense: payload.expense,
-      paymentSourceId: payload.paymentSource.id,
+      paymentSourceId: payload.paymentSourceId,
+      appUserId: payload.appUserId,
       createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")
     });
 
-    payload.tags.forEach(async (tag) => {
+    payload.tagIds.forEach(async (tagId) => {
       await this.financialChangeTagRepository.save({
         financialChangeId: financialChange.id,
-        tagId: tag.id
+        tagId
       });
     });
 
@@ -77,16 +78,16 @@ export class FinancialChangeService {
 
     const historyEntry: Financialhistory = {
       checking:
-        payload.paymentSource.id == PaymentSourceEnum.Checking
+        payload.paymentSourceId == PaymentSourceEnum.Checking
           ? parseFloat((currentAmount.checking - payload.amount).toFixed(2))
           : currentAmount.checking,
       euros: currentAmount.euros,
       gyro:
-        payload.paymentSource.id == PaymentSourceEnum.Gyro
+        payload.paymentSourceId == PaymentSourceEnum.Gyro
           ? parseFloat((currentAmount.gyro - payload.amount).toFixed(2))
           : currentAmount.gyro,
       pocket:
-        payload.paymentSource.id == PaymentSourceEnum.Pocket
+        payload.paymentSourceId == PaymentSourceEnum.Pocket
           ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
           : currentAmount.pocket,
       createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")

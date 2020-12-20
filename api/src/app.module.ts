@@ -41,7 +41,7 @@ const { host, port, username, password, database } = { ...serverConfig };
         Paymentsource,
         Tag
       ],
-      synchronize: true
+      synchronize: false
     }),
     TagHttpModule,
     FinancialChangeHttpModule,
