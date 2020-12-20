@@ -23,7 +23,7 @@ export class FinancialChangeService {
 
   async findAllByUserId(id: number): Promise<Financialchange[]> {
     return await this.financialChangeRepository.find({
-      where: { appUserId: id }
+      where: { appUserId: id }, order: { createdAt: "DESC" }
     });
   }
 

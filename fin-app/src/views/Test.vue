@@ -8,7 +8,6 @@
 import { getService, Types } from "@/di-container";
 import { GHistoryItem } from "@/models/history-item";
 import { IHistoryService } from "@/services/interfaces/history-service";
-import axios from "axios";
 import { defineComponent, onMounted, reactive } from "vue";
 
 interface State {
@@ -23,21 +22,6 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      await axios.post("https://localhost:3000/graphql", {
-        query: `
-        mutation {
-          financialHistory(id: 1) {
-            id,
-            createdAt,
-            checking,
-            gyro,
-            pocket,
-            euros,
-            appUserId
-          }
-        }
-      `
-      });
       state.financialHistory = await getService<IHistoryService>(
         Types.HistoryService
       ).getHistoryByUserId();
