@@ -33,6 +33,8 @@ export class Financialhistory {
   @Column("int", { name: "appUserId" })
   public appUserId?: number;
 
+  public total?: number;
+
   @ManyToOne(() => Appuser, (appuser) => appuser.financialhistories, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION"
@@ -57,6 +59,9 @@ export class GFinancialHistory {
 
   @Field()
   pocket: number;
+
+  @Field()
+  total: number;
 
   @Field()
   euros: number;

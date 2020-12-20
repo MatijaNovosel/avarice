@@ -54,6 +54,7 @@ type GFinancialHistory {
   checking: Float!
   gyro: Float!
   pocket: Float!
+  total: Float!
   euros: Float!
   appUserId: Float!
 }
