@@ -8,14 +8,14 @@ export class HistoryService implements IHistoryService {
     const response = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-            financialHistory(id: 1) {
-              id,
-              createdAt,
-              checking,
-              gyro,
-              pocket,
-              euros,
-              appUserId
+          financialHistory(id: 1) {
+            id,
+            createdAt,
+            checking,
+            gyro,
+            pocket,
+            euros,
+            appUserId
           }
         }
       `
