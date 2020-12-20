@@ -37,6 +37,7 @@ import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
+import { useRouter } from "vue-router";
 
 interface Props {
   visible: boolean;
@@ -63,6 +64,8 @@ export default defineComponent({
   },
   setup(props: Props) {
     const store = useStore();
+    const router = useRouter();
+
     const state: State = reactive({
       visible: props.visible,
       settingsDialog: false,
@@ -71,7 +74,15 @@ export default defineComponent({
       user: computed(() => store.getters.user),
       menuItems: [
         {
+          label: "Početna stranica",
+          icon: "pi pi-home",
+          command: () => {
+            router.push({ name: "home" });
+          }
+        },
+        {
           label: "Financijske akcije",
+          icon: "pi pi-dollar",
           items: [
             {
               label: "Novi trošak",
@@ -91,6 +102,7 @@ export default defineComponent({
         },
         {
           label: "Postavke",
+          icon: "pi pi-cog",
           command: () => {
             state.settingsDialog = true;
           }
