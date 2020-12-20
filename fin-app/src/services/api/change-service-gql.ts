@@ -78,12 +78,4 @@ export class ChangeService implements IChangeServiceGql {
     });
     return res;
   }
-  async getCurrentAmount(): Promise<HistoryItemDto> {
-    const data = await db
-      .collection("history")
-      .orderBy("date", "desc")
-      .limit(1)
-      .get();
-    return data.docs[0].data() as HistoryItemDto;
-  }
 }
