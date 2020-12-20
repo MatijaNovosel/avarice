@@ -118,18 +118,28 @@ export default defineComponent({
 
     async function login() {
       state.loading = true;
-      const userData = await getService<IAuthService>(
-        Types.AuthService
-      ).signIn();
-      store.dispatch("setUser", userData);
-      toast.add({
-        severity: "success",
-        summary: "Login successful!",
-        detail: "You have been successfully authenticated!",
-        life: 3000
-      });
-      state.loading = false;
-      router.push({ name: "home" });
+      let userData;
+      try {
+        userData = await getService<IAuthService>(Types.AuthService).signIn();
+        store.dispatch("setUser", userData);
+        toast.add({
+          severity: "success",
+          summary: "Login successful!",
+          detail: "You have been successfully authenticated!",
+          life: 3000
+        });
+        router.push({ name: "home" });
+      } catch (e) {
+        toast.add({
+          severity: "error",
+          summary: "Login failed!",
+          detail: "Something went wrong!",
+          life: 3000
+        });
+        state.loading = false;
+      } finally {
+        state.loading = false;
+      }
     }
 
     return {
