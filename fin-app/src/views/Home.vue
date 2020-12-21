@@ -143,6 +143,7 @@
                   :amount="change.amount"
                   :tags="change.tags"
                   :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
+                  :show="false"
                 />
               </div>
               <div class="p-col-12 p-mt-5">

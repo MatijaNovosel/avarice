@@ -11,7 +11,11 @@
       >{{ state.title }} •
       <span class="amount-date p-mb-1">{{ state.date }}</span>
     </span>
-    <span class="amount-text">{{ `${state.amount}HRK` }}</span>
+    <span class="amount-text">{{
+      `${
+        state.show ? state.amount : ("" + state.amount).replace(/[0-9]/gi, "*")
+      }HRK`
+    }}</span>
     <div class="amount-end">
       <div class="amount-tags">
         <tag
@@ -35,16 +39,18 @@ interface Props {
   amount?: number | null;
   title?: string | null;
   date?: string | null;
-  expense?: boolean | null;
+  expense?: boolean;
   tags?: TagEnum[] | null;
+  show?: boolean;
 }
 
 interface State {
   amount?: number | null;
   title?: string | null;
   date?: string | null;
-  expense?: boolean | null;
+  expense?: boolean;
   tags?: TagEnum[] | null;
+  show?: boolean;
 }
 
 export default defineComponent({
@@ -54,7 +60,11 @@ export default defineComponent({
     title: String,
     tags: null,
     date: String,
-    expense: Boolean
+    expense: Boolean,
+    show: {
+      type: Boolean,
+      default: true
+    }
   },
   setup(props: Props) {
     const state: State = reactive({
@@ -62,8 +72,14 @@ export default defineComponent({
       title: props.title,
       date: props.date,
       tags: props.tags,
-      expense: props.expense
+      expense: props.expense,
+      show: props.show
     });
+
+    watch(
+      () => props.show,
+      (val) => (state.show = val)
+    );
 
     watch(
       () => props.tags,
