@@ -84,26 +84,30 @@
                   <icon class="p-pr-3" name="filter" />
                   <span>{{ $t("filterAndOtherOptions") }}</span>
                 </template>
-                <div class="p-grid">
-                  <div class="p-col-12 p-mt-2 filter-item-text">
-                    {{ $t("tag") }}
-                  </div>
-                  <div class="p-col-12 p-my-2">
-                    <list-box
-                      :multiple="true"
-                      v-model="state.filter.tag"
-                      :options="categories"
-                      dataKey="val"
-                      listStyle="max-height: 250px"
-                      optionValue="val"
-                      optionLabel="text"
-                    >
-                      <template #option="slotProps">
-                        {{ slotProps.option.text }}
-                      </template>
-                    </list-box>
-                  </div>
-                  <div class="p-col-12 p-mt-3 p-text-right">
+                <div class="filter-container">
+                  <list-box
+                    :multiple="true"
+                    v-model="state.filter.tag"
+                    :options="categories"
+                    dataKey="val"
+                    listStyle="max-height: 250px"
+                    optionValue="val"
+                    optionLabel="text"
+                  >
+                    <template #option="slotProps">
+                      {{ slotProps.option.text }}
+                    </template>
+                  </list-box>
+                  <div class="filter-actions">
+                    <mdi-icon
+                      class="cursor-pointer eye-btn-visible"
+                      @click="
+                        state.changeAmountVisible = !state.changeAmountVisible
+                      "
+                      :size="20"
+                      :name="state.changeAmountVisible ? 'eye' : 'eye-off'"
+                      v-tooltip="'Prikaži vrijednosti'"
+                    />
                     <btn
                       @click="resetFilter"
                       :label="$t('removeFilter')"
@@ -143,7 +147,7 @@
                   :amount="change.amount"
                   :tags="change.tags"
                   :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
-                  :show="false"
+                  :show="state.changeAmountVisible"
                 />
               </div>
               <div class="p-col-12 p-mt-5">
@@ -275,6 +279,7 @@ interface State {
   dataSets: DataSets;
   graphValuesVisible: boolean;
   graphOptions: GraphOptions;
+  changeAmountVisible: boolean;
 }
 
 export default defineComponent({
@@ -290,6 +295,7 @@ export default defineComponent({
     const graph: any = ref(null);
 
     const state: State = reactive({
+      changeAmountVisible: false,
       graphValuesVisible: false,
       dataSets: {
         gyro: null,
@@ -627,4 +633,19 @@ export default defineComponent({
 
 .p-dataview .p-dataview-content
   padding: 0px !important
+
+.filter-container
+  display: flex
+  flex-direction: column
+  padding: 1.4em 0 0 0
+
+.filter-actions
+  padding: 1.4em 0 0.8em 0
+  display: flex
+  flex-direction: row
+  justify-content: flex-end
+
+.eye-btn-visible
+  align-self: center
+  margin-right: 1em
 </style>
