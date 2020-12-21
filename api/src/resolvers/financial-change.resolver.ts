@@ -21,18 +21,6 @@ export class FinancialChangeResolver {
     return this.financialChangeService.findAllByUserId(id);
   }
 
-  @ResolveField()
-  async tags(@Parent() financialChange: GFinancialChange) {
-    const { id } = financialChange;
-    return await this.financialChangeService.getFinancialChangeTags(id);
-  }
-
-  @ResolveField()
-  async paymentSource(@Parent() financialChange: GFinancialChange) {
-    const { id } = financialChange;
-    return await this.financialChangeService.getPaymentSource(id);
-  }
-
   @Mutation(() => VoidScalar, { nullable: true })
   async addFinancialChange(
     @Args("financialChange") financialChange: FinancialChangeInputType

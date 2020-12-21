@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GPaymentSource {
-  id: Int!
-
-  """Payment source description"""
-  description: String
-}
-
 type GTag {
   id: Int!
 
@@ -22,8 +15,8 @@ type GFinancialChange {
   createdAt: String!
   description: String!
   expense: Boolean!
-  paymentSource: GPaymentSource!
-  tags: [GTag!]!
+  paymentSourceId: Int!
+  tagIds: [Int!]!
 }
 
 type GAppsetting {

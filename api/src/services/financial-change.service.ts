@@ -1,3 +1,4 @@
+import { GFinancialChange } from "src/entities/financialchange";
 import { Financialhistory } from "./../entities/financialhistory";
 import { Paymentsource } from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
@@ -21,10 +22,21 @@ export class FinancialChangeService {
     private financialChangeHistoryRepository: Repository<Financialhistory>
   ) {}
 
-  async findAllByUserId(id: number): Promise<Financialchange[]> {
-    return await this.financialChangeRepository.find({
-      where: { appUserId: id }, order: { createdAt: "DESC" }
+  async findAllByUserId(id: number): Promise<GFinancialChange[]> {
+    const data = await this.financialChangeRepository.find({
+      where: { appUserId: id },
+      order: { createdAt: "DESC" },
+      relations: ["financialchangetags"]
     });
+    return data.map((fc) => ({
+      id: fc.id,
+      amount: fc.amount,
+      description: fc.description,
+      createdAt: format(fc.createdAt, "yyyy-MM-dd HH:mm"),
+      expense: fc.expense,
+      paymentSourceId: fc.paymentSourceId,
+      tagIds: fc.financialchangetags.map((fct) => fct.tagId)
+    }));
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {

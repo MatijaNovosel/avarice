@@ -8,9 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
-import { GPaymentSource, Paymentsource } from "./paymentsource";
+import { Paymentsource } from "./paymentsource";
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
-import { GTag } from "./tag";
 import { Financialchangetag } from "./financialchangetag";
 
 @Index("appUserId", ["appUserId"], {})
@@ -77,9 +76,9 @@ export class GFinancialChange {
   @Field()
   expense?: boolean;
 
-  @Field(() => GPaymentSource)
-  paymentSource?: GPaymentSource;
+  @Field(() => Int)
+  paymentSourceId?: number;
 
-  @Field(() => [GTag])
-  tags?: GTag[];
+  @Field(() => [Int])
+  tagIds?: number[];
 }
