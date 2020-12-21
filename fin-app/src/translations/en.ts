@@ -13,6 +13,15 @@ export default {
     november: "November",
     december: "December"
   },
+  tags: {
+    food: "Food",
+    gifts: "Gifts",
+    games: "Games",
+    publicTransport: "Public transport",
+    other: "Other",
+    drink: "Drink",
+    groceries: "Groceries"
+  },
   tag: "Tag",
   filterAndOtherOptions: "Filtering and other options",
   filter: "Filter",

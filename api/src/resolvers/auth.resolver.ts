@@ -1,5 +1,4 @@
 import { AuthRegisterInputType } from "./../input-types/auth.input-type";
-import { VoidScalar } from "./../scalars/void";
 import { AuthService } from "./../services/auth.service";
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import {

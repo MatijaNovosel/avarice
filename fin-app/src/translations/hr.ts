@@ -13,6 +13,15 @@ export default {
     november: "Studeni",
     december: "Prosinac"
   },
+  tags: {
+    food: "Hrana",
+    gifts: "Darovi",
+    games: "Igre",
+    publicTransport: "Javni prijevoz",
+    other: "Ostalo",
+    drink: "Piće",
+    groceries: "Namirnice"
+  },
   tag: "Kategorija",
   filterAndOtherOptions: "Filtriranje i ostale mogućnosti",
   filter: "Filtriraj",
