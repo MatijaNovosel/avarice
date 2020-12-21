@@ -4,7 +4,7 @@ import {
   CreateFinancialChangeItemDto,
   GFinancialChangeItem
 } from "@/models/change-item";
-import { HistoryItem, HistoryItemDto } from "@/models/history-item";
+import { GHistoryItem, HistoryItem, HistoryItemDto } from "@/models/history-item";
 
 interface Filter {
   tag: TagEnum[];
@@ -22,5 +22,5 @@ export interface IChangeService {
 export interface IChangeServiceGql {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
   getChanges(appUserId: number): Promise<GFinancialChangeItem[]>;
-  getHistory(): Promise<HistoryItemDto[]>;
+  getHistory(appUserId: number): Promise<GHistoryItem[]>;
 }

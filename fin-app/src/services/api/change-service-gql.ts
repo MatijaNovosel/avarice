@@ -1,14 +1,11 @@
-import { db } from "../firebase";
 import {
   CreateFinancialChangeItemDto,
-  GFinancialChangeItem,
-  GFinancialChangeItemDto
+  GFinancialChangeItem
 } from "@/models/change-item";
-import { HistoryItemDto } from "@/models/history-item";
+import { GFinancialHistoryItem, HistoryItemDto } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { IChangeServiceGql } from "../interfaces/change-service";
-import { format } from "date-fns";
 
 export class ChangeService implements IChangeServiceGql {
   async addChange(payload: CreateFinancialChangeItemDto): Promise<void> {
@@ -43,39 +40,35 @@ export class ChangeService implements IChangeServiceGql {
       query: `
         query {
           financialChanges(id: ${appUserId}) {
-            id,
-            amount,
-            createdAt,
-            description,
-            expense,
-            paymentSource { id },
-            tags { id }
+            id
+            amount
+            createdAt
+            description
+            expense
+            paymentSourceId
+            tagIds
           }
         }
       `
     });
-    const changeItems: GFinancialChangeItemDto[] = data.data.financialChanges;
-    return changeItems.map(x => {
-      return {
-        id: x.id,
-        amount: x.amount,
-        createdAt: format(new Date(x.createdAt), "dd.MM.yyyy HH:mm"),
-        description: x.description,
-        expense: x.expense,
-        paymentSourceId: x.paymentSource.id,
-        tagIds: x.tags.map(y => y.id)
-      } as GFinancialChangeItem;
-    });
+    return data.data.financialChanges;
   }
-  async getHistory(): Promise<HistoryItemDto[]> {
-    const res: HistoryItemDto[] = [];
-    const data = await db
-      .collection("history")
-      .orderBy("date", "asc")
-      .get();
-    data.forEach(document => {
-      res.push(document.data() as HistoryItemDto);
+  async getHistory(appUserId: number): Promise<GFinancialHistoryItem[]> {
+    const { data } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          financialHistory(id: ${appUserId}) {
+            id
+            createdAt
+            checking
+            gyro
+            pocket
+            total
+            euros
+          }
+        }
+      `
     });
-    return res;
+    return data.data.financialHistory;
   }
 }

@@ -1,7 +1,6 @@
 import { Timestamp } from "@firebase/firestore-types";
 import { TagEnum } from "@/constants/tag-enum";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
-import { EntityWithId } from "./generic";
 
 export interface ChangeItem {
   uid?: string;
@@ -21,16 +20,6 @@ export interface ChangeItemDto {
   amount: number;
   date: Timestamp;
   expense: boolean;
-}
-
-export interface GFinancialChangeItemDto {
-  id: number;
-  amount: number;
-  createdAt: string;
-  description: string;
-  expense: boolean;
-  paymentSource: EntityWithId;
-  tags: EntityWithId[];
 }
 
 export interface GFinancialChangeItem {

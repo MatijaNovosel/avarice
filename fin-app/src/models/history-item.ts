@@ -24,3 +24,13 @@ export interface HistoryItemDto {
   euros: number | null;
   date: Timestamp;
 }
+
+export interface GFinancialHistoryItem {
+  id: number;
+  createdAt: string;
+  checking: number;
+  gyro: number;
+  pocket: number;
+  total: number;
+  euros: number;
+}
