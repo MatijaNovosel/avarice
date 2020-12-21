@@ -178,6 +178,8 @@ export default defineComponent({
         ...entry
       };
 
+      payload.date = new Date();
+
       const changeService = await getService<IChangeService>(
         Types.ChangeService
       );
