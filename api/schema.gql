@@ -66,7 +66,7 @@ type Query {
 
 type Mutation {
   login(input: AuthEmailLoginInputType!): AccessToken!
-  googleLogin(input: AuthGoogleLoginInputType!): Void
+  googleLogin(input: AuthGoogleLoginInputType!): AccessToken!
   register(input: AuthRegisterInputType!): Int!
   addUser(user: AppUserInputType!): Int!
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
@@ -79,9 +79,6 @@ input AuthEmailLoginInputType {
   email: String!
   password: String!
 }
-
-"""Represents no return value."""
-scalar Void
 
 input AuthGoogleLoginInputType {
   uid: String!
@@ -101,6 +98,9 @@ input AppUserInputType {
   photoUrl: String
   displayName: String!
 }
+
+"""Represents no return value."""
+scalar Void
 
 input AppSettingInputType {
   checkingGraphColor: String

@@ -21,7 +21,7 @@ export class AuthResolver {
     return res;
   }
 
-  @Mutation(() => VoidScalar, { nullable: true })
+  @Mutation(() => AccessToken)
   async googleLogin(@Args("input") input: AuthGoogleLoginInputType) {
     this.authService.googleLogin(input);
   }

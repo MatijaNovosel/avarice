@@ -2,7 +2,7 @@ import {
   CreateFinancialChangeItemDto,
   GFinancialChangeItem
 } from "@/models/change-item";
-import { GFinancialHistoryItem, HistoryItemDto } from "@/models/history-item";
+import { GFinancialHistoryItem } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { IChangeServiceGql } from "../interfaces/change-service";

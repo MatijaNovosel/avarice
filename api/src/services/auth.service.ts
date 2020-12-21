@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
 import { AuthGoogleLoginInputType } from "src/input-types/auth.input-type";
+import { AccessToken } from "src/entities/auth";
 
 @Injectable()
 export class AuthService {
@@ -51,7 +52,7 @@ export class AuthService {
     };
   }
 
-  async googleLogin(payload: AuthGoogleLoginInputType) {
+  async googleLogin(payload: AuthGoogleLoginInputType): Promise<AccessToken> {
     const user = await this.appUserRepository.findOne({
       where: { uid: payload.uid }
     });
