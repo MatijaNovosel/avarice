@@ -5,10 +5,8 @@
 </template>
 
 <script lang="ts">
-import { getService, Types } from "@/di-container";
 import { GHistoryItem } from "@/models/history-item";
-import { IHistoryService } from "@/services/interfaces/history-service";
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, reactive } from "vue";
 
 interface State {
   financialHistory: GHistoryItem[];
@@ -19,12 +17,6 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       financialHistory: []
-    });
-
-    onMounted(async () => {
-      state.financialHistory = await getService<IHistoryService>(
-        Types.HistoryService
-      ).getHistoryByUserId();
     });
 
     return {

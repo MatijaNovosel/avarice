@@ -1,19 +1,29 @@
-import { ISettingsService } from "../interfaces/settings-service";
-import { UserSettings } from "@/models/user-settings";
-import { db } from "../firebase";
+import { GUserSettings } from "@/models/user-settings";
+import axios from "axios";
+import environmentVariables from "@/constants/environment-variables.json";
+import { ISettingsServiceGql } from "../interfaces/settings-service";
 
-export class SettingsService implements ISettingsService {
-  async getSettings(): Promise<UserSettings> {
-    const data = await db
-      .collection("settings")
-      .limit(1)
-      .get();
-    return data.docs[0].data() as UserSettings;
+export class SettingsService implements ISettingsServiceGql {
+  async getSettings(appUserId: number): Promise<GUserSettings> {
+    const { data } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          appSettings(userId: ${appUserId}) {
+            checkingGraphColor
+            gyroGraphColor
+            pocketGraphColor
+            totalGraphColor
+            gyroGraphVisible
+            checkingGraphVisible
+            pocketGraphVisible
+            totalGraphVisible
+          }
+        }
+      `
+    });
+    return data.data.appSettings;
   }
-  async saveSettings(settings: UserSettings): Promise<void> {
-    await db
-      .collection("settings")
-      .doc("settings")
-      .update(settings);
+  async saveSettings(): Promise<void> {
+    //
   }
 }
