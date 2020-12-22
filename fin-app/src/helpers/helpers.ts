@@ -94,6 +94,7 @@ export function createSelectFromEnum<T extends IndexableCollectionByString>(
  * @param {Object} obj Object reference.
  * @param {any} val Value of properties.
  */
+// eslint-disable-next-line
 export function setAllPropertiesToVal(obj: Record<string, any>, val: any) {
   Object.keys(obj).forEach(index => (obj[index] = val));
 }
