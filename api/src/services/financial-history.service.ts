@@ -2,7 +2,6 @@ import { Financialhistory } from "./../entities/financialhistory";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { convert } from "exchange-rates-api";
 import { format } from "date-fns";
 
 @Injectable()
@@ -16,23 +15,10 @@ export class FinancialHistoryService {
     const data = await this.financialHistoryRepository.find({
       where: { appUserId: id }
     });
-    for (const financialHistory of data) {
-      const euroConversion: number = await convert(
-        financialHistory.euros,
-        "EUR",
-        "HRK",
-        format(new Date(financialHistory.createdAt), "yyyy-MM-dd")
-      );
-      financialHistory.total =
-        financialHistory.checking +
-        financialHistory.gyro +
-        financialHistory.pocket +
-        euroConversion;
-      financialHistory.createdAt = format(
-        new Date(financialHistory.createdAt),
-        "dd.MM.yyyy. HH:mm:ss"
-      );
-    }
-    return data;
+    return data.map((fh) => {
+      fh.total = fh.checking + fh.gyro + fh.pocket + fh.euroVal;
+      fh.createdAt = format(new Date(fh.createdAt), "dd.MM.yyyy. HH:mm:ss");
+      return fh;
+    });
   }
 }

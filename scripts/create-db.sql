@@ -62,6 +62,7 @@ CREATE TABLE financialhistory (
   euros DOUBLE,
   gyro DOUBLE,
   pocket DOUBLE,
+  euroVal DOUBLE,
   appUserId INT NOT NULL,
   FOREIGN KEY (appUserId) REFERENCES appuser(id)
 );

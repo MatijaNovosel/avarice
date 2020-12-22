@@ -10,6 +10,7 @@ import { getRepository, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
 import { PaymentSourceEnum } from "src/constants/payment-source";
+import { convert } from "exchange-rates-api";
 
 @Injectable()
 export class FinancialChangeService {
@@ -88,6 +89,13 @@ export class FinancialChangeService {
       .orderBy("fh.createdAt", "ASC")
       .getOne();
 
+    const euroConversion: number = await convert(
+      currentAmount.euros,
+      "EUR",
+      "HRK",
+      format(new Date(currentAmount.createdAt), "yyyy-MM-dd")
+    );
+
     const historyEntry: Financialhistory = {
       checking:
         payload.paymentSourceId == PaymentSourceEnum.Checking
@@ -102,7 +110,8 @@ export class FinancialChangeService {
         payload.paymentSourceId == PaymentSourceEnum.Pocket
           ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
           : currentAmount.pocket,
-      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")
+      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
+      euroVal: euroConversion
     };
 
     await this.financialChangeHistoryRepository.save(historyEntry);

@@ -27,6 +27,9 @@ export class Financialhistory {
   @Column("double", { name: "gyro", nullable: true, precision: 22 })
   public gyro?: number | null;
 
+  @Column("double", { name: "euroVal", nullable: true, precision: 22 })
+  public euroVal?: number | null;
+
   @Column("double", { name: "pocket", nullable: true, precision: 22 })
   public pocket?: number | null;
 
@@ -59,6 +62,9 @@ export class GFinancialHistory {
 
   @Field()
   pocket: number;
+
+  @Field()
+  euroVal: number;
 
   @Field()
   total: number;
