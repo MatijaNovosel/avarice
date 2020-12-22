@@ -6,6 +6,11 @@ import { IndexableCollectionByString } from "@/constants/indexable-collection-by
 import { Color } from "./color";
 import Solver from "./solver";
 
+/**
+ * Converts a hexadecimal color string to a rgb color string.
+ * @param {string} hex Hex string.
+ * @returns {(null|Array)} RGB values in an array.
+ */
 export function hexToRgb(hex: string): number[] | null {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, (m, r, g, b) => {
@@ -82,4 +87,13 @@ export function createSelectFromEnum<T extends IndexableCollectionByString>(
   });
 
   return returnVal;
+}
+
+/**
+ * Sets all properties of an object to a specific value.
+ * @param {Object} obj Object reference.
+ * @param {any} val Value of properties.
+ */
+export function setAllPropertiesToVal(obj: Record<string, any>, val: any) {
+  Object.keys(obj).forEach(index => (obj[index] = val));
 }

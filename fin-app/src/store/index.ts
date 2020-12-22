@@ -1,6 +1,7 @@
 import { AppUser } from "./../models/user";
 import { createStore, ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import { setAllPropertiesToVal } from "@/helpers/helpers";
 
 interface State {
   user: AppUser;
@@ -11,7 +12,8 @@ const state: State = {
     email: null,
     uid: null,
     displayName: null,
-    photoURL: null
+    photoURL: null,
+    accessToken: null
   }
 };
 
@@ -20,10 +22,7 @@ const mutations = {
     state.user = { ...user };
   },
   unsetUser(state: State) {
-    state.user.email = null;
-    state.user.uid = null;
-    state.user.displayName = null;
-    state.user.photoURL = null;
+    setAllPropertiesToVal(state.user, null);
   }
 };
 
