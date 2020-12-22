@@ -1,3 +1,4 @@
+import { UpdateUserSettingsDto } from './../../models/user-settings';
 import { GUserSettings, UserSettings } from "@/models/user-settings";
 
 export interface ISettingsService {
@@ -7,4 +8,5 @@ export interface ISettingsService {
 
 export interface ISettingsServiceGql {
   getSettings(appUserId: number): Promise<GUserSettings>;
+  saveSettings(payload: UpdateUserSettingsDto): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { GUserSettings } from "@/models/user-settings";
+import { GUserSettings, UpdateUserSettingsDto } from "@/models/user-settings";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { ISettingsServiceGql } from "../interfaces/settings-service";
@@ -23,7 +23,35 @@ export class SettingsService implements ISettingsServiceGql {
     });
     return data.data.appSettings;
   }
-  async saveSettings(): Promise<void> {
-    //
+  async saveSettings(payload: UpdateUserSettingsDto): Promise<void> {
+    const {
+      appUserId,
+      checkingGraphColor,
+      gyroGraphColor,
+      pocketGraphColor,
+      totalGraphColor,
+      gyroGraphVisible,
+      checkingGraphVisible,
+      pocketGraphVisible,
+      totalGraphVisible
+    } = payload;
+
+    await axios.post(environmentVariables.apiUrl, {
+      query: `
+        mutation {
+          updateUserAppSetting(appSetting: {
+            checkingGraphColor: ${checkingGraphColor}
+            gyroGraphColor: ${gyroGraphColor}
+            pocketGraphColor: ${pocketGraphColor}
+            totalGraphColor: ${totalGraphColor}
+            gyroGraphVisible: ${gyroGraphVisible}
+            checkingGraphVisible: ${checkingGraphVisible}
+            pocketGraphVisible: ${pocketGraphVisible}
+            totalGraphVisible: ${totalGraphVisible}
+            appUserId: ${appUserId}
+          })
+        }
+      `
+    });
   }
 }
