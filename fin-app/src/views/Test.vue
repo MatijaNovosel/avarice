@@ -5,23 +5,12 @@
 </template>
 
 <script lang="ts">
-import { GHistoryItem } from "@/models/history-item";
-import { defineComponent, reactive } from "vue";
-
-interface State {
-  financialHistory: GHistoryItem[];
-}
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "test",
   setup() {
-    const state: State = reactive({
-      financialHistory: []
-    });
-
-    return {
-      state
-    };
+    return {};
   }
 });
 </script>

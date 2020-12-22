@@ -12,19 +12,19 @@
     <div class="p-my-5 p-shadow-6 graph-settings-container">
       <div class="p-grid p-formgrid p-mt-3">
         <div class="p-field p-col-12">
-          <p-color-picker v-model="state.settings.gyroColor" />
+          <p-color-picker v-model="state.settings.gyroGraphColor" />
           <span class="p-ml-3">Žiro račun</span>
         </div>
         <div class="p-field p-col-12">
-          <p-color-picker v-model="state.settings.checkingColor" />
+          <p-color-picker v-model="state.settings.checkingGraphColor" />
           <span class="p-ml-3">Tekući račun</span>
         </div>
         <div class="p-field p-col-12">
-          <p-color-picker v-model="state.settings.pocketColor" />
+          <p-color-picker v-model="state.settings.pocketGraphColor" />
           <span class="p-ml-3">Džep (novčanik)</span>
         </div>
         <div class="p-field p-col-12">
-          <p-color-picker v-model="state.settings.totalColor" />
+          <p-color-picker v-model="state.settings.totalGraphColor" />
           <span class="p-ml-3">Ukupno</span>
         </div>
       </div>
@@ -56,7 +56,7 @@ import {
   onMounted,
   inject
 } from "vue";
-import { UserSettings } from "@/models/user-settings";
+import { UpdateUserSettingsDto, UserSettings } from "@/models/user-settings";
 import { getService, Types } from "@/di-container";
 import { ISettingsService } from "@/services/interfaces/settings-service";
 
@@ -83,10 +83,14 @@ export default defineComponent({
       dialog: props.dialog,
       loading: false,
       settings: {
-        gyroColor: "",
-        checkingColor: "",
-        totalColor: "",
-        pocketColor: ""
+        checkingGraphColor: "",
+        gyroGraphColor: "",
+        pocketGraphColor: "",
+        totalGraphColor: "",
+        gyroGraphVisible: false,
+        checkingGraphVisible: false,
+        pocketGraphVisible: false,
+        totalGraphVisible: false
       },
       refresh: inject("refresh")
     });
@@ -102,8 +106,20 @@ export default defineComponent({
 
     async function save() {
       state.loading = true;
+
+      const settings = { ...state.settings };
+      settings.checkingGraphColor = "#" + settings.checkingGraphColor;
+      settings.gyroGraphColor = "#" + settings.gyroGraphColor;
+      settings.totalGraphColor = "#" + settings.totalGraphColor;
+      settings.pocketGraphColor = "#" + settings.pocketGraphColor;
+
+      const payload: UpdateUserSettingsDto = {
+        ...settings,
+        appUserId: 1
+      };
+
       await getService<ISettingsService>(Types.SettingsService).saveSettings(
-        state.settings
+        payload
       );
       state.dialog = false;
       state.refresh.refresh();
@@ -111,9 +127,19 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      state.settings = await getService<ISettingsService>(
+      const settings = await getService<ISettingsService>(
         Types.SettingsService
-      ).getSettings();
+      ).getSettings(1);
+
+      settings.checkingGraphColor = settings.checkingGraphColor.replace(
+        "#",
+        ""
+      );
+      settings.pocketGraphColor = settings.pocketGraphColor.replace("#", "");
+      settings.totalGraphColor = settings.totalGraphColor.replace("#", "");
+      settings.gyroGraphColor = settings.gyroGraphColor.replace("#", "");
+
+      state.settings = settings;
     });
 
     return {

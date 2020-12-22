@@ -45,7 +45,7 @@
       <div class="container p-mt-3">
         <span class="container-label">Izvor plaćanja</span>
         <select-button
-          v-model="model.paymentSource.$model"
+          v-model="model.paymentSourceId.$model"
           :options="paymentSources"
           optionLabel="text"
           optionValue="val"
@@ -75,7 +75,7 @@ import {
   Ref
 } from "vue";
 import { PaymentSourceEnum } from "../constants/payment-source-enum";
-import { ChangeItem } from "../models/change-item";
+import { CreateFinancialChangeItemDto } from "../models/change-item";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { TagEnum } from "../constants/tag-enum";
@@ -103,19 +103,18 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
-      paymentSource: PaymentSourceEnum.GyroAccount,
-      tags: [TagEnum.Other],
+      paymentSourceId: PaymentSourceEnum.GyroAccount,
+      tagIds: [TagEnum.Other],
       description: "",
       amount: 0,
-      date: new Date(),
       expense: false
-    } as ChangeItem);
+    } as CreateFinancialChangeItemDto);
 
     const rules = {
       amount: { required, numeric },
-      paymentSource: { required },
+      paymentSourceId: { required },
       description: { required },
-      tags: { required }
+      tagIds: { required }
     };
 
     // eslint-disable-next-line
@@ -141,8 +140,8 @@ export default defineComponent({
       state.dialog = false;
       entry.amount = 0;
       entry.description = "Description";
-      entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.tags = [TagEnum.Other];
+      entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
+      entry.tagIds = [TagEnum.Other];
       model.value.$reset;
     }
 
@@ -158,36 +157,12 @@ export default defineComponent({
     async function addGain() {
       state.saving = true;
 
-      const payload: ChangeItem = {
+      const payload: CreateFinancialChangeItemDto = {
         ...entry
       };
 
-      payload.date = new Date();
+      await getService<IChangeService>(Types.ChangeService).addChange(payload);
 
-      const changeService = await getService<IChangeService>(
-        Types.ChangeService
-      );
-
-      const currentAmount = await changeService.getCurrentAmount();
-
-      await changeService.addHistory({
-        euros: currentAmount.euros,
-        gyro:
-          entry.paymentSource == PaymentSourceEnum.GyroAccount
-            ? ((currentAmount?.gyro + entry.amount) as number)
-            : currentAmount?.gyro,
-        checking:
-          entry.paymentSource == PaymentSourceEnum.CheckingAccount
-            ? ((currentAmount?.checking + entry.amount) as number)
-            : currentAmount?.checking,
-        pocket:
-          entry.paymentSource == PaymentSourceEnum.Pocket
-            ? ((currentAmount?.pocket + entry.amount) as number)
-            : currentAmount?.pocket,
-        date: new Date()
-      });
-
-      changeService.addChange(payload);
       hideDialog();
       state.saving = false;
       refresh();

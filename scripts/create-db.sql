@@ -77,6 +77,14 @@ BEGIN
 END $$ 
 DELIMITER;
 
+DELIMITER $$ 
+DROP TRIGGER IF EXISTS financialChangeAfterInsertTrigger $$ 
+CREATE TRIGGER financialChangeAfterInsertTrigger AFTER INSERT ON financialChange FOR EACH ROW 
+BEGIN
+  DELETE FROM financialChange WHERE tagId = NULL OR financialChangeId = NULL; 
+END $$ 
+DELIMITER;
+
 INSERT INTO appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
 INSERT INTO tag (description) VALUES ("Hrana"), ("Darovi"), ("Igre"), ("Javni prijevoz"), ("Ostalo"), ("Piće"), ("Namirnice");
 INSERT INTO paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");

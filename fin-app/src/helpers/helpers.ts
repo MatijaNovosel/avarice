@@ -12,6 +12,10 @@ import Solver from "./solver";
  * @returns {(null|Array)} RGB values in an array.
  */
 export function hexToRgb(hex: string): number[] | null {
+  if (hex == "") {
+    return [0, 0, 0];
+  }
+
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, (m, r, g, b) => {
     return r + r + g + g + b + b;

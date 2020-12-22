@@ -1,11 +1,4 @@
 export interface UserSettings {
-  gyroColor: string;
-  checkingColor: string;
-  totalColor: string;
-  pocketColor: string;
-}
-
-export interface GUserSettings {
   checkingGraphColor: string;
   gyroGraphColor: string;
   pocketGraphColor: string;

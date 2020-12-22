@@ -1,26 +1,10 @@
-import { TagEnum } from "@/constants/tag-enum";
 import {
-  ChangeItem,
-  CreateFinancialChangeItemDto,
-  GFinancialChangeItem
+  CreateFinancialChangeItemDto, FinancialChangeItem
 } from "@/models/change-item";
-import { GHistoryItem, HistoryItem, HistoryItemDto } from "@/models/history-item";
-
-interface Filter {
-  tag: TagEnum[];
-}
+import { FinancialHistoryItem } from "@/models/history-item";
 
 export interface IChangeService {
-  addChange(payload: ChangeItem): Promise<void>;
-  addHistory(payload: HistoryItem): Promise<void>;
-  getChanges(filterOptions?: Filter): Promise<ChangeItem[]>;
-  getHistory(): Promise<HistoryItemDto[]>;
-  getCurrentAmount(): Promise<HistoryItemDto>;
-  function(): Promise<void>;
-}
-
-export interface IChangeServiceGql {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
-  getChanges(appUserId: number): Promise<GFinancialChangeItem[]>;
-  getHistory(appUserId: number): Promise<GHistoryItem[]>;
+  getChanges(appUserId: number): Promise<FinancialChangeItem[]>;
+  getHistory(appUserId: number): Promise<FinancialHistoryItem[]>;
 }

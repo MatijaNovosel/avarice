@@ -7,7 +7,7 @@
         icon="credit-card-outline"
         :title="$t('account.gyro')"
         :loading="state.loading"
-        :color="`#${state.settings.gyroColor}`"
+        :color="state.settings.gyroGraphColor"
         :amount="state.currentAmount.gyro"
         :amount-visible="state.amountVisible.gyro"
         v-model:enabled="state.account.gyro"
@@ -16,7 +16,7 @@
         icon="credit-card"
         :title="$t('account.checking')"
         :loading="state.loading"
-        :color="`#${state.settings.checkingColor}`"
+        :color="state.settings.checkingGraphColor"
         :amount="state.currentAmount.checking"
         :amount-visible="state.amountVisible.checking"
         v-model:enabled="state.account.checking"
@@ -25,7 +25,7 @@
         icon="wallet"
         :title="$t('account.pocket')"
         :loading="state.loading"
-        :color="`#${state.settings.pocketColor}`"
+        :color="state.settings.pocketGraphColor"
         :amount="state.currentAmount.pocket"
         :amount-visible="state.amountVisible.pocket"
         v-model:enabled="state.account.pocket"
@@ -34,7 +34,7 @@
         icon="currency-eur"
         :title="$t('account.euros')"
         :loading="state.loading"
-        :color="`#${state.settings.totalColor}`"
+        :color="state.settings.totalGraphColor"
         :amount="state.currentAmount.euros"
         :amount-visible="state.amountVisible.euros"
         no-enabling
@@ -43,7 +43,7 @@
         icon="sigma"
         :title="$t('account.total')"
         :loading="state.loading"
-        :color="`#${state.settings.totalColor}`"
+        :color="state.settings.totalGraphColor"
         :amount="state.totalAmount"
         :amount-visible="state.amountVisible.total"
         no-enabling
@@ -146,7 +146,7 @@
                   :title="change.description"
                   :amount="change.amount"
                   :tags="change.tags"
-                  :date="format(change.date, 'dd/MM/yyyy - HH:mm')"
+                  :date="change.createdAt"
                   :show="state.changeAmountVisible"
                 />
               </div>
@@ -180,9 +180,8 @@ import {
   createSelectFromEnum
 } from "../helpers/helpers";
 import { UserSettings } from "../models/user-settings";
-import { euroRate } from "../constants/app-constants";
 import { TagEnum } from "../constants/tag-enum";
-import { ChangeItem } from "../models/change-item";
+import { FinancialChangeItem } from "../models/change-item";
 import { useI18n } from "vue-i18n";
 import { Account } from "../models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
@@ -263,8 +262,8 @@ interface State {
   account: Account;
   graphData: GraphData | null;
   totalAmount: string;
-  changes: ChangeItem[];
-  baseChanges: ChangeItem[];
+  changes: FinancialChangeItem[];
+  baseChanges: FinancialChangeItem[];
   // eslint-disable-next-line
   refresh: any;
   settings: UserSettings;
@@ -323,10 +322,14 @@ export default defineComponent({
         tag: []
       },
       settings: {
-        gyroColor: "",
-        checkingColor: "",
-        totalColor: "",
-        pocketColor: ""
+        checkingGraphColor: "#383737",
+        gyroGraphColor: "#383737",
+        pocketGraphColor: "#383737",
+        totalGraphColor: "#383737",
+        gyroGraphVisible: false,
+        checkingGraphVisible: false,
+        pocketGraphVisible: false,
+        totalGraphVisible: false
       },
       account: {
         gyro: true,
@@ -367,7 +370,7 @@ export default defineComponent({
       state.changesLoading = true;
       state.baseChanges = await getService<IChangeService>(
         Types.ChangeService
-      ).getChanges(state.filter);
+      ).getChanges(1);
       state.changes = state.baseChanges.slice(0, state.numberOfRows);
       state.changesTotalItems = state.baseChanges.length;
       state.changesNumberOfPages = Math.floor(
@@ -412,27 +415,19 @@ export default defineComponent({
 
       const history = await getService<IChangeService>(
         Types.ChangeService
-      ).getHistory();
+      ).getHistory(1);
 
       state.settings = await getService<ISettingsService>(
         Types.SettingsService
-      ).getSettings();
+      ).getSettings(1);
 
       state.dataSets.total = {
         label: t("account.total"),
-        data: history.map(
-          (x) =>
-            +(
-              x.gyro +
-              x.pocket +
-              x.checking +
-              ((x.euros as number) * euroRate || 0)
-            ).toFixed(2)
-        ),
+        data: history.map((x) => +x.total.toFixed(2)),
         fill: true,
-        borderColor: `#${state.settings.totalColor}`,
+        borderColor: state.settings.totalGraphColor,
         backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.totalColor, -10),
+          adjustHexColor(state.settings.totalGraphColor.replace("#", ""), -10),
           0.4
         ) as string
       };
@@ -441,9 +436,9 @@ export default defineComponent({
         label: t("account.gyro"),
         data: history.map((x) => +x.gyro.toFixed(2)),
         fill: true,
-        borderColor: `#${state.settings.gyroColor}`,
+        borderColor: state.settings.gyroGraphColor,
         backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.gyroColor, -10),
+          adjustHexColor(state.settings.gyroGraphColor.replace("#", ""), -10),
           0.4
         ) as string
       };
@@ -452,9 +447,12 @@ export default defineComponent({
         label: t("account.checking"),
         data: history.map((x) => +x.checking.toFixed(2)),
         fill: true,
-        borderColor: `#${state.settings.checkingColor}`,
+        borderColor: state.settings.checkingGraphColor,
         backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.checkingColor, -10),
+          adjustHexColor(
+            state.settings.checkingGraphColor.replace("#", ""),
+            -10
+          ),
           0.4
         ) as string
       };
@@ -463,17 +461,15 @@ export default defineComponent({
         label: t("account.pocket"),
         data: history.map((x) => +x.pocket.toFixed(2)),
         fill: true,
-        borderColor: `#${state.settings.pocketColor}`,
+        borderColor: state.settings.pocketGraphColor,
         backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.pocketColor, -10),
+          adjustHexColor(state.settings.pocketGraphColor.replace("#", ""), -10),
           0.4
         ) as string
       };
 
       state.graphData = {
-        labels: history.map((x) =>
-          format(x.date.toDate(), "dd/MM/yyyy - HH:mm")
-        ),
+        labels: history.map((x) => x.createdAt),
         datasets: []
       };
 

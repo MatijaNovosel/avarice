@@ -120,7 +120,9 @@ export default defineComponent({
       state.loading = true;
       let userData;
       try {
-        userData = await getService<IAuthService>(Types.AuthService).signIn();
+        userData = await getService<IAuthService>(
+          Types.AuthService
+        ).signInGoogle();
         store.dispatch("setUser", userData);
         toast.add({
           severity: "success",

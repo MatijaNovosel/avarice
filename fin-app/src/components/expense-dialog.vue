@@ -45,7 +45,7 @@
       <div class="container p-mt-3">
         <span class="container-label">Izvor plaćanja</span>
         <select-button
-          v-model="model.paymentSource.$model"
+          v-model="model.paymentSourceId.$model"
           :options="paymentSources"
           optionLabel="text"
           optionValue="val"
@@ -55,7 +55,7 @@
         <span class="container-label">Kategorija</span>
         <list-box
           :multiple="true"
-          v-model="model.tags.$model"
+          v-model="model.tagIds.$model"
           :options="tags"
           dataKey="val"
           listStyle="max-height: 250px"
@@ -96,7 +96,7 @@ import {
 } from "vue";
 import { PaymentSourceEnum } from "../constants/payment-source-enum";
 import { TagEnum } from "../constants/tag-enum";
-import { ChangeItem } from "../models/change-item";
+import { CreateFinancialChangeItemDto } from "../models/change-item";
 import { createSelectFromEnum } from "../helpers/helpers";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -122,18 +122,18 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
-      paymentSource: PaymentSourceEnum.GyroAccount,
-      tags: [TagEnum.Food],
+      appUserId: 1,
+      paymentSourceId: PaymentSourceEnum.GyroAccount,
+      tagIds: [TagEnum.Food],
       description: "",
       amount: 0,
-      date: new Date(),
       expense: true
-    } as ChangeItem);
+    } as CreateFinancialChangeItemDto);
 
     const rules = {
       amount: { required, numeric },
-      paymentSource: { required },
-      tags: { required },
+      paymentSourceId: { required },
+      tagIds: { required },
       description: { required }
     };
 
@@ -160,9 +160,10 @@ export default defineComponent({
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
+      entry.appUserId = 1;
       entry.description = "Description";
-      entry.paymentSource = PaymentSourceEnum.GyroAccount;
-      entry.tags = [TagEnum.Other];
+      entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
+      entry.tagIds = [TagEnum.Other];
       model.value.$reset;
     }
 
@@ -174,36 +175,12 @@ export default defineComponent({
     async function addExpense() {
       state.saving = true;
 
-      const payload: ChangeItem = {
+      const payload: CreateFinancialChangeItemDto = {
         ...entry
       };
 
-      payload.date = new Date();
+      await getService<IChangeService>(Types.ChangeService).addChange(payload);
 
-      const changeService = await getService<IChangeService>(
-        Types.ChangeService
-      );
-
-      const currentAmount = await changeService.getCurrentAmount();
-
-      await changeService.addHistory({
-        euros: currentAmount.euros,
-        gyro:
-          entry.paymentSource == PaymentSourceEnum.GyroAccount
-            ? ((currentAmount?.gyro - entry.amount) as number)
-            : currentAmount?.gyro,
-        checking:
-          entry.paymentSource == PaymentSourceEnum.CheckingAccount
-            ? ((currentAmount?.checking - entry.amount) as number)
-            : currentAmount?.checking,
-        pocket:
-          entry.paymentSource == PaymentSourceEnum.Pocket
-            ? ((currentAmount?.pocket - entry.amount) as number)
-            : currentAmount?.pocket,
-        date: new Date()
-      });
-
-      changeService.addChange(payload);
       hideDialog();
       state.saving = false;
       state.refresh.refresh();
