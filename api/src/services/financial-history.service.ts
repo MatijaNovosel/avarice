@@ -1,8 +1,8 @@
 import { Financialhistory } from "./../entities/financialhistory";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOperator, MoreThanOrEqual, Repository } from "typeorm";
-import { format } from "date-fns";
+import { Between, FindOperator, Repository } from "typeorm";
+import { add, format } from "date-fns";
 
 interface FilterValues {
   appUserId: number;
@@ -27,8 +27,12 @@ export class FinancialHistoryService {
       }
     };
     if (month) {
-      filterObject.where.createdAt = MoreThanOrEqual(
-        `2020-${month}-00 00:00:00`
+      filterObject.where.createdAt = Between(
+        `2020-${month}-00 00:00:00`,
+        format(
+          add(new Date(`2020-${month}-00 00:00:00`), { months: 1 }),
+          "yyyy-MM-dd HH:mm:ss"
+        )
       );
     }
 
