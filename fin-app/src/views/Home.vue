@@ -139,7 +139,7 @@
               <div
                 class="p-col-12 p-md-3 p-p-2"
                 v-for="change in state.changes"
-                :key="change.uid"
+                :key="change.id"
               >
                 <change-card
                   :expense="change.expense"
@@ -505,7 +505,6 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      // await getService<IChangeService>(Types.ChangeService).function();
       updateData();
     });
 
