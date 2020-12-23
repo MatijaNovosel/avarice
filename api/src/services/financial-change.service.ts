@@ -86,7 +86,7 @@ export class FinancialChangeService {
     )
       .createQueryBuilder("fh")
       .where("fh.appUserId = :id", { id: payload.appUserId })
-      .orderBy("fh.createdAt", "ASC")
+      .orderBy("fh.createdAt", "DESC")
       .getOne();
 
     const euroConversion: number = await convert(
