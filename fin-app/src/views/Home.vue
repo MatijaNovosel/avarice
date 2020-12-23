@@ -482,7 +482,9 @@ export default defineComponent({
       state.currentAmount.checking = `${
         state.dataSets.checking.data[state.dataSets.checking.data.length - 1]
       }HRK`;
-      state.currentAmount.euros = `${history[history.length - 1].euros}€`;
+      state.currentAmount.euros = `${
+        history[history.length - 1].euros
+      }€ (${history[history.length - 1].euroVal.toFixed(2)}HRK)`;
 
       state.totalAmount = `${
         state.dataSets.total.data[state.dataSets.total.data.length - 1]

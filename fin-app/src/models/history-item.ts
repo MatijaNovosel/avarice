@@ -6,4 +6,5 @@ export interface FinancialHistoryItem {
   pocket: number;
   total: number;
   euros: number;
+  euroVal: number;
 }

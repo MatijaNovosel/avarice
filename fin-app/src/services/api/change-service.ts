@@ -65,6 +65,7 @@ export class ChangeService implements IChangeService {
             pocket
             total
             euros
+            euroVal
           }
         }
       `
