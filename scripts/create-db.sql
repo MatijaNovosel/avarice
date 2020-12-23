@@ -71,8 +71,6 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
 CREATE TRIGGER appUserAfterInsertTrigger AFTER INSERT ON appuser FOR EACH ROW 
 BEGIN
-  INSERT INTO financialhistory (appUserId, checking, createdAt, euros, gyro, pocket) 
-  VALUES (NEW.id, 0, CURRENT_TIMESTAMP(), 0, 0, 0);
   INSERT INTO appsetting (appUserId, checkingGraphColor, checkingGraphVisible, gyroGraphColor, gyroGraphVisible, pocketGraphColor, pocketGraphVisible, totalGraphColor, totalGraphVisible)
   VALUES (NEW.id, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1);
 END $$ 
@@ -82,7 +80,7 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS financialChangeAfterInsertTrigger $$ 
 CREATE TRIGGER financialChangeAfterInsertTrigger AFTER INSERT ON financialChange FOR EACH ROW 
 BEGIN
-  DELETE FROM financialChange WHERE tagId = NULL OR financialChangeId = NULL; 
+  DELETE FROM financialChangeTag WHERE tagId = NULL OR financialChangeId = NULL; 
 END $$ 
 DELIMITER;
 
