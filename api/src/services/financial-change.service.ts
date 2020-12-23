@@ -71,7 +71,7 @@ export class FinancialChangeService {
       expense: payload.expense,
       paymentSourceId: payload.paymentSourceId,
       appUserId: payload.appUserId,
-      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss")
+      createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss")
     });
 
     payload.tagIds.forEach(async (tagId) => {
