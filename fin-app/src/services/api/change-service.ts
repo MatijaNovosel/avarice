@@ -25,7 +25,7 @@ export class ChangeService implements IChangeService {
             financialChange: {
               appUserId: ${appUserId}
               amount: ${amount}
-              description: ${description}
+              description: "${description}"
               expense: ${expense}
               paymentSourceId: ${paymentSourceId}
               tagIds: [${tagIds.join(",")}]

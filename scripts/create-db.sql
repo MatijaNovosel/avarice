@@ -80,7 +80,7 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS financialChangeAfterInsertTrigger $$ 
 CREATE TRIGGER financialChangeAfterInsertTrigger AFTER INSERT ON financialChange FOR EACH ROW 
 BEGIN
-  DELETE FROM financialChangeTag WHERE tagId = NULL OR financialChangeId = NULL; 
+  DELETE FROM financialChangeTag WHERE tagId IS NULL OR financialChangeId IS NULL; 
 END $$ 
 DELIMITER;
 

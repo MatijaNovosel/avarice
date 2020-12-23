@@ -67,7 +67,7 @@
           </template>
         </list-box>
       </div>
-      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.tags.$invalid">{{
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.tagIds.$invalid">{{
         model.tags.$errors.map((x) => x.$message).join(" • ")
       }}</span>
     </div>

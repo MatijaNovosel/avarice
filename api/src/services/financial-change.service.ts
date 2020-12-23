@@ -19,7 +19,7 @@ export class FinancialChangeService {
     private financialChangeRepository: Repository<Financialchange>,
     @InjectRepository(Financialchangetag)
     private financialChangeTagRepository: Repository<Financialchangetag>,
-    @InjectRepository(Financialchangetag)
+    @InjectRepository(Financialhistory)
     private financialChangeHistoryRepository: Repository<Financialhistory>
   ) {}
 
@@ -111,7 +111,8 @@ export class FinancialChangeService {
           ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
           : currentAmount.pocket,
       createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
-      euroVal: euroConversion
+      euroVal: euroConversion,
+      appUserId: payload.appUserId
     };
 
     await this.financialChangeHistoryRepository.save(historyEntry);
