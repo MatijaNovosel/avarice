@@ -145,7 +145,7 @@
                   :expense="change.expense"
                   :title="change.description"
                   :amount="change.amount"
-                  :tags="change.tags"
+                  :tags="change.tagIds"
                   :date="change.createdAt"
                   :show="state.changeAmountVisible"
                 />
