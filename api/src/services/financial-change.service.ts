@@ -110,7 +110,7 @@ export class FinancialChangeService {
         payload.paymentSourceId == PaymentSourceEnum.Pocket
           ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
           : currentAmount.pocket,
-      createdAt: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
+      createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
       euroVal: euroConversion,
       appUserId: payload.appUserId
     };
