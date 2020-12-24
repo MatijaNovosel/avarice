@@ -50,6 +50,6 @@ const { host, port, username, password, database } = { ...serverConfig };
     AuthModule,
     FinancialHistoryHttpModule
   ],
-  providers: []
+  providers: [VoidScalar]
 })
 export class AppModule {}
