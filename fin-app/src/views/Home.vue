@@ -366,11 +366,11 @@ export default defineComponent({
       totalAmount: "0,00HRK"
     });
 
-    async function getChanges() {
+    async function getChanges(skip?: number, take?: number) {
       state.changesLoading = true;
       const itemCollection = await getService<IChangeService>(
         Types.ChangeService
-      ).getChanges(1);
+      ).getChanges(1, skip, take);
       state.baseChanges = itemCollection.items;
       state.changes = state.baseChanges.slice(0, state.numberOfRows);
       state.changesTotalItems = itemCollection.count;
@@ -545,35 +545,6 @@ export default defineComponent({
 @use "../assets/css/variables"
 @import "../assets/css/helpers"
 
-.amount-card
-  background-color: #7673731a !important
-  border-radius: 12px !important
-  margin: 0.5em
-
-.expense-text
-  color: rgb(197, 38, 38)
-
-.gain-text
-  color: rgb(69, 170, 98)
-
-.p-card .p-card-title
-  border-bottom: 1px solid variables.$color-dark
-  padding-bottom: 10px
-
-.expense-description
-  color: rgb(155, 154, 154)
-
-.expense-title
-  display: flex
-  flex-direction: row
-  justify-content: space-between
-
-.currency-change-caret
-  animation: up-and-down 0.5s infinite alternate
-
-  &-table
-    animation: up-and-down-table 0.5s infinite alternate
-
 .amount-cards-container
   display: grid
   grid-template-columns: repeat(auto-fit, 100%)
@@ -605,29 +576,12 @@ export default defineComponent({
   font-family: "ProximaNovaBold" !important
   user-select: none
 
-@keyframes up-and-down-table
-  0%
-    transform: translateY(0)
-  100%
-    transform: translateY(-2px)
-
 .p-accordion-header-link
   background-color: rgba(255, 255, 255, 0.04) !important
   z-index: 0 !important
 
 .p-paginator
   justify-content: center !important
-
-.filter-item-text
-  color: #b6b3b3
-  font-size: 14px
-
-.filter-divider
-  border-bottom: 1px solid variables.$color-dark
-
-.spinner-accounts
-  width: 25px !important
-  height: 25px !important
 
 .p-dataview .p-dataview-content
   padding: 0px !important
