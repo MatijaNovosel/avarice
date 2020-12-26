@@ -1,46 +1,62 @@
-import { Financialhistory } from "./../entities/financialhistory";
+import { Appuser } from "src/entities/appuser";
+import {
+  Financialhistory,
+  GFinancialHistory,
+  GFinancialHistoryRecord,
+  GUserPaymentSource
+} from "./../entities/financialhistory";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Between, FindOperator, Repository } from "typeorm";
-import { add, format } from "date-fns";
-
-interface FilterValues {
-  appUserId: number;
-  createdAt?: FindOperator<string>;
-}
-
-interface Filter {
-  where: FilterValues;
-}
+import { Repository } from "typeorm";
+import { format } from "date-fns";
 
 @Injectable()
 export class FinancialHistoryService {
   constructor(
     @InjectRepository(Financialhistory)
-    private financialHistoryRepository: Repository<Financialhistory>
+    private financialHistoryRepository: Repository<Financialhistory>,
+    @InjectRepository(Appuser)
+    private appUserRepository: Repository<Appuser>
   ) {}
 
-  async findByUserId(id: number, month?: number): Promise<Financialhistory[]> {
-    const filterObject: Filter = {
-      where: {
-        appUserId: id
-      }
-    };
-    if (month) {
-      filterObject.where.createdAt = Between(
-        `2020-${month}-00 00:00:00`,
-        format(
-          add(new Date(`2020-${month}-00 00:00:00`), { months: 1 }),
-          "yyyy-MM-dd HH:mm:ss"
-        )
-      );
-    }
+  async findByUserId(
+    appUserId: number,
+    month?: number
+  ): Promise<GFinancialHistory[]> {
+    const userPaymentSourceIds: number[] = (
+      await this.appUserRepository.findOne({
+        where: { id: appUserId },
+        relations: ["paymentsources"]
+      })
+    ).paymentsources.map((ps) => ps.id);
 
-    const data = await this.financialHistoryRepository.find(filterObject);
-    return data.map((fh) => {
-      fh.total = fh.checking + fh.gyro + fh.pocket + fh.euroVal;
-      fh.createdAt = format(new Date(fh.createdAt), "dd.MM.yyyy. HH:mm:ss");
-      return fh;
+    const userPaymentSources: GUserPaymentSource[] = [];
+
+    userPaymentSourceIds.forEach(async (id) => {
+      const data: Financialhistory[] = await this.financialHistoryRepository.find(
+        {
+          where: { appUserId, paymentSourceId: id },
+          order: { createdAt: "DESC" }
+        }
+      );
+      console.log({
+        id,
+        financialHistoryRecords: data.map((fh) => ({
+          amount: fh.amount,
+          createdAt: format(fh.createdAt, "dd.MM.yyyy. HH:mm")
+        }))
+      });
+      userPaymentSources.push({
+        id,
+        financialHistoryRecords: data.map((fh) => ({
+          amount: fh.amount,
+          createdAt: format(fh.createdAt, "dd.MM.yyyy. HH:mm")
+        }))
+      });
     });
+
+    const historyItems: GFinancialHistory[] = [];
+
+    return historyItems;
   }
 }

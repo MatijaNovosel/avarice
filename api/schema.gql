@@ -2,6 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GFinancialHistoryRecord {
+  amount: Float!
+  createdAt: String!
+}
+
+type GUserPaymentSource {
+  id: Int!
+  financialHistoryRecords: [GFinancialHistoryRecord!]!
+}
+
+type GFinancialHistory {
+  id: Int!
+  createdAt: String!
+  paymentSources: [GUserPaymentSource!]!
+  total: Float!
+  appUserId: Int!
+}
+
 type GTag {
   id: Int!
 
@@ -39,18 +57,6 @@ type GAppUser {
   photoUrl: String!
   password: String!
   displayName: String!
-}
-
-type GFinancialHistory {
-  id: Int!
-  createdAt: String!
-  checking: Float!
-  gyro: Float!
-  pocket: Float!
-  euroVal: Float!
-  total: Float!
-  euros: Float!
-  appUserId: Float!
 }
 
 type AccessToken {

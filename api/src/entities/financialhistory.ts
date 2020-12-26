@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType, Float } from "@nestjs/graphql";
 import {
   Column,
   Entity,
@@ -46,6 +46,24 @@ export class Financialhistory {
 }
 
 @ObjectType()
+export class GFinancialHistoryRecord {
+  @Field(() => Float)
+  amount: number;
+
+  @Field()
+  createdAt: string;
+}
+
+@ObjectType()
+export class GUserPaymentSource {
+  @Field(() => Int)
+  id: number;
+
+  @Field(() => [GFinancialHistoryRecord])
+  financialHistoryRecords: GFinancialHistoryRecord[];
+}
+
+@ObjectType()
 export class GFinancialHistory {
   @Field(() => Int)
   id: number;
@@ -53,12 +71,12 @@ export class GFinancialHistory {
   @Field()
   createdAt: string;
 
-  @Field()
-  paymentSourceId: number;
+  @Field(() => [GUserPaymentSource])
+  paymentSources: GUserPaymentSource[];
 
-  @Field()
-  amount: number;
+  @Field(() => Float)
+  total: number;
 
-  @Field()
+  @Field(() => Int)
   appUserId: number;
 }

@@ -93,6 +93,8 @@ export class FinancialChangeService {
       });
     });
 
+    /*
+
     const currentAmount: Financialhistory = await getRepository(
       Financialhistory
     )
@@ -128,5 +130,6 @@ export class FinancialChangeService {
     };
 
     await this.financialChangeHistoryRepository.save(historyEntry);
+    */
   }
 }
