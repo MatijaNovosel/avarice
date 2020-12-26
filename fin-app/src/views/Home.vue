@@ -9,9 +9,9 @@
         :icon="paymentSource.icon"
         :title="paymentSource.description"
         :loading="state.loading"
-        :color="state.settings.gyroGraphColor"
-        :amount="state.currentAmount.gyro"
-        :amount-visible="state.amountVisible.gyro"
+        :color="'#ff8a00'"
+        :amount="paymentSource.currentAmount"
+        :amount-visible="true"
         v-model:enabled="state.account.gyro"
       />
     </div>
@@ -137,7 +137,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, inject, ref, onMounted } from "vue";
-import { formatTag, formatPaymentSource } from "../helpers/helpers";
+import {
+  formatTag,
+  formatPaymentSource,
+  hexToRgba,
+  adjustHexColor
+} from "../helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import { createSelectFromEnum } from "../helpers/helpers";
@@ -164,13 +169,6 @@ interface GraphData {
   datasets: DatasetItem[];
 }
 
-interface CurrentAmount {
-  gyro: string;
-  checking: string;
-  pocket: string;
-  euros: string;
-}
-
 interface PaginatorInfo {
   page: number;
   first: number;
@@ -187,7 +185,6 @@ interface AmountVisible {
 }
 
 interface State {
-  currentAmount: CurrentAmount;
   loading: boolean;
   changesLoading: boolean;
   account: Account;
@@ -262,12 +259,6 @@ export default defineComponent({
         pocket: true,
         checking: true
       },
-      currentAmount: {
-        gyro: "",
-        checking: "",
-        pocket: "",
-        euros: ""
-      },
       loading: false,
       changesLoading: false,
       graphOptions: {
@@ -314,30 +305,7 @@ export default defineComponent({
     }
 
     function updateGraph() {
-      /*
-      const dataSets: DatasetItem[] = [];
-
-      if (
-        state.account.gyro &&
-        state.account.pocket &&
-        state.account.checking
-      ) {
-        dataSets.push(state.dataSets.total as DatasetItem);
-      } else {
-        if (state.account.gyro) {
-          dataSets.push(state.dataSets.gyro as DatasetItem);
-        }
-        if (state.account.pocket) {
-          dataSets.push(state.dataSets.pocket as DatasetItem);
-        }
-        if (state.account.checking) {
-          dataSets.push(state.dataSets.checking as DatasetItem);
-        }
-      }
-
-      (state.graphData as GraphData).datasets = dataSets;
       graph.value.reinit();
-      */
     }
 
     async function updateData() {
@@ -357,6 +325,9 @@ export default defineComponent({
       ).getSettings(1);
 
       state.paymentSources.forEach((x) => {
+        x.currentAmount = history[0].paymentSources.filter(
+          (z) => z.id == x.id
+        )[0].amount;
         state.dataSets.push({
           label: x.description,
           data: history
@@ -364,81 +335,17 @@ export default defineComponent({
             .map((y) => y.amount),
           fill: true,
           borderColor: "#ff8a00",
-          backgroundColor: "#ff8a00"
+          backgroundColor: hexToRgba(
+            adjustHexColor("#ff8a00".replace("#", ""), -10),
+            0.4
+          ) as string
         });
       });
 
-      /*
-
-      state.dataSets.total = {
-        label: t("account.total"),
-        data: history.map((x) => +x.total.toFixed(2)),
-        fill: true,
-        borderColor: state.settings.totalGraphColor,
-        backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.totalGraphColor.replace("#", ""), -10),
-          0.4
-        ) as string
-      };
-
-      state.dataSets.gyro = {
-        label: t("account.gyro"),
-        data: history.map((x) => +x.gyro.toFixed(2)),
-        fill: true,
-        borderColor: state.settings.gyroGraphColor,
-        backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.gyroGraphColor.replace("#", ""), -10),
-          0.4
-        ) as string
-      };
-
-      state.dataSets.checking = {
-        label: t("account.checking"),
-        data: history.map((x) => +x.checking.toFixed(2)),
-        fill: true,
-        borderColor: state.settings.checkingGraphColor,
-        backgroundColor: hexToRgba(
-          adjustHexColor(
-            state.settings.checkingGraphColor.replace("#", ""),
-            -10
-          ),
-          0.4
-        ) as string
-      };
-
-      state.dataSets.pocket = {
-        label: t("account.pocket"),
-        data: history.map((x) => +x.pocket.toFixed(2)),
-        fill: true,
-        borderColor: state.settings.pocketGraphColor,
-        backgroundColor: hexToRgba(
-          adjustHexColor(state.settings.pocketGraphColor.replace("#", ""), -10),
-          0.4
-        ) as string
-      };
-
       state.graphData = {
         labels: history.map((x) => x.createdAt),
-        datasets: []
+        datasets: state.dataSets
       };
-
-      state.currentAmount.gyro = `${
-        state.dataSets.gyro.data[state.dataSets.gyro.data.length - 1]
-      }HRK`;
-      state.currentAmount.pocket = `${
-        state.dataSets.pocket.data[state.dataSets.pocket.data.length - 1]
-      }HRK`;
-      state.currentAmount.checking = `${
-        state.dataSets.checking.data[state.dataSets.checking.data.length - 1]
-      }HRK`;
-      state.currentAmount.euros = `${
-        history[history.length - 1].euros
-      }€ (${history[history.length - 1].euroVal.toFixed(2)}HRK)`;
-
-      state.totalAmount = `${
-        state.dataSets.total.data[state.dataSets.total.data.length - 1]
-      }HRK`;
-      */
 
       updateGraph();
 

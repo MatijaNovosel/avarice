@@ -3,4 +3,5 @@ export interface PaymentSource {
   description: string;
   currency: string;
   icon: string;
+  currentAmount?: number;
 }
