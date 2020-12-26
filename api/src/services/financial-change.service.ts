@@ -23,17 +23,23 @@ export class FinancialChangeService {
     private financialChangeHistoryRepository: Repository<Financialhistory>
   ) {}
 
-  async findAllByUserId(id: number): Promise<GFinancialChange[]> {
+  async findAllByUserId(
+    id: number,
+    skip: number = 0,
+    take: number = 15
+  ): Promise<GFinancialChange[]> {
     const data = await this.financialChangeRepository.find({
       where: { appUserId: id },
       order: { createdAt: "DESC" },
+      skip,
+      take,
       relations: ["financialchangetags"]
     });
     return data.map((fc) => ({
       id: fc.id,
       amount: fc.amount,
       description: fc.description,
-      createdAt: format(fc.createdAt, "yyyy-MM-dd HH:mm"),
+      createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm"),
       expense: fc.expense,
       paymentSourceId: fc.paymentSourceId,
       tagIds: fc.financialchangetags.map((fct) => fct.tagId)
