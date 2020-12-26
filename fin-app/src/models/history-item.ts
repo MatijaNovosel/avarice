@@ -1,10 +1,10 @@
-export interface FinancialHistoryItem {
+export interface PaymentSourceRecord {
   id: number;
+  amount: number;
+}
+
+export interface FinancialHistory {
   createdAt: string;
-  checking: number;
-  gyro: number;
-  pocket: number;
+  paymentSources: PaymentSourceRecord[];
   total: number;
-  euros: number;
-  euroVal: number;
 }

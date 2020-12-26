@@ -24,6 +24,7 @@ export class FinancialHistoryService {
     const res = await createQueryBuilder("financialhistory")
       .select("financialhistory.createdAt")
       .groupBy("financialhistory.createdAt")
+      .orderBy("financialHistory.createdAt", "DESC")
       .getRawMany();
 
     for (const entry of res) {
@@ -37,7 +38,7 @@ export class FinancialHistoryService {
 
       data.forEach((fh) => {
         userPaymentSources.push({
-          id: fh.id,
+          id: fh.paymentSourceId,
           amount: fh.amount
         });
       });

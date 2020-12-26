@@ -3,7 +3,7 @@ import {
   CreateFinancialChangeItemDto,
   FinancialChangeItem
 } from "@/models/change-item";
-import { FinancialHistoryItem } from "@/models/history-item";
+import { FinancialHistory } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { IChangeService } from "../interfaces/change-service";
@@ -62,19 +62,17 @@ export class ChangeService implements IChangeService {
     });
     return data.data.financialChanges;
   }
-  async getHistory(appUserId: number): Promise<FinancialHistoryItem[]> {
+  async getHistory(appUserId: number): Promise<FinancialHistory[]> {
     const { data } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
           financialHistory(id: ${appUserId}) {
-            id
             createdAt
-            checking
-            gyro
-            pocket
+            paymentSources {
+              id
+              amount
+            }
             total
-            euros
-            euroVal
           }
         }
       `

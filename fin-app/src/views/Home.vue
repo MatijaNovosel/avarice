@@ -4,49 +4,15 @@
       class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 p-pb-5 p-pb-md-0 amount-cards-container"
     >
       <dashboard-amount-card
-        icon="credit-card-outline"
-        :title="$t('account.gyro')"
+        v-for="paymentSource in state.paymentSources"
+        :key="paymentSource.id"
+        :icon="paymentSource.icon"
+        :title="paymentSource.description"
         :loading="state.loading"
         :color="state.settings.gyroGraphColor"
         :amount="state.currentAmount.gyro"
         :amount-visible="state.amountVisible.gyro"
         v-model:enabled="state.account.gyro"
-      />
-      <dashboard-amount-card
-        icon="credit-card"
-        :title="$t('account.checking')"
-        :loading="state.loading"
-        :color="state.settings.checkingGraphColor"
-        :amount="state.currentAmount.checking"
-        :amount-visible="state.amountVisible.checking"
-        v-model:enabled="state.account.checking"
-      />
-      <dashboard-amount-card
-        icon="wallet"
-        :title="$t('account.pocket')"
-        :loading="state.loading"
-        :color="state.settings.pocketGraphColor"
-        :amount="state.currentAmount.pocket"
-        :amount-visible="state.amountVisible.pocket"
-        v-model:enabled="state.account.pocket"
-      />
-      <dashboard-amount-card
-        icon="currency-eur"
-        :title="$t('account.euros')"
-        :loading="state.loading"
-        :color="state.settings.totalGraphColor"
-        :amount="state.currentAmount.euros"
-        :amount-visible="state.amountVisible.euros"
-        no-enabling
-      />
-      <dashboard-amount-card
-        icon="sigma"
-        :title="$t('account.total')"
-        :loading="state.loading"
-        :color="state.settings.totalGraphColor"
-        :amount="state.totalAmount"
-        :amount-visible="state.amountVisible.total"
-        no-enabling
       />
     </div>
     <div class="p-col-12 p-md-8 p-px-5">
@@ -88,7 +54,7 @@
                   <list-box
                     :multiple="true"
                     v-model="state.filter.tag"
-                    :options="categories"
+                    :options="tags"
                     dataKey="val"
                     listStyle="max-height: 250px"
                     optionValue="val"
@@ -191,6 +157,8 @@ import { IChangeService } from "../services/interfaces/change-service";
 import { ISettingsService } from "../services/interfaces/settings-service";
 import MdiIcon from "../components/mdi-icon.vue";
 import { GraphOptions } from "@/models/graph";
+import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
+import { PaymentSource } from "@/models/payment-source";
 
 interface Filter {
   tag: TagEnum[];
@@ -253,6 +221,7 @@ interface State {
   graphValuesVisible: boolean;
   graphOptions: GraphOptions;
   changeAmountVisible: boolean;
+  paymentSources: PaymentSource[];
 }
 
 export default defineComponent({
@@ -268,6 +237,7 @@ export default defineComponent({
     const graph: any = ref(null);
 
     const state: State = reactive({
+      paymentSources: [],
       changeAmountVisible: false,
       graphValuesVisible: false,
       dataSets: {
@@ -362,6 +332,7 @@ export default defineComponent({
     }
 
     function updateGraph() {
+      /*
       const dataSets: DatasetItem[] = [];
 
       if (
@@ -384,19 +355,28 @@ export default defineComponent({
 
       (state.graphData as GraphData).datasets = dataSets;
       graph.value.reinit();
+      */
     }
 
     async function updateData() {
       state.loading = true;
       getChanges(0, state.numberOfRows);
 
+      state.paymentSources = await getService<IPaymentSourceService>(
+        Types.PaymentSourceService
+      ).getAllByUserId(1);
+
       const history = await getService<IChangeService>(
         Types.ChangeService
       ).getHistory(1);
 
+      console.log(history);
+      
       state.settings = await getService<ISettingsService>(
         Types.SettingsService
       ).getSettings(1);
+
+      /*
 
       state.dataSets.total = {
         label: t("account.total"),
@@ -466,6 +446,7 @@ export default defineComponent({
       state.totalAmount = `${
         state.dataSets.total.data[state.dataSets.total.data.length - 1]
       }HRK`;
+      */
 
       updateGraph();
 
@@ -499,14 +480,14 @@ export default defineComponent({
       { deep: true }
     );
 
-    const categories = createSelectFromEnum(TagEnum, "tag");
+    const tags = createSelectFromEnum(TagEnum, "tag");
 
     return {
       state,
       format,
       formatTag,
       formatPaymentSource,
-      categories,
+      tags,
       resetFilter,
       getChanges,
       pageChanged,

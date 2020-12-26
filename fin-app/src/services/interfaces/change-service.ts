@@ -2,7 +2,7 @@ import {
   CreateFinancialChangeItemDto,
   FinancialChangeItem
 } from "@/models/change-item";
-import { FinancialHistoryItem } from "@/models/history-item";
+import { FinancialHistory } from "@/models/history-item";
 import { ItemCollection } from "@/models/item-collection";
 
 export interface IChangeService {
@@ -12,5 +12,5 @@ export interface IChangeService {
     skip?: number,
     take?: number
   ): Promise<ItemCollection<FinancialChangeItem>>;
-  getHistory(appUserId: number): Promise<FinancialHistoryItem[]>;
+  getHistory(appUserId: number): Promise<FinancialHistory[]>;
 }

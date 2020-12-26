@@ -19,7 +19,7 @@ export class PaymentSourceService implements IPaymentSourceService {
     });
     return data.data.paymentSources;
   }
-  async create(payload: Object): Promise<void> {
+  async create(): Promise<void> {
     //
   }
 }
