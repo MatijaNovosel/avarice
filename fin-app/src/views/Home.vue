@@ -325,7 +325,7 @@ export default defineComponent({
       ).getSettings(1);
 
       state.paymentSources.forEach((x) => {
-        x.currentAmount = history[0].paymentSources.filter(
+        x.currentAmount = history[history.length - 1].paymentSources.filter(
           (z) => z.id == x.id
         )[0].amount;
         state.dataSets.push({
@@ -340,6 +340,25 @@ export default defineComponent({
             0.4
           ) as string
         });
+      });
+
+      state.paymentSources.push({
+        id: -1,
+        description: "Total",
+        currency: "HRK",
+        icon: "sigma",
+        currentAmount: history[history.length - 1].total
+      });
+
+      state.dataSets.push({
+        label: "Total",
+        data: history.map((x) => x.total),
+        fill: true,
+        borderColor: "#ff8a00",
+        backgroundColor: hexToRgba(
+          adjustHexColor("#ff8a00".replace("#", ""), -10),
+          0.4
+        ) as string
       });
 
       state.graphData = {

@@ -24,10 +24,11 @@ export class FinancialHistoryService {
     const res = await createQueryBuilder("financialhistory")
       .select("financialhistory.createdAt")
       .groupBy("financialhistory.createdAt")
-      .orderBy("financialHistory.createdAt", "DESC")
+      .orderBy("financialHistory.createdAt", "ASC")
       .getRawMany();
 
     for (const entry of res) {
+      let total = 0;
       const createdAt = entry.createdAt;
       const userPaymentSources: GUserPaymentSource[] = [];
       const data: Financialhistory[] = await this.financialHistoryRepository.find(
@@ -41,12 +42,13 @@ export class FinancialHistoryService {
           id: fh.paymentSourceId,
           amount: fh.amount
         });
+        total += fh.amount;
       });
 
       historyItems.push({
         createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
         paymentSources: userPaymentSources,
-        total: 0
+        total
       });
     }
 
