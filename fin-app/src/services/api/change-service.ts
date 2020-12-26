@@ -1,3 +1,4 @@
+import { ItemCollection } from "./../../models/item-collection";
 import {
   CreateFinancialChangeItemDto,
   FinancialChangeItem
@@ -35,18 +36,26 @@ export class ChangeService implements IChangeService {
       `
     });
   }
-  async getChanges(appUserId: number): Promise<FinancialChangeItem[]> {
+  async getChanges(
+    appUserId: number,
+    skip?: number,
+    take?: number
+  ): Promise<ItemCollection<FinancialChangeItem>> {
     const { data } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-          financialChanges(id: ${appUserId}) {
-            id
-            amount
-            createdAt
-            description
-            expense
-            paymentSourceId
-            tagIds
+          financialChanges(id: ${appUserId}, take: ${take ||
+        null}, skip: ${skip || null}) {
+            count
+            items {
+              id
+              amount
+              createdAt
+              description
+              expense
+              paymentSourceId
+              tagIds
+            }
           }
         }
       `

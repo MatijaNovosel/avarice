@@ -368,11 +368,12 @@ export default defineComponent({
 
     async function getChanges() {
       state.changesLoading = true;
-      state.baseChanges = await getService<IChangeService>(
+      const itemCollection = await getService<IChangeService>(
         Types.ChangeService
       ).getChanges(1);
+      state.baseChanges = itemCollection.items;
       state.changes = state.baseChanges.slice(0, state.numberOfRows);
-      state.changesTotalItems = state.baseChanges.length;
+      state.changesTotalItems = itemCollection.count;
       state.changesNumberOfPages = Math.floor(
         state.baseChanges.length / state.numberOfRows
       );
