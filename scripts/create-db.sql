@@ -27,7 +27,11 @@ CREATE TABLE appsetting (
 
 CREATE TABLE paymentsource (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  description VARCHAR(255)
+  currency VARCHAR(50) NOT NULL DEFAULT "HRK",
+  icon VARCHAR(50) NOT NULL DEFAULT "eye",
+  description VARCHAR(255),
+  appUserId INT,
+  FOREIGN KEY (appUserId) REFERENCES appuser(id)
 );
 
 CREATE TABLE financialchange (
@@ -57,13 +61,11 @@ CREATE TABLE financialchangetag (
 
 CREATE TABLE financialhistory (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  checking DOUBLE,
+  paymentSourceId INT,
+  amount DOUBLE NOT NULL DEFAULT 0,
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  euros DOUBLE,
-  gyro DOUBLE,
-  pocket DOUBLE,
-  euroVal DOUBLE,
-  appUserId INT NOT NULL,
+  appUserId INT,
+  FOREIGN KEY (paymentSourceId) REFERENCES paymentSource(id),
   FOREIGN KEY (appUserId) REFERENCES appuser(id)
 );
 
@@ -84,6 +86,15 @@ BEGIN
 END $$ 
 DELIMITER;
 
-INSERT INTO appuser (displayName, email, photoURL, uid) VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
-INSERT INTO tag (description) VALUES ("Hrana"), ("Darovi"), ("Igre"), ("Javni prijevoz"), ("Ostalo"), ("Piće"), ("Namirnice");
-INSERT INTO paymentsource (description) VALUES ("Žiro račun"), ("Tekući račun"), ("Džep");
+INSERT INTO appuser (displayName, email, photoURL, uid) 
+VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+
+INSERT INTO tag (description) 
+VALUES ("Hrana"), ("Darovi"), ("Igre"), ("Javni prijevoz"), ("Ostalo"), ("Piće"), ("Namirnice");
+
+INSERT INTO paymentsource (description, currency, icon) 
+VALUES 
+("Žiro račun", "HRK", "credit-card-outline"), 
+("Tekući račun", "HRK", "credit-card"), 
+("Džep", "HRK", "wallet"), 
+("Euri", "EUR", "currency-eur");
