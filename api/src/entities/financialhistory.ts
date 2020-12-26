@@ -8,35 +8,34 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Appuser } from "./appuser";
+import { Paymentsource } from "./paymentsource";
 
 @Index("appUserId", ["appUserId"], {})
+@Index("paymentSourceId", ["paymentSourceId"], {})
 @Entity("financialhistory", { schema: "finapp" })
 export class Financialhistory {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   public id?: number;
 
-  @Column("double", { name: "checking", nullable: true, precision: 22 })
-  public checking?: number | null;
+  @Column("int", { name: "paymentSourceId", nullable: true })
+  public paymentSourceId?: number | null;
 
-  @Column("datetime", { name: "createdAt" })
-  public createdAt?: string;
+  @Column("double", { name: "amount", precision: 22, default: () => "'0'" })
+  public amount?: number;
 
-  @Column("double", { name: "euros", nullable: true, precision: 22 })
-  public euros?: number | null;
+  @Column("datetime", { name: "createdAt", default: () => "CURRENT_TIMESTAMP" })
+  public createdAt?: Date;
 
-  @Column("double", { name: "gyro", nullable: true, precision: 22 })
-  public gyro?: number | null;
+  @Column("int", { name: "appUserId", nullable: true })
+  public appUserId?: number | null;
 
-  @Column("double", { name: "euroVal", nullable: true, precision: 22 })
-  public euroVal?: number | null;
-
-  @Column("double", { name: "pocket", nullable: true, precision: 22 })
-  public pocket?: number | null;
-
-  @Column("int", { name: "appUserId" })
-  public appUserId?: number;
-
-  public total?: number;
+  @ManyToOne(
+    () => Paymentsource,
+    (paymentsource) => paymentsource.financialhistories,
+    { onDelete: "NO ACTION", onUpdate: "NO ACTION" }
+  )
+  @JoinColumn([{ name: "paymentSourceId", referencedColumnName: "id" }])
+  public paymentSource?: Paymentsource;
 
   @ManyToOne(() => Appuser, (appuser) => appuser.financialhistories, {
     onDelete: "NO ACTION",
@@ -55,22 +54,10 @@ export class GFinancialHistory {
   createdAt: string;
 
   @Field()
-  checking: number;
+  paymentSourceId: number;
 
   @Field()
-  gyro: number;
-
-  @Field()
-  pocket: number;
-
-  @Field()
-  euroVal: number;
-
-  @Field()
-  total: number;
-
-  @Field()
-  euros: number;
+  amount: number;
 
   @Field()
   appUserId: number;

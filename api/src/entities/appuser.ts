@@ -3,6 +3,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Appsetting } from "./appsetting";
 import { Financialhistory } from "./financialhistory";
+import { Paymentsource } from "./paymentsource";
 
 @Entity("appuser", { schema: "finapp" })
 export class Appuser {
@@ -28,16 +29,19 @@ export class Appuser {
   public appsettings?: Appsetting[];
 
   @OneToMany(
+    () => Financialchange,
+    (financialchange) => financialchange.appUser
+  )
+  public financialchanges?: Financialchange[];
+
+  @OneToMany(
     () => Financialhistory,
     (financialhistory) => financialhistory.appUser
   )
   public financialhistories?: Financialhistory[];
 
-  @OneToMany(
-    () => Financialchange,
-    (financialchange) => financialchange.appUser
-  )
-  public financialchanges?: Financialchange[];
+  @OneToMany(() => Paymentsource, (paymentsource) => paymentsource.appUser)
+  public paymentsources?: Paymentsource[];
 }
 
 @ObjectType()
