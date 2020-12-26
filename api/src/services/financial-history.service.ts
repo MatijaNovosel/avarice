@@ -1,4 +1,3 @@
-import { Appuser } from "src/entities/appuser";
 import {
   Financialhistory,
   GFinancialHistory,
@@ -13,22 +12,13 @@ import { format } from "date-fns";
 export class FinancialHistoryService {
   constructor(
     @InjectRepository(Financialhistory)
-    private financialHistoryRepository: Repository<Financialhistory>,
-    @InjectRepository(Appuser)
-    private appUserRepository: Repository<Appuser>
+    private financialHistoryRepository: Repository<Financialhistory>
   ) {}
 
   async findByUserId(
     appUserId: number,
     month?: number
   ): Promise<GFinancialHistory[]> {
-    const userPaymentSourceIds: number[] = (
-      await this.appUserRepository.findOne({
-        where: { id: appUserId },
-        relations: ["paymentsources"]
-      })
-    ).paymentsources.map((ps) => ps.id);
-
     const historyItems: GFinancialHistory[] = [];
 
     const res = await createQueryBuilder("financialhistory")
@@ -53,7 +43,7 @@ export class FinancialHistoryService {
       });
 
       historyItems.push({
-        createdAt,
+        createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
         paymentSources: userPaymentSources,
         total: 0
       });

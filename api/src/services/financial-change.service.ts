@@ -9,8 +9,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { getRepository, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
-import { PaymentSourceEnum } from "src/constants/payment-source";
-import { convert } from "exchange-rates-api";
+import { Appuser } from "src/entities/appuser";
 
 @Injectable()
 export class FinancialChangeService {
@@ -20,7 +19,9 @@ export class FinancialChangeService {
     @InjectRepository(Financialchangetag)
     private financialChangeTagRepository: Repository<Financialchangetag>,
     @InjectRepository(Financialhistory)
-    private financialChangeHistoryRepository: Repository<Financialhistory>
+    private financialChangeHistoryRepository: Repository<Financialhistory>,
+    @InjectRepository(Appuser)
+    private appUserRepository: Repository<Appuser>
   ) {}
 
   async findAllByUserId(
@@ -93,43 +94,29 @@ export class FinancialChangeService {
       });
     });
 
-    /*
+    const userPaymentSourceIds: number[] = (
+      await this.appUserRepository.findOne({
+        where: { id: payload.appUserId },
+        relations: ["paymentsources"]
+      })
+    ).paymentsources.map((ps) => ps.id);
 
-    const currentAmount: Financialhistory = await getRepository(
-      Financialhistory
-    )
-      .createQueryBuilder("fh")
-      .where("fh.appUserId = :id", { id: payload.appUserId })
-      .orderBy("fh.createdAt", "DESC")
-      .getOne();
-
-    const euroConversion: number = await convert(
-      currentAmount.euros,
-      "EUR",
-      "HRK",
-      format(new Date(currentAmount.createdAt), "yyyy-MM-dd")
-    );
-
-    const historyEntry: Financialhistory = {
-      checking:
-        payload.paymentSourceId == PaymentSourceEnum.Checking
-          ? parseFloat((currentAmount.checking - payload.amount).toFixed(2))
-          : currentAmount.checking,
-      euros: currentAmount.euros,
-      gyro:
-        payload.paymentSourceId == PaymentSourceEnum.Gyro
-          ? parseFloat((currentAmount.gyro - payload.amount).toFixed(2))
-          : currentAmount.gyro,
-      pocket:
-        payload.paymentSourceId == PaymentSourceEnum.Pocket
-          ? parseFloat((currentAmount.pocket - payload.amount).toFixed(2))
-          : currentAmount.pocket,
-      createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-      euroVal: euroConversion,
-      appUserId: payload.appUserId
-    };
-
-    await this.financialChangeHistoryRepository.save(historyEntry);
-    */
+    for (const id of userPaymentSourceIds) {
+      const current = await this.financialChangeHistoryRepository.findOne({
+        where: { appUserId: payload.appUserId, paymentSourceId: id },
+        order: { createdAt: "DESC" }
+      });
+      await this.financialChangeHistoryRepository.save({
+        createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        appUserId: payload.appUserId,
+        paymentSourceId: id,
+        amount:
+          payload.paymentSourceId == id
+            ? payload.expense
+              ? parseFloat((current.amount - payload.amount).toFixed(2))
+              : parseFloat((current.amount + payload.amount).toFixed(2))
+            : current.amount
+      });
+    }
   }
 }
