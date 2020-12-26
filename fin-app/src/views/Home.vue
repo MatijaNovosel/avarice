@@ -247,13 +247,7 @@ export default defineComponent({
       },
       settings: {
         checkingGraphColor: "#383737",
-        gyroGraphColor: "#383737",
-        pocketGraphColor: "#383737",
-        totalGraphColor: "#383737",
-        gyroGraphVisible: false,
-        checkingGraphVisible: false,
-        pocketGraphVisible: false,
-        totalGraphVisible: false
+        checkingGraphVisible: false
       },
       account: {
         gyro: true,

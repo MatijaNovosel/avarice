@@ -131,13 +131,13 @@ export default defineComponent({
         Types.SettingsService
       ).getSettings(1);
 
-      settings.checkingGraphColor = settings.checkingGraphColor.replace(
+      settings.checkingGraphColor = settings.checkingGraphColor?.replace(
         "#",
         ""
       );
-      settings.pocketGraphColor = settings.pocketGraphColor.replace("#", "");
-      settings.totalGraphColor = settings.totalGraphColor.replace("#", "");
-      settings.gyroGraphColor = settings.gyroGraphColor.replace("#", "");
+      settings.pocketGraphColor = settings.pocketGraphColor?.replace("#", "");
+      settings.totalGraphColor = settings.totalGraphColor?.replace("#", "");
+      settings.gyroGraphColor = settings.gyroGraphColor?.replace("#", "");
 
       state.settings = settings;
     });
