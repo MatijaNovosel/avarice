@@ -6,7 +6,7 @@ import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 export class PaymentSourceResolver {
   constructor(private paymentSourceService: PaymentSourceService) {}
 
-  @Query(() => [GPaymentSource], { name: "tags" })
+  @Query(() => [GPaymentSource], { name: "paymentSources" })
   async getAll(@Args({ name: "id" }) id: number) {
     return this.paymentSourceService.findAllByUserId(id);
   }

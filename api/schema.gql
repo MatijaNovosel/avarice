@@ -2,17 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GUserPaymentSource {
-  id: Int!
-  amount: Float!
-}
-
-type GFinancialHistory {
-  createdAt: String!
-  paymentSources: [GUserPaymentSource!]!
-  total: Float!
-}
-
 type GTag {
   id: Int!
 
@@ -43,6 +32,17 @@ type GAppsetting {
   appUserId: Int!
 }
 
+type GUserPaymentSource {
+  id: Int!
+  amount: Float!
+}
+
+type GFinancialHistory {
+  createdAt: String!
+  paymentSources: [GUserPaymentSource!]!
+  total: Float!
+}
+
 type GAppUser {
   id: Int!
   uid: String!
@@ -50,6 +50,14 @@ type GAppUser {
   photoUrl: String!
   password: String!
   displayName: String!
+}
+
+type GPaymentSource {
+  id: Int!
+  description: String!
+  currency: String!
+  icon: String!
+  appUserId: Int!
 }
 
 type AccessToken {
@@ -62,6 +70,7 @@ type PaginatedFinancialChange {
 }
 
 type Query {
+  paymentSources(id: Float!): [GPaymentSource!]!
   financialHistory(id: Float!): [GFinancialHistory!]!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
@@ -70,13 +79,13 @@ type Query {
 }
 
 type Mutation {
+  create(description: String!): Int!
   login(input: AuthEmailLoginInputType!): AccessToken!
   googleLogin(input: AuthGoogleLoginInputType!): AccessToken!
   register(input: AuthRegisterInputType!): Int!
   addUser(user: AppUserInputType!): Int!
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
   addFinancialChange(financialChange: FinancialChangeInputType!): Void
-  create(description: String!): Int!
   delete(id: Int!): Void
 }
 
