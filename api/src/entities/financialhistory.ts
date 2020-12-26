@@ -46,28 +46,16 @@ export class Financialhistory {
 }
 
 @ObjectType()
-export class GFinancialHistoryRecord {
-  @Field(() => Float)
-  amount: number;
-
-  @Field()
-  createdAt: string;
-}
-
-@ObjectType()
 export class GUserPaymentSource {
   @Field(() => Int)
   id: number;
 
-  @Field(() => [GFinancialHistoryRecord])
-  financialHistoryRecords: GFinancialHistoryRecord[];
+  @Field(() => Float)
+  amount: number;
 }
 
 @ObjectType()
 export class GFinancialHistory {
-  @Field(() => Int)
-  id: number;
-
   @Field()
   createdAt: string;
 
@@ -76,7 +64,4 @@ export class GFinancialHistory {
 
   @Field(() => Float)
   total: number;
-
-  @Field(() => Int)
-  appUserId: number;
 }

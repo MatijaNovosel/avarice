@@ -2,12 +2,11 @@ import { Appuser } from "src/entities/appuser";
 import {
   Financialhistory,
   GFinancialHistory,
-  GFinancialHistoryRecord,
   GUserPaymentSource
 } from "./../entities/financialhistory";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { createQueryBuilder, Repository } from "typeorm";
 import { format } from "date-fns";
 
 @Injectable()
@@ -30,32 +29,35 @@ export class FinancialHistoryService {
       })
     ).paymentsources.map((ps) => ps.id);
 
-    const userPaymentSources: GUserPaymentSource[] = [];
+    const historyItems: GFinancialHistory[] = [];
 
-    userPaymentSourceIds.forEach(async (id) => {
+    const res = await createQueryBuilder("financialhistory")
+      .select("financialhistory.createdAt")
+      .groupBy("financialhistory.createdAt")
+      .getRawMany();
+
+    for (const entry of res) {
+      const createdAt = entry.createdAt;
+      const userPaymentSources: GUserPaymentSource[] = [];
       const data: Financialhistory[] = await this.financialHistoryRepository.find(
         {
-          where: { appUserId, paymentSourceId: id },
-          order: { createdAt: "DESC" }
+          where: { appUserId, createdAt }
         }
       );
-      console.log({
-        id,
-        financialHistoryRecords: data.map((fh) => ({
-          amount: fh.amount,
-          createdAt: format(fh.createdAt, "dd.MM.yyyy. HH:mm")
-        }))
-      });
-      userPaymentSources.push({
-        id,
-        financialHistoryRecords: data.map((fh) => ({
-          amount: fh.amount,
-          createdAt: format(fh.createdAt, "dd.MM.yyyy. HH:mm")
-        }))
-      });
-    });
 
-    const historyItems: GFinancialHistory[] = [];
+      data.forEach((fh) => {
+        userPaymentSources.push({
+          id: fh.id,
+          amount: fh.amount
+        });
+      });
+
+      historyItems.push({
+        createdAt,
+        paymentSources: userPaymentSources,
+        total: 0
+      });
+    }
 
     return historyItems;
   }

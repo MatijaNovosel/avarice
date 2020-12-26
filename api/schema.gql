@@ -2,22 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GFinancialHistoryRecord {
-  amount: Float!
-  createdAt: String!
-}
-
 type GUserPaymentSource {
   id: Int!
-  financialHistoryRecords: [GFinancialHistoryRecord!]!
+  amount: Float!
 }
 
 type GFinancialHistory {
-  id: Int!
   createdAt: String!
   paymentSources: [GUserPaymentSource!]!
   total: Float!
-  appUserId: Int!
 }
 
 type GTag {
