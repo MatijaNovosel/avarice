@@ -11,7 +11,8 @@
         :loading="state.loading"
         :color="'#ff8a00'"
         :amount="paymentSource.currentAmount"
-        :amount-visible="true"
+        :amount-visible="paymentSource.visible"
+        :currency="'HRK'"
         v-model:enabled="state.account.gyro"
       />
     </div>
@@ -328,6 +329,7 @@ export default defineComponent({
         x.currentAmount = history[history.length - 1].paymentSources.filter(
           (z) => z.id == x.id
         )[0].amount;
+        x.visible = false;
         state.dataSets.push({
           label: x.description,
           data: history
@@ -347,6 +349,7 @@ export default defineComponent({
         description: "Total",
         currency: "HRK",
         icon: "sigma",
+        visible: false,
         currentAmount: history[history.length - 1].total
       });
 

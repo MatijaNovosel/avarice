@@ -4,4 +4,5 @@ export interface PaymentSource {
   currency: string;
   icon: string;
   currentAmount?: number;
+  visible?: boolean;
 }

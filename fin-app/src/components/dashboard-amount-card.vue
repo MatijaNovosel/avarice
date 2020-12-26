@@ -26,8 +26,8 @@
               class="amount-text"
               >{{
                 state.amountVisible
-                  ? state.amount
-                  : state.amount.replace(/[0-9]/gi, "*")
+                  ? `${state.amount}${state.currency}`
+                  : `${state.amount}${state.currency}`.replace(/[0-9]/gi, "*")
               }}</span
             >
           </div>
@@ -62,7 +62,8 @@ import mdiIcon from "@/components/mdi-icon.vue";
 import { MDIIcon } from "@/types/index";
 
 interface Props {
-  amount?: string | null;
+  amount?: number | null;
+  currency?: string | null;
   icon?: MDIIcon;
   title?: string | null;
   color?: string | null;
@@ -73,7 +74,8 @@ interface Props {
 }
 
 interface State {
-  amount?: string | null;
+  amount?: number | null;
+  currency?: string | null;
   icon?: MDIIcon;
   title?: string | null;
   color?: string | null;
@@ -90,7 +92,8 @@ export default defineComponent({
     mdiIcon
   },
   props: {
-    amount: String,
+    amount: Number,
+    currency: String,
     icon: null,
     title: String,
     color: String,
@@ -108,7 +111,8 @@ export default defineComponent({
       loading: props.loading,
       enabled: props.enabled,
       noEnabling: props.noEnabling,
-      amountVisible: props.amountVisible
+      amountVisible: props.amountVisible,
+      currency: props.currency
     });
 
     function graphEnabled() {
@@ -139,6 +143,11 @@ export default defineComponent({
     watch(
       () => props.enabled,
       (val) => (state.enabled = val)
+    );
+
+    watch(
+      () => props.currency,
+      (val) => (state.currency = val)
     );
 
     return {
