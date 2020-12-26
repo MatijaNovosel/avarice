@@ -1,3 +1,4 @@
+import { PaginatedFinancialChange } from "./../models/item-collection";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { VoidScalar } from "src/scalars/void";
 import { GFinancialChange } from "src/entities/financialchange";
@@ -8,7 +9,7 @@ import { FinancialChangeService } from "src/services/financial-change.service";
 export class FinancialChangeResolver {
   constructor(private financialChangeService: FinancialChangeService) {}
 
-  @Query(() => [GFinancialChange], { name: "financialChanges" })
+  @Query(() => PaginatedFinancialChange, { name: "financialChanges" })
   async getAllByUserId(
     @Args("id", { type: () => Int }) id: number,
     @Args("skip", { type: () => Int, nullable: true }) skip: number,

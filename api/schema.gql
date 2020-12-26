@@ -57,11 +57,16 @@ type AccessToken {
   accessToken: String!
 }
 
+type PaginatedFinancialChange {
+  items: [GFinancialChange!]
+  count: Int!
+}
+
 type Query {
   financialHistory(id: Float!): [GFinancialHistory!]!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
-  financialChanges(id: Int!): [GFinancialChange!]!
+  financialChanges(take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
   tags: [GTag!]!
 }
 

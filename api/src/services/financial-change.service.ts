@@ -1,4 +1,4 @@
-import { GFinancialChange } from "src/entities/financialchange";
+import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
 import { Paymentsource } from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
@@ -25,9 +25,9 @@ export class FinancialChangeService {
 
   async findAllByUserId(
     id: number,
-    skip: number = 0,
-    take: number = 15
-  ): Promise<GFinancialChange[]> {
+    skip?: number,
+    take?: number
+  ): Promise<PaginatedFinancialChange> {
     const data = await this.financialChangeRepository.find({
       where: { appUserId: id },
       order: { createdAt: "DESC" },
@@ -35,15 +35,21 @@ export class FinancialChangeService {
       take,
       relations: ["financialchangetags"]
     });
-    return data.map((fc) => ({
-      id: fc.id,
-      amount: fc.amount,
-      description: fc.description,
-      createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm"),
-      expense: fc.expense,
-      paymentSourceId: fc.paymentSourceId,
-      tagIds: fc.financialchangetags.map((fct) => fct.tagId)
-    }));
+    const count = await this.financialChangeRepository.count({
+      where: { appUserId: id }
+    });
+    return new PaginatedFinancialChange(
+      data.map((fc) => ({
+        id: fc.id,
+        amount: fc.amount,
+        description: fc.description,
+        createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm"),
+        expense: fc.expense,
+        paymentSourceId: fc.paymentSourceId,
+        tagIds: fc.financialchangetags.map((fct) => fct.tagId)
+      })),
+      count
+    );
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {
