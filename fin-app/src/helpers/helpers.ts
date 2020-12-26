@@ -1,8 +1,8 @@
-import { stringFormatCollection } from "./../constants/string-format-collection";
+import { stringFormatCollection } from "../models/string-format-collection";
 import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { TagEnum } from "@/constants/tag-enum";
-import { SelectItem } from "@/constants/select-item";
-import { IndexableCollectionByString } from "@/constants/indexable-collection-by-string";
+import { SelectItem } from "@/models/select-item";
+import { IndexableCollectionByString } from "@/models/indexable-collection-by-string";
 import { Color } from "./color";
 import Solver from "./solver";
 

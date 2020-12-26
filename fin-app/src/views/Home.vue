@@ -190,6 +190,7 @@ import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
 import { ISettingsService } from "../services/interfaces/settings-service";
 import MdiIcon from "../components/mdi-icon.vue";
+import { GraphOptions } from "@/models/graph";
 
 interface Filter {
   tag: TagEnum[];
@@ -229,32 +230,6 @@ interface AmountVisible {
   total: boolean;
 }
 
-interface GraphLineOptions {
-  tension: number;
-}
-
-interface GraphElementsOptions {
-  line: GraphLineOptions;
-}
-
-interface GraphLegendOptions {
-  display: boolean;
-}
-
-interface GraphYAxesOptions {
-  display: boolean;
-}
-
-interface GraphScalesOptions {
-  yAxes: GraphYAxesOptions[];
-}
-
-interface GraphOptions {
-  scales: GraphScalesOptions;
-  legend: GraphLegendOptions;
-  responsive: boolean;
-}
-
 interface State {
   currentAmount: CurrentAmount;
   loading: boolean;
@@ -263,7 +238,6 @@ interface State {
   graphData: GraphData | null;
   totalAmount: string;
   changes: FinancialChangeItem[];
-  baseChanges: FinancialChangeItem[];
   // eslint-disable-next-line
   refresh: any;
   settings: UserSettings;
@@ -368,15 +342,17 @@ export default defineComponent({
 
     async function getChanges(skip?: number, take?: number) {
       state.changesLoading = true;
+
       const itemCollection = await getService<IChangeService>(
         Types.ChangeService
       ).getChanges(1, skip, take);
-      state.baseChanges = itemCollection.items;
-      state.changes = state.baseChanges.slice(0, state.numberOfRows);
+
+      state.changes = itemCollection.items;
       state.changesTotalItems = itemCollection.count;
       state.changesNumberOfPages = Math.floor(
-        state.baseChanges.length / state.numberOfRows
+        state.changesTotalItems / state.numberOfRows
       );
+
       state.changesLoading = false;
     }
 
@@ -412,7 +388,7 @@ export default defineComponent({
 
     async function updateData() {
       state.loading = true;
-      getChanges();
+      getChanges(0, state.numberOfRows);
 
       const history = await getService<IChangeService>(
         Types.ChangeService
@@ -497,8 +473,8 @@ export default defineComponent({
     }
 
     function pageChanged(paginationInfo: PaginatorInfo) {
-      const { page, first, rows } = { ...paginationInfo };
-      state.changes = state.baseChanges.slice(page * rows, first + rows);
+      const { page, rows } = { ...paginationInfo };
+      getChanges(page * rows, state.numberOfRows);
     }
 
     function changeGraphVisibility() {

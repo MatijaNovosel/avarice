@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, watch } from "vue";
-import MenuItem from "@/constants/menu-item";
+import MenuItem from "@/models/menu-item";
 import ExpenseDialog from "@/components/expense-dialog.vue";
 import GainDialog from "@/components/gain-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
