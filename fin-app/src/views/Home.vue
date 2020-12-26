@@ -140,15 +140,10 @@ import { defineComponent, reactive, watch, inject, ref, onMounted } from "vue";
 import { formatTag, formatPaymentSource } from "../helpers/helpers";
 import { format } from "date-fns";
 import { DatasetItem } from "../models/dataset";
-import {
-  hexToRgba,
-  adjustHexColor,
-  createSelectFromEnum
-} from "../helpers/helpers";
+import { createSelectFromEnum } from "../helpers/helpers";
 import { UserSettings } from "../models/user-settings";
 import { TagEnum } from "../constants/tag-enum";
 import { FinancialChangeItem } from "../models/change-item";
-import { useI18n } from "vue-i18n";
 import { Account } from "../models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import ChangeCard from "../components/change-card.vue";
@@ -183,13 +178,6 @@ interface PaginatorInfo {
   pageCount: number;
 }
 
-interface DataSets {
-  gyro: DatasetItem | null;
-  checking: DatasetItem | null;
-  pocket: DatasetItem | null;
-  total: DatasetItem | null;
-}
-
 interface AmountVisible {
   gyro: boolean;
   checking: boolean;
@@ -217,7 +205,7 @@ interface State {
   numberOfRows: number;
   changesOffset: number;
   amountVisible: AmountVisible;
-  dataSets: DataSets;
+  dataSets: DatasetItem[];
   graphValuesVisible: boolean;
   graphOptions: GraphOptions;
   changeAmountVisible: boolean;
@@ -232,7 +220,6 @@ export default defineComponent({
     MdiIcon
   },
   setup() {
-    const { t } = useI18n();
     // eslint-disable-next-line
     const graph: any = ref(null);
 
@@ -240,12 +227,7 @@ export default defineComponent({
       paymentSources: [],
       changeAmountVisible: false,
       graphValuesVisible: false,
-      dataSets: {
-        gyro: null,
-        checking: null,
-        pocket: null,
-        total: null
-      },
+      dataSets: [],
       amountVisible: {
         gyro: false,
         checking: false,
@@ -370,11 +352,21 @@ export default defineComponent({
         Types.ChangeService
       ).getHistory(1);
 
-      console.log(history);
-      
       state.settings = await getService<ISettingsService>(
         Types.SettingsService
       ).getSettings(1);
+
+      state.paymentSources.forEach((x) => {
+        state.dataSets.push({
+          label: x.description,
+          data: history
+            .map((y) => y.paymentSources.filter((z) => z.id == x.id)[0])
+            .map((y) => y.amount),
+          fill: true,
+          borderColor: "#ff8a00",
+          backgroundColor: "#ff8a00"
+        });
+      });
 
       /*
 
