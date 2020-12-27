@@ -338,6 +338,8 @@ export default defineComponent({
         });
       });
 
+      state.dataSets = [];
+
       state.paymentSources.push({
         id: -1,
         description: "Total",
@@ -364,7 +366,6 @@ export default defineComponent({
       };
 
       updateGraph();
-
       state.loading = false;
     }
 

@@ -142,6 +142,7 @@ export default defineComponent({
       entry.description = "Description";
       entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
       entry.tagIds = [TagEnum.Other];
+      entry.expense = false;
       model.value.$reset;
     }
 
@@ -158,7 +159,8 @@ export default defineComponent({
       state.saving = true;
 
       const payload: CreateFinancialChangeItemDto = {
-        ...entry
+        ...entry,
+        appUserId: 1
       };
 
       await getService<IChangeService>(Types.ChangeService).addChange(payload);
