@@ -6,7 +6,6 @@ import {
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { createQueryBuilder, Repository } from "typeorm";
-import { convert } from "exchange-rates-api";
 import { format } from "date-fns";
 
 @Injectable()
@@ -40,15 +39,6 @@ export class FinancialHistoryService {
       );
 
       for (const fh of data) {
-        if (fh.paymentSource.currency != "HRK") {
-          const conversion: number = await convert(
-            fh.amount,
-            fh.paymentSource.currency,
-            "HRK",
-            format(new Date(createdAt), "yyyy-MM-dd")
-          );
-          fh.amount = conversion;
-        }
         userPaymentSources.push({
           id: fh.paymentSourceId,
           amount: fh.amount
