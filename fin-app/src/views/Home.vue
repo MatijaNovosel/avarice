@@ -319,6 +319,8 @@ export default defineComponent({
         Types.SettingsService
       ).getSettings(1);
 
+      state.dataSets = [];
+
       state.paymentSources.forEach((x) => {
         x.currentAmount = history[history.length - 1].paymentSources.filter(
           (z) => z.id == x.id
@@ -337,8 +339,6 @@ export default defineComponent({
           ) as string
         });
       });
-
-      state.dataSets = [];
 
       state.paymentSources.push({
         id: -1,
