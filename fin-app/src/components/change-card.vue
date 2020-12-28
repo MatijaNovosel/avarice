@@ -13,7 +13,9 @@
     </span>
     <span class="amount-text">{{
       `${
-        state.show ? state.amount : ("" + state.amount).replace(/[0-9]/gi, "*")
+        state.show
+          ? state.amount.toLocaleString("en")
+          : ("" + state.amount).replace(/[0-9]/gi, "*")
       }HRK`
     }}</span>
     <div class="amount-end">

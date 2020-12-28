@@ -26,7 +26,7 @@
               class="amount-text"
               >{{
                 state.amountVisible
-                  ? `${state.amount}${state.currency}`
+                  ? `${state.amount.toLocaleString('en')}${state.currency}`
                   : `${state.amount}${state.currency}`.replace(/[0-9]/gi, "*")
               }}</span
             >
