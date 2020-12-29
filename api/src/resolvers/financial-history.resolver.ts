@@ -1,6 +1,6 @@
 import { FinancialHistoryService } from "./../services/financial-history.service";
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { GFinancialHistory } from "src/entities/financialhistory";
+import { GFinancialHistory, GFinancialHistoryCurrentAmount } from "src/entities/financialhistory";
 
 @Resolver(() => GFinancialHistory)
 export class FinancialHistoryResolver {
@@ -9,5 +9,10 @@ export class FinancialHistoryResolver {
   @Query(() => [GFinancialHistory], { name: "financialHistory" })
   async getAll(@Args("id") id: number) {
     return this.financialHistoryService.findByUserId(id);
+  }
+
+  @Query(() => GFinancialHistoryCurrentAmount, { name: "financialHistoryCurrentAmount" })
+  async getCurrentAmountByUserId(@Args("id") id: number) {
+    return this.financialHistoryService.getCurrentAmountByUserId(id);
   }
 }

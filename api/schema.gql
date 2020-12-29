@@ -43,6 +43,19 @@ type GFinancialHistory {
   total: Float!
 }
 
+type GUserPaymentSourceDetailed {
+  id: Int!
+  amount: Float!
+  description: String!
+  icon: String!
+}
+
+type GFinancialHistoryCurrentAmount {
+  createdAt: String!
+  paymentSources: [GUserPaymentSourceDetailed!]!
+  total: Float!
+}
+
 type GAppUser {
   id: Int!
   uid: String!
@@ -72,6 +85,7 @@ type PaginatedFinancialChange {
 type Query {
   paymentSources(id: Float!): [GPaymentSource!]!
   financialHistory(id: Float!): [GFinancialHistory!]!
+  financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(take: Int, skip: Int, id: Int!): PaginatedFinancialChange!

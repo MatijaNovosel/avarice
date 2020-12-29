@@ -1,7 +1,9 @@
 import {
   Financialhistory,
   GFinancialHistory,
-  GUserPaymentSource
+  GFinancialHistoryCurrentAmount,
+  GUserPaymentSource,
+  GUserPaymentSourceDetailed
 } from "./../entities/financialhistory";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -33,8 +35,7 @@ export class FinancialHistoryService {
       const userPaymentSources: GUserPaymentSource[] = [];
       const data: Financialhistory[] = await this.financialHistoryRepository.find(
         {
-          where: { appUserId, createdAt },
-          relations: ["paymentSource"]
+          where: { appUserId, createdAt }
         }
       );
 
@@ -54,5 +55,42 @@ export class FinancialHistoryService {
     }
 
     return historyItems;
+  }
+
+  async getCurrentAmountByUserId(
+    appUserId: number
+  ): Promise<GFinancialHistoryCurrentAmount> {
+    const res = await createQueryBuilder("financialhistory")
+      .select("financialhistory.createdAt")
+      .groupBy("financialhistory.createdAt")
+      .orderBy("financialHistory.createdAt", "DESC")
+      .getRawOne();
+
+    let total = 0;
+    const createdAt = res.createdAt;
+    const userPaymentSources: GUserPaymentSourceDetailed[] = [];
+
+    const data: Financialhistory[] = await this.financialHistoryRepository.find(
+      {
+        where: { appUserId, createdAt },
+        relations: ["paymentSource"]
+      }
+    );
+
+    for (const fh of data) {
+      userPaymentSources.push({
+        id: fh.paymentSourceId,
+        amount: fh.amount,
+        description: fh.paymentSource.description,
+        icon: fh.paymentSource.icon
+      });
+      total += fh.amount;
+    }
+
+    return {
+      createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
+      paymentSources: userPaymentSources,
+      total
+    };
   }
 }

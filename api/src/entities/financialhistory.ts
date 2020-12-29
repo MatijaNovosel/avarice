@@ -65,3 +65,30 @@ export class GFinancialHistory {
   @Field(() => Float)
   total: number;
 }
+
+@ObjectType()
+export class GUserPaymentSourceDetailed {
+  @Field(() => Int)
+  id: number;
+
+  @Field(() => Float)
+  amount: number;
+
+  @Field()
+  description: string;
+
+  @Field()
+  icon: string;
+}
+
+@ObjectType()
+export class GFinancialHistoryCurrentAmount {
+  @Field()
+  createdAt: string;
+
+  @Field(() => [GUserPaymentSourceDetailed])
+  paymentSources: GUserPaymentSourceDetailed[];
+
+  @Field(() => Float)
+  total: number;
+}
