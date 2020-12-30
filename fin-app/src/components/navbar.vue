@@ -4,11 +4,10 @@
       <div class="header">
         <btn
           icon="pi pi-bars"
-          class="p-button-rounded p-button-text p-mx-2"
+          class="p-button-rounded p-button-text p-ml-2 p-mr-3"
           style="color: white"
           @click="changeSiderbarState"
         />
-        <mdi-icon color="#ff8a00" class="logo p-mx-2" name="wallet" />
         <span class="leading-text gradient-text">FinApp</span>
         <span class="following-text">by Matija Novosel</span>
       </div>
@@ -31,7 +30,6 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
-import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
   title?: string | null;
@@ -46,9 +44,6 @@ interface State {
 export default defineComponent({
   name: "navbar",
   emits: ["update:sidebar"],
-  components: {
-    mdiIcon
-  },
   props: {
     title: String,
     sidebar: Boolean

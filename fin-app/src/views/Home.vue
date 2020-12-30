@@ -44,7 +44,7 @@
     <div class="p-col-12 p-pl-4 p-pr-5 p-mt-5">
       <div class="p-shadow-6 changes-container">
         <div class="p-grid">
-          <div class="p-col-12 p-mb-5">
+          <div class="p-col-12 p-mb-2">
             <accordion>
               <accordion-tab>
                 <template #header>
@@ -117,7 +117,7 @@
                   :show="state.changeAmountVisible"
                 />
               </div>
-              <div class="p-col-12 p-mt-5">
+              <div class="p-col-12">
                 <paginator
                   v-model:first="state.changesOffset"
                   v-model:rows="state.numberOfRows"
@@ -424,7 +424,7 @@ export default defineComponent({
   grid-gap: 1.5em
 
 .changes-container
-  padding: 1.5rem
+  padding: 1.5rem 1.5rem 0 1.5rem
   background-color: #1e1e1e
   border-radius: 12px
 
