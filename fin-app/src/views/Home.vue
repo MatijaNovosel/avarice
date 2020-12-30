@@ -102,13 +102,11 @@
                 style="height: 100px; width: 100px"
               />
             </div>
-            <div v-else class="p-grid">
-              <div
-                class="p-col-12 p-md-3 p-p-2"
-                v-for="change in state.changes"
-                :key="change.id"
-              >
+            <template v-else>
+              <div class="financial-change-grid">
                 <change-card
+                  v-for="change in state.changes"
+                  :key="change.id"
                   :expense="change.expense"
                   :title="change.description"
                   :amount="change.amount"
@@ -117,18 +115,17 @@
                   :show="state.changeAmountVisible"
                 />
               </div>
-              <div class="p-col-12">
-                <paginator
-                  v-model:first="state.changesOffset"
-                  v-model:rows="state.numberOfRows"
-                  :totalRecords="state.changesTotalItems"
-                  :rowsPerPageOptions="[16, 32]"
-                  :pageLinkSize="state.changesNumberOfPages"
-                  @page="pageChanged"
-                  :alwaysShow="true"
-                />
-              </div>
-            </div>
+              <paginator
+                class="p-mt-3"
+                v-model:first="state.changesOffset"
+                v-model:rows="state.numberOfRows"
+                :totalRecords="state.changesTotalItems"
+                :rowsPerPageOptions="[16, 32]"
+                :pageLinkSize="state.changesNumberOfPages"
+                @page="pageChanged"
+                :alwaysShow="true"
+              />
+            </template>
           </div>
         </div>
       </div>
@@ -473,4 +470,18 @@ export default defineComponent({
 .eye-btn-visible
   align-self: center
   margin-right: 1em
+
+@media screen and (min-width: 959px)
+  .financial-change-grid
+    width: 100%
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    grid-gap: 20px
+
+@media screen and (max-width: 958px)
+  .financial-change-grid
+    width: 100%
+    display: grid
+    grid-template-columns: repeat(1, 1fr)
+    grid-gap: 20px
 </style>
