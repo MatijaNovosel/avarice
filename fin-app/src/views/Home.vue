@@ -157,6 +157,7 @@ import MdiIcon from "../components/mdi-icon.vue";
 import { GraphOptions } from "@/models/graph";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { PaymentSource } from "@/models/payment-source";
+import { Pagination } from "@/models/pagination";
 
 interface Filter {
   tag: TagEnum[];
@@ -165,13 +166,6 @@ interface Filter {
 interface GraphData {
   labels: string[];
   datasets: DatasetItem[];
-}
-
-interface PaginatorInfo {
-  page: number;
-  first: number;
-  rows: number;
-  pageCount: number;
 }
 
 interface AmountVisible {
@@ -366,7 +360,7 @@ export default defineComponent({
       state.loading = false;
     }
 
-    function pageChanged(paginationInfo: PaginatorInfo) {
+    function pageChanged(paginationInfo: Pagination) {
       const { page, rows } = { ...paginationInfo };
       getChanges(page * rows, state.numberOfRows);
     }
