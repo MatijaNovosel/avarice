@@ -11,7 +11,7 @@ export interface FinancialChangeItem {
 export interface CreateFinancialChangeItemDto {
   appUserId: number;
   amount: number;
-  description: string;
+  description: string | null;
   expense: boolean;
   paymentSourceId: number;
   tagIds: number[];

@@ -102,7 +102,7 @@ import { PaymentSourceEnum } from "../constants/payment-source-enum";
 import { TagEnum } from "../constants/tag-enum";
 import { CreateFinancialChangeItemDto } from "../models/change-item";
 import { createSelectFromEnum } from "../helpers/helpers";
-import { required, numeric } from "@vuelidate/validators";
+import { required, numeric, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
@@ -129,7 +129,7 @@ export default defineComponent({
       appUserId: 1,
       paymentSourceId: PaymentSourceEnum.GyroAccount,
       tagIds: [TagEnum.Food],
-      description: "",
+      description: null,
       amount: 0,
       expense: true
     } as CreateFinancialChangeItemDto);
@@ -138,7 +138,7 @@ export default defineComponent({
       amount: { required, numeric },
       paymentSourceId: { required },
       tagIds: { required },
-      description: { required },
+      description: { required, minLength: minLength(4) },
       expense: { required }
     };
 
@@ -166,7 +166,7 @@ export default defineComponent({
       state.dialog = false;
       entry.amount = 0;
       entry.appUserId = 1;
-      entry.description = "Description";
+      entry.description = null;
       entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
       entry.tagIds = [TagEnum.Other];
       entry.expense = true;
