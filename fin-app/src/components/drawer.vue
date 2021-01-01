@@ -24,16 +24,14 @@
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
-  <expense-dialog v-model:dialog="state.expenseDialog" />
-  <gain-dialog v-model:dialog="state.gainDialog" />
+  <financial-change-dialog v-model:dialog="state.financialChangeDialog" />
   <settings-dialog v-model:dialog="state.settingsDialog" />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/models/menu-item";
-import ExpenseDialog from "@/components/expense-dialog.vue";
-import GainDialog from "@/components/gain-dialog.vue";
+import FinancialChangeDialog from "@/components/financial-change-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
@@ -46,8 +44,7 @@ interface Props {
 interface State {
   menuItems: MenuItem[];
   visible: boolean;
-  expenseDialog: boolean;
-  gainDialog: boolean;
+  financialChangeDialog: boolean;
   settingsDialog: boolean;
   user: AppUser;
 }
@@ -58,9 +55,8 @@ export default defineComponent({
     visible: Boolean
   },
   components: {
-    ExpenseDialog,
-    SettingsDialog,
-    GainDialog
+    FinancialChangeDialog,
+    SettingsDialog
   },
   setup(props: Props) {
     const store = useStore();
@@ -70,8 +66,7 @@ export default defineComponent({
     const state: State = reactive({
       visible: props.visible,
       settingsDialog: false,
-      expenseDialog: false,
-      gainDialog: false,
+      financialChangeDialog: false,
       user: computed(() => store.getters.user),
       menuItems: [
         {
@@ -83,24 +78,11 @@ export default defineComponent({
           }
         },
         {
-          label: "Financijske akcije",
           icon: "pi pi-dollar",
-          items: [
-            {
-              label: "Novi trošak",
-              icon: "pi pi-minus",
-              command: () => {
-                state.expenseDialog = true;
-              }
-            },
-            {
-              label: "Novi dobitak",
-              icon: "pi pi-plus",
-              command: () => {
-                state.gainDialog = true;
-              }
-            }
-          ]
+          label: "New financial change",
+          command: () => {
+            state.financialChangeDialog = true;
+          }
         },
         {
           label: "Postavke",

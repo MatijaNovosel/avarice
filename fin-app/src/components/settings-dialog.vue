@@ -13,19 +13,19 @@
       <div class="p-grid p-formgrid p-mt-3">
         <div class="p-field p-col-12">
           <p-color-picker v-model="state.settings.gyroGraphColor" />
-          <span class="p-ml-3">Žiro račun</span>
+          <span class="p-ml-3">Gyro</span>
         </div>
         <div class="p-field p-col-12">
           <p-color-picker v-model="state.settings.checkingGraphColor" />
-          <span class="p-ml-3">Tekući račun</span>
+          <span class="p-ml-3">Checking</span>
         </div>
         <div class="p-field p-col-12">
           <p-color-picker v-model="state.settings.pocketGraphColor" />
-          <span class="p-ml-3">Džep (novčanik)</span>
+          <span class="p-ml-3">Pocket</span>
         </div>
         <div class="p-field p-col-12">
           <p-color-picker v-model="state.settings.totalGraphColor" />
-          <span class="p-ml-3">Ukupno</span>
+          <span class="p-ml-3">Total</span>
         </div>
       </div>
     </div>

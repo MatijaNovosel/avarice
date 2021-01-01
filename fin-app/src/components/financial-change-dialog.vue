@@ -7,7 +7,7 @@
     :style="{ width: '50vw' }"
   >
     <template #header>
-      <h3>Unos novog dobitka</h3>
+      <h3>New financial change</h3>
     </template>
     <div class="expense-form p-mt-5 p-px-3">
       <span class="p-float-label">
@@ -23,7 +23,7 @@
           v-model="model.amount.$model"
           class="expense-input"
         />
-        <label for="amount"> Iznos troška</label>
+        <label for="amount"> Amount </label>
       </span>
       <span class="p-invalid p-pl-2 p-pt-2" v-if="model.amount.$invalid">{{
         model.amount.$errors.map((x) => x.$message).join(" • ")
@@ -37,13 +37,13 @@
           id="description"
           class="expense-input"
         />
-        <label for="description"> Opis</label>
+        <label for="description"> Description </label>
       </span>
       <span class="p-invalid p-pl-2 p-pt-2" v-if="model.description.$invalid">{{
         model.description.$errors.map((x) => x.$message).join(" • ")
       }}</span>
       <div class="container p-mt-3">
-        <span class="container-label">Izvor plaćanja</span>
+        <span class="container-label">Payment source</span>
         <select-button
           v-model="model.paymentSourceId.$model"
           :options="paymentSources"
@@ -51,12 +51,36 @@
           optionValue="val"
         />
       </div>
+      <div class="container p-mt-3">
+        <span class="container-label">Tags</span>
+        <list-box
+          :multiple="true"
+          v-model="model.tagIds.$model"
+          :options="tags"
+          dataKey="val"
+          listStyle="max-height: 250px"
+          optionValue="val"
+          optionLabel="text"
+        >
+          <template #option="slotProps">
+            {{ slotProps.option.text }}
+          </template>
+        </list-box>
+      </div>
+      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.tagIds.$invalid">{{
+        model.tags.$errors.map((x) => x.$message).join(" • ")
+      }}</span>
+      <span class="expense-switch-container p-mt-5">
+        <span class="container-label p-mr-3"> Expense </span>
+        <input-switch id="expense" v-model="model.expense.$model" />
+      </span>
     </div>
     <template #footer>
       <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
       <btn
         v-else
-        @click="addGain"
+        @click="addFinancialChange"
+        :disabled="model.$invalid"
         label="Spremi"
         icon="pi pi-save"
         class="p-button-raised p-button-success"
@@ -75,13 +99,13 @@ import {
   Ref
 } from "vue";
 import { PaymentSourceEnum } from "../constants/payment-source-enum";
+import { TagEnum } from "../constants/tag-enum";
 import { CreateFinancialChangeItemDto } from "../models/change-item";
+import { createSelectFromEnum } from "../helpers/helpers";
 import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { TagEnum } from "../constants/tag-enum";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
-import { createSelectFromEnum } from "../helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -95,26 +119,27 @@ interface State {
 }
 
 export default defineComponent({
-  name: "expense-dialog",
+  name: "financial-change-dialog",
   emits: ["update:dialog"],
   props: {
-    dialog: Boolean,
-    input: null
+    dialog: Boolean
   },
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
+      appUserId: 1,
       paymentSourceId: PaymentSourceEnum.GyroAccount,
-      tagIds: [TagEnum.Other],
+      tagIds: [TagEnum.Food],
       description: "",
       amount: 0,
-      expense: false
+      expense: true
     } as CreateFinancialChangeItemDto);
 
     const rules = {
       amount: { required, numeric },
       paymentSourceId: { required },
+      tagIds: { required },
       description: { required },
-      tagIds: { required }
+      expense: { required }
     };
 
     // eslint-disable-next-line
@@ -135,14 +160,16 @@ export default defineComponent({
       PaymentSourceEnum,
       "paymentSource"
     );
+    const tags = createSelectFromEnum(TagEnum, "tag");
 
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
+      entry.appUserId = 1;
       entry.description = "Description";
       entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
       entry.tagIds = [TagEnum.Other];
-      entry.expense = false;
+      entry.expense = true;
       model.value.$reset;
     }
 
@@ -151,31 +178,28 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
-    function refresh() {
-      state.refresh.refresh();
-    }
-
-    async function addGain() {
+    async function addFinancialChange() {
       state.saving = true;
 
       const payload: CreateFinancialChangeItemDto = {
-        ...entry,
-        appUserId: 1
+        ...entry
       };
 
       await getService<IChangeService>(Types.ChangeService).addChange(payload);
 
       hideDialog();
       state.saving = false;
-      refresh();
+      state.refresh.refresh();
     }
 
     return {
       state,
-      addGain,
+      addFinancialChange,
+      tags,
       paymentSources,
       hideDialog,
-      model
+      model,
+      entry
     };
   }
 });
@@ -183,12 +207,8 @@ export default defineComponent({
 
 <style scoped lang="sass">
 .container-label
-  color: whtie
+  color: white
   margin-bottom: 1.2rem
-
-.expense-form
-  display: flex
-  flex-direction: column
 
 .expense-input
   width: 100%
@@ -200,7 +220,15 @@ export default defineComponent({
   display: flex
   flex-direction: column
 
+.expense-form
+  display: flex
+  flex-direction: column
+
 .spinner
   width: 25px
   height: 25px
+
+.expense-switch-container
+  display: flex
+  justify-content: center
 </style>
