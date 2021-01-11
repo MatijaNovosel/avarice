@@ -260,7 +260,7 @@ export default defineComponent({
         },
         elements: {
           line: {
-            tension: 0.3
+            tension: 0.6
           }
         },
         responsive: true
