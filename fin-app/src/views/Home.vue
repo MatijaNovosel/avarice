@@ -26,12 +26,13 @@
             :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
             v-tooltip="'Prikaži vrijednosti'"
           />
-          <div v-ripple class="p-ripple month-select-item cursor-pointer">
-            {{ $t("months.november") }}
-          </div>
-          <div v-ripple class="p-ripple month-select-item cursor-pointer">
-            {{ $t("months.december") }}
-          </div>
+          <calendar
+            dateFormat="yy-mm-dd"
+            class="p-ml-3"
+            v-model="state.dateRange"
+            selectionMode="range"
+            :manualInput="false"
+          />
         </div>
         <chart
           ref="graph"
@@ -141,7 +142,7 @@ import {
   hexToRgba,
   adjustHexColor
 } from "../helpers/helpers";
-import { format } from "date-fns";
+import { add, format, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import { createSelectFromEnum } from "../helpers/helpers";
 import { UserSettings } from "../models/user-settings";
@@ -177,6 +178,7 @@ interface AmountVisible {
 }
 
 interface State {
+  dateRange: Array<Date | null>;
   loading: boolean;
   changesLoading: boolean;
   account: Account;
@@ -213,6 +215,7 @@ export default defineComponent({
     const graph: any = ref(null);
 
     const state: State = reactive({
+      dateRange: [],
       paymentSources: [],
       changeAmountVisible: false,
       graphValuesVisible: false,
@@ -304,7 +307,7 @@ export default defineComponent({
 
       const history = await getService<IChangeService>(
         Types.ChangeService
-      ).getHistory(1);
+      ).getHistory(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
 
       state.settings = await getService<ISettingsService>(
         Types.SettingsService
@@ -372,6 +375,10 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      state.dateRange = [
+        startOfMonth(new Date()),
+        add(new Date(), { days: 1 })
+      ];
       updateData();
     });
 

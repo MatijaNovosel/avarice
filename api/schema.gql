@@ -84,7 +84,7 @@ type PaginatedFinancialChange {
 
 type Query {
   paymentSources(id: Float!): [GPaymentSource!]!
-  financialHistory(id: Float!): [GFinancialHistory!]!
+  financialHistory(to: String, from: String, id: Float!): [GFinancialHistory!]!
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!

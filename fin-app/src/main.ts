@@ -39,6 +39,7 @@ import Slider from "primevue/slider";
 import ProgressSpinner from "primevue/progressspinner";
 import OverlayPanel from "primevue/overlaypanel";
 import ContextMenu from "primevue/contextmenu";
+import Calendar from 'primevue/calendar';
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -113,6 +114,7 @@ app.component("slider", Slider);
 app.component("progress-spinner", ProgressSpinner);
 app.component("overlay-panel", OverlayPanel);
 app.component("context-menu", ContextMenu);
+app.component("calendar", Calendar);
 
 // Directives
 app.directive("tooltip", Tooltip);

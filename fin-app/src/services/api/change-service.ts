@@ -7,6 +7,7 @@ import { FinancialHistory } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { IChangeService } from "../interfaces/change-service";
+import { format } from "date-fns";
 
 export class ChangeService implements IChangeService {
   async addChange(payload: CreateFinancialChangeItemDto): Promise<void> {
@@ -62,11 +63,11 @@ export class ChangeService implements IChangeService {
     });
     return data.data.financialChanges;
   }
-  async getHistory(appUserId: number): Promise<FinancialHistory[]> {
+  async getHistory(appUserId: number, from: Date, to: Date): Promise<FinancialHistory[]> {
     const { data } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-          financialHistory(id: ${appUserId}) {
+          financialHistory(id: ${appUserId}, from: "${format(from, "yyyy-MM-dd HH:mm:ss")}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
             createdAt
             paymentSources {
               id

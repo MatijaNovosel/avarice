@@ -19,12 +19,16 @@ export class FinancialHistoryService {
 
   async findByUserId(
     appUserId: number,
-    month?: number
+    from?: string,
+    to?: string
   ): Promise<GFinancialHistory[]> {
     const historyItems: GFinancialHistory[] = [];
 
     const res = await createQueryBuilder("financialhistory")
       .select("financialhistory.createdAt")
+      .where(
+        `financialhistory.createdAt >= '${from}' AND financialhistory.createdAt <= '${to}'`
+      )
       .groupBy("financialhistory.createdAt")
       .orderBy("financialHistory.createdAt", "ASC")
       .getRawMany();
