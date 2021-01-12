@@ -45,8 +45,7 @@ export class ChangeService implements IChangeService {
     const { data } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-          financialChanges(id: ${appUserId}, take: ${take ||
-        null}, skip: ${skip || null}) {
+          financialChanges(id: ${appUserId}, take: ${take || null}, skip: ${skip || null}) {
             count
             items {
               id
