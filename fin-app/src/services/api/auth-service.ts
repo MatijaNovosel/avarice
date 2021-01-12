@@ -10,7 +10,7 @@ interface UserDto {
 
 export class AuthService implements IAuthService {
   async register(email: string, password: string): Promise<number> {
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { register } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         mutation {
           register(input: {
@@ -20,8 +20,9 @@ export class AuthService implements IAuthService {
         }
       `
     });
-    return data.data.register;
+    return register;
   }
+
   async signInGoogle(): Promise<UserDto> {
     const provider = new firebase.auth.GoogleAuthProvider();
     const credential = await firebase.auth().signInWithPopup(provider);
@@ -30,7 +31,7 @@ export class AuthService implements IAuthService {
       ...(credential.user as User)
     };
 
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { login } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         mutation {
           googleLogin(input: {
@@ -44,10 +45,11 @@ export class AuthService implements IAuthService {
         }
       `
     });
-    return data.data.login;
+    return login;
   }
+
   async signInEmail(email: string, password: number): Promise<UserDto> {
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { login } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         mutation {
           login(input: {
@@ -59,8 +61,9 @@ export class AuthService implements IAuthService {
         }
       `
     });
-    return data.data.login;
+    return login;
   }
+
   async signOut(): Promise<void> {
     //
   }

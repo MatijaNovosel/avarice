@@ -37,12 +37,13 @@ export class ChangeService implements IChangeService {
       `
     });
   }
+  
   async getChanges(
     appUserId: number,
     skip?: number,
     take?: number
   ): Promise<ItemCollection<FinancialChangeItem>> {
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { financialChanges } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
           financialChanges(id: ${appUserId}, take: ${take || null}, skip: ${skip || null}) {
@@ -60,10 +61,11 @@ export class ChangeService implements IChangeService {
         }
       `
     });
-    return data.data.financialChanges;
+    return financialChanges;
   }
+
   async getHistory(appUserId: number, from: Date, to: Date): Promise<FinancialHistory[]> {
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { financialHistory } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
           financialHistory(id: ${appUserId}, from: "${format(from, "yyyy-MM-dd HH:mm:ss")}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
@@ -77,6 +79,6 @@ export class ChangeService implements IChangeService {
         }
       `
     });
-    return data.data.financialHistory;
+    return financialHistory;
   }
 }

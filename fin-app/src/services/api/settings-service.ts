@@ -5,7 +5,7 @@ import { ISettingsService } from "../interfaces/settings-service";
 
 export class SettingsService implements ISettingsService {
   async getSettings(appUserId: number): Promise<UserSettings> {
-    const { data } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { appSettings } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
           appSettings(userId: ${appUserId}) {
@@ -21,7 +21,7 @@ export class SettingsService implements ISettingsService {
         }
       `
     });
-    return data.data.appSettings;
+    return appSettings;
   }
   async saveSettings(payload: UpdateUserSettingsDto): Promise<void> {
     const {
