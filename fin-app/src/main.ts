@@ -39,7 +39,7 @@ import Slider from "primevue/slider";
 import ProgressSpinner from "primevue/progressspinner";
 import OverlayPanel from "primevue/overlaypanel";
 import ContextMenu from "primevue/contextmenu";
-import Calendar from 'primevue/calendar';
+import Calendar from "primevue/calendar";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -50,8 +50,8 @@ import Icon from "@/components/icon.vue";
 import "@/assets/css/themes/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
-import "primeflex/primeflex.css";
 import "@/assets/css/site.sass";
+import "./index.css";
 
 // Translations
 import en from "@/translations/en";

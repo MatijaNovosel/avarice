@@ -9,7 +9,7 @@
     <template #header>
       <h3>New financial change</h3>
     </template>
-    <div class="expense-form p-mt-5 p-px-3">
+    <div class="expense-form">
       <span class="p-float-label">
         <input-number
           filled
@@ -25,7 +25,7 @@
         />
         <label for="amount"> Amount </label>
       </span>
-      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.amount.$invalid">{{
+      <span class="p-invalid" v-if="model.amount.$invalid">{{
         model.amount.$errors.map((x) => x.$message).join(" • ")
       }}</span>
       <span class="p-float-label p-mt-3">
@@ -39,10 +39,10 @@
         />
         <label for="description"> Description </label>
       </span>
-      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.description.$invalid">{{
+      <span class="p-invalid" v-if="model.description.$invalid">{{
         model.description.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <div class="container p-mt-3">
+      <div class="container">
         <span class="container-label">Payment source</span>
         <select-button
           v-model="model.paymentSourceId.$model"
@@ -51,7 +51,7 @@
           optionValue="val"
         />
       </div>
-      <div class="container p-mt-3">
+      <div class="container">
         <span class="container-label">Tags</span>
         <list-box
           :multiple="true"
@@ -67,11 +67,11 @@
           </template>
         </list-box>
       </div>
-      <span class="p-invalid p-pl-2 p-pt-2" v-if="model.tagIds.$invalid">{{
+      <span class="p-invalid" v-if="model.tagIds.$invalid">{{
         model.tags.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <span class="expense-switch-container p-mt-5">
-        <span class="container-label p-mr-3"> Expense </span>
+      <span class="expense-switch-container">
+        <span class="container-label"> Expense </span>
         <input-switch id="expense" v-model="model.expense.$model" />
       </span>
     </div>

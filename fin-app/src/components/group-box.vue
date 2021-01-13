@@ -2,7 +2,7 @@
   <field-set>
     <template #legend>
       <span>
-        <icon v-if="state.icon" class="p-pr-2" :name="state.icon" />{{
+        <icon v-if="state.icon" :name="state.icon" />{{
           state.title
         }}
       </span>

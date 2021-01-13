@@ -3,22 +3,17 @@
     :style="{
       borderLeft: `10px solid ${state.color}`
     }"
-    class="amount-container p-shadow-6"
+    class="amount-container"
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="content">
         <div class="left-side no-select">
-          <div class="p-pr-2">
-            <mdi-icon
-              :size="28"
-              class="p-mx-3"
-              :color="state.color"
-              :name="state.icon"
-            />
+          <div>
+            <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           </div>
           <div class="amount-info">
-            <span class="amount-title p-mb-1">{{ state.title }}</span>
+            <span class="amount-title">{{ state.title }}</span>
             <span
               :style="{
                 color: state.color
@@ -26,7 +21,7 @@
               class="amount-text"
               >{{
                 state.amountVisible
-                  ? `${state.amount.toLocaleString('en')}${state.currency}`
+                  ? `${state.amount.toLocaleString("en")}${state.currency}`
                   : `${state.amount}${state.currency}`.replace(/[0-9]/gi, "*")
               }}</span
             >
@@ -37,7 +32,7 @@
             @click="graphEnabled"
             v-if="!state.noEnabling"
             :color="state.color"
-            class="p-mr-3 graph-enable-btn"
+            class="graph-enable-btn"
             :size="20"
             :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
             v-tooltip.bottom="'Prikaži na grafu'"

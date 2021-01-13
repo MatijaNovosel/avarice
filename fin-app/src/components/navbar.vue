@@ -4,7 +4,7 @@
       <div class="header">
         <btn
           icon="pi pi-bars"
-          class="p-button-rounded p-button-text p-ml-2 p-mr-3"
+          class="p-button-rounded p-button-text"
           style="color: white"
           @click="changeSiderbarState"
         />
@@ -16,7 +16,7 @@
       <div class="end">
         <btn
           icon="pi pi-power-off"
-          class="p-button-rounded p-mr-4 logout-button"
+          class="p-button-rounded logout-button"
           @click="logout"
         />
       </div>

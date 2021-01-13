@@ -2,37 +2,35 @@
   <div class="login-container">
     <div class="loading-screen" v-if="state.loading">
       <progress-spinner strokeWidth="10" style="height: 100px; width: 100px" />
-      <span class="loading-title p-mt-5 gradient-text">Signing you in ...</span>
+      <span class="loading-title gradient-text">Signing you in ...</span>
     </div>
     <div class="login-screen" v-else>
-      <div class="app-title p-pb-3">
+      <div class="app-title">
         <span
-          ><span class="app-title-text gradient-text p-pr-2">FinApp</span>
+          ><span class="app-title-text gradient-text">FinApp</span>
           <span class="author-text">by Matija Novosel</span></span
         >
       </div>
-      <div class="login-form cursor-pointer p-shadow-6 expand" @click="login">
-        <div class="login-icon p-mr-4">
+      <div class="login-form cursor-pointer expand" @click="login">
+        <div class="login-icon">
           <mdi-icon color="#fc9219" name="google" />
         </div>
         <div class="login-content">
           <span class="login-content-title">Google OAuth</span>
-          <span class="login-content-subtitle p-pt-2">Sign in with Google</span>
+          <span class="login-content-subtitle">Sign in with Google</span>
         </div>
       </div>
-      <div class="login-form cursor-pointer p-shadow-6 expand p-mt-3">
-        <div class="login-icon p-mr-4">
+      <div class="login-form cursor-pointer expand">
+        <div class="login-icon">
           <mdi-icon color="#4267b2" name="facebook" />
         </div>
         <div class="login-content">
           <span class="login-content-title">Facebook</span>
-          <span class="login-content-subtitle p-pt-2"
-            >Sign in with Facebook</span
-          >
+          <span class="login-content-subtitle">Sign in with Facebook</span>
         </div>
       </div>
-      <div class="login-form-standard p-shadow-6 p-mt-3">
-        <span class="login-title p-mb-4">Sign in with email</span>
+      <div class="login-form-standard">
+        <span class="login-title">Sign in with email</span>
         <span class="p-float-label">
           <input-text
             v-model="model.email.$model"
@@ -45,10 +43,10 @@
           />
           <label for="email">Email</label>
         </span>
-        <span class="p-invalid p-pt-2 p-pl-2" v-if="model.email.$invalid">{{
+        <span class="p-invalid" v-if="model.email.$invalid">{{
           model.email.$errors.map((x) => x.$message).join(" • ")
         }}</span>
-        <span class="p-float-label p-mt-3">
+        <span class="p-float-label">
           <input-text
             v-model="model.password.$model"
             class="login-input"
@@ -60,11 +58,11 @@
           />
           <label for="password">Password</label>
         </span>
-        <span class="p-invalid p-pt-2 p-pl-2" v-if="model.password.$invalid">{{
+        <span class="p-invalid" v-if="model.password.$invalid">{{
           model.password.$errors.map((x) => x.$message).join(" • ")
         }}</span>
-        <btn class="p-mb-2 login-btn p-mt-4" label="Sign in" />
-        <btn class="p-my-2 login-btn" label="Register" />
+        <btn class="login-btn" label="Sign in" />
+        <btn class="login-btn" label="Register" />
       </div>
     </div>
   </div>

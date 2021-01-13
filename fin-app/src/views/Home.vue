@@ -1,8 +1,6 @@
 <template>
-  <div class="p-grid p-nogutter p-justify-center">
-    <div
-      class="p-col-12 p-md-4 p-px-4 p-pl-md-4 p-pr-md-0 p-pb-5 p-pb-md-0 amount-cards-container"
-    >
+  <div>
+    <div>
       <dashboard-amount-card
         v-for="paymentSource in state.paymentSources"
         :key="paymentSource.id"
@@ -16,11 +14,11 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div class="p-col-12 p-md-8 p-px-5">
-      <div class="p-shadow-6 chart-container">
+    <div>
+      <div class="chart-container">
         <div class="month-select-container">
           <mdi-icon
-            class="p-mr-3 cursor-pointer"
+            class="cursor-pointer"
             @click="changeGraphVisibility"
             :size="20"
             :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
@@ -28,7 +26,6 @@
           />
           <calendar
             dateFormat="yy-mm-dd"
-            class="p-ml-3"
             v-model="state.dateRange"
             selectionMode="range"
             :manualInput="false"
@@ -42,14 +39,14 @@
         />
       </div>
     </div>
-    <div class="p-col-12 p-pl-4 p-pr-5 p-mt-5">
-      <div class="p-shadow-6 changes-container">
-        <div class="p-grid">
-          <div class="p-col-12 p-mb-2">
+    <div>
+      <div class="changes-container">
+        <div>
+          <div>
             <accordion>
               <accordion-tab>
                 <template #header>
-                  <icon class="p-pr-3" name="filter" />
+                  <icon name="filter" />
                   <span>{{ $t("filterAndOtherOptions") }}</span>
                 </template>
                 <div class="filter-container">
@@ -86,18 +83,15 @@
                       @click="getChanges"
                       :label="$t('filter')"
                       icon="pi pi-filter"
-                      class="p-button-raised p-button-info p-ml-3"
+                      class="p-button-raised p-button-info"
                     />
                   </div>
                 </div>
               </accordion-tab>
             </accordion>
           </div>
-          <div class="p-col-12">
-            <div
-              class="p-grid p-justify-center p-my-6"
-              v-if="state.changesLoading"
-            >
+          <div>
+            <div v-if="state.changesLoading">
               <progress-spinner
                 strokeWidth="10"
                 style="height: 100px; width: 100px"
@@ -117,7 +111,6 @@
                 />
               </div>
               <paginator
-                class="p-mt-3"
                 v-model:first="state.changesOffset"
                 v-model:rows="state.numberOfRows"
                 :totalRecords="state.changesTotalItems"

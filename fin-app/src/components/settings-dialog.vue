@@ -9,23 +9,23 @@
     <template #header>
       <h3>Postavke</h3>
     </template>
-    <div class="p-my-5 p-shadow-6 graph-settings-container">
-      <div class="p-grid p-formgrid p-mt-3">
-        <div class="p-field p-col-12">
+    <div class="graph-settings-container">
+      <div>
+        <div>
           <p-color-picker v-model="state.settings.gyroGraphColor" />
-          <span class="p-ml-3">Gyro</span>
+          <span>Gyro</span>
         </div>
-        <div class="p-field p-col-12">
+        <div>
           <p-color-picker v-model="state.settings.checkingGraphColor" />
-          <span class="p-ml-3">Checking</span>
+          <span>Checking</span>
         </div>
-        <div class="p-field p-col-12">
+        <div>
           <p-color-picker v-model="state.settings.pocketGraphColor" />
-          <span class="p-ml-3">Pocket</span>
+          <span>Pocket</span>
         </div>
-        <div class="p-field p-col-12">
+        <div>
           <p-color-picker v-model="state.settings.totalGraphColor" />
-          <span class="p-ml-3">Total</span>
+          <span>Total</span>
         </div>
       </div>
     </div>
@@ -33,7 +33,6 @@
       <progress-spinner
         strokeWidth="10"
         style="width: 25px; height: 25px"
-        class="p-mr-4"
         v-if="state.loading"
       />
       <btn

@@ -1,15 +1,15 @@
 <template>
   <div
     v-ripple
-    class="amount-container p-shadow-6 p-ripple"
+    class="amount-container"
     :class="{
       'expense red': state.expense,
       'gain green': !state.expense
     }"
   >
-    <span class="amount-title p-mb-1"
+    <span class="amount-title"
       >{{ state.title }} •
-      <span class="amount-date p-mb-1">{{ state.date }}</span>
+      <span class="amount-date">{{ state.date }}</span>
     </span>
     <span class="amount-text">{{
       `${
@@ -23,7 +23,6 @@
         <tag
           v-for="(tag, i) in state.tags"
           :key="i"
-          class="p-mx-1"
           :color="state.expense ? '#c52626' : '#428733'"
           >{{ formatTag(tag) }}</tag
         >
