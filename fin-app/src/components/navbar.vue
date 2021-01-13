@@ -1,11 +1,10 @@
 <template>
-  <menubar class="no-border-radius no-border navbar navbar-shadow">
+  <menubar class="no-border-radius no-border navbar shadow-lg bg-gray-800">
     <template #start>
       <div class="header">
         <btn
           icon="pi pi-bars"
-          class="p-button-rounded p-button-text"
-          style="color: white"
+          class="p-button-rounded p-button-text text-white ml-3 mr-5"
           @click="changeSiderbarState"
         />
         <span class="leading-text gradient-text">FinApp</span>
@@ -109,9 +108,6 @@ export default defineComponent({
   display: flex
   align-items: center
   align-content: center
-
-.p-panelmenu-content
-  background-color: variables.$color-dark-gradient-3 !important
 
 .leading-text
   font-size: 1.7rem

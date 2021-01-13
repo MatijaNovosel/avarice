@@ -3,7 +3,7 @@
     :style="{
       borderLeft: `10px solid ${state.color}`
     }"
-    class="amount-container"
+    class="amount-container bg-gray-800 rounded-r-2xl"
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
@@ -169,9 +169,6 @@ export default defineComponent({
   display: flex
   align-items: center
   padding: 1.2rem 2.4rem 1.2rem 0.6rem
-  background-color: #1e1e1e
-  border-top-right-radius: 12px
-  border-bottom-right-radius: 12px
 
 .content
   width: 100%

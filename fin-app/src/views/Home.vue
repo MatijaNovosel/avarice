@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div class="container mx-auto">
+    <div class="grid grid-cols-3 gap-4">
       <dashboard-amount-card
         v-for="paymentSource in state.paymentSources"
         :key="paymentSource.id"
@@ -14,7 +14,7 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div>
+    <div class="mt-10">
       <div class="chart-container">
         <div class="month-select-container">
           <mdi-icon
@@ -39,7 +39,7 @@
         />
       </div>
     </div>
-    <div>
+    <div class="mt-10">
       <div class="changes-container">
         <div>
           <div>
@@ -98,7 +98,7 @@
               />
             </div>
             <template v-else>
-              <div class="financial-change-grid">
+              <div class="grid grid-cols-4 gap-4 mt-5">
                 <change-card
                   v-for="change in state.changes"
                   :key="change.id"
@@ -118,6 +118,7 @@
                 :pageLinkSize="state.changesNumberOfPages"
                 @page="pageChanged"
                 :alwaysShow="true"
+                class="pb-5 mt-5"
               />
             </template>
           </div>
@@ -464,18 +465,4 @@ export default defineComponent({
 .eye-btn-visible
   align-self: center
   margin-right: 1em
-
-@media screen and (min-width: 959px)
-  .financial-change-grid
-    width: 100%
-    display: grid
-    grid-template-columns: repeat(4, 1fr)
-    grid-gap: 20px
-
-@media screen and (max-width: 958px)
-  .financial-change-grid
-    width: 100%
-    display: grid
-    grid-template-columns: repeat(1, 1fr)
-    grid-gap: 20px
 </style>

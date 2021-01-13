@@ -6,7 +6,7 @@
     :autoZIndex="false"
     v-model:visible="state.visible"
     style="z-index: 1"
-    class="navbar-offset sidebar"
+    class="navbar-offset sidebar bg-gray-900"
   >
     <div class="drawer-header">
       <div class="avatar-container">
