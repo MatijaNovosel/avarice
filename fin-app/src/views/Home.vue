@@ -14,115 +14,103 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div class="mt-10">
-      <div class="chart-container flex flex-col bg-gray-800">
-        <div class="month-select-container">
-          <mdi-icon
-            class="cursor-pointer"
-            @click="changeGraphVisibility"
-            :size="20"
-            :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
-            v-tooltip="'Prikaži vrijednosti'"
-          />
-          <calendar
-            dateFormat="yy-mm-dd"
-            v-model="state.dateRange"
-            selectionMode="range"
-            :manualInput="false"
-          />
-        </div>
-        <chart
-          ref="graph"
-          type="line"
-          :data="state.graphData"
-          :options="state.graphOptions"
+    <div class="mt-10 p-10 flex flex-col bg-gray-800 rounded-2xl">
+      <div class="flex items-center justify-center mb-8">
+        <mdi-icon
+          class="cursor-pointer"
+          @click="changeGraphVisibility"
+          :size="20"
+          :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
+          v-tooltip="'Prikaži vrijednosti'"
+        />
+        <calendar
+          dateFormat="yy-mm-dd"
+          v-model="state.dateRange"
+          selectionMode="range"
+          :manualInput="false"
+          class="ml-4"
         />
       </div>
+      <chart
+        ref="graph"
+        type="line"
+        :data="state.graphData"
+        :options="state.graphOptions"
+      />
     </div>
-    <div class="mt-10">
-      <div class="changes-container rounded-2xl bg-gray-800">
-        <div>
-          <div>
-            <accordion>
-              <accordion-tab>
-                <template #header>
-                  <span>{{ $t("filterAndOtherOptions") }}</span>
-                </template>
-                <div class="filter-container flex flex-col">
-                  <list-box
-                    :multiple="true"
-                    v-model="state.filter.tag"
-                    :options="tags"
-                    dataKey="val"
-                    listStyle="max-height: 250px"
-                    optionValue="val"
-                    optionLabel="text"
-                  >
-                    <template #option="slotProps">
-                      {{ slotProps.option.text }}
-                    </template>
-                  </list-box>
-                  <div class="filter-actions flex">
-                    <mdi-icon
-                      class="cursor-pointer mr-5 self-center"
-                      @click="
-                        state.changeAmountVisible = !state.changeAmountVisible
-                      "
-                      :size="20"
-                      :name="state.changeAmountVisible ? 'eye' : 'eye-off'"
-                      v-tooltip="'Prikaži vrijednosti'"
-                    />
-                    <btn
-                      @click="resetFilter"
-                      :label="$t('removeFilter')"
-                      icon="pi pi-ban"
-                      class="p-button-raised p-button-danger mr-5"
-                    />
-                    <btn
-                      @click="getChanges"
-                      :label="$t('filter')"
-                      icon="pi pi-filter"
-                      class="p-button-raised p-button-info"
-                    />
-                  </div>
-                </div>
-              </accordion-tab>
-            </accordion>
-          </div>
-          <div>
-            <div v-if="state.changesLoading">
-              <progress-spinner
-                strokeWidth="10"
-                style="height: 100px; width: 100px"
+    <div class="mt-10 rounded-2xl bg-gray-800 px-6 pt-6">
+      <accordion>
+        <accordion-tab>
+          <template #header>
+            <span>{{ $t("filterAndOtherOptions") }}</span>
+          </template>
+          <div class="filter-container flex flex-col">
+            <list-box
+              :multiple="true"
+              v-model="state.filter.tag"
+              :options="tags"
+              dataKey="val"
+              listStyle="max-height: 250px"
+              optionValue="val"
+              optionLabel="text"
+            >
+              <template #option="slotProps">
+                {{ slotProps.option.text }}
+              </template>
+            </list-box>
+            <div class="filter-actions flex">
+              <mdi-icon
+                class="cursor-pointer mr-5 self-center"
+                @click="state.changeAmountVisible = !state.changeAmountVisible"
+                :size="20"
+                :name="state.changeAmountVisible ? 'eye' : 'eye-off'"
+                v-tooltip="'Prikaži vrijednosti'"
+              />
+              <btn
+                @click="resetFilter"
+                :label="$t('removeFilter')"
+                icon="pi pi-ban"
+                class="p-button-raised p-button-danger mr-5"
+              />
+              <btn
+                @click="getChanges"
+                :label="$t('filter')"
+                icon="pi pi-filter"
+                class="p-button-raised p-button-info"
               />
             </div>
-            <template v-else>
-              <div class="grid grid-cols-4 gap-4 mt-5">
-                <change-card
-                  v-for="change in state.changes"
-                  :key="change.id"
-                  :expense="change.expense"
-                  :title="change.description"
-                  :amount="change.amount"
-                  :tags="change.tagIds"
-                  :date="change.createdAt"
-                  :show="state.changeAmountVisible"
-                />
-              </div>
-              <paginator
-                v-model:first="state.changesOffset"
-                v-model:rows="state.numberOfRows"
-                :totalRecords="state.changesTotalItems"
-                :rowsPerPageOptions="[16, 32]"
-                :pageLinkSize="state.changesNumberOfPages"
-                @page="pageChanged"
-                :alwaysShow="true"
-                class="pb-5 mt-5"
-              />
-            </template>
           </div>
+        </accordion-tab>
+      </accordion>
+      <progress-spinner
+        v-if="state.changesLoading"
+        strokeWidth="10"
+        style="height: 100px; width: 100px"
+      />
+      <template v-else>
+        <div class="grid grid-cols-4 gap-4 mt-5">
+          <change-card
+            v-for="change in state.changes"
+            :key="change.id"
+            :expense="change.expense"
+            :title="change.description"
+            :amount="change.amount"
+            :tags="change.tagIds"
+            :date="change.createdAt"
+            :show="state.changeAmountVisible"
+          />
         </div>
-      </div>
+        <paginator
+          v-model:first="state.changesOffset"
+          v-model:rows="state.numberOfRows"
+          :totalRecords="state.changesTotalItems"
+          :rowsPerPageOptions="[16, 32]"
+          :pageLinkSize="state.changesNumberOfPages"
+          @page="pageChanged"
+          :alwaysShow="true"
+          class="pb-5 mt-5"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -409,21 +397,8 @@ export default defineComponent({
 @use "../assets/css/variables"
 @import "../assets/css/helpers"
 
-.amount-cards-container
-  display: grid
-  grid-template-columns: repeat(auto-fit, 100%)
-  grid-gap: 1.5em
-
 .changes-container
   padding: 1.5rem 1.5rem 0 1.5rem
-
-.chart-container
-  padding: 2rem
-  border-radius: 12px
-
-.month-select-container
-  display: flex
-  align-items: center
 
 .month-select-item
   font-size: 0.8em

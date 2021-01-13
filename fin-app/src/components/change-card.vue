@@ -1,6 +1,6 @@
 <template>
   <div
-    class="select-none flex flex-col justify-center p-3 rounded-r-2xl"
+    class="select-none flex flex-col justify-center p-3 rounded-r-2xl shadow-lg"
     :class="{
       'expense red': state.expense,
       'gain green': !state.expense
