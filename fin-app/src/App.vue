@@ -49,11 +49,9 @@ export default defineComponent({
 
 @media screen and (min-width: 959px)
   .offset-top
-    margin-top: variables.$navbar-height * 1.4 !important
-    margin-bottom: variables.$navbar-height !important
+    margin-top: variables.$navbar-height * 1.25 !important
 
 @media screen and (max-width: 958px)
   .offset-top
     margin-top: 20px !important
-    margin-bottom: 5px !important
 </style>

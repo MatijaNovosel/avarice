@@ -42,7 +42,7 @@
       <span class="p-invalid" v-if="model.description.$invalid">{{
         model.description.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <div class="flex flex-col p-4 rounded-xl bg-gray-900">
+      <div class="flex flex-col p-4 rounded-xl bg-gray-900 justify-center items-center">
         <span class="mb-3">Payment source</span>
         <select-button
           v-model="model.paymentSourceId.$model"

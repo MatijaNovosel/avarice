@@ -3,7 +3,7 @@
     :style="{
       borderLeft: `6px solid ${state.color}`
     }"
-    class="flex p-5 bg-gray-800 rounded-r-2xl shadow-lg"
+    class="flex px-5 py-6 bg-gray-800 rounded-r-2xl shadow-lg"
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>

@@ -15,11 +15,11 @@ interface GraphYAxesOptions {
 }
 
 interface GraphScalesOptions {
-  yAxes: GraphYAxesOptions[];
+  yAxes?: GraphYAxesOptions[];
 }
 
 export interface GraphOptions {
-  scales: GraphScalesOptions;
+  scales?: GraphScalesOptions;
   legend: GraphLegendOptions;
   responsive: boolean;
 }

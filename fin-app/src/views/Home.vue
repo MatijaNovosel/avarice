@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto mb-10">
     <div class="grid grid-cols-3 gap-4">
       <dashboard-amount-card
         v-for="paymentSource in state.paymentSources"
@@ -14,31 +14,23 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div class="grid gap-5 grid-cols-4 mt-10">
+    <div class="grid gap-5 grid-cols-3 mt-5">
       <div
         :key="i"
         v-for="(graphData, i) in state.graphData"
-        class="p-6 flex flex-col items-center bg-gray-800 rounded-2xl"
+        class="p-6 flex flex-col items-center bg-gray-800 rounded-2xl shadow-lg"
       >
-        <div class="flex items-center justify-center mb-8">
-          <calendar
-            dateFormat="yy-mm-dd"
-            v-model="state.dateRange"
-            selectionMode="range"
-            :manualInput="false"
-            class="ml-4"
+        <div class="flex items-center">
+          <chart
+            type="line"
+            :data="graphData"
+            :options="state.graphOptions"
+            :height="300"
           />
         </div>
-        <chart
-          ref="graph"
-          type="line"
-          :data="graphData"
-          :options="state.graphOptions"
-          :height="200"
-        />
       </div>
     </div>
-    <div class="mt-10 rounded-2xl bg-gray-800 px-6 pt-6">
+    <div class="mt-5 rounded-2xl bg-gray-800 px-6 pt-6">
       <accordion>
         <accordion-tab>
           <template #header>
@@ -231,12 +223,11 @@ export default defineComponent({
       loading: false,
       changesLoading: false,
       graphOptions: {
-        scales: {
-          yAxes: [
-            {
-              display: false
-            }
-          ]
+        ticks: {
+          fontFamily: "Lato",
+          fontColor: "#fff",
+          fontSize: 14,
+          minRotation: 30
         },
         legend: {
           display: true
