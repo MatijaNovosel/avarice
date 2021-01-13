@@ -44,7 +44,7 @@
           <template #header>
             <span>{{ $t("filterAndOtherOptions") }}</span>
           </template>
-          <div class="filter-container flex flex-col">
+          <div class="flex flex-col">
             <list-box
               :multiple="true"
               v-model="state.filter.tag"
@@ -58,7 +58,7 @@
                 {{ slotProps.option.text }}
               </template>
             </list-box>
-            <div class="filter-actions flex">
+            <div class="flex mt-4 justify-end">
               <mdi-icon
                 class="cursor-pointer mr-5 self-center"
                 @click="state.changeAmountVisible = !state.changeAmountVisible"
@@ -389,22 +389,6 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-@use "../assets/css/variables"
-@import "../assets/css/helpers"
-
-.changes-container
-  padding: 1.5rem 1.5rem 0 1.5rem
-
-.month-select-item
-  font-size: 0.8em
-  margin: 0.2em 0.5em
-  padding: 1.2em
-  background-color: #191515
-  border-radius: 12px
-  color: white
-  font-family: "ProximaNovaBold" !important
-  user-select: none
-
 .p-accordion-header-link
   background-color: rgba(255, 255, 255, 0.04) !important
   z-index: 0 !important
@@ -414,11 +398,4 @@ export default defineComponent({
 
 .p-dataview .p-dataview-content
   padding: 0px !important
-
-.filter-container
-  padding: 1.4em 0 0 0
-
-.filter-actions
-  padding: 1.4em 0 0.8em 0
-  justify-content: flex-end
 </style>
