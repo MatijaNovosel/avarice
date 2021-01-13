@@ -17,12 +17,11 @@
           : ("" + state.amount).replace(/[0-9]/gi, "*")
       }HRK`
     }}</span>
-    <div class="flex self-end">
+    <div class="flex self-end space-x-2">
       <tag
         v-for="(tag, i) in state.tags"
         :key="i"
         :color="state.expense ? '#c52626' : '#428733'"
-        class="mr-3"
         >{{ formatTag(tag) }}</tag
       >
     </div>

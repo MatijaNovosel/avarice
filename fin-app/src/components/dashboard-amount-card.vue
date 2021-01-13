@@ -1,17 +1,15 @@
 <template>
   <div
     :style="{
-      borderLeft: `10px solid ${state.color}`
+      borderLeft: `6px solid ${state.color}`
     }"
     class="flex p-5 bg-gray-800 rounded-r-2xl shadow-lg"
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
-      <div class="flex items-center">
+      <div class="w-full flex items-center content-between justify-between">
         <div class="flex items-center no-select">
-          <div>
-            <mdi-icon :size="28" :color="state.color" :name="state.icon" />
-          </div>
+          <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
             <span class="amount-title">{{ state.title }}</span>
             <span
@@ -27,7 +25,7 @@
             >
           </div>
         </div>
-        <div class="flex">
+        <div class="flex space-x-4">
           <mdi-icon
             @click="graphEnabled"
             v-if="!state.noEnabling"
@@ -163,12 +161,4 @@ export default defineComponent({
 
 .amount-title
   color: #927d7d
-
-.amount-text
-  font-size: 1.5rem
-
-.amount-circle
-  border-radius: 50%
-  width: 25px
-  height: 25px
 </style>

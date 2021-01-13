@@ -14,29 +14,29 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div class="mt-10 p-10 flex flex-col bg-gray-800 rounded-2xl">
-      <div class="flex items-center justify-center mb-8">
-        <mdi-icon
-          class="cursor-pointer"
-          @click="changeGraphVisibility"
-          :size="20"
-          :name="state.graphValuesVisible ? 'eye' : 'eye-off'"
-          v-tooltip="'Prikaži vrijednosti'"
-        />
-        <calendar
-          dateFormat="yy-mm-dd"
-          v-model="state.dateRange"
-          selectionMode="range"
-          :manualInput="false"
-          class="ml-4"
+    <div class="grid gap-5 grid-cols-4 mt-10">
+      <div
+        :key="i"
+        v-for="(graphData, i) in state.graphData"
+        class="p-6 flex flex-col items-center bg-gray-800 rounded-2xl"
+      >
+        <div class="flex items-center justify-center mb-8">
+          <calendar
+            dateFormat="yy-mm-dd"
+            v-model="state.dateRange"
+            selectionMode="range"
+            :manualInput="false"
+            class="ml-4"
+          />
+        </div>
+        <chart
+          ref="graph"
+          type="line"
+          :data="graphData"
+          :options="state.graphOptions"
+          :height="200"
         />
       </div>
-      <chart
-        ref="graph"
-        type="line"
-        :data="state.graphData"
-        :options="state.graphOptions"
-      />
     </div>
     <div class="mt-10 rounded-2xl bg-gray-800 px-6 pt-6">
       <accordion>
@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, inject, ref, onMounted } from "vue";
+import { defineComponent, reactive, watch, inject, onMounted } from "vue";
 import {
   formatTag,
   formatPaymentSource,
@@ -163,7 +163,7 @@ interface State {
   loading: boolean;
   changesLoading: boolean;
   account: Account;
-  graphData: GraphData | null;
+  graphData: GraphData[] | null;
   totalAmount: string;
   changes: FinancialChangeItem[];
   // eslint-disable-next-line
@@ -182,6 +182,7 @@ interface State {
   graphOptions: GraphOptions;
   changeAmountVisible: boolean;
   paymentSources: PaymentSource[];
+  graphLabels: string[];
 }
 
 export default defineComponent({
@@ -192,10 +193,8 @@ export default defineComponent({
     MdiIcon
   },
   setup() {
-    // eslint-disable-next-line
-    const graph: any = ref(null);
-
     const state: State = reactive({
+      graphLabels: [],
       dateRange: [],
       paymentSources: [],
       changeAmountVisible: false,
@@ -249,7 +248,7 @@ export default defineComponent({
         },
         responsive: true
       },
-      graphData: null,
+      graphData: [],
       totalAmount: "0,00HRK"
     });
 
@@ -275,7 +274,7 @@ export default defineComponent({
     }
 
     function updateGraph() {
-      graph.value.reinit();
+      // graph.value.reinit();
     }
 
     async function updateData() {
@@ -335,10 +334,14 @@ export default defineComponent({
         ) as string
       });
 
-      state.graphData = {
-        labels: history.map((x) => x.createdAt),
-        datasets: state.dataSets
-      };
+      state.graphLabels = history.map((x) => x.createdAt);
+
+      state.dataSets.forEach((x) => {
+        state?.graphData?.push({
+          labels: state.graphLabels,
+          datasets: [x]
+        });
+      });
 
       updateGraph();
       state.loading = false;
@@ -347,12 +350,6 @@ export default defineComponent({
     function pageChanged(paginationInfo: Pagination) {
       const { page, rows } = { ...paginationInfo };
       getChanges(page * rows, state.numberOfRows);
-    }
-
-    function changeGraphVisibility() {
-      state.graphValuesVisible = !state.graphValuesVisible;
-      state.graphOptions.scales.yAxes[0].display = state.graphValuesVisible;
-      updateGraph();
     }
 
     onMounted(async () => {
@@ -385,9 +382,7 @@ export default defineComponent({
       tags,
       resetFilter,
       getChanges,
-      pageChanged,
-      graph,
-      changeGraphVisibility
+      pageChanged
     };
   }
 });
