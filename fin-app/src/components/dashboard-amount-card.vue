@@ -3,22 +3,22 @@
     :style="{
       borderLeft: `10px solid ${state.color}`
     }"
-    class="amount-container bg-gray-800 rounded-r-2xl"
+    class="flex p-5 bg-gray-800 rounded-r-2xl"
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="content">
-        <div class="left-side no-select">
+        <div class="flex items-center no-select">
           <div>
             <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           </div>
-          <div class="amount-info">
+          <div class="flex flex-col ml-5">
             <span class="amount-title">{{ state.title }}</span>
             <span
               :style="{
                 color: state.color
               }"
-              class="amount-text"
+              class="font-bold text-xl"
               >{{
                 state.amountVisible
                   ? `${state.amount.toLocaleString("en")}${state.currency}`
@@ -161,32 +161,17 @@ export default defineComponent({
   width: 25px
   height: 25px
 
-.left-side
-  display: flex
-  align-items: center
-
-.amount-container
-  display: flex
-  align-items: center
-  padding: 1.2rem 2.4rem 1.2rem 0.6rem
-
 .content
   width: 100%
   display: flex
   justify-content: space-between
   align-items: center
 
-.amount-info
-  display: flex
-  flex-direction: column
-  justify-content: center
-
 .amount-title
   color: #927d7d
 
 .amount-text
   font-size: 1.5rem
-  font-weight: bold
 
 .amount-circle
   border-radius: 50%

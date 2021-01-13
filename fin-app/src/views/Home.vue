@@ -15,7 +15,7 @@
       />
     </div>
     <div class="mt-10">
-      <div class="chart-container">
+      <div class="chart-container flex flex-col bg-gray-800">
         <div class="month-select-container">
           <mdi-icon
             class="cursor-pointer"
@@ -422,10 +422,7 @@ export default defineComponent({
 
 .chart-container
   padding: 2rem
-  background-color: #1e1e1e
   border-radius: 12px
-  display: flex
-  flex-direction: column
 
 .month-select-container
   display: flex
