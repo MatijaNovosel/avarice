@@ -9,7 +9,7 @@
     <template #header>
       <h3>New financial change</h3>
     </template>
-    <div class="expense-form">
+    <div class="flex flex-col grid gap-4 py-5">
       <span class="p-float-label">
         <input-number
           filled
@@ -42,8 +42,8 @@
       <span class="p-invalid" v-if="model.description.$invalid">{{
         model.description.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <div class="container">
-        <span class="container-label">Payment source</span>
+      <div class="flex flex-col p-4 rounded-xl bg-gray-900">
+        <span class="mb-3">Payment source</span>
         <select-button
           v-model="model.paymentSourceId.$model"
           :options="paymentSources"
@@ -51,8 +51,8 @@
           optionValue="val"
         />
       </div>
-      <div class="container">
-        <span class="container-label">Tags</span>
+      <div class="flex flex-col p-4 rounded-xl bg-gray-900">
+        <span class="mb-3">Tags</span>
         <list-box
           :multiple="true"
           v-model="model.tagIds.$model"
@@ -70,9 +70,9 @@
       <span class="p-invalid" v-if="model.tagIds.$invalid">{{
         model.tags.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <span class="expense-switch-container">
-        <span class="container-label"> Expense </span>
-        <input-switch id="expense" v-model="model.expense.$model" />
+      <span class="flex justify-center items-center">
+        <span class="text-white"> Expense </span>
+        <input-switch class="ml-4" id="expense" v-model="model.expense.$model" />
       </span>
     </div>
     <template #footer>
@@ -206,29 +206,10 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
-.container-label
-  color: white
-  margin-bottom: 1.2rem
-
 .expense-input
   width: 100%
-
-.container
-  padding: 1.5em
-  border-radius: 12px
-  background-color: #1e1e1e
-  display: flex
-  flex-direction: column
-
-.expense-form
-  display: flex
-  flex-direction: column
 
 .spinner
   width: 25px
   height: 25px
-
-.expense-switch-container
-  display: flex
-  justify-content: center
 </style>
