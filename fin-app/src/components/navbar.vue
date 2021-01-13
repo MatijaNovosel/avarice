@@ -1,18 +1,18 @@
 <template>
   <menubar class="no-border-radius no-border navbar shadow-lg bg-gray-800">
     <template #start>
-      <div class="header">
+      <div class="header flex items-center">
         <btn
           icon="pi pi-bars"
           class="p-button-rounded p-button-text text-white ml-3 mr-5"
           @click="changeSiderbarState"
         />
         <span class="leading-text gradient-text">FinApp</span>
-        <span class="following-text">by Matija Novosel</span>
+        <span class="following-text mt-2">by Matija Novosel</span>
       </div>
     </template>
     <template #end>
-      <div class="end">
+      <div class="flex mr-5">
         <btn
           icon="pi pi-power-off"
           class="p-button-rounded logout-button"
@@ -95,19 +95,6 @@ export default defineComponent({
   width: 100%
   z-index: 1
   height: variables.$navbar-height
-
-.logo
-  align-self: center
-
-.header
-  display: flex
-  align-items: baseline
-  align-content: center
-
-.end
-  display: flex
-  align-items: center
-  align-content: center
 
 .leading-text
   font-size: 1.7rem

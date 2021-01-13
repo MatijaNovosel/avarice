@@ -1,7 +1,6 @@
 <template>
   <div
-    v-ripple
-    class="amount-container"
+    class="select-none flex flex-col justify-center p-3 rounded-r-2xl"
     :class="{
       'expense red': state.expense,
       'gain green': !state.expense
@@ -11,22 +10,21 @@
       >{{ state.title }} •
       <span class="amount-date">{{ state.date }}</span>
     </span>
-    <span class="amount-text">{{
+    <span class="text-2xl">{{
       `${
         state.show
           ? state.amount.toLocaleString("en")
           : ("" + state.amount).replace(/[0-9]/gi, "*")
       }HRK`
     }}</span>
-    <div class="amount-end">
-      <div class="amount-tags">
-        <tag
-          v-for="(tag, i) in state.tags"
-          :key="i"
-          :color="state.expense ? '#c52626' : '#428733'"
-          >{{ formatTag(tag) }}</tag
-        >
-      </div>
+    <div class="flex self-end">
+      <tag
+        v-for="(tag, i) in state.tags"
+        :key="i"
+        :color="state.expense ? '#c52626' : '#428733'"
+        class="mr-3"
+        >{{ formatTag(tag) }}</tag
+      >
     </div>
   </div>
 </template>
@@ -106,30 +104,9 @@ export default defineComponent({
   color: rgb(66, 135, 51)
   background-color: rgb(46, 84, 37)
 
-.amount-container
-  display: flex
-  flex-direction: column
-  justify-content: center
-  padding: 1.2rem
-  border-top-right-radius: 6px
-  border-bottom-right-radius: 6px
-  user-select: none
-
 .amount-title
   color: #927d7d
 
 .amount-date
   color: #bfb4b4
-
-.amount-text
-  font-size: 1.5rem
-
-.amount-tags
-  margin-right: 0.7em
-
-.amount-end
-  display: flex
-  align-items: center
-  align-self: flex-end
-  margin: 0.4em 0
 </style>

@@ -7,7 +7,7 @@
   >
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
-      <div class="content">
+      <div class="flex items-center">
         <div class="flex items-center no-select">
           <div>
             <mdi-icon :size="28" :color="state.color" :name="state.icon" />
@@ -27,18 +27,18 @@
             >
           </div>
         </div>
-        <div class="actions">
+        <div class="flex">
           <mdi-icon
             @click="graphEnabled"
             v-if="!state.noEnabling"
             :color="state.color"
-            class="graph-enable-btn"
+            class="cursor-pointer"
             :size="20"
             :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
             v-tooltip.bottom="'Prikaži na grafu'"
           />
           <mdi-icon
-            class="display-btn"
+            class="cursor-pointer"
             :color="state.color"
             :size="20"
             :name="state.amountVisible ? 'eye' : 'eye-off'"
@@ -161,12 +161,6 @@ export default defineComponent({
   width: 25px
   height: 25px
 
-.content
-  width: 100%
-  display: flex
-  justify-content: space-between
-  align-items: center
-
 .amount-title
   color: #927d7d
 
@@ -177,10 +171,4 @@ export default defineComponent({
   border-radius: 50%
   width: 25px
   height: 25px
-
-.graph-enable-btn
-  @extend .cursor-pointer
-
-.display-btn
-  @extend .cursor-pointer
 </style>

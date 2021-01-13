@@ -40,16 +40,15 @@
       </div>
     </div>
     <div class="mt-10">
-      <div class="changes-container">
+      <div class="changes-container rounded-2xl bg-gray-800">
         <div>
           <div>
             <accordion>
               <accordion-tab>
                 <template #header>
-                  <icon name="filter" />
                   <span>{{ $t("filterAndOtherOptions") }}</span>
                 </template>
-                <div class="filter-container">
+                <div class="filter-container flex flex-col">
                   <list-box
                     :multiple="true"
                     v-model="state.filter.tag"
@@ -63,9 +62,9 @@
                       {{ slotProps.option.text }}
                     </template>
                   </list-box>
-                  <div class="filter-actions">
+                  <div class="filter-actions flex">
                     <mdi-icon
-                      class="cursor-pointer eye-btn-visible"
+                      class="cursor-pointer mr-5 self-center"
                       @click="
                         state.changeAmountVisible = !state.changeAmountVisible
                       "
@@ -77,7 +76,7 @@
                       @click="resetFilter"
                       :label="$t('removeFilter')"
                       icon="pi pi-ban"
-                      class="p-button-raised p-button-danger"
+                      class="p-button-raised p-button-danger mr-5"
                     />
                     <btn
                       @click="getChanges"
@@ -417,8 +416,6 @@ export default defineComponent({
 
 .changes-container
   padding: 1.5rem 1.5rem 0 1.5rem
-  background-color: #1e1e1e
-  border-radius: 12px
 
 .chart-container
   padding: 2rem
@@ -449,17 +446,9 @@ export default defineComponent({
   padding: 0px !important
 
 .filter-container
-  display: flex
-  flex-direction: column
   padding: 1.4em 0 0 0
 
 .filter-actions
   padding: 1.4em 0 0.8em 0
-  display: flex
-  flex-direction: row
   justify-content: flex-end
-
-.eye-btn-visible
-  align-self: center
-  margin-right: 1em
 </style>
