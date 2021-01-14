@@ -67,13 +67,16 @@
                   }}</span>
                 </div>
               </div>
-              <radio-button v-model="model.paymentSourceId.$model" />
+              <radio-button
+                name="category"
+                :value="paymentSource.id"
+                v-model="model.paymentSourceId.$model"
+              />
             </div>
           </div>
         </template>
       </div>
       <div class="flex flex-col p-4 rounded-xl bg-gray-900 items-center">
-        <span class="mb-3">Tags</span>
         <list-box
           :multiple="true"
           v-model="model.tagIds.$model"
