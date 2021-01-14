@@ -11,7 +11,6 @@
         :amount="paymentSource.currentAmount"
         :amount-visible="paymentSource.visible"
         :currency="'HRK'"
-        v-model:enabled="state.account.gyro"
       />
     </div>
     <div class="grid gap-5 grid-cols-1 md:grid-cols-3 mt-5">
@@ -121,7 +120,6 @@ import { createSelectFromEnum } from "../helpers/helpers";
 import { UserSettings } from "../models/user-settings";
 import { TagEnum } from "../constants/tag-enum";
 import { FinancialChangeItem } from "../models/change-item";
-import { Account } from "../models/account";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import ChangeCard from "../components/change-card.vue";
 import { getService, Types } from "../di-container";
@@ -154,7 +152,6 @@ interface State {
   dateRange: Array<Date | null>;
   loading: boolean;
   changesLoading: boolean;
-  account: Account;
   graphData: GraphData[] | null;
   totalAmount: string;
   changes: FinancialChangeItem[];
@@ -214,11 +211,6 @@ export default defineComponent({
       settings: {
         checkingGraphColor: "#383737",
         checkingGraphVisible: false
-      },
-      account: {
-        gyro: true,
-        pocket: true,
-        checking: true
       },
       loading: false,
       changesLoading: false,
@@ -350,12 +342,6 @@ export default defineComponent({
       ];
       updateData();
     });
-
-    watch(
-      () => state.account,
-      () => updateGraph(),
-      { deep: true }
-    );
 
     watch(
       () => state.refresh,

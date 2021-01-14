@@ -27,15 +27,6 @@
         </div>
         <div class="flex space-x-4">
           <mdi-icon
-            @click="graphEnabled"
-            v-if="!state.noEnabling"
-            :color="state.color"
-            class="cursor-pointer"
-            :size="20"
-            :name="state.enabled ? 'signal-cellular-3' : 'signal-off'"
-            v-tooltip.bottom="'Prikaži na grafu'"
-          />
-          <mdi-icon
             class="cursor-pointer"
             :color="state.color"
             :size="20"
@@ -61,7 +52,6 @@ interface Props {
   title?: string | null;
   color?: string | null;
   loading?: boolean;
-  enabled?: boolean;
   noEnabling?: boolean;
   amountVisible?: boolean;
 }
@@ -73,7 +63,6 @@ interface State {
   title?: string | null;
   color?: string | null;
   loading?: boolean;
-  enabled?: boolean;
   noEnabling?: boolean;
   amountVisible?: boolean;
 }
@@ -91,7 +80,6 @@ export default defineComponent({
     title: String,
     color: String,
     loading: Boolean,
-    enabled: Boolean,
     noEnabling: Boolean,
     amountVisible: Boolean
   },
@@ -102,16 +90,10 @@ export default defineComponent({
       title: props.title,
       color: props.color,
       loading: props.loading,
-      enabled: props.enabled,
       noEnabling: props.noEnabling,
       amountVisible: props.amountVisible,
       currency: props.currency
     });
-
-    function graphEnabled() {
-      state.enabled = !state.enabled;
-      context.emit("update:enabled", state.enabled);
-    }
 
     function amountVisibleChanged() {
       state.amountVisible = !state.amountVisible;
@@ -134,18 +116,12 @@ export default defineComponent({
     );
 
     watch(
-      () => props.enabled,
-      (val) => (state.enabled = val)
-    );
-
-    watch(
       () => props.currency,
       (val) => (state.currency = val)
     );
 
     return {
       state,
-      graphEnabled,
       amountVisibleChanged
     };
   }
