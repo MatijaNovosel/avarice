@@ -256,10 +256,6 @@ export default defineComponent({
       getChanges();
     }
 
-    function updateGraph() {
-      // graph.value.reinit();
-    }
-
     async function updateData() {
       state.loading = true;
       getChanges(0, state.numberOfRows);
@@ -326,7 +322,6 @@ export default defineComponent({
         });
       });
 
-      updateGraph();
       state.loading = false;
     }
 
