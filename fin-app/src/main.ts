@@ -40,6 +40,7 @@ import ProgressSpinner from "primevue/progressspinner";
 import OverlayPanel from "primevue/overlaypanel";
 import ContextMenu from "primevue/contextmenu";
 import Calendar from "primevue/calendar";
+import RadioButton from "primevue/radiobutton";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -115,6 +116,7 @@ app.component("progress-spinner", ProgressSpinner);
 app.component("overlay-panel", OverlayPanel);
 app.component("context-menu", ContextMenu);
 app.component("calendar", Calendar);
+app.component("radio-button", RadioButton);
 
 // Directives
 app.directive("tooltip", Tooltip);

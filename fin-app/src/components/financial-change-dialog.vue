@@ -9,7 +9,7 @@
     <template #header>
       <h3>New financial change</h3>
     </template>
-    <div class="flex flex-col grid gap-4 py-5">
+    <div class="flex flex-col grid gap-4 pt-5">
       <span class="p-float-label">
         <input-number
           filled
@@ -42,16 +42,37 @@
       <span class="p-invalid" v-if="model.description.$invalid">{{
         model.description.$errors.map((x) => x.$message).join(" • ")
       }}</span>
-      <div class="flex flex-col p-4 rounded-xl bg-gray-900 justify-center items-center">
-        <span class="mb-3">Payment source</span>
-        <select-button
-          v-model="model.paymentSourceId.$model"
-          :options="paymentSources"
-          optionLabel="text"
-          optionValue="val"
-        />
+      <div
+        class="flex p-8 rounded-xl bg-gray-900 justify-center items-center gap-4 grid grid-cols-2"
+      >
+        <template
+          v-for="paymentSource in state.paymentSources"
+          :key="paymentSource.id"
+        >
+          <div
+            class="flex px-5 py-6 bg-gray-800 rounded-r-2xl shadow-lg border-l-8 border-yellow-600 cursor-pointer"
+          >
+            <div
+              class="w-full flex items-center content-between justify-between"
+            >
+              <div class="flex items-center">
+                <mdi-icon
+                  :size="28"
+                  color="#ffffff"
+                  :name="paymentSource.icon"
+                />
+                <div class="flex flex-col ml-5">
+                  <span class="amount-title">{{
+                    paymentSource.description
+                  }}</span>
+                </div>
+              </div>
+              <radio-button v-model="model.paymentSourceId.$model" />
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="flex flex-col p-4 rounded-xl bg-gray-900">
+      <div class="flex flex-col p-4 rounded-xl bg-gray-900 items-center">
         <span class="mb-3">Tags</span>
         <list-box
           :multiple="true"
@@ -61,6 +82,7 @@
           listStyle="max-height: 250px"
           optionValue="val"
           optionLabel="text"
+          class="w-full"
         >
           <template #option="slotProps">
             {{ slotProps.option.text }}
@@ -72,7 +94,11 @@
       }}</span>
       <span class="flex justify-center items-center">
         <span class="text-white"> Expense </span>
-        <input-switch class="ml-4" id="expense" v-model="model.expense.$model" />
+        <input-switch
+          class="ml-4"
+          id="expense"
+          v-model="model.expense.$model"
+        />
       </span>
     </div>
     <template #footer>
@@ -96,7 +122,8 @@ import {
   SetupContext,
   watch,
   inject,
-  Ref
+  Ref,
+  onMounted
 } from "vue";
 import { PaymentSourceEnum } from "../constants/payment-source-enum";
 import { TagEnum } from "../constants/tag-enum";
@@ -106,6 +133,9 @@ import { required, numeric, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
+import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
+import MdiIcon from "../components/mdi-icon.vue";
+import { PaymentSource } from "@/models/payment-source";
 
 interface Props {
   dialog: boolean;
@@ -116,11 +146,15 @@ interface State {
   // eslint-disable-next-line
   refresh: any;
   saving: boolean;
+  paymentSources: PaymentSource[];
 }
 
 export default defineComponent({
   name: "financial-change-dialog",
   emits: ["update:dialog"],
+  components: {
+    MdiIcon
+  },
   props: {
     dialog: Boolean
   },
@@ -148,7 +182,8 @@ export default defineComponent({
     const state: State = reactive({
       dialog: props.dialog,
       refresh: inject("refresh"),
-      saving: false
+      saving: false,
+      paymentSources: []
     });
 
     watch(
@@ -156,10 +191,6 @@ export default defineComponent({
       (val) => (state.dialog = val)
     );
 
-    const paymentSources = createSelectFromEnum(
-      PaymentSourceEnum,
-      "paymentSource"
-    );
     const tags = createSelectFromEnum(TagEnum, "tag");
 
     function resetDialog() {
@@ -192,11 +223,16 @@ export default defineComponent({
       state.refresh.refresh();
     }
 
+    onMounted(async () => {
+      state.paymentSources = await getService<IPaymentSourceService>(
+        Types.PaymentSourceService
+      ).getAllByUserId(1);
+    });
+
     return {
       state,
       addFinancialChange,
       tags,
-      paymentSources,
       hideDialog,
       model,
       entry

@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto mb-10">
-    <div class="grid grid-cols-3 gap-4">
+  <div class="md:container md:mx-auto mb-10 px-8 md:px-0">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <dashboard-amount-card
         v-for="paymentSource in state.paymentSources"
         :key="paymentSource.id"
@@ -14,7 +14,7 @@
         v-model:enabled="state.account.gyro"
       />
     </div>
-    <div class="grid gap-5 grid-cols-3 mt-5">
+    <div class="grid gap-5 grid-cols-1 md:grid-cols-3 mt-5">
       <div
         :key="i"
         v-for="(graphData, i) in state.graphData"
@@ -80,7 +80,7 @@
         style="height: 100px; width: 100px"
       />
       <template v-else>
-        <div class="grid grid-cols-4 gap-4 mt-5">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
           <change-card
             v-for="change in state.changes"
             :key="change.id"
