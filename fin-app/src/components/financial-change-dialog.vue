@@ -62,9 +62,7 @@
                   :name="paymentSource.icon"
                 />
                 <div class="flex flex-col ml-5">
-                  <span class="amount-title">{{
-                    paymentSource.description
-                  }}</span>
+                  <span class="text-lg">{{ paymentSource.description }}</span>
                 </div>
               </div>
               <radio-button
