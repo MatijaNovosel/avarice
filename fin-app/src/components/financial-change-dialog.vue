@@ -7,12 +7,11 @@
     :style="{ width: '50vw' }"
   >
     <template #header>
-      <h3>New financial change</h3>
+      <h3>New transaction</h3>
     </template>
-    <div class="flex flex-col grid gap-4 pt-5">
+    <div class="flex flex-col grid gap-4 mt-5">
       <span class="p-float-label">
         <input-number
-          filled
           locale="hr-HR"
           mode="currency"
           currency="HRK"
@@ -21,36 +20,28 @@
             'p-invalid': model.amount.$invalid
           }"
           v-model="model.amount.$model"
-          class="expense-input"
+          class="w-full"
         />
-        <label for="amount"> Amount </label>
+        <label class="text-gray-400" for="amount"> Amount </label>
       </span>
-      <span class="p-invalid" v-if="model.amount.$invalid">{{
-        model.amount.$errors.map((x) => x.$message).join(" • ")
-      }}</span>
-      <span class="p-float-label p-mt-3">
+      <span class="p-float-label">
         <text-area
+          class="w-full"
           :class="{
             'p-invalid': model.description.$invalid
           }"
           v-model="model.description.$model"
           id="description"
-          class="expense-input"
         />
-        <label for="description"> Description </label>
+        <label class="text-gray-400" for="description"> Description </label>
       </span>
-      <span class="p-invalid" v-if="model.description.$invalid">{{
-        model.description.$errors.map((x) => x.$message).join(" • ")
-      }}</span>
-      <div
-        class="flex p-8 rounded-xl bg-gray-900 justify-center items-center gap-4 grid grid-cols-2"
-      >
+      <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
         <template
           v-for="paymentSource in state.paymentSources"
           :key="paymentSource.id"
         >
           <div
-            class="flex px-5 py-6 bg-gray-800 rounded-r-2xl shadow-lg border-l-8 border-yellow-600 cursor-pointer"
+            class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer"
           >
             <div
               class="w-full flex items-center content-between justify-between"
@@ -58,11 +49,13 @@
               <div class="flex items-center">
                 <mdi-icon
                   :size="28"
-                  color="#ffffff"
+                  color="#acb0bf"
                   :name="paymentSource.icon"
                 />
                 <div class="flex flex-col ml-5">
-                  <span class="text-lg">{{ paymentSource.description }}</span>
+                  <span class="text-lg text-gray-400 font-bold">{{
+                    paymentSource.description
+                  }}</span>
                 </div>
               </div>
               <radio-button
@@ -74,7 +67,9 @@
           </div>
         </template>
       </div>
-      <div class="flex flex-col p-4 rounded-xl bg-gray-900 items-center">
+      <div
+        class="flex flex-col rounded-lg shadow-md border border-gray-200 bg-white items-center"
+      >
         <list-box
           :multiple="true"
           v-model="model.tagIds.$model"
@@ -83,7 +78,7 @@
           listStyle="max-height: 250px"
           optionValue="val"
           optionLabel="text"
-          class="w-full"
+          class="w-full rounded-lg"
         >
           <template #option="slotProps">
             {{ slotProps.option.text }}
@@ -94,7 +89,7 @@
         model.tags.$errors.map((x) => x.$message).join(" • ")
       }}</span>
       <span class="flex justify-center items-center">
-        <span class="text-white"> Expense </span>
+        <span class="text-black"> Expense </span>
         <input-switch
           class="ml-4"
           id="expense"
@@ -104,14 +99,14 @@
     </div>
     <template #footer>
       <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
-      <btn
+      <button
         v-else
-        @click="addFinancialChange"
         :disabled="model.$invalid"
-        label="Spremi"
-        icon="pi pi-save"
-        class="p-button-raised p-button-success"
-      />
+        @click="addTransaction"
+        class="disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
+      >
+        Save
+      </button>
     </template>
   </p-dialog>
 </template>
@@ -210,7 +205,7 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
-    async function addFinancialChange() {
+    async function addTransaction() {
       state.saving = true;
 
       const payload: CreateFinancialChangeItemDto = {
@@ -232,7 +227,7 @@ export default defineComponent({
 
     return {
       state,
-      addFinancialChange,
+      addTransaction,
       tags,
       hideDialog,
       model,

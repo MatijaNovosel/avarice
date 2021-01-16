@@ -1,8 +1,8 @@
 <template>
   <div
-    class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2 divide-y divide-grey-500"
+    class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2"
   >
-    <div class="flex items-center w-full justify-end">
+    <div class="flex items-center w-full justify-end border-b border-gray-200">
       <mdi-icon
         class="cursor-pointer mr-3"
         name="bell-outline"
@@ -45,6 +45,7 @@
         New transaction
       </button>
     </div>
+    <financial-change-dialog v-model:dialog="state.newTransactionDialog" />
   </div>
 </template>
 
@@ -55,6 +56,7 @@ import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
 import mdiIcon from "./mdi-icon.vue";
+import FinancialChangeDialog from "@/components/financial-change-dialog.vue";
 
 interface Props {
   title?: string | null;
@@ -64,10 +66,11 @@ interface Props {
 interface State {
   title?: string | null;
   sidebar: boolean;
+  newTransactionDialog: boolean;
 }
 
 export default defineComponent({
-  components: { mdiIcon },
+  components: { mdiIcon, FinancialChangeDialog },
   name: "navbar",
   emits: ["update:sidebar"],
   props: {
@@ -78,6 +81,7 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const state: State = reactive({
+      newTransactionDialog: false,
       sidebar: props.sidebar,
       title: props.title,
       timeOfDay: computed(() => {
@@ -115,7 +119,7 @@ export default defineComponent({
     }
 
     function openNewTransactionDialog() {
-      //
+      state.newTransactionDialog = true;
     }
 
     return {

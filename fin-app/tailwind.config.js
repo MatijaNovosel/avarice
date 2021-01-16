@@ -22,11 +22,16 @@ module.exports = {
         yellow: {
           "450": "#fed001"
         }
-      }
+      },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ['disabled'],
+      backgroundColor: [
+        "disabled"
+      ],
+    },
   },
   plugins: [],
 }
