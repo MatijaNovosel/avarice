@@ -1,5 +1,6 @@
 <template>
-  <div class="md:container md:mx-auto mb-10 px-8 md:px-0">
+  <div class="mb-10 px-8 flex flex-col">
+    <span class="mb-3 text-xl font-semibold"> Overview </span>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <dashboard-amount-card
         v-for="paymentSource in state.paymentSources"
@@ -7,17 +8,18 @@
         :icon="paymentSource.icon"
         :title="paymentSource.description"
         :loading="state.loading"
-        :color="'#ff8a00'"
+        color="#acb0bf"
         :amount="paymentSource.currentAmount"
         :amount-visible="paymentSource.visible"
         :currency="'HRK'"
       />
     </div>
-    <div class="grid gap-5 grid-cols-1 md:grid-cols-3 mt-5">
+    <span class="mb-3 my-5 text-xl font-semibold"> Financial changes </span>
+    <div class="grid gap-5 grid-cols-1 md:grid-cols-3">
       <div
         :key="i"
         v-for="(graphData, i) in state.graphData"
-        class="p-6 flex flex-col items-center bg-gray-800 rounded-2xl shadow-lg"
+        class="p-6 flex flex-col items-center bg-white rounded-lg shadow-md"
       >
         <div class="flex items-center">
           <chart
@@ -29,50 +31,8 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 rounded-2xl bg-gray-800 px-6 pt-6">
-      <accordion>
-        <accordion-tab>
-          <template #header>
-            <span>{{ $t("filterAndOtherOptions") }}</span>
-          </template>
-          <div class="flex flex-col">
-            <list-box
-              :multiple="true"
-              v-model="state.filter.tag"
-              :options="tags"
-              dataKey="val"
-              listStyle="max-height: 250px"
-              optionValue="val"
-              optionLabel="text"
-            >
-              <template #option="slotProps">
-                {{ slotProps.option.text }}
-              </template>
-            </list-box>
-            <div class="flex mt-4 justify-end">
-              <mdi-icon
-                class="cursor-pointer mr-5 self-center"
-                @click="state.changeAmountVisible = !state.changeAmountVisible"
-                :size="20"
-                :name="state.changeAmountVisible ? 'eye' : 'eye-off'"
-                v-tooltip="'Prikaži vrijednosti'"
-              />
-              <btn
-                @click="resetFilter"
-                :label="$t('removeFilter')"
-                icon="pi pi-ban"
-                class="p-button-raised p-button-danger mr-5"
-              />
-              <btn
-                @click="getChanges"
-                :label="$t('filter')"
-                icon="pi pi-filter"
-                class="p-button-raised p-button-info"
-              />
-            </div>
-          </div>
-        </accordion-tab>
-      </accordion>
+    <span class="mb-3 my-5 text-xl font-semibold"> Transactions </span>
+    <div class="rounded-lg bg-white px-6 pt-6 shadow-md">
       <progress-spinner
         v-if="state.changesLoading"
         strokeWidth="10"
@@ -125,7 +85,6 @@ import ChangeCard from "../components/change-card.vue";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
 import { ISettingsService } from "../services/interfaces/settings-service";
-import MdiIcon from "../components/mdi-icon.vue";
 import { GraphOptions } from "@/models/graph";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { PaymentSource } from "@/models/payment-source";
@@ -178,8 +137,7 @@ export default defineComponent({
   name: "Home",
   components: {
     DashboardAmountCard,
-    ChangeCard,
-    MdiIcon
+    ChangeCard
   },
   setup() {
     const state: State = reactive({
@@ -222,7 +180,7 @@ export default defineComponent({
           minRotation: 30
         },
         legend: {
-          display: true
+          display: false
         },
         elements: {
           line: {

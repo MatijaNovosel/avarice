@@ -1,28 +1,17 @@
 <template>
-  <div
-    :style="{
-      borderLeft: `6px solid ${state.color}`
-    }"
-    class="flex px-5 py-6 bg-gray-800 rounded-r-2xl shadow-lg"
-  >
+  <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="w-full flex items-center content-between justify-between">
         <div class="flex items-center no-select">
           <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
-            <span class="amount-title">{{ state.title }}</span>
-            <span
-              :style="{
-                color: state.color
-              }"
-              class="font-bold text-xl"
-              >{{
-                state.amountVisible
-                  ? `${state.amount.toLocaleString("en")}${state.currency}`
-                  : `${state.amount}${state.currency}`.replace(/[0-9]/gi, "*")
-              }}</span
-            >
+            <span class="amount-title font-bold">{{ state.title }}</span>
+            <span class="font-semibold text-xl">{{
+              state.amountVisible
+                ? `${state.amount.toLocaleString("en")} ${state.currency}`
+                : `${state.amount} ${state.currency}`.replace(/[0-9]/gi, "*")
+            }}</span>
           </div>
         </div>
         <div class="flex space-x-4">

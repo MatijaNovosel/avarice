@@ -6,13 +6,16 @@ module.exports = {
   darkMode: 'class',
   theme: {
     colors: {
-      gray: colors.warmGray,
-      blue: colors.blueGray,
+      gray: colors.blueGray,
+      blue: colors.blue,
       yellow: colors.yellow,
       red: colors.red,
       green: colors.green,
       pink: colors.pink,
-      purple: colors.purple
+      purple: colors.purple,
+      white: colors.white,
+      orange: colors.orange,
+      black: colors.black
     },
     extend: {},
   },

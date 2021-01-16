@@ -1,10 +1,20 @@
 <template>
   <toast position="top-right" />
   <template v-if="state.isAuthenticated">
-    <navbar v-model:sidebar="state.visible" />
     <drawer v-model:visible="state.visible" />
   </template>
-  <router-view :class="{ 'offset-top': state.isAuthenticated }" />
+  <div class="grid grid-cols-12">
+    <div class="col-span-2 bg-gray-200">
+      <div class="flex flex-col p-3 items-center mt-5">
+        <span class="text-4xl gradient-text proxima-bold font-bold">FinApp</span>
+        <span>by Matija Novosel</span>
+      </div>
+    </div>
+    <div class="col-span-10">
+      <navbar v-model:sidebar="state.visible" class="mb-5" />
+      <router-view :class="{ 'offset-top': state.isAuthenticated }" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -44,14 +54,6 @@ export default defineComponent({
 <style lang="sass">
 @use "assets/css/variables"
 
-.navbar-offset
-  margin-top: variables.$navbar-height !important
-
-@media screen and (min-width: 959px)
-  .offset-top
-    margin-top: variables.$navbar-height * 1.25 !important
-
-@media screen and (max-width: 958px)
-  .offset-top
-    margin-top: 20px !important
+.proxima-bold
+  font-family: "ProximaNovaBold" !important
 </style>

@@ -11,7 +11,9 @@ const mdiIcons = [
   "signal-cellular-3",
   "signal-off",
   "facebook",
-  "cog"
+  "cog",
+  "chevron-down",
+  "check-circle"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];
