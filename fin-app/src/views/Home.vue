@@ -187,6 +187,13 @@ export default defineComponent({
             tension: 0.6
           }
         },
+        scales: {
+          yAxes: [
+            {
+              display: false
+            }
+          ]
+        },
         responsive: true
       },
       graphData: [],

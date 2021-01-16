@@ -11,7 +11,7 @@ interface GraphLegendOptions {
 }
 
 interface GraphYAxesOptions {
-  display: boolean;
+  display?: boolean;
 }
 
 interface GraphScalesOptions {

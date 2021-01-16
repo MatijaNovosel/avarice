@@ -17,7 +17,13 @@ module.exports = {
       orange: colors.orange,
       black: colors.black
     },
-    extend: {},
+    extend: {
+      colors: {
+        yellow: {
+          "450": "#fed001"
+        }
+      }
+    },
   },
   variants: {
     extend: {},

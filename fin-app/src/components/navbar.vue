@@ -3,9 +3,10 @@
     class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2 divide-y divide-grey-500"
   >
     <div class="flex items-center w-full justify-end">
+      <mdi-icon class="cursor-pointer mr-3" name="bell-outline" color="#94a3b8" />
       <img
         class="inline-block h-8 w-8 rounded-full"
-        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        src="https://avatars0.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4"
         alt=""
       />
       <span class="text-black ml-4 mr-3 font-bold">Matija Novosel</span>
@@ -14,21 +15,29 @@
     <div class="flex items-center pt-4">
       <img
         class="h-26 w-16 rounded-full flex-none"
-        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        src="https://avatars0.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4"
         alt=""
       />
       <div class="flex flex-col ml-4">
         <span class="text-black font-bold text-2xl"
-          >Good morning, Matija Novosel</span
+          >Good {{ state.timeOfDay }}, Matija Novosel</span
         >
-        <div class="flex items-center text-gray-400 font-bold"><mdi-icon class="mr-1" :size="18" name="check-circle" color="#38bf8c" /> Verified account</div>
+        <div class="flex items-center text-gray-400 font-bold">
+          <mdi-icon
+            class="mr-1"
+            :size="18"
+            name="check-circle"
+            color="#38bf8c"
+          />
+          Verified account
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, SetupContext } from "vue";
+import { defineComponent, reactive, watch, SetupContext, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -58,7 +67,18 @@ export default defineComponent({
     const router = useRouter();
     const state: State = reactive({
       sidebar: props.sidebar,
-      title: props.title
+      title: props.title,
+      timeOfDay: computed(() => {
+        const hours = new Date().getHours();
+        const minutes = new Date().getMinutes();
+        if (hours >= 6 && hours <= 11 && minutes <= 59) {
+          return "Morning";
+        } else if (hours >= 12 && hours <= 17) {
+          return "Afternoon";
+        } else {
+          return "Evening";
+        }
+      })
     });
 
     watch(

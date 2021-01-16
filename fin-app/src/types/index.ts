@@ -13,7 +13,12 @@ const mdiIcons = [
   "facebook",
   "cog",
   "chevron-down",
-  "check-circle"
+  "check-circle",
+  "home",
+  "clock",
+  "scale",
+  "shield-check",
+  "bell-outline"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];

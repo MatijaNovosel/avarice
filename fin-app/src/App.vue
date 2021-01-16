@@ -4,10 +4,40 @@
     <drawer v-model:visible="state.visible" />
   </template>
   <div class="grid grid-cols-12">
-    <div class="col-span-2 bg-gray-200">
-      <div class="flex flex-col p-3 items-center mt-5">
-        <span class="text-4xl gradient-text proxima-bold font-bold">FinApp</span>
-        <span>by Matija Novosel</span>
+    <div class="col-span-2 bg-gray-600 text-white px-3 space-y-2">
+      <div class="flex flex-col my-8 items-center">
+        <span class="text-4xl proxima-bold font-bold">FinApp</span>
+        <span class="text-sm">by Matija Novosel</span>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="home" /> <span>Home</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="clock" /> <span>History</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="scale" /> <span>Balances</span>
+        </div>
+      </div>
+      <div class="flex flex-col border-b border-gray-800 pb-3">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="credit-card-outline" /> <span>Accounts</span>
+        </div>
+      </div>
+      <div class="flex flex-col pt-1">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="cog" /> <span>Settings</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3">
+          <mdi-icon class="mr-3" color="#ffffff" name="shield-check" /> <span>Privacy</span>
+        </div>
       </div>
     </div>
     <div class="col-span-10">
@@ -23,6 +53,7 @@ import { useStore } from "vuex";
 import navbar from "@/components/navbar.vue";
 import drawer from "@/components/drawer.vue";
 import refresh from "@/helpers/refresh";
+import MdiIcon from "./components/mdi-icon.vue";
 
 interface State {
   visible: boolean;
@@ -31,7 +62,8 @@ interface State {
 export default defineComponent({
   components: {
     navbar,
-    drawer
+    drawer,
+    MdiIcon
   },
   provide: {
     refresh
