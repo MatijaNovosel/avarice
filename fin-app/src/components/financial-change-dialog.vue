@@ -100,10 +100,11 @@
     <template #footer>
       <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
       <button
+        v-ripple
         v-else
         :disabled="model.$invalid"
         @click="addTransaction"
-        class="shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
+        class="p-ripple shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
       >
         Save
       </button>

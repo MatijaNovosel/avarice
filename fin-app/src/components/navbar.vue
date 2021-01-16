@@ -1,7 +1,6 @@
 <template>
   <div
-    class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2 p-ripple"
-    v-ripple
+    class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2"
   >
     <div class="flex items-center w-full justify-end border-b border-gray-200">
       <mdi-icon
@@ -41,7 +40,7 @@
       </div>
       <button
         @click="openNewTransactionDialog"
-        class="p-ripple text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none"
+        class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
         v-ripple
       >
         New transaction

@@ -124,7 +124,4 @@ app.component("radio-button", RadioButton);
 app.directive("tooltip", Tooltip);
 app.directive("ripple", Ripple);
 
-// Config
-app.config.globalProperties.$primevue = { ripple: true };
-
 app.mount("#app");
