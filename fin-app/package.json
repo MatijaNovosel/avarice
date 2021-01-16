@@ -20,7 +20,7 @@
     "mitt": "^2.1.0",
     "postcss": "^7.0.35",
     "primeicons": "^4.0.0",
-    "primevue": "^3.1.1",
+    "primevue": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "vue": "^3.0.0",

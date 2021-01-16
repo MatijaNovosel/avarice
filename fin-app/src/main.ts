@@ -6,6 +6,7 @@ import router from "./router";
 import store from "./store";
 import ToastService from "primevue/toastservice";
 import Ripple from "primevue/ripple";
+import PrimeVue from "primevue/config";
 
 // PrimeVue component import
 import DataTable from "primevue/datatable";
@@ -78,6 +79,7 @@ app.use(router);
 app.use(VuelidatePlugin);
 app.use(ToastService);
 app.use(i18n);
+app.use(PrimeVue, { ripple: true });
 
 // Custom components
 app.component("tag", Tag);

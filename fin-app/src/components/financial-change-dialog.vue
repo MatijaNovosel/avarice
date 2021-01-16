@@ -103,7 +103,7 @@
         v-else
         :disabled="model.$invalid"
         @click="addTransaction"
-        class="disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
+        class="shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
       >
         Save
       </button>
