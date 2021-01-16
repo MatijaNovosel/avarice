@@ -2,11 +2,11 @@
   <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
-      <div class="w-full flex items-center content-between justify-between">
+      <div class="w-full flex items-center justify-between">
         <div class="flex items-center no-select">
           <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
-            <span class="amount-title font-bold">{{ state.title }}</span>
+            <span class="font-bold text-gray-400">{{ state.title }}</span>
             <span class="font-semibold text-xl">{{
               state.amountVisible
                 ? `${state.amount.toLocaleString("en")} ${state.currency}`
@@ -16,7 +16,7 @@
         </div>
         <div class="flex space-x-4">
           <mdi-icon
-            class="cursor-pointer"
+            class="cursor-pointer mr-3"
             :color="state.color"
             :size="20"
             :name="state.amountVisible ? 'eye' : 'eye-off'"
@@ -123,7 +123,4 @@ export default defineComponent({
 .spinner
   width: 25px
   height: 25px
-
-.amount-title
-  color: #927d7d
 </style>

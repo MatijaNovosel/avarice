@@ -1,27 +1,22 @@
 <template>
   <div
-    class="select-none flex flex-col justify-center p-3 rounded-r-2xl shadow-lg"
-    :class="{
-      'expense red': state.expense,
-      'gain green': !state.expense
-    }"
+    class="select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow-md border-gray-200 border"
   >
-    <span class="amount-title"
-      >{{ state.title }} •
-      <span class="amount-date">{{ state.date }}</span>
-    </span>
+    <span class="text-gray-400 font-bold">{{ state.title }} </span>
+    <span class="text-gray-300">{{ state.date }}</span>
     <span class="text-2xl">{{
       `${
         state.show
           ? state.amount.toLocaleString("en")
           : ("" + state.amount).replace(/[0-9]/gi, "*")
-      }HRK`
+      } HRK`
     }}</span>
-    <div class="flex self-end space-x-2">
+    <div class="flex self-end space-x-2 mt-3">
       <tag
         v-for="(tag, i) in state.tags"
         :key="i"
-        :color="state.expense ? '#c52626' : '#428733'"
+        :text-color="state.expense ? '#c52626' : '#428733'"
+        :color="state.expense ? '#ff9494' : '#bedeb7'"
         >{{ formatTag(tag) }}</tag
       >
     </div>
@@ -102,10 +97,4 @@ export default defineComponent({
   border-left: 10px solid rgb(66, 135, 51)
   color: rgb(66, 135, 51)
   background-color: rgb(46, 84, 37)
-
-.amount-title
-  color: #927d7d
-
-.amount-date
-  color: #bfb4b4
 </style>

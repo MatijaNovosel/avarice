@@ -13,26 +13,37 @@
         :amount-visible="paymentSource.visible"
         :currency="'HRK'"
       />
-    </div>
-    <span class="mb-3 my-5 text-xl font-semibold"> Financial changes </span>
-    <div class="grid gap-5 grid-cols-1 md:grid-cols-3">
-      <div
-        :key="i"
-        v-for="(graphData, i) in state.graphData"
-        class="p-6 flex flex-col items-center bg-white rounded-lg shadow-md"
-      >
-        <div class="flex items-center">
-          <chart
-            type="line"
-            :data="graphData"
-            :options="state.graphOptions"
-            :height="300"
-          />
+      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
+        <div class="w-full flex items-center content-between justify-between">
+          <div class="flex items-center no-select">
+            <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
+            <div class="flex flex-col ml-5">
+              <span class="font-bold text-gray-400"
+                >Withdrawals (Last 30 days)</span
+              >
+              <span class="font-semibold text-xl text-red-400"
+                >- 10,200 HRK</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
+        <div class="w-full flex items-center content-between justify-between">
+          <div class="flex items-center no-select">
+            <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
+            <div class="flex flex-col ml-5">
+              <span class="font-bold text-gray-400">Gains (Last 30 days)</span>
+              <span class="font-semibold text-xl text-green-500"
+                >+ 1,240 HRK</span
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold"> Transactions </span>
-    <div class="rounded-lg bg-white px-6 pt-6 shadow-md">
+    <span class="mb-3 my-5 text-xl font-semibold"> Recent transactions </span>
+    <div class="rounded-lg bg-white px-6 shadow-md">
       <progress-spinner
         v-if="state.changesLoading"
         strokeWidth="10"
@@ -63,6 +74,18 @@
         />
       </template>
     </div>
+    <span class="mb-3 my-5 text-xl font-semibold"> Financial changes </span>
+    <div class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md">
+      <div class="flex items-center">
+        <chart
+          type="line"
+          :data="state.graphData[0]"
+          :options="state.graphOptions"
+          :height="400"
+          :width="1000"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -86,9 +109,9 @@ import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
 import { ISettingsService } from "../services/interfaces/settings-service";
 import { GraphOptions } from "@/models/graph";
-import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
+import MdiIcon from "@/components/mdi-icon.vue";
 
 interface Filter {
   tag: TagEnum[];
@@ -137,7 +160,8 @@ export default defineComponent({
   name: "Home",
   components: {
     DashboardAmountCard,
-    ChangeCard
+    ChangeCard,
+    MdiIcon
   },
   setup() {
     const state: State = reactive({
@@ -225,9 +249,7 @@ export default defineComponent({
       state.loading = true;
       getChanges(0, state.numberOfRows);
 
-      state.paymentSources = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
-      ).getAllByUserId(1);
+      state.paymentSources = [];
 
       const history = await getService<IChangeService>(
         Types.ChangeService
@@ -239,30 +261,11 @@ export default defineComponent({
 
       state.dataSets = [];
 
-      state.paymentSources.forEach((x) => {
-        x.currentAmount = history[history.length - 1].paymentSources.filter(
-          (z) => z.id == x.id
-        )[0].amount;
-        x.visible = false;
-        state.dataSets.push({
-          label: x.description,
-          data: history
-            .map((y) => y.paymentSources.filter((z) => z.id == x.id)[0])
-            .map((y) => y.amount),
-          fill: true,
-          borderColor: "#ff8a00",
-          backgroundColor: hexToRgba(
-            adjustHexColor("#ff8a00".replace("#", ""), -10),
-            0.4
-          ) as string
-        });
-      });
-
       state.paymentSources.push({
         id: -1,
-        description: "Total",
+        description: "Total account balance",
         currency: "HRK",
-        icon: "sigma",
+        icon: "scale",
         visible: false,
         currentAmount: history[history.length - 1].total
       });

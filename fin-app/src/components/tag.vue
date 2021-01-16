@@ -3,7 +3,7 @@
     class="tag size-default"
     :style="{ 'background-color': state.color, 'border-color': state.color }"
   >
-    <span class="tag-content" :style="{ color: state.textColor }">
+    <span class="tag-content font-bold" :style="{ color: state.textColor }">
       <slot />
     </span>
   </span>

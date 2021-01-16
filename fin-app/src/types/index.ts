@@ -18,7 +18,10 @@ const mdiIcons = [
   "clock",
   "scale",
   "shield-check",
-  "bell-outline"
+  "bell-outline",
+  "piggy-bank",
+  "bank-transfer-in",
+  "bank-transfer-out"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];
