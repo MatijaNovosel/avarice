@@ -1,7 +1,7 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
-    <span class="mb-3 text-xl font-semibold"> Overview </span>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <span class="mb-3 text-xl font-semibold"> Accounts </span>
+    <div class="grid grid-cols-1 md:grid-cols-3">
       <dashboard-amount-card
         :icon="state.total.icon"
         :title="state.total.description"
@@ -11,81 +11,6 @@
         :amount-visible="state.total.visible"
         currency="HRK"
       />
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
-        <div class="w-full flex items-center content-between justify-between">
-          <div class="flex items-center no-select">
-            <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
-            <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400"
-                >Withdrawals (Last 30 days)</span
-              >
-              <span class="font-semibold text-xl text-red-400"
-                >- {{ state.recentWithdrawals }} HRK</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
-        <div class="w-full flex items-center content-between justify-between">
-          <div class="flex items-center no-select">
-            <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
-            <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400">Gains (Last 30 days)</span>
-              <span class="font-semibold text-xl text-green-500"
-                >+ {{ state.recentGains }} HRK</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <span class="mb-3 my-5 text-xl font-semibold"> Recent transactions </span>
-    <div class="rounded-lg bg-white px-6 shadow-md">
-      <progress-spinner
-        v-if="state.transactionsLoading"
-        strokeWidth="10"
-        style="height: 100px; width: 100px"
-      />
-      <template v-else>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
-          <transaction-card
-            v-for="change in state.transactions"
-            :key="change.id"
-            :expense="change.expense"
-            :title="change.description"
-            :amount="change.amount"
-            :tags="change.tagIds"
-            :date="change.createdAt"
-          />
-        </div>
-        <paginator
-          v-model:first="state.transactionsOffset"
-          v-model:rows="state.numberOfRows"
-          :totalRecords="state.totalTransactions"
-          :rowsPerPageOptions="[16, 32]"
-          :pageLinkSize="state.transactionsNumberOfPages"
-          @page="pageChanged"
-          :alwaysShow="true"
-          class="pb-5 mt-5"
-        />
-      </template>
-    </div>
-    <span class="mb-3 my-5 text-xl font-semibold">
-      Financial changes visualized
-    </span>
-    <div
-      class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
-    >
-      <div class="flex items-center">
-        <chart
-          type="line"
-          :data="state.graphData"
-          :options="state.graphOptions"
-          :height="400"
-          :width="1000"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -97,13 +22,11 @@ import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
-import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
 import { GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
-import MdiIcon from "@/components/mdi-icon.vue";
 
 interface GraphData {
   labels: string[];
@@ -132,9 +55,7 @@ interface State {
 export default defineComponent({
   name: "Home",
   components: {
-    DashboardAmountCard,
-    TransactionCard,
-    MdiIcon
+    DashboardAmountCard
   },
   setup() {
     const state: State = reactive({

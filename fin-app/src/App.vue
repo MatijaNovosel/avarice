@@ -1,9 +1,11 @@
 <template>
   <toast position="top-right" />
   <div class="grid grid-cols-12">
-    <div class="col-span-2 bg-gray-600 space-y-2">
+    <div class="col-span-2 bg-gray-600 space-y-2 h-screen">
       <div class="flex flex-col my-8 items-center text-white">
-        <span class="text-5xl proxima-bold font-bold gradient-text">FinApp</span>
+        <span class="text-5xl proxima-bold font-bold gradient-text"
+          >FinApp</span
+        >
         <span class="text-sm">by Matija Novosel</span>
       </div>
       <div class="flex flex-col space-y-1 text-gray-100">
@@ -13,6 +15,7 @@
             'bg-gray-600': state.currentRoute.name != 'home'
           }"
           class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3 p-ripple"
+          @click="redirect('home')"
           v-ripple
         >
           <mdi-icon class="mr-3 select-none" color="#ffffff" name="home" />
@@ -34,10 +37,19 @@
         </div>
         <div class="flex flex-col border-b border-gray-700 pb-3">
           <div
+            :class="{
+              'bg-gray-700': state.currentRoute.name == 'accounts',
+              'bg-gray-600': state.currentRoute.name != 'accounts'
+            }"
             class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
+            @click="redirect('accounts')"
             v-ripple
           >
-            <mdi-icon class="mr-3 select-none" color="#ffffff" name="credit-card-outline" />
+            <mdi-icon
+              class="mr-3 select-none"
+              color="#ffffff"
+              name="credit-card-outline"
+            />
             <span class="select-none">Accounts</span>
           </div>
         </div>
@@ -54,7 +66,11 @@
           class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
           v-ripple
         >
-          <mdi-icon class="mr-3 select-none" color="#ffffff" name="shield-check" />
+          <mdi-icon
+            class="mr-3 select-none"
+            color="#ffffff"
+            name="shield-check"
+          />
           <span class="select-none">Privacy</span>
         </div>
       </div>
@@ -72,7 +88,7 @@ import { useStore } from "vuex";
 import navbar from "@/components/navbar.vue";
 import refresh from "@/helpers/refresh";
 import MdiIcon from "./components/mdi-icon.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 interface State {
   visible: boolean;
@@ -89,6 +105,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
 
     const state: State = reactive({
       visible: false,
@@ -98,9 +115,16 @@ export default defineComponent({
       isAuthenticated: computed(() => store.getters.isAuthenticated)
     });
 
+    function redirect(name: string) {
+      if (route.name != name) {
+        router.push({ name });
+      }
+    }
+
     return {
       state,
-      store
+      store,
+      redirect
     };
   }
 });
