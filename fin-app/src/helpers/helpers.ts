@@ -1,5 +1,4 @@
 import { stringFormatCollection } from "../models/string-format-collection";
-import { PaymentSourceEnum } from "@/constants/payment-source-enum";
 import { TagEnum } from "@/constants/tag-enum";
 import { SelectItem } from "@/models/select-item";
 import { IndexableCollectionByString } from "@/models/indexable-collection-by-string";
@@ -71,10 +70,6 @@ export function hexToCssFilter(hex: string) {
 
 export function formatTag(val: TagEnum): string {
   return stringFormatCollection["tag"][TagEnum[val]];
-}
-
-export function formatPaymentSource(val: PaymentSourceEnum): string {
-  return stringFormatCollection["paymentSource"][PaymentSourceEnum[val]];
 }
 
 export function createSelectFromEnum<T extends IndexableCollectionByString>(

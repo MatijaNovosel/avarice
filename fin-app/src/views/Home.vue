@@ -9,7 +9,7 @@
         color="#acb0bf"
         :amount="state.total.currentAmount"
         :amount-visible="state.total.visible"
-        :currency="'HRK'"
+        currency="HRK"
       />
       <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
         <div class="w-full flex items-center content-between justify-between">
@@ -49,7 +49,7 @@
       />
       <template v-else>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
-          <change-card
+          <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
             :expense="change.expense"
@@ -97,7 +97,7 @@ import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
-import ChangeCard from "../components/change-card.vue";
+import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
 import { GraphOptions } from "@/models/graph";
@@ -133,7 +133,7 @@ export default defineComponent({
   name: "Home",
   components: {
     DashboardAmountCard,
-    ChangeCard,
+    TransactionCard,
     MdiIcon
   },
   setup() {

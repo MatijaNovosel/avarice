@@ -45,8 +45,6 @@ import RadioButton from "primevue/radiobutton";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
-import GroupBox from "@/components/group-box.vue";
-import Icon from "@/components/icon.vue";
 
 // CSS
 import "@/assets/css/themes/theme.css";
@@ -83,8 +81,6 @@ app.use(PrimeVue, { ripple: true });
 
 // Custom components
 app.component("tag", Tag);
-app.component("group-box", GroupBox);
-app.component("icon", Icon);
 
 // PrimeVue components
 app.component("data-table", DataTable);

@@ -47,7 +47,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "change-card",
+  name: "transaction-card",
   props: {
     amount: Number,
     title: String,
