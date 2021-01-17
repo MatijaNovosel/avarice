@@ -29,13 +29,6 @@
             <mdi-icon class="mr-3 select-none" color="#ffffff" name="clock" />
             <span class="select-none">History</span>
           </div>
-          <div
-            class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
-            v-ripple
-          >
-            <mdi-icon class="mr-3 select-none" color="#ffffff" name="scale" />
-            <span class="select-none">Balances</span>
-          </div>
           <div class="flex flex-col border-b border-gray-700 pb-3">
             <div
               :class="{

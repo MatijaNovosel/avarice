@@ -40,6 +40,13 @@
       </div>
       <div class="flex space-x-2">
         <button
+          v-if="state.currentRoute == 'accounts'"
+          class="text-white rounded-md bg-gray-700 hover:bg-gray-800 py-1 px-6 shadow-md select-none p-ripple"
+          v-ripple
+        >
+          Add new account
+        </button>
+        <button
           @click="openNewTransactionDialog"
           class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
           v-ripple
@@ -47,7 +54,7 @@
           New transaction
         </button>
         <button
-          class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
+          class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
           v-ripple
         >
           New transfer
@@ -61,7 +68,7 @@
 <script lang="ts">
 import { defineComponent, reactive, watch, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
 import mdiIcon from "./mdi-icon.vue";
@@ -85,9 +92,12 @@ export default defineComponent({
   setup(props: Props) {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
+
     const state: State = reactive({
       newTransactionDialog: false,
       title: props.title,
+      currentRoute: computed(() => route.name),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();
