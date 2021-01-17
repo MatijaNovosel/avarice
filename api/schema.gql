@@ -65,6 +65,13 @@ type GAppUser {
   displayName: String!
 }
 
+type GLatestAccountValue {
+  amount: Float!
+  description: String!
+  currency: String!
+  icon: String!
+}
+
 type GPaymentSource {
   id: Int!
   description: String!
@@ -84,6 +91,7 @@ type PaginatedFinancialChange {
 
 type Query {
   paymentSources(id: Float!): [GPaymentSource!]!
+  latestValues(id: Float!): [GLatestAccountValue!]!
   financialHistory(to: String, from: String, id: Float!): [GFinancialHistory!]!
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   appUser(id: Int!): GAppUser!

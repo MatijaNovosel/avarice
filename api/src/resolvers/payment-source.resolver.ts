@@ -1,4 +1,7 @@
-import { GPaymentSource } from "./../entities/paymentsource";
+import {
+  GLatestAccountValue,
+  GPaymentSource
+} from "./../entities/paymentsource";
 import { PaymentSourceService } from "./../services/payment-source.service";
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 
@@ -9,6 +12,11 @@ export class PaymentSourceResolver {
   @Query(() => [GPaymentSource], { name: "paymentSources" })
   async getAll(@Args({ name: "id" }) id: number) {
     return this.paymentSourceService.findAllByUserId(id);
+  }
+
+  @Query(() => [GLatestAccountValue], { name: "latestValues" })
+  async getLatestValues(@Args({ name: "id" }) id: number) {
+    return this.paymentSourceService.getLatestValues(id);
   }
 
   @Mutation(() => Int)

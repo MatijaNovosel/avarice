@@ -6,3 +6,10 @@ export interface PaymentSource {
   currentAmount?: number;
   visible?: boolean;
 }
+
+export interface AccountLatestValue {
+  description: string;
+  currency: string;
+  icon: string;
+  amount?: number;
+}
