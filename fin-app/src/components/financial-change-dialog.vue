@@ -7,7 +7,7 @@
     :style="{ width: '50vw' }"
   >
     <template #header>
-      <h3>New transaction</h3>
+      <span class="text-lg text-gray-400 font-bold">New transaction</span>
     </template>
     <div class="flex flex-col grid gap-4 mt-5">
       <span class="p-float-label">
