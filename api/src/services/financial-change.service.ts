@@ -26,7 +26,7 @@ export class FinancialChangeService {
 
   async getRecentWithdrawalValues(appUserId: number) {
     const res = await createQueryBuilder("financialchange")
-      .select("SUM(amount) total")
+      .select("ROUND(SUM(amount), 2) total")
       .where(
         `expense = 1 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )
@@ -36,7 +36,7 @@ export class FinancialChangeService {
 
   async getRecentGains(appUserId: number) {
     const res = await createQueryBuilder("financialchange")
-      .select("SUM(amount) total")
+      .select("ROUND(SUM(amount), 2) total")
       .where(
         `expense = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )

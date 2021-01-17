@@ -72,7 +72,7 @@
       </template>
     </div>
     <span class="mb-3 my-5 text-xl font-semibold">
-      Financial transactions
+      Financial changes visualized
     </span>
     <div
       class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
