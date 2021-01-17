@@ -6,7 +6,7 @@ import { Tag } from "./../entities/tag";
 import { Financialchange } from "./../entities/financialchange";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { getRepository, Repository } from "typeorm";
+import { createQueryBuilder, getRepository, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
 import { Appuser } from "src/entities/appuser";
@@ -23,6 +23,26 @@ export class FinancialChangeService {
     @InjectRepository(Appuser)
     private appUserRepository: Repository<Appuser>
   ) {}
+
+  async getRecentWithdrawalValues(appUserId: number) {
+    const res = await createQueryBuilder("financialchange")
+      .select("SUM(amount) total")
+      .where(
+        `expense = 1 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
+      )
+      .getRawOne();
+    return res.total;
+  }
+
+  async getRecentGains(appUserId: number) {
+    const res = await createQueryBuilder("financialchange")
+      .select("SUM(amount) total")
+      .where(
+        `expense = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
+      )
+      .getRawOne();
+    return res.total;
+  }
 
   async findAllByUserId(
     id: number,

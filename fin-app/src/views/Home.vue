@@ -22,7 +22,7 @@
                 >Withdrawals (Last 30 days)</span
               >
               <span class="font-semibold text-xl text-red-400"
-                >- 10,200 HRK</span
+                >- {{ state.recentWithdrawals }} HRK</span
               >
             </div>
           </div>
@@ -35,7 +35,7 @@
             <div class="flex flex-col ml-5">
               <span class="font-bold text-gray-400">Gains (Last 30 days)</span>
               <span class="font-semibold text-xl text-green-500"
-                >+ 1,240 HRK</span
+                >+ {{ state.recentGains }} HRK</span
               >
             </div>
           </div>
@@ -75,7 +75,9 @@
       </template>
     </div>
     <span class="mb-3 my-5 text-xl font-semibold"> Financial changes </span>
-    <div class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md">
+    <div
+      class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
+    >
       <div class="flex items-center">
         <chart
           type="line"
@@ -131,6 +133,8 @@ interface AmountVisible {
 }
 
 interface State {
+  recentWithdrawals: number;
+  recentGains: number;
   dateRange: Array<Date | null>;
   loading: boolean;
   changesLoading: boolean;
@@ -165,6 +169,8 @@ export default defineComponent({
   },
   setup() {
     const state: State = reactive({
+      recentWithdrawals: 0,
+      recentGains: 0,
       graphLabels: [],
       dateRange: [],
       paymentSources: [],
@@ -289,6 +295,16 @@ export default defineComponent({
           datasets: [x]
         });
       });
+
+      state.recentWithdrawals = await getService<IChangeService>(
+        Types.ChangeService
+      ).getRecentWithdrawals(1);
+
+      console.log(state.recentWithdrawals);
+
+      state.recentGains = await getService<IChangeService>(
+        Types.ChangeService
+      ).getRecentGains(1);
 
       state.loading = false;
     }

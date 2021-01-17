@@ -89,6 +89,8 @@ type Query {
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
+  recentWithdrawals(id: Int!): Float!
+  recentGains(id: Int!): Float!
   tags: [GTag!]!
 }
 

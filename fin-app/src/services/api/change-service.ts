@@ -10,6 +10,28 @@ import { IChangeService } from "../interfaces/change-service";
 import { format } from "date-fns";
 
 export class ChangeService implements IChangeService {
+  async getRecentWithdrawals(appUserId: number): Promise<number> {
+    const { data: { data: { recentWithdrawals } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          recentWithdrawals(id: ${appUserId})
+        }
+      `
+    });
+    return recentWithdrawals;
+  }
+
+  async getRecentGains(appUserId: number): Promise<number> {
+    const { data: { data: { recentGains } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          recentGains(id: ${appUserId})
+        }
+      `
+    });
+    return recentGains;
+  }
+
   async addChange(payload: CreateFinancialChangeItemDto): Promise<void> {
     const {
       appUserId,

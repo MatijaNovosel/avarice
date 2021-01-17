@@ -38,15 +38,23 @@
           </div>
         </div>
       </div>
-      <button
-        @click="openNewTransactionDialog"
-        class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
-        v-ripple
-      >
-        New transaction
-      </button>
+      <div class="flex space-x-2">
+        <button
+          @click="openNewTransactionDialog"
+          class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
+          v-ripple
+        >
+          New transaction
+        </button>
+        <button
+          class="text-white rounded-md bg-gray-600 hover:bg-gray-700 py-1 px-6 shadow-md select-none p-ripple"
+          v-ripple
+        >
+          New transfer
+        </button>
+      </div>
     </div>
-    <financial-change-dialog v-model:dialog="state.newTransactionDialog" />
+    <transaction-dialog v-model:dialog="state.newTransactionDialog" />
   </div>
 </template>
 
@@ -57,7 +65,7 @@ import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
 import mdiIcon from "./mdi-icon.vue";
-import FinancialChangeDialog from "@/components/financial-change-dialog.vue";
+import TransactionDialog from "@/components/transaction-dialog.vue";
 
 interface Props {
   title?: string | null;
@@ -71,7 +79,7 @@ interface State {
 }
 
 export default defineComponent({
-  components: { mdiIcon, FinancialChangeDialog },
+  components: { mdiIcon, TransactionDialog },
   name: "navbar",
   emits: ["update:sidebar"],
   props: {

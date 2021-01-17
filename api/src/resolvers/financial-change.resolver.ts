@@ -2,7 +2,7 @@ import { PaginatedFinancialChange } from "./../models/item-collection";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { VoidScalar } from "src/scalars/void";
 import { GFinancialChange } from "src/entities/financialchange";
-import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Float, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { FinancialChangeService } from "src/services/financial-change.service";
 
 @Resolver(() => GFinancialChange)
@@ -16,6 +16,16 @@ export class FinancialChangeResolver {
     @Args("take", { type: () => Int, nullable: true }) take: number
   ) {
     return this.financialChangeService.findAllByUserId(id, skip, take);
+  }
+
+  @Query(() => Float, { name: "recentWithdrawals" })
+  async getRecentWithdrawals(@Args("id", { type: () => Int }) id: number) {
+    return this.financialChangeService.getRecentWithdrawalValues(id);
+  }
+
+  @Query(() => Float, { name: "recentGains" })
+  async getRecentGains(@Args("id", { type: () => Int }) id: number) {
+    return this.financialChangeService.getRecentGains(id);
   }
 
   @Mutation(() => VoidScalar, { nullable: true })

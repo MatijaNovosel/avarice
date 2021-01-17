@@ -147,7 +147,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "financial-change-dialog",
+  name: "transaction-dialog",
   emits: ["update:dialog"],
   components: {
     MdiIcon

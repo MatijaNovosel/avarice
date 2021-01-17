@@ -7,6 +7,8 @@ import { ItemCollection } from "@/models/item-collection";
 
 export interface IChangeService {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
+  getRecentWithdrawals(appUserId: number): Promise<number>;
+  getRecentGains(appUserId: number): Promise<number>;
   getChanges(
     appUserId: number,
     skip?: number,

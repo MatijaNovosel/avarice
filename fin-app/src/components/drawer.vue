@@ -24,14 +24,14 @@
     </div>
     <panel-menu :model="state.menuItems" />
   </sidebar>
-  <financial-change-dialog v-model:dialog="state.financialChangeDialog" />
+  <transaction-dialog v-model:dialog="state.TransactionDialog" />
   <settings-dialog v-model:dialog="state.settingsDialog" />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, reactive, watch } from "vue";
 import MenuItem from "@/models/menu-item";
-import FinancialChangeDialog from "@/components/financial-change-dialog.vue";
+import TransactionDialog from "@/components/transaction-dialog.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
@@ -44,7 +44,7 @@ interface Props {
 interface State {
   menuItems: MenuItem[];
   visible: boolean;
-  financialChangeDialog: boolean;
+  TransactionDialog: boolean;
   settingsDialog: boolean;
   user: AppUser;
 }
@@ -55,7 +55,7 @@ export default defineComponent({
     visible: Boolean
   },
   components: {
-    FinancialChangeDialog,
+    TransactionDialog,
     SettingsDialog
   },
   setup(props: Props) {
@@ -66,7 +66,7 @@ export default defineComponent({
     const state: State = reactive({
       visible: props.visible,
       settingsDialog: false,
-      financialChangeDialog: false,
+      TransactionDialog: false,
       user: computed(() => store.getters.user),
       menuItems: [
         {
@@ -81,7 +81,7 @@ export default defineComponent({
           icon: "pi pi-dollar",
           label: "New financial change",
           command: () => {
-            state.financialChangeDialog = true;
+            state.TransactionDialog = true;
           }
         },
         {

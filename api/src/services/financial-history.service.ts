@@ -16,7 +16,6 @@ export class FinancialHistoryService {
     @InjectRepository(Financialhistory)
     private financialHistoryRepository: Repository<Financialhistory>
   ) {}
-
   async findByUserId(
     appUserId: number,
     from?: string,
