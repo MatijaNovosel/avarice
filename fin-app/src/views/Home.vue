@@ -92,13 +92,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, inject, onMounted } from "vue";
-import {
-  formatTag,
-  formatPaymentSource,
-  hexToRgba,
-  adjustHexColor
-} from "../helpers/helpers";
-import { add, format, startOfMonth } from "date-fns";
+import { hexToRgba, adjustHexColor } from "../helpers/helpers";
+import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
@@ -258,10 +253,6 @@ export default defineComponent({
 
     return {
       state,
-      format,
-      formatTag,
-      formatPaymentSource,
-      getTransactions,
       pageChanged
     };
   }
