@@ -64,9 +64,7 @@ export class FinancialHistoryService {
     appUserId: number
   ): Promise<GFinancialHistoryCurrentAmount> {
     const res = await createQueryBuilder("financialhistory")
-      .select("financialhistory.createdAt")
-      .groupBy("financialhistory.createdAt")
-      .orderBy("financialHistory.createdAt", "DESC")
+      .select("MAX(financialhistory.createdAt)", "createdAt")
       .getRawOne();
 
     let total = 0;
