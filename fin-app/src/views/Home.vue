@@ -42,11 +42,9 @@
     </div>
     <span class="mb-3 my-5 text-xl font-semibold"> Recent transactions </span>
     <div class="rounded-lg bg-white px-6 shadow-md">
-      <progress-spinner
-        v-if="state.transactionsLoading"
-        strokeWidth="10"
-        style="height: 100px; width: 100px"
-      />
+      <div v-if="state.transactionsLoading" class="text-center my-16">
+        <progress-spinner strokeWidth="10" class="h-24 w-24" />
+      </div>
       <template v-else>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
           <transaction-card

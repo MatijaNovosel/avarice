@@ -4,7 +4,7 @@
   >
     <span class="text-gray-400 font-bold">{{ state.title }} </span>
     <span class="text-gray-300">{{ state.date }}</span>
-    <span class="text-2xl">{{
+    <span class="text-xl">{{
       `${
         state.show
           ? state.amount.toLocaleString("en")
