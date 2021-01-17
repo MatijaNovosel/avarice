@@ -3,7 +3,7 @@
   <div class="grid grid-cols-12">
     <div class="col-span-2 bg-gray-600 space-y-2">
       <div class="flex flex-col my-8 items-center text-white">
-        <span class="text-4xl proxima-bold font-bold">FinApp</span>
+        <span class="text-5xl proxima-bold font-bold gradient-text">FinApp</span>
         <span class="text-sm">by Matija Novosel</span>
       </div>
       <div class="flex flex-col space-y-1 text-gray-100">
