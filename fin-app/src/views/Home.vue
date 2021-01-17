@@ -3,14 +3,12 @@
     <span class="mb-3 text-xl font-semibold"> Overview </span>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <dashboard-amount-card
-        v-for="paymentSource in state.paymentSources"
-        :key="paymentSource.id"
-        :icon="paymentSource.icon"
-        :title="paymentSource.description"
+        :icon="state.total.icon"
+        :title="state.total.description"
         :loading="state.loading"
         color="#acb0bf"
-        :amount="paymentSource.currentAmount"
-        :amount-visible="paymentSource.visible"
+        :amount="state.total.currentAmount"
+        :amount-visible="state.total.visible"
         :currency="'HRK'"
       />
       <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
@@ -45,43 +43,44 @@
     <span class="mb-3 my-5 text-xl font-semibold"> Recent transactions </span>
     <div class="rounded-lg bg-white px-6 shadow-md">
       <progress-spinner
-        v-if="state.changesLoading"
+        v-if="state.transactionsLoading"
         strokeWidth="10"
         style="height: 100px; width: 100px"
       />
       <template v-else>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
           <change-card
-            v-for="change in state.changes"
+            v-for="change in state.transactions"
             :key="change.id"
             :expense="change.expense"
             :title="change.description"
             :amount="change.amount"
             :tags="change.tagIds"
             :date="change.createdAt"
-            :show="state.changeAmountVisible"
           />
         </div>
         <paginator
-          v-model:first="state.changesOffset"
+          v-model:first="state.transactionsOffset"
           v-model:rows="state.numberOfRows"
-          :totalRecords="state.changesTotalItems"
+          :totalRecords="state.totalTransactions"
           :rowsPerPageOptions="[16, 32]"
-          :pageLinkSize="state.changesNumberOfPages"
+          :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
           :alwaysShow="true"
           class="pb-5 mt-5"
         />
       </template>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold"> Financial changes </span>
+    <span class="mb-3 my-5 text-xl font-semibold">
+      Financial transactions
+    </span>
     <div
       class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
     >
       <div class="flex items-center">
         <chart
           type="line"
-          :data="state.graphData[0]"
+          :data="state.graphData"
           :options="state.graphOptions"
           :height="400"
           :width="1000"
@@ -101,35 +100,19 @@ import {
 } from "../helpers/helpers";
 import { add, format, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
-import { createSelectFromEnum } from "../helpers/helpers";
-import { UserSettings } from "../models/user-settings";
-import { TagEnum } from "../constants/tag-enum";
 import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import ChangeCard from "../components/change-card.vue";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/change-service";
-import { ISettingsService } from "../services/interfaces/settings-service";
 import { GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
 import MdiIcon from "@/components/mdi-icon.vue";
 
-interface Filter {
-  tag: TagEnum[];
-}
-
 interface GraphData {
   labels: string[];
   datasets: DatasetItem[];
-}
-
-interface AmountVisible {
-  gyro: boolean;
-  checking: boolean;
-  pocket: boolean;
-  euros: boolean;
-  total: boolean;
 }
 
 interface State {
@@ -137,27 +120,18 @@ interface State {
   recentGains: number;
   dateRange: Array<Date | null>;
   loading: boolean;
-  changesLoading: boolean;
-  graphData: GraphData[] | null;
-  totalAmount: string;
-  changes: FinancialChangeItem[];
+  transactionsLoading: boolean;
+  graphData: GraphData | null;
+  transactions: FinancialChangeItem[];
   // eslint-disable-next-line
   refresh: any;
-  settings: UserSettings;
-  filter: Filter;
-  maxValue: number;
-  entry: number;
-  changesNumberOfPages: number;
-  changesTotalItems: number;
+  transactionsNumberOfPages: number;
+  totalTransactions: number;
   numberOfRows: number;
-  changesOffset: number;
-  amountVisible: AmountVisible;
-  dataSets: DatasetItem[];
-  graphValuesVisible: boolean;
+  transactionsOffset: number;
+  totalDataset: DatasetItem | null;
   graphOptions: GraphOptions;
-  changeAmountVisible: boolean;
-  paymentSources: PaymentSource[];
-  graphLabels: string[];
+  total: PaymentSource;
 }
 
 export default defineComponent({
@@ -171,44 +145,25 @@ export default defineComponent({
     const state: State = reactive({
       recentWithdrawals: 0,
       recentGains: 0,
-      graphLabels: [],
       dateRange: [],
-      paymentSources: [],
-      changeAmountVisible: false,
-      graphValuesVisible: false,
-      dataSets: [],
-      amountVisible: {
-        gyro: false,
-        checking: false,
-        pocket: false,
-        euros: true,
-        total: false
+      total: {
+        id: 1,
+        description: "Total account balance",
+        currency: "HRK",
+        icon: "scale",
+        currentAmount: 0,
+        visible: false
       },
-      entry: 0,
-      changesNumberOfPages: 0,
-      changesOffset: 0,
-      changesTotalItems: 0,
+      totalDataset: null,
+      transactionsNumberOfPages: 0,
+      transactionsOffset: 0,
+      totalTransactions: 0,
       numberOfRows: 16,
       refresh: inject("refresh"),
-      changes: [],
-      baseChanges: [],
-      maxValue: 0,
-      filter: {
-        tag: []
-      },
-      settings: {
-        checkingGraphColor: "#383737",
-        checkingGraphVisible: false
-      },
+      transactions: [],
       loading: false,
-      changesLoading: false,
+      transactionsLoading: false,
       graphOptions: {
-        ticks: {
-          fontFamily: "Lato",
-          fontColor: "#fff",
-          fontSize: 14,
-          minRotation: 30
-        },
         legend: {
           display: false
         },
@@ -220,63 +175,42 @@ export default defineComponent({
         scales: {
           yAxes: [
             {
-              display: false
+              display: true
             }
           ]
         },
         responsive: true
       },
-      graphData: [],
-      totalAmount: "0,00HRK"
+      graphData: null
     });
 
-    async function getChanges(skip?: number, take?: number) {
-      state.changesLoading = true;
+    async function getTransactions(skip?: number, take?: number) {
+      state.transactionsLoading = true;
 
       const itemCollection = await getService<IChangeService>(
         Types.ChangeService
       ).getChanges(1, skip, take);
 
-      state.changes = itemCollection.items;
-      state.changesTotalItems = itemCollection.count;
-      state.changesNumberOfPages = Math.floor(
-        state.changesTotalItems / state.numberOfRows
+      state.transactions = itemCollection.items;
+      state.totalTransactions = itemCollection.count;
+      state.transactionsNumberOfPages = Math.floor(
+        state.totalTransactions / state.numberOfRows
       );
 
-      state.changesLoading = false;
-    }
-
-    function resetFilter() {
-      state.filter.tag = [];
-      getChanges();
+      state.transactionsLoading = false;
     }
 
     async function updateData() {
       state.loading = true;
-      getChanges(0, state.numberOfRows);
-
-      state.paymentSources = [];
+      getTransactions(0, state.numberOfRows);
 
       const history = await getService<IChangeService>(
         Types.ChangeService
       ).getHistory(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
 
-      state.settings = await getService<ISettingsService>(
-        Types.SettingsService
-      ).getSettings(1);
+      state.total.currentAmount = history[history.length - 1].total;
 
-      state.dataSets = [];
-
-      state.paymentSources.push({
-        id: -1,
-        description: "Total account balance",
-        currency: "HRK",
-        icon: "scale",
-        visible: false,
-        currentAmount: history[history.length - 1].total
-      });
-
-      state.dataSets.push({
+      state.totalDataset = {
         label: "Total",
         data: history.map((x) => x.total),
         fill: true,
@@ -285,22 +219,16 @@ export default defineComponent({
           adjustHexColor("#ff8a00".replace("#", ""), -10),
           0.4
         ) as string
-      });
+      };
 
-      state.graphLabels = history.map((x) => x.createdAt);
-
-      state.dataSets.forEach((x) => {
-        state?.graphData?.push({
-          labels: state.graphLabels,
-          datasets: [x]
-        });
-      });
+      state.graphData = {
+        labels: history.map((x) => x.createdAt),
+        datasets: [state.totalDataset]
+      };
 
       state.recentWithdrawals = await getService<IChangeService>(
         Types.ChangeService
       ).getRecentWithdrawals(1);
-
-      console.log(state.recentWithdrawals);
 
       state.recentGains = await getService<IChangeService>(
         Types.ChangeService
@@ -311,7 +239,7 @@ export default defineComponent({
 
     function pageChanged(paginationInfo: Pagination) {
       const { page, rows } = { ...paginationInfo };
-      getChanges(page * rows, state.numberOfRows);
+      getTransactions(page * rows, state.numberOfRows);
     }
 
     onMounted(async () => {
@@ -328,16 +256,12 @@ export default defineComponent({
       { deep: true }
     );
 
-    const tags = createSelectFromEnum(TagEnum, "tag");
-
     return {
       state,
       format,
       formatTag,
       formatPaymentSource,
-      tags,
-      resetFilter,
-      getChanges,
+      getTransactions,
       pageChanged
     };
   }
@@ -345,13 +269,4 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.p-accordion-header-link
-  background-color: rgba(255, 255, 255, 0.04) !important
-  z-index: 0 !important
-
-.p-paginator
-  justify-content: center !important
-
-.p-dataview .p-dataview-content
-  padding: 0px !important
 </style>

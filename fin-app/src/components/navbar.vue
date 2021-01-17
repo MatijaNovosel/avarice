@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, SetupContext, computed } from "vue";
+import { defineComponent, reactive, watch, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -69,29 +69,24 @@ import TransactionDialog from "@/components/transaction-dialog.vue";
 
 interface Props {
   title?: string | null;
-  sidebar: boolean;
 }
 
 interface State {
   title?: string | null;
-  sidebar: boolean;
   newTransactionDialog: boolean;
 }
 
 export default defineComponent({
   components: { mdiIcon, TransactionDialog },
   name: "navbar",
-  emits: ["update:sidebar"],
   props: {
-    title: String,
-    sidebar: Boolean
+    title: String
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props: Props) {
     const store = useStore();
     const router = useRouter();
     const state: State = reactive({
       newTransactionDialog: false,
-      sidebar: props.sidebar,
       title: props.title,
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
@@ -111,20 +106,10 @@ export default defineComponent({
       (val) => (state.title = val)
     );
 
-    watch(
-      () => props.sidebar,
-      (val) => (state.sidebar = val)
-    );
-
     async function logout() {
       await getService<IAuthService>(Types.AuthService).signOut();
       store.dispatch("unsetUser");
       router.push({ name: "login" });
-    }
-
-    function changeSiderbarState() {
-      state.sidebar = !state.sidebar;
-      context.emit("update:sidebar", state.sidebar);
     }
 
     function openNewTransactionDialog() {
@@ -134,7 +119,6 @@ export default defineComponent({
     return {
       state,
       logout,
-      changeSiderbarState,
       store,
       openNewTransactionDialog
     };

@@ -1,8 +1,5 @@
 <template>
   <toast position="top-right" />
-  <template v-if="state.isAuthenticated">
-    <drawer v-model:visible="state.visible" />
-  </template>
   <div class="grid grid-cols-12">
     <div class="col-span-2 bg-gray-600 space-y-2">
       <div class="flex flex-col my-8 items-center text-white">
@@ -18,21 +15,21 @@
           class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3 p-ripple"
           v-ripple
         >
-          <mdi-icon class="mr-3" color="#ffffff" name="home" />
+          <mdi-icon class="mr-3 select-none" color="#ffffff" name="home" />
           <span class="select-none">Home</span>
         </div>
         <div
           class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3 p-ripple"
           v-ripple
         >
-          <mdi-icon class="mr-3" color="#ffffff" name="clock" />
+          <mdi-icon class="mr-3 select-none" color="#ffffff" name="clock" />
           <span class="select-none">History</span>
         </div>
         <div
           class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
           v-ripple
         >
-          <mdi-icon class="mr-3" color="#ffffff" name="scale" />
+          <mdi-icon class="mr-3 select-none" color="#ffffff" name="scale" />
           <span class="select-none">Balances</span>
         </div>
         <div class="flex flex-col border-b border-gray-700 pb-3">
@@ -40,7 +37,7 @@
             class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
             v-ripple
           >
-            <mdi-icon class="mr-3" color="#ffffff" name="credit-card-outline" />
+            <mdi-icon class="mr-3 select-none" color="#ffffff" name="credit-card-outline" />
             <span class="select-none">Accounts</span>
           </div>
         </div>
@@ -49,7 +46,7 @@
             class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
             v-ripple
           >
-            <mdi-icon class="mr-3" color="#ffffff" name="cog" />
+            <mdi-icon class="mr-3 select-none" color="#ffffff" name="cog" />
             <span class="select-none">Settings</span>
           </div>
         </div>
@@ -57,7 +54,7 @@
           class="p-ripple flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-700 py-2 px-3 mx-3"
           v-ripple
         >
-          <mdi-icon class="mr-3" color="#ffffff" name="shield-check" />
+          <mdi-icon class="mr-3 select-none" color="#ffffff" name="shield-check" />
           <span class="select-none">Privacy</span>
         </div>
       </div>
@@ -73,7 +70,6 @@
 import { computed, defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 import navbar from "@/components/navbar.vue";
-import drawer from "@/components/drawer.vue";
 import refresh from "@/helpers/refresh";
 import MdiIcon from "./components/mdi-icon.vue";
 import { useRoute } from "vue-router";
@@ -85,7 +81,6 @@ interface State {
 export default defineComponent({
   components: {
     navbar,
-    drawer,
     MdiIcon
   },
   provide: {
