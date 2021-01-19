@@ -1,5 +1,8 @@
 <template>
   <div
+    :class="{
+      'bg-gray-50': state.transfer
+    }"
     class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow-md border-gray-200 border"
   >
     <mdi-icon
@@ -98,15 +101,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="sass">
-.expense
-  border-left: 10px solid rgb(197, 38, 38)
-  color: rgb(197, 38, 38)
-  background-color: rgb(94, 33, 33)
-
-.gain
-  border-left: 10px solid rgb(66, 135, 51)
-  color: rgb(66, 135, 51)
-  background-color: rgb(46, 84, 37)
-</style>

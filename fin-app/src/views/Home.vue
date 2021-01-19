@@ -46,7 +46,7 @@
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mt-5">
           <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
