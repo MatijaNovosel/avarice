@@ -21,7 +21,8 @@ const mdiIcons = [
   "bell-outline",
   "piggy-bank",
   "bank-transfer-in",
-  "bank-transfer-out"
+  "bank-transfer-out",
+  "swap"
 ] as const;
 
 export type MDIIcon = typeof mdiIcons[number];

@@ -4,6 +4,7 @@ export interface FinancialChangeItem {
   createdAt: string;
   description: string;
   expense: boolean;
+  transfer: boolean;
   paymentSourceId: number;
   tagIds: number[];
 }

@@ -55,6 +55,8 @@
             :amount="change.amount"
             :tags="change.tagIds"
             :date="change.createdAt"
+            :show="false"
+            :transfer="change.transfer"
           />
         </div>
         <paginator

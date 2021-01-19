@@ -62,6 +62,7 @@ export class FinancialChangeService {
     return new PaginatedFinancialChange(
       data.map((fc) => ({
         id: fc.id,
+        transfer: fc.transfer,
         amount: fc.amount,
         description: fc.description,
         createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm"),

@@ -73,6 +73,7 @@ export class ChangeService implements IChangeService {
             items {
               id
               amount
+              transfer
               createdAt
               description
               expense

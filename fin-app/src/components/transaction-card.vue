@@ -1,7 +1,13 @@
 <template>
   <div
-    class="select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow-md border-gray-200 border"
+    class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow-md border-gray-200 border"
   >
+    <mdi-icon
+      v-if="state.transfer"
+      name="swap"
+      class="absolute top-5 right-5"
+      color="#97afcf"
+    />
     <span class="text-gray-400 font-bold">{{ state.title }} </span>
     <span class="text-gray-300">{{ state.date }}</span>
     <span class="text-xl">{{
@@ -27,12 +33,14 @@
 import { TagEnum } from "@/constants/tag-enum";
 import { defineComponent, reactive, watch } from "vue";
 import { formatTag } from "@/helpers/helpers";
+import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
   amount?: number | null;
   title?: string | null;
   date?: string | null;
   expense?: boolean;
+  transfer?: boolean;
   tags?: TagEnum[] | null;
   show?: boolean;
 }
@@ -42,11 +50,13 @@ interface State {
   title?: string | null;
   date?: string | null;
   expense?: boolean;
+  transfer?: boolean;
   tags?: TagEnum[] | null;
   show?: boolean;
 }
 
 export default defineComponent({
+  components: { mdiIcon },
   name: "transaction-card",
   props: {
     amount: Number,
@@ -54,6 +64,7 @@ export default defineComponent({
     tags: null,
     date: String,
     expense: Boolean,
+    transfer: Boolean,
     show: {
       type: Boolean,
       default: true
@@ -66,6 +77,7 @@ export default defineComponent({
       date: props.date,
       tags: props.tags,
       expense: props.expense,
+      transfer: props.transfer,
       show: props.show
     });
 

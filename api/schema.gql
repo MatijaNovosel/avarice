@@ -15,6 +15,7 @@ type GFinancialChange {
   createdAt: String!
   description: String!
   expense: Boolean!
+  transfer: Boolean!
   paymentSourceId: Int!
   tagIds: [Int!]!
 }
