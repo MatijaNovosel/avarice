@@ -1,7 +1,7 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
     <span class="mb-3 text-xl font-semibold"> Accounts </span>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <dashboard-amount-card
         v-for="(account, i) in state.accounts"
         :key="i"
