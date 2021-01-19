@@ -46,7 +46,7 @@
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mt-5">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-5">
           <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
@@ -63,7 +63,7 @@
           v-model:first="state.transactionsOffset"
           v-model:rows="state.numberOfRows"
           :totalRecords="state.totalTransactions"
-          :rowsPerPageOptions="[16, 32]"
+          :rowsPerPageOptions="state.transactionPageOption"
           :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
           :alwaysShow="true"
@@ -127,6 +127,7 @@ interface State {
   totalDataset: DatasetItem | null;
   graphOptions: GraphOptions;
   total: PaymentSource;
+  transactionPageOption: number[];
 }
 
 export default defineComponent({
@@ -138,6 +139,7 @@ export default defineComponent({
   },
   setup() {
     const state: State = reactive({
+      transactionPageOption: [15, 30],
       recentWithdrawals: 0,
       recentGains: 0,
       dateRange: [],
@@ -153,7 +155,7 @@ export default defineComponent({
       transactionsNumberOfPages: 0,
       transactionsOffset: 0,
       totalTransactions: 0,
-      numberOfRows: 32,
+      numberOfRows: 30,
       refresh: inject("refresh"),
       transactions: [],
       loading: false,
