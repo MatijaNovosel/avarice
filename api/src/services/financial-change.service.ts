@@ -28,7 +28,7 @@ export class FinancialChangeService {
     const res = await createQueryBuilder("financialchange")
       .select("ROUND(SUM(amount), 2) total")
       .where(
-        `expense = 1 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
+        `expense = 1 AND transfer = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )
       .getRawOne();
     return res.total;
@@ -38,7 +38,7 @@ export class FinancialChangeService {
     const res = await createQueryBuilder("financialchange")
       .select("ROUND(SUM(amount), 2) total")
       .where(
-        `expense = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
+        `expense = 0 AND transfer = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )
       .getRawOne();
     return res.total;
