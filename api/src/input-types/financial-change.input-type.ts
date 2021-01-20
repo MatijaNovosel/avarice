@@ -20,3 +20,18 @@ export class FinancialChangeInputType {
   @Field(() => [Int])
   tagIds?: number[];
 }
+
+@InputType()
+export class TransferInputType {
+  @Field(() => Int)
+  appUserId: number;
+
+  @Field(() => Float)
+  amount: number;
+
+  @Field(() => Int)
+  accountFromId: number;
+
+  @Field(() => Int)
+  accountToId: number;
+}

@@ -98,6 +98,10 @@ export class FinancialChangeService {
     ).paymentSource;
   }
 
+  async transfer(payload: FinancialChangeInputType): Promise<void> {
+    //
+  }
+
   async create(payload: FinancialChangeInputType): Promise<void> {
     const financialChange = await this.financialChangeRepository.save({
       amount: payload.amount,

@@ -5,5 +5,6 @@ export enum TagEnum {
   PublicTransport = 4,
   Other = 5,
   Drink = 6,
-  Groceries = 7
+  Groceries = 7,
+  Transfer = 8
 }
