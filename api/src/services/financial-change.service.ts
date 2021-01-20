@@ -1,3 +1,4 @@
+import { TransferInputType } from "./../input-types/financial-change.input-type";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
 import { Paymentsource } from "./../entities/paymentsource";
@@ -98,8 +99,69 @@ export class FinancialChangeService {
     ).paymentSource;
   }
 
-  async transfer(payload: FinancialChangeInputType): Promise<void> {
-    //
+  async transfer(payload: TransferInputType): Promise<void> {
+    const createdAt = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+
+    const transferRecordFrom = await this.financialChangeRepository.save({
+      amount: payload.amount,
+      description: "Transfer",
+      expense: true,
+      transfer: true,
+      paymentSourceId: payload.accountFromId,
+      appUserId: payload.appUserId,
+      createdAt
+    });
+
+    const transferRecordTo = await this.financialChangeRepository.save({
+      amount: payload.amount,
+      description: "Transfer",
+      expense: false,
+      transfer: true,
+      paymentSourceId: payload.accountFromId,
+      appUserId: payload.appUserId,
+      createdAt
+    });
+
+    // Change tag id later to correspond to more flexible future changes - tag enumerations
+    await this.financialChangeTagRepository.save({
+      financialChangeId: transferRecordFrom.id,
+      tagId: 8
+    });
+
+    await this.financialChangeTagRepository.save({
+      financialChangeId: transferRecordTo.id,
+      tagId: 8
+    });
+
+    const currentFrom = await this.financialChangeHistoryRepository.findOne({
+      where: {
+        appUserId: payload.appUserId,
+        paymentSourceId: payload.accountFromId
+      },
+      order: { createdAt: "DESC" }
+    });
+
+    await this.financialChangeHistoryRepository.save({
+      createdAt,
+      appUserId: payload.appUserId,
+      paymentSourceId: payload.accountFromId,
+      amount: parseFloat((currentFrom.amount - payload.amount).toFixed(2))
+    });
+
+    const currentTo = await this.financialChangeHistoryRepository.findOne({
+      where: {
+        appUserId: payload.appUserId,
+        paymentSourceId: payload.accountToId
+      },
+      order: { createdAt: "DESC" }
+    });
+
+    await this.financialChangeHistoryRepository.save({
+      createdAt,
+      appUserId: payload.appUserId,
+      paymentSourceId: payload.accountToId,
+      amount: parseFloat((currentTo.amount + payload.amount).toFixed(2))
+    });
   }
 
   async create(payload: FinancialChangeInputType): Promise<void> {

@@ -1,4 +1,5 @@
-import { ItemCollection } from "./../../models/item-collection";
+import { CreateTransferDto } from './../../models/change-item';
+import { ItemCollection } from "../../models/item-collection";
 import {
   CreateFinancialChangeItemDto,
   FinancialChangeItem
@@ -6,7 +7,7 @@ import {
 import { FinancialHistory } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
-import { IChangeService } from "../interfaces/change-service";
+import { IChangeService } from "../interfaces/transaction-service";
 import { format } from "date-fns";
 
 export class ChangeService implements IChangeService {
@@ -30,6 +31,30 @@ export class ChangeService implements IChangeService {
       `
     });
     return recentGains;
+  }
+
+  async transfer(payload: CreateTransferDto): Promise<void> {
+    const {
+      appUserId,
+      amount,
+      accountFromId,
+      accountToId
+    } = payload;
+
+    await axios.post(environmentVariables.apiUrl, {
+      query: `
+        mutation {
+          transfer(
+            transfer: {
+              appUserId: ${appUserId}
+              amount: ${amount}
+              accountFromId: ${accountFromId}
+              accountToId: ${accountToId}
+            }
+          )
+        }
+      `
+    });
   }
 
   async addChange(payload: CreateFinancialChangeItemDto): Promise<void> {

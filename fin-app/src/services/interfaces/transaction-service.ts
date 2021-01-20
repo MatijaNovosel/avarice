@@ -1,5 +1,6 @@
 import {
   CreateFinancialChangeItemDto,
+  CreateTransferDto,
   FinancialChangeItem
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
@@ -9,6 +10,7 @@ export interface IChangeService {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
   getRecentWithdrawals(appUserId: number): Promise<number>;
   getRecentGains(appUserId: number): Promise<number>;
+  transfer(payload: CreateTransferDto): Promise<void>;
   getChanges(
     appUserId: number,
     skip?: number,

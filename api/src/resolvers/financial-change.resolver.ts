@@ -1,5 +1,8 @@
 import { PaginatedFinancialChange } from "./../models/item-collection";
-import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
+import {
+  FinancialChangeInputType,
+  TransferInputType
+} from "src/input-types/financial-change.input-type";
 import { VoidScalar } from "src/scalars/void";
 import { GFinancialChange } from "src/entities/financialchange";
 import { Args, Float, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
@@ -33,5 +36,10 @@ export class FinancialChangeResolver {
     @Args("financialChange") financialChange: FinancialChangeInputType
   ) {
     await this.financialChangeService.create(financialChange);
+  }
+
+  @Mutation(() => VoidScalar, { nullable: true })
+  async transfer(@Args("transfer") transfer: TransferInputType) {
+    await this.financialChangeService.transfer(transfer);
   }
 }

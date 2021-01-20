@@ -111,6 +111,7 @@ type Mutation {
   addUser(user: AppUserInputType!): Int!
   updateUserAppSetting(appSetting: AppSettingInputType!): Void
   addFinancialChange(financialChange: FinancialChangeInputType!): Void
+  transfer(transfer: TransferInputType!): Void
   delete(id: Int!): Void
 }
 
@@ -160,4 +161,11 @@ input FinancialChangeInputType {
   expense: Boolean!
   paymentSourceId: Int!
   tagIds: [Int!]!
+}
+
+input TransferInputType {
+  appUserId: Int!
+  amount: Float!
+  accountFromId: Int!
+  accountToId: Int!
 }

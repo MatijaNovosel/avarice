@@ -99,7 +99,7 @@ import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
-import { IChangeService } from "../services/interfaces/change-service";
+import { IChangeService } from "../services/interfaces/transaction-service";
 import { GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";

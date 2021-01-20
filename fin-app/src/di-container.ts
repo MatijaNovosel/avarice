@@ -6,8 +6,8 @@ import { SettingsService } from "./services/api/settings-service";
 import { ISettingsService } from "./services/interfaces/settings-service";
 import { AuthService } from "./services/api/auth-service";
 import { IAuthService } from "./services/interfaces/auth-service";
-import { IChangeService } from "./services/interfaces/change-service";
-import { ChangeService } from "./services/api/change-service";
+import { IChangeService } from "./services/interfaces/transaction-service";
+import { ChangeService } from "./services/api/transaction-service";
 
 export class Types {
   static readonly AuthService = Symbol("IAuthService");

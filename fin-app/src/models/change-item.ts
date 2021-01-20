@@ -17,3 +17,10 @@ export interface CreateFinancialChangeItemDto {
   paymentSourceId: number;
   tagIds: number[];
 }
+
+export interface CreateTransferDto {
+  appUserId: number;
+  amount: number;
+  accountFromId: number;
+  accountToId: number;
+}
