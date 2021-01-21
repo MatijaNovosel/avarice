@@ -35,13 +35,6 @@
         style="width: 25px; height: 25px"
         v-if="state.loading"
       />
-      <btn
-        v-else
-        @click="save"
-        label="Spremi"
-        icon="pi pi-save"
-        class="p-button-raised p-button-success"
-      />
     </template>
   </p-dialog>
 </template>

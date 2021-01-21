@@ -71,7 +71,7 @@
       </div>
     </div>
     <div class="col-span-10">
-      <navbar v-model:sidebar="state.visible" class="mb-5" />
+      <navbar class="mb-5" />
       <router-view :class="{ 'offset-top': state.isAuthenticated }" />
     </div>
   </div>
