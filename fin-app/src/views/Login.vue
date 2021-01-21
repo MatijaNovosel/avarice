@@ -152,8 +152,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
-@import "../assets/css/helpers"
-
 .author-text
   color: white
 

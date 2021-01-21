@@ -3,7 +3,7 @@
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="w-full flex items-center justify-between">
-        <div class="flex items-center no-select">
+        <div class="flex items-center select-none">
           <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
             <span class="font-bold text-gray-400">{{ state.title }}</span>
@@ -118,8 +118,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
-@import "../assets/css/helpers"
-
 .spinner
   width: 25px
   height: 25px

@@ -1,7 +1,5 @@
 <template>
-  <div class="test-container">
-    <span class="gradient-text">Testing</span>
-  </div>
+  <span class="gradient-text">Testing</span>
 </template>
 
 <script lang="ts">
@@ -16,14 +14,4 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.test-container
-  display: flex
-  flex-direction: column
-  padding: 1.5em
-  justify-content: center
-  justify-items: center
-  align-content: center
-  font-weight: bold
-  font-size: 3em
-  text-align: center
 </style>

@@ -13,7 +13,7 @@
       />
       <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
         <div class="w-full flex items-center content-between justify-between">
-          <div class="flex items-center no-select">
+          <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
             <div class="flex flex-col ml-5">
               <span class="font-bold text-gray-400"
@@ -28,7 +28,7 @@
       </div>
       <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
         <div class="w-full flex items-center content-between justify-between">
-          <div class="flex items-center no-select">
+          <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
             <div class="flex flex-col ml-5">
               <span class="font-bold text-gray-400">Gains (Last 30 days)</span>

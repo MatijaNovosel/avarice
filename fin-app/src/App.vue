@@ -124,10 +124,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="sass">
-@use "assets/css/variables"
-
-.proxima-bold
-  font-family: "ProximaNovaBold" !important
-</style>

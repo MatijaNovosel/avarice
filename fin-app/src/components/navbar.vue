@@ -1,6 +1,6 @@
 <template>
   <div
-    class="no-border-radius no-border navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2"
+    class="navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2"
   >
     <div class="flex items-center w-full justify-end border-b border-gray-200">
       <mdi-icon
@@ -133,22 +133,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="sass">
-@use "../assets/css/variables"
-
-.navbar
-  z-index: 1
-
-.leading-text
-  font-size: 1.7rem
-  font-family: "ProximaNovaBold" !important
-  font-weight: bold
-  align-self: center
-
-.following-text
-  margin-left: 5px
-
-.logout-button
-  background: linear-gradient(90deg, #ff8a00, #e52e71) !important
-</style>
