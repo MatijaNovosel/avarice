@@ -122,7 +122,6 @@ import {
   Ref,
   onMounted
 } from "vue";
-import { PaymentSourceEnum } from "../constants/payment-source-enum";
 import { TagEnum } from "../constants/tag-enum";
 import { CreateFinancialChangeItemDto } from "../models/change-item";
 import { createSelectFromEnum } from "../helpers/helpers";
@@ -158,7 +157,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       appUserId: 1,
-      paymentSourceId: PaymentSourceEnum.GyroAccount,
+      paymentSourceId: 1,
       tagIds: [TagEnum.Food],
       description: null,
       amount: 0,
@@ -195,7 +194,7 @@ export default defineComponent({
       entry.amount = 0;
       entry.appUserId = 1;
       entry.description = null;
-      entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
+      entry.paymentSourceId = 1;
       entry.tagIds = [TagEnum.Other];
       entry.expense = true;
       model.value.$reset;

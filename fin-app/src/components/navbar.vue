@@ -54,6 +54,7 @@
           New transaction
         </button>
         <button
+          @click="openTransferDialog"
           class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
           v-ripple
         >
@@ -62,41 +63,38 @@
       </div>
     </div>
     <transaction-dialog v-model:dialog="state.newTransactionDialog" />
+    <transfer-dialog v-model:dialog="state.transferDialog" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, computed } from "vue";
+import { defineComponent, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
 import mdiIcon from "./mdi-icon.vue";
 import TransactionDialog from "@/components/transaction-dialog.vue";
-
-interface Props {
-  title?: string | null;
-}
+import TransferDialog from "@/components/transfer-dialog.vue";
 
 interface State {
-  title?: string | null;
   newTransactionDialog: boolean;
+  transferDialog: boolean;
+  currentRoute: string | symbol | null | undefined;
+  timeOfDay: string;
 }
 
 export default defineComponent({
-  components: { mdiIcon, TransactionDialog },
+  components: { mdiIcon, TransactionDialog, TransferDialog },
   name: "navbar",
-  props: {
-    title: String
-  },
-  setup(props: Props) {
+  setup() {
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
 
     const state: State = reactive({
       newTransactionDialog: false,
-      title: props.title,
+      transferDialog: false,
       currentRoute: computed(() => route.name),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
@@ -111,11 +109,6 @@ export default defineComponent({
       })
     });
 
-    watch(
-      () => props.title,
-      (val) => (state.title = val)
-    );
-
     async function logout() {
       await getService<IAuthService>(Types.AuthService).signOut();
       store.dispatch("unsetUser");
@@ -126,11 +119,16 @@ export default defineComponent({
       state.newTransactionDialog = true;
     }
 
+    function openTransferDialog() {
+      state.transferDialog = true;
+    }
+
     return {
       state,
       logout,
       store,
-      openNewTransactionDialog
+      openNewTransactionDialog,
+      openTransferDialog
     };
   }
 });

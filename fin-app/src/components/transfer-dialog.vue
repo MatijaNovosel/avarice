@@ -24,6 +24,7 @@
         />
         <label class="text-gray-400" for="amount"> Amount </label>
       </span>
+      <span class="text-lg text-gray-500">Account from</span>
       <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
         <template
           v-for="paymentSource in state.paymentSources"
@@ -48,9 +49,42 @@
                 </div>
               </div>
               <radio-button
-                name="category"
+                name="accountFromId"
                 :value="paymentSource.id"
-                v-model="model.paymentSourceId.$model"
+                v-model="model.accountFromId.$model"
+              />
+            </div>
+          </div>
+        </template>
+      </div>
+      <span class="text-lg text-gray-500">Account to</span>
+      <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
+        <template
+          v-for="paymentSource in state.paymentSources"
+          :key="paymentSource.id"
+        >
+          <div
+            class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer"
+          >
+            <div
+              class="w-full flex items-center content-between justify-between"
+            >
+              <div class="flex items-center">
+                <mdi-icon
+                  :size="28"
+                  color="#acb0bf"
+                  :name="paymentSource.icon"
+                />
+                <div class="flex flex-col ml-5">
+                  <span class="text-lg text-gray-400 font-bold">{{
+                    paymentSource.description
+                  }}</span>
+                </div>
+              </div>
+              <radio-button
+                name="accountToId"
+                :value="paymentSource.id"
+                v-model="model.accountToId.$model"
               />
             </div>
           </div>
@@ -82,11 +116,10 @@ import {
   Ref,
   onMounted
 } from "vue";
-import { PaymentSourceEnum } from "../constants/payment-source-enum";
 import { TagEnum } from "../constants/tag-enum";
-import { CreateFinancialChangeItemDto } from "../models/change-item";
+import { CreateTransferDto } from "../models/change-item";
 import { createSelectFromEnum } from "../helpers/helpers";
-import { required, numeric, minLength } from "@vuelidate/validators";
+import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { IChangeService } from "../services/interfaces/transaction-service";
@@ -107,24 +140,29 @@ interface State {
 }
 
 export default defineComponent({
-  name: "transaction-dialog",
+  name: "transfer-dialog",
   emits: ["update:dialog"],
   components: {
     MdiIcon
   },
   props: {
-    dialog: Boolean
+    dialog: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props: Props, context: SetupContext) {
     const entry = reactive({
       appUserId: 1,
-      paymentSourceId: PaymentSourceEnum.GyroAccount,
+      accountFromId: 1,
+      accountToId: 2,
       amount: 0
-    } as CreateFinancialChangeItemDto);
+    } as CreateTransferDto);
 
     const rules = {
       amount: { required, numeric },
-      paymentSourceId: { required }
+      accountFromId: { required },
+      accountToId: { required }
     };
 
     // eslint-disable-next-line
@@ -148,7 +186,8 @@ export default defineComponent({
       state.dialog = false;
       entry.amount = 0;
       entry.appUserId = 1;
-      entry.paymentSourceId = PaymentSourceEnum.GyroAccount;
+      entry.accountFromId = 1;
+      entry.accountToId = 2;
       model.value.$reset;
     }
 
@@ -160,11 +199,11 @@ export default defineComponent({
     async function addTransaction() {
       state.saving = true;
 
-      const payload: CreateFinancialChangeItemDto = {
+      const payload: CreateTransferDto = {
         ...entry
       };
 
-      await getService<IChangeService>(Types.ChangeService).addChange(payload);
+      await getService<IChangeService>(Types.ChangeService).transfer(payload);
 
       hideDialog();
       state.saving = false;
