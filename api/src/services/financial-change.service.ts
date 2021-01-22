@@ -133,35 +133,34 @@ export class FinancialChangeService {
       tagId: 8
     });
 
-    const currentFrom = await this.financialChangeHistoryRepository.findOne({
-      where: {
+    const userPaymentSourceIds: number[] = (
+      await this.appUserRepository.findOne({
+        where: { id: payload.appUserId },
+        relations: ["paymentsources"]
+      })
+    ).paymentsources.map((ps) => ps.id);
+
+    for (const id of userPaymentSourceIds) {
+      const current = await this.financialChangeHistoryRepository.findOne({
+        where: { appUserId: payload.appUserId, paymentSourceId: id },
+        order: { createdAt: "DESC" }
+      });
+
+      let finalAmount: number = current.amount;
+
+      if (id == payload.accountFromId) {
+        finalAmount = parseFloat((current.amount - payload.amount).toFixed(2));
+      } else if (id == payload.accountToId) {
+        finalAmount = parseFloat((current.amount + payload.amount).toFixed(2));
+      }
+
+      await this.financialChangeHistoryRepository.save({
+        createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
         appUserId: payload.appUserId,
-        paymentSourceId: payload.accountFromId
-      },
-      order: { createdAt: "DESC" }
-    });
-
-    await this.financialChangeHistoryRepository.save({
-      createdAt,
-      appUserId: payload.appUserId,
-      paymentSourceId: payload.accountFromId,
-      amount: parseFloat((currentFrom.amount - payload.amount).toFixed(2))
-    });
-
-    const currentTo = await this.financialChangeHistoryRepository.findOne({
-      where: {
-        appUserId: payload.appUserId,
-        paymentSourceId: payload.accountToId
-      },
-      order: { createdAt: "DESC" }
-    });
-
-    await this.financialChangeHistoryRepository.save({
-      createdAt,
-      appUserId: payload.appUserId,
-      paymentSourceId: payload.accountToId,
-      amount: parseFloat((currentTo.amount + payload.amount).toFixed(2))
-    });
+        paymentSourceId: id,
+        amount: finalAmount
+      });
+    }
   }
 
   async create(payload: FinancialChangeInputType): Promise<void> {
