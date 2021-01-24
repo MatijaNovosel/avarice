@@ -55,7 +55,7 @@
             :amount="change.amount"
             :tags="change.tagIds"
             :date="change.createdAt"
-            :show="false"
+            :show="true"
             :transfer="change.transfer"
           />
         </div>

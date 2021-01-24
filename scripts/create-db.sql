@@ -2,72 +2,88 @@ DROP DATABASE IF EXISTS finapp;
 CREATE DATABASE finapp;
 USE finapp;
 
-CREATE TABLE appuser (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  uid VARCHAR(255),
-  email VARCHAR(255),
-  photoURL VARCHAR(255),
-  displayName VARCHAR(255),
-  password VARCHAR(255)
-);
+CREATE TABLE `appsetting` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `checkingGraphColor` varchar(50) DEFAULT NULL,
+  `gyroGraphColor` varchar(50) DEFAULT NULL,
+  `pocketGraphColor` varchar(50) DEFAULT NULL,
+  `totalGraphColor` varchar(50) DEFAULT NULL,
+  `gyroGraphVisible` tinyint(1) DEFAULT NULL,
+  `checkingGraphVisible` tinyint(1) DEFAULT NULL,
+  `pocketGraphVisible` tinyint(1) DEFAULT NULL,
+  `totalGraphVisible` tinyint(1) DEFAULT NULL,
+  `appUserId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `appUserId` (`appUserId`),
+  CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE appsetting (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  checkingGraphColor VARCHAR(50),
-  gyroGraphColor VARCHAR(50),
-  pocketGraphColor VARCHAR(50),
-  totalGraphColor VARCHAR(50),
-  gyroGraphVisible BOOLEAN,
-  checkingGraphVisible BOOLEAN,
-  pocketGraphVisible BOOLEAN,
-  totalGraphVisible BOOLEAN,
-  appUserId INT,
-  FOREIGN KEY (appUserId) REFERENCES appuser(id)
-);
+CREATE TABLE `appuser` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `uid` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `photoURL` varchar(255) DEFAULT NULL,
+  `displayName` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE paymentsource (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  currency VARCHAR(50) NOT NULL DEFAULT "HRK",
-  icon VARCHAR(50) NOT NULL DEFAULT "eye",
-  description VARCHAR(255),
-  appUserId INT,
-  FOREIGN KEY (appUserId) REFERENCES appuser(id)
-);
+CREATE TABLE `financialchange` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `amount` double DEFAULT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `description` varchar(255) DEFAULT NULL,
+  `expense` tinyint(1) DEFAULT NULL,
+  `paymentSourceId` int DEFAULT NULL,
+  `appUserId` int DEFAULT NULL,
+  `transfer` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `appUserId` (`appUserId`),
+  KEY `paymentSourceId` (`paymentSourceId`),
+  CONSTRAINT `financialchange_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
+  CONSTRAINT `financialchange_ibfk_2` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE financialchange (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  amount DOUBLE,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  description VARCHAR(255),
-  expense BOOLEAN,
-  paymentSourceId INT,
-  appUserId INT,
-  FOREIGN KEY (appUserId) REFERENCES appuser(id),
-  FOREIGN KEY (paymentSourceId) REFERENCES paymentsource(id)
-);
+CREATE TABLE `financialchangetag` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `financialChangeId` int DEFAULT NULL,
+  `tagId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `financialChangeId` (`financialChangeId`),
+  KEY `tagId` (`tagId`),
+  CONSTRAINT `financialchangetag_ibfk_1` FOREIGN KEY (`financialChangeId`) REFERENCES `financialchange` (`id`),
+  CONSTRAINT `financialchangetag_ibfk_2` FOREIGN KEY (`tagId`) REFERENCES `tag` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=223 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE tag (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  description VARCHAR(255)
-);
+CREATE TABLE `financialhistory` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `paymentSourceId` int DEFAULT NULL,
+  `amount` double NOT NULL DEFAULT '0',
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `appUserId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paymentSourceId` (`paymentSourceId`),
+  KEY `appUserId` (`appUserId`),
+  CONSTRAINT `financialhistory_ibfk_1` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`),
+  CONSTRAINT `financialhistory_ibfk_2` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4725 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE financialchangetag (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  financialChangeId INT,
-  tagId INT,
-  FOREIGN KEY (financialChangeId) REFERENCES financialchange(id),
-  FOREIGN KEY (tagId) REFERENCES tag(id)
-);
+CREATE TABLE `paymentsource` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `currency` varchar(50) NOT NULL DEFAULT 'HRK',
+  `icon` varchar(50) NOT NULL DEFAULT 'eye',
+  `description` varchar(255) DEFAULT NULL,
+  `appUserId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `appUserId` (`appUserId`),
+  CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE financialhistory (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  paymentSourceId INT,
-  amount DOUBLE NOT NULL DEFAULT 0,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  appUserId INT,
-  FOREIGN KEY (paymentSourceId) REFERENCES paymentSource(id),
-  FOREIGN KEY (appUserId) REFERENCES appuser(id)
-);
+CREATE TABLE `tag` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELIMITER $$ 
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
@@ -86,15 +102,44 @@ BEGIN
 END $$ 
 DELIMITER;
 
-INSERT INTO appuser (displayName, email, photoURL, uid) 
-VALUES ("Matija Novosel", "mnovosel5@gmail.com", "url.url", "uid");
+DELIMITER $$
+DROP FUNCTION IF EXISTS getPercentageOfTag $$
+CREATE FUNCTION getPercentageOfTag(id INT, userId INT) RETURNS DECIMAL(5, 2)
+DETERMINISTIC
+BEGIN
+	DECLARE totalRecords INT DEFAULT 0;
+	DECLARE requestedRecords INT DEFAULT 0;
+	
+	SET totalRecords = (SELECT COUNT(DISTINCT(financialChangeId)) FROM financialchangetag);
+	SET requestedRecords = (SELECT COUNT(*) FROM financialchangetag WHERE tagId = id);
+	
+	RETURN requestedRecords / totalRecords;
+END; $$
+DELIMITER ;
 
-INSERT INTO tag (description) 
-VALUES ("Hrana"), ("Darovi"), ("Igre"), ("Javni prijevoz"), ("Ostalo"), ("Piće"), ("Namirnice");
+DROP PROCEDURE IF EXISTS getTagPercentages;
+DELIMITER $$
+CREATE PROCEDURE getTagPercentages(userId INT)
+BEGIN
+	DECLARE tId INT DEFAULT 0;
+	DECLARE finished BOOL DEFAULT FALSE;
 
-INSERT INTO paymentsource (description, currency, icon) 
-VALUES 
-("Žiro račun", "HRK", "credit-card-outline"), 
-("Tekući račun", "HRK", "credit-card"), 
-("Džep", "HRK", "wallet"), 
-("Euri", "EUR", "currency-eur");
+	DECLARE curTags CURSOR FOR SELECT id FROM tag;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = TRUE;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT NULL;
+	
+	DROP TEMPORARY TABLE IF EXISTS tagPercentages;
+	CREATE TEMPORARY TABLE tagPercentages (id INT, percentage DECIMAL(5, 2));
+	
+	OPEN curTags;
+	tagLoop:LOOP
+		FETCH curTags INTO tId;
+		IF finished = TRUE THEN LEAVE tagLoop; END IF;
+		INSERT INTO tagPercentages (id, percentage) VALUES (tId, getPercentageOfTag(tId, userId));
+	END LOOP;
+	CLOSE curTags;
+	
+	SELECT * FROM tagPercentages;
+END; $$
+DELIMITER ;
