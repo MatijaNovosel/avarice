@@ -35,7 +35,7 @@ import { IPaymentSourceService } from "@/services/interfaces/payment-source-serv
 import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
 import { GraphOptions } from "@/models/graph";
-import { randomHexColor } from "@/helpers/helpers";
+import { adjustHexColor, randomHexColor } from "@/helpers/helpers";
 
 interface GraphData {
   labels: string[];
@@ -85,11 +85,16 @@ export default defineComponent({
       const tagPercentages = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getTagPercentages(1);
+
+      const color = "#475569";
+
       state.graphData = {
         labels: tagPercentages.map((x) => x.description),
         datasets: [
           {
-            backgroundColor: tagPercentages.map(() => randomHexColor()),
+            backgroundColor: tagPercentages.map(
+              (x, i) => "#" + adjustHexColor(color, i * 8)
+            ),
             data: tagPercentages.map((x) => x.percentage * 100)
           }
         ]
