@@ -53,7 +53,7 @@ export class FinancialHistoryService {
       historyItems.push({
         createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
         paymentSources: userPaymentSources,
-        total
+        total: parseFloat(total.toFixed(2))
       });
     }
 

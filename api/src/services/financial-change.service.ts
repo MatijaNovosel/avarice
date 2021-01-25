@@ -76,13 +76,6 @@ export class FinancialChangeService {
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {
-    /*
-
-      SELECT t.id, t.description FROM tag AS t
-      INNER JOIN financialchangetag AS fct ON fct.tagId = t.id
-      WHERE fct.financialChangeId = {id}
-
-    */
     return await getRepository(Tag)
       .createQueryBuilder("t")
       .innerJoin(Financialchangetag, "fct", "fct.tagId = t.id")
