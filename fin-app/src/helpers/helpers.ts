@@ -57,6 +57,12 @@ export function adjustHexColor(color: string, amount: number): string {
     );
 }
 
+export function randomHexColor(): string {
+  return "#000000".replace(/0/g, function() {
+    return (~~(Math.random() * 16)).toString(16);
+  });
+}
+
 export function hexToCssFilter(hex: string) {
   const rgb = hexToRgb(hex);
   const color = new Color(

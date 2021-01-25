@@ -33,10 +33,20 @@ import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import { AccountLatestValue } from "@/models/payment-source";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { getService, Types } from "@/di-container";
+import { DatasetItem } from "@/models/dataset";
+import { GraphOptions } from "@/models/graph";
+import { randomHexColor } from "@/helpers/helpers";
+
+interface GraphData {
+  labels: string[];
+  datasets: DatasetItem[];
+}
 
 interface State {
   loading: boolean;
   accounts: AccountLatestValue[];
+  graphData: GraphData | null;
+  graphOptions: GraphOptions;
 }
 
 export default defineComponent({
@@ -47,15 +57,10 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       loading: false,
-
       graphOptions: {
+        cutoutPercentage: 75,
         legend: {
           display: false
-        },
-        elements: {
-          line: {
-            tension: 0.6
-          }
         },
         scales: {
           yAxes: [
@@ -68,14 +73,8 @@ export default defineComponent({
       },
       accounts: [],
       graphData: {
-        labels: ["A", "B", "C"],
-        datasets: [
-          {
-            data: [300, 50, 100],
-            backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
-            hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D"]
-          }
-        ]
+        labels: [],
+        datasets: []
       }
     });
 
@@ -86,7 +85,15 @@ export default defineComponent({
       const tagPercentages = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getTagPercentages(1);
-      console.log(tagPercentages);
+      state.graphData = {
+        labels: tagPercentages.map((x) => x.description),
+        datasets: [
+          {
+            backgroundColor: tagPercentages.map(() => randomHexColor()),
+            data: tagPercentages.map((x) => x.percentage * 100)
+          }
+        ]
+      };
     });
 
     return {

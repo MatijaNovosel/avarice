@@ -1,7 +1,7 @@
 export interface DatasetItem {
-  label: string;
-  data: number[];
-  fill: boolean;
-  borderColor: string;
-  backgroundColor: string;
+  label?: string;
+  data: number[] | number;
+  fill?: boolean;
+  borderColor?: string | string[];
+  backgroundColor?: string | string[];
 }

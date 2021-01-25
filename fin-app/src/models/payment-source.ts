@@ -17,5 +17,5 @@ export interface AccountLatestValue {
 export interface TagPercentageRecord {
   description: string;
   id: number;
-  amount: number;
+  percentage: number;
 }
