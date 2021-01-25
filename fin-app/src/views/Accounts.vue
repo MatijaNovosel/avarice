@@ -16,6 +16,9 @@
     </div>
     <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
     <div class="rounded-lg py-10 bg-white shadow-md flex flex-col items-center">
+      <div v-if="state.loading" class="text-center my-16">
+        <progress-spinner strokeWidth="10" class="h-24 w-24" />
+      </div>
       <chart
         type="doughnut"
         :data="state.graphData"
@@ -35,7 +38,7 @@ import { IPaymentSourceService } from "@/services/interfaces/payment-source-serv
 import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
 import { GraphOptions } from "@/models/graph";
-import { adjustHexColor, randomHexColor } from "@/helpers/helpers";
+import { adjustHexColor } from "@/helpers/helpers";
 
 interface GraphData {
   labels: string[];
@@ -79,9 +82,12 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+      state.loading = true;
+
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getLatestValues(1);
+
       let tagPercentages = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getTagPercentages(1);
@@ -103,6 +109,8 @@ export default defineComponent({
           }
         ]
       };
+
+      state.loading = false;
     });
 
     return {
