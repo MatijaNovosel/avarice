@@ -1,3 +1,4 @@
+import { TagPercentageRecord } from './../../models/payment-source';
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
 import { IPaymentSourceService } from "../interfaces/payment-source-service";
@@ -34,6 +35,21 @@ export class PaymentSourceService implements IPaymentSourceService {
       `
     });
     return latestValues;
+  }
+
+  async getTagPercentages(appUserId: number): Promise<TagPercentageRecord[]> {
+    const { data: { data: { tagPercentages } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          tagPercentages(appUserId: ${appUserId}) {
+            id
+            description
+            percentage
+          }
+        }
+      `
+    });
+    return tagPercentages;
   }
 
   async create(): Promise<void> {

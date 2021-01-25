@@ -1,4 +1,3 @@
-import { VoidScalar } from "./../scalars/void";
 import {
   GLatestAccountValue,
   GPaymentSource,

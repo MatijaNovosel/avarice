@@ -13,3 +13,9 @@ export interface AccountLatestValue {
   icon: string;
   amount?: number;
 }
+
+export interface TagPercentageRecord {
+  description: string;
+  id: number;
+  amount: number;
+}

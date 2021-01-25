@@ -45,6 +45,10 @@ export default defineComponent({
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getLatestValues(1);
+      const tagPercentages = await getService<IPaymentSourceService>(
+        Types.PaymentSourceService
+      ).getTagPercentages(1);
+      console.log(tagPercentages);
     });
 
     return {
@@ -53,6 +57,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="sass">
-</style>
