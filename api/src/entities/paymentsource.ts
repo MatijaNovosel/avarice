@@ -82,3 +82,15 @@ export class GPaymentSource {
   @Field(() => Int)
   appUserId?: number;
 }
+
+@ObjectType()
+export class GTagPercentage {
+  @Field(() => Int)
+  id?: number;
+
+  @Field()
+  description?: string;
+
+  @Field()
+  percentage?: number;
+}

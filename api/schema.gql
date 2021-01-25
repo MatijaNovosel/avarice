@@ -81,6 +81,12 @@ type GPaymentSource {
   appUserId: Int!
 }
 
+type GTagPercentage {
+  id: Int!
+  description: String!
+  percentage: Float!
+}
+
 type AccessToken {
   accessToken: String!
 }
@@ -93,6 +99,7 @@ type PaginatedFinancialChange {
 type Query {
   paymentSources(id: Float!): [GPaymentSource!]!
   latestValues(id: Float!): [GLatestAccountValue!]!
+  tagPercentages(appUserId: Float!): [GTagPercentage!]!
   financialHistory(to: String, from: String, id: Float!): [GFinancialHistory!]!
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   appUser(id: Int!): GAppUser!

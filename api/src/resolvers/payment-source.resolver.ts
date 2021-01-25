@@ -1,6 +1,8 @@
+import { VoidScalar } from "./../scalars/void";
 import {
   GLatestAccountValue,
-  GPaymentSource
+  GPaymentSource,
+  GTagPercentage
 } from "./../entities/paymentsource";
 import { PaymentSourceService } from "./../services/payment-source.service";
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
@@ -17,6 +19,11 @@ export class PaymentSourceResolver {
   @Query(() => [GLatestAccountValue], { name: "latestValues" })
   async getLatestValues(@Args({ name: "id" }) id: number) {
     return this.paymentSourceService.getLatestValues(id);
+  }
+
+  @Query(() => [GTagPercentage], { name: "tagPercentages" })
+  async getTagPercentages(@Args({ name: "appUserId" }) appUserId: number) {
+    return this.paymentSourceService.getTagPercentages(appUserId);
   }
 
   @Mutation(() => Int)

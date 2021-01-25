@@ -1,8 +1,8 @@
-import { GLatestAccountValue, GPaymentSource } from "./../entities/paymentsource";
+import { GLatestAccountValue, GPaymentSource, GTagPercentage } from "./../entities/paymentsource";
 import { Paymentsource } from "../entities/paymentsource";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { createQueryBuilder, Repository } from "typeorm";
+import { createQueryBuilder, getConnection, Repository } from "typeorm";
 import { format } from "date-fns";
 
 @Injectable()
@@ -46,6 +46,17 @@ export class PaymentSourceService {
           id: x.id
         } as GPaymentSource)
     );
+  }
+
+  async getTagPercentages(appUserId: number): Promise<GTagPercentage[]> {
+    const data = await getConnection().query('CALL getTagPercentages(?)', [appUserId]);
+    return data[0].map(record => {
+      return {
+        description: record.description,
+        id: record.id,
+        percentage: record.percentage
+      } as GTagPercentage
+    });
   }
 
   async create(): Promise<void> {

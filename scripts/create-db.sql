@@ -122,24 +122,32 @@ DELIMITER $$
 CREATE PROCEDURE getTagPercentages(userId INT)
 BEGIN
 	DECLARE tId INT DEFAULT 0;
+	DECLARE tDescription VARCHAR(255) DEFAULT "";
 	DECLARE finished BOOL DEFAULT FALSE;
 
-	DECLARE curTags CURSOR FOR SELECT id FROM tag;
+	DECLARE curTags CURSOR FOR SELECT id, `description` FROM tag;
 	
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = TRUE;
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT NULL;
 	
 	DROP TEMPORARY TABLE IF EXISTS tagPercentages;
-	CREATE TEMPORARY TABLE tagPercentages (id INT, percentage DECIMAL(5, 2));
+	CREATE TEMPORARY TABLE tagPercentages (
+		id INT, 
+		`description` VARCHAR(255), 
+		percentage DECIMAL(5, 2)
+	);
 	
 	OPEN curTags;
 	tagLoop:LOOP
-		FETCH curTags INTO tId;
+		FETCH curTags INTO tId, tDescription;
 		IF finished = TRUE THEN LEAVE tagLoop; END IF;
-		INSERT INTO tagPercentages (id, percentage) VALUES (tId, getPercentageOfTag(tId, userId));
+		INSERT INTO tagPercentages (id, `description`, percentage) 
+		VALUES (tId, tDescription, getPercentageOfTag(tId, userId));
 	END LOOP;
 	CLOSE curTags;
 	
 	SELECT * FROM tagPercentages;
 END; $$
 DELIMITER ;
+
+CALL getTagPercentages(1) 

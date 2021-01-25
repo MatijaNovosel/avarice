@@ -14,6 +14,7 @@
         :currency="account.currency"
       />
     </div>
+    <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
   </div>
 </template>
 
@@ -30,7 +31,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "Home",
+  name: "Accounts",
   components: {
     DashboardAmountCard
   },
