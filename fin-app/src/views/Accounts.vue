@@ -91,7 +91,6 @@ export default defineComponent({
       tagPercentages = tagPercentages.sort(
         (a, b) => a.percentage - b.percentage
       );
-      console.log(tagPercentages);
 
       state.graphData = {
         labels: tagPercentages.map((x) => x.description),
