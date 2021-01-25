@@ -15,6 +15,15 @@
       />
     </div>
     <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
+    <div class="rounded-lg py-10 bg-white shadow-md flex flex-col items-center">
+      <chart
+        type="doughnut"
+        :data="state.graphData"
+        :options="state.graphOptions"
+        :height="300"
+        :width="300"
+      />
+    </div>
   </div>
 </template>
 
@@ -38,7 +47,36 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       loading: false,
-      accounts: []
+
+      graphOptions: {
+        legend: {
+          display: false
+        },
+        elements: {
+          line: {
+            tension: 0.6
+          }
+        },
+        scales: {
+          yAxes: [
+            {
+              display: false
+            }
+          ]
+        },
+        responsive: false
+      },
+      accounts: [],
+      graphData: {
+        labels: ["A", "B", "C"],
+        datasets: [
+          {
+            data: [300, 50, 100],
+            backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
+            hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D"]
+          }
+        ]
+      }
     });
 
     onMounted(async () => {

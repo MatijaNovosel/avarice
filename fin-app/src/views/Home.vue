@@ -77,15 +77,13 @@
     <div
       class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
     >
-      <div class="flex items-center">
-        <chart
-          type="line"
-          :data="state.graphData"
-          :options="state.graphOptions"
-          :height="400"
-          :width="1000"
-        />
-      </div>
+      <chart
+        type="line"
+        :data="state.graphData"
+        :options="state.graphOptions"
+        :height="400"
+        :width="1000"
+      />
     </div>
   </div>
 </template>
