@@ -15,17 +15,27 @@
       />
     </div>
     <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
-    <div class="rounded-lg py-10 bg-white shadow-md flex flex-col items-center">
+    <div
+      class="rounded-lg p-10 bg-white shadow-md flex items-center justify-center"
+    >
       <div v-if="state.loading" class="text-center my-16">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
-      <chart
-        type="doughnut"
-        :data="state.graphData"
-        :options="state.graphOptions"
-        :height="300"
-        :width="300"
-      />
+      <template v-else>
+        <div class="flex flex-col">
+          <span
+            v-for="tagPercentage in state.tagPercentages"
+            :key="tagPercentage.id"
+          >
+            <span class="font-bold">{{ tagPercentage.description }}</span> • {{ tagPercentage.percentage * 100 }}%
+          </span>
+        </div>
+        <chart
+          type="doughnut"
+          :data="state.graphData"
+          :options="state.graphOptions"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -33,7 +43,10 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
-import { AccountLatestValue } from "@/models/payment-source";
+import {
+  AccountLatestValue,
+  TagPercentageRecord
+} from "@/models/payment-source";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
@@ -50,6 +63,7 @@ interface State {
   accounts: AccountLatestValue[];
   graphData: GraphData | null;
   graphOptions: GraphOptions;
+  tagPercentages: TagPercentageRecord[];
 }
 
 export default defineComponent({
@@ -59,6 +73,7 @@ export default defineComponent({
   },
   setup() {
     const state: State = reactive({
+      tagPercentages: [],
       loading: false,
       graphOptions: {
         cutoutPercentage: 75,
@@ -72,7 +87,7 @@ export default defineComponent({
             }
           ]
         },
-        responsive: false
+        responsive: true
       },
       accounts: [],
       graphData: {
@@ -95,8 +110,10 @@ export default defineComponent({
       const color = "#475569";
 
       tagPercentages = tagPercentages.sort(
-        (a, b) => a.percentage - b.percentage
+        (a, b) => b.percentage - a.percentage
       );
+
+      state.tagPercentages = tagPercentages;
 
       state.graphData = {
         labels: tagPercentages.map((x) => x.description),
