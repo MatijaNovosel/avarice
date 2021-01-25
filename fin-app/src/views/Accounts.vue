@@ -82,11 +82,16 @@ export default defineComponent({
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getLatestValues(1);
-      const tagPercentages = await getService<IPaymentSourceService>(
+      let tagPercentages = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getTagPercentages(1);
 
       const color = "#475569";
+
+      tagPercentages = tagPercentages.sort(
+        (a, b) => a.percentage - b.percentage
+      );
+      console.log(tagPercentages);
 
       state.graphData = {
         labels: tagPercentages.map((x) => x.description),
