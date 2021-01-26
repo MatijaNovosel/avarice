@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2"
-  >
+  <div class="navbar shadow-md bg-white px-8 pb-4 pt-1 grid grid-rows-2">
     <div class="flex items-center w-full justify-end border-b border-gray-200">
       <mdi-icon
         class="cursor-pointer mr-3"
@@ -13,7 +11,9 @@
         src="https://avatars0.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4"
         alt=""
       />
-      <span class="text-black ml-4 mr-3 font-bold">Matija Novosel</span>
+      <span class="text-black ml-4 mr-3 font-bold">{{
+        state.user.displayName
+      }}</span>
       <mdi-icon class="cursor-pointer" name="chevron-down" color="#000000" />
     </div>
     <div class="flex items-center pt-4 w-full justify-between">
@@ -25,7 +25,7 @@
         />
         <div class="flex flex-col ml-4">
           <span class="text-black font-bold text-2xl"
-            >Good {{ state.timeOfDay }}, Matija Novosel</span
+            >Good {{ state.timeOfDay }}, {{ state.user.displayName }}</span
           >
           <div class="flex items-center text-gray-400 font-bold">
             <mdi-icon
@@ -96,6 +96,7 @@ export default defineComponent({
       newTransactionDialog: false,
       transferDialog: false,
       currentRoute: computed(() => route.name),
+      user: computed(() => store.getters.user),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();
