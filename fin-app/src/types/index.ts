@@ -25,4 +25,7 @@ const mdiIcons = [
   "swap"
 ] as const;
 
+const Alignment = ["left", "center", "right"] as const;
+
 export type MDIIcon = typeof mdiIcons[number];
+export type Alignment = typeof Alignment[number];
