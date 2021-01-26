@@ -1,10 +1,11 @@
+import { RouteNames } from "./../constants/route-names";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store/index";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/login",
-    name: "login",
+    name: RouteNames.LOGIN,
     component: () => import("../views/Login.vue"),
     meta: {
       auth: false
@@ -12,7 +13,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    name: "home",
+    name: RouteNames.HOME,
     component: () => import("../views/Home.vue"),
     meta: {
       auth: true
@@ -20,7 +21,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/accounts",
-    name: "accounts",
+    name: RouteNames.ACCOUNTS,
     component: () => import("../views/Accounts.vue"),
     meta: {
       auth: true
@@ -28,8 +29,32 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/test",
-    name: "test",
+    name: RouteNames.TEST,
     component: () => import("../views/Test.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: "/settings",
+    name: RouteNames.SETTINGS,
+    component: () => import("../views/Settings.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: "/privacy",
+    name: RouteNames.PRIVACY,
+    component: () => import("../views/Privacy.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: "/history",
+    name: RouteNames.HISTORY,
+    component: () => import("../views/History.vue"),
     meta: {
       auth: true
     }
@@ -42,8 +67,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "login" && !store.getters.isAuthenticated) {
-    next({ name: "login" });
+  if (to.name !== RouteNames.LOGIN && !store.getters.isAuthenticated) {
+    next({ name: RouteNames.LOGIN });
   } else {
     next();
   }
