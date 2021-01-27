@@ -37,7 +37,7 @@ export class AuthService implements IAuthService {
           googleLogin(input: {
             uid: ${uid}
             email: ${email}
-            photoUrl: ${photoURL}
+            photoURL: ${photoURL}
             displayName: ${displayName}
           }) {
             accessToken

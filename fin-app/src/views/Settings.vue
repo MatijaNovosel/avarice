@@ -15,10 +15,42 @@
       </span>
     </div>
   </div>
+  <div class="mt-6 px-6">
+    <div
+      class="flex flex-col space-y-5"
+      v-if="state.activeTab == TabsEnum.Account"
+    >
+      <div class="flex justify-between">
+        <span class="text-gray-500 font-bold mr-3">Display name</span>
+        <span>{{ state.user.displayName }}</span>
+        <span>
+          <button
+            class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+            v-ripple
+          >
+            Update
+          </button>
+        </span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500 font-bold mr-3">Email:</span>
+        <span>{{ state.user.email }}</span>
+        <span>
+          <button
+            class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+            v-ripple
+          >
+            Update
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
+import { useStore } from "vuex";
 
 enum TabsEnum {
   Appearance = 1,
@@ -39,9 +71,16 @@ interface State {
 export default defineComponent({
   name: "Settings",
   setup() {
+    const store = useStore();
+
     const state: State = reactive({
-      activeTab: TabsEnum.Appearance,
+      user: computed(() => store.getters.user),
+      activeTab: TabsEnum.Account,
       tabHeaders: [
+        {
+          text: "Account",
+          value: TabsEnum.Account
+        },
         {
           text: "Appearance",
           value: TabsEnum.Appearance
@@ -49,16 +88,13 @@ export default defineComponent({
         {
           text: "Currency",
           value: TabsEnum.Currency
-        },
-        {
-          text: "Account",
-          value: TabsEnum.Account
         }
       ]
     });
 
     return {
-      state
+      state,
+      TabsEnum
     };
   }
 });

@@ -1,11 +1,19 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
     <span class="mb-3 text-xl font-semibold"> Overview </span>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div v-if="state.loading" class="grid gap-4 grid-cols-3">
+      <skeleton
+        :key="n"
+        v-for="n in 3"
+        animation
+        class="rounded-lg bg-gray-300"
+        height="100px"
+      />
+    </div>
+    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <dashboard-amount-card
         :icon="state.total.icon"
         :title="state.total.description"
-        :loading="state.loading"
         color="#acb0bf"
         :amount="state.total.currentAmount"
         :amount-visible="state.total.visible"
