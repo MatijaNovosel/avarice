@@ -20,34 +20,85 @@
       class="flex flex-col space-y-5"
       v-if="state.activeTab == TabsEnum.Account"
     >
-      <div class="flex items-center">
-        <div class="flex flex-col">
-          <span class="text-gray-500 font-bold mb-3">Display name</span>
-          <input-text v-model="state.userData.displayName" />
-        </div>
-        <img
-          class="inline-block h-32 w-32 rounded-full ml-6"
-          :src="state.user.photoURL"
-          alt=""
-        />
-      </div>
+      <table>
+        <tbody>
+          <tr>
+            <td class="py-3">
+              <span class="text-gray-500 font-bold">Display name</span>
+            </td>
+            <td class="text-left">
+              <span>{{ state.user.displayName }}</span>
+            </td>
+            <td class="text-right">
+              <button
+                class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+                v-ripple
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-3">
+              <span class="text-gray-500 font-bold">Email</span>
+            </td>
+            <td class="text-left">
+              <span>{{ state.user.email }}</span>
+            </td>
+            <td class="text-right">
+              <button
+                class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+                v-ripple
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-3">
+              <span class="text-gray-500 font-bold">Date format</span>
+            </td>
+            <td class="text-left">
+              <span>dd.MM.yyyy. HH:mm</span>
+            </td>
+            <td class="text-right">
+              <button
+                class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+                v-ripple
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-3">
+              <span class="text-gray-500 font-bold">Preferred currency</span>
+            </td>
+            <td class="text-left">
+              <span>HRK</span>
+            </td>
+            <td class="text-right">
+              <button
+                class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+                v-ripple
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { AppUser } from "@/models/user";
-import { computed, defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 
 enum TabsEnum {
   Appearance = 1,
-  Currency = 2,
-  Account = 3
-}
-
-interface UserData {
-  displayName: string;
+  Account = 2
 }
 
 interface TabHeaderItem {
@@ -58,8 +109,6 @@ interface TabHeaderItem {
 interface State {
   tabHeaders: TabHeaderItem[];
   activeTab: TabsEnum;
-  userData: UserData;
-  user: AppUser;
 }
 
 export default defineComponent({
@@ -68,9 +117,6 @@ export default defineComponent({
     const store = useStore();
 
     const state: State = reactive({
-      userData: {
-        displayName: ""
-      },
       user: computed(() => store.getters.user),
       activeTab: TabsEnum.Account,
       tabHeaders: [
@@ -81,16 +127,8 @@ export default defineComponent({
         {
           text: "Appearance",
           value: TabsEnum.Appearance
-        },
-        {
-          text: "Currency",
-          value: TabsEnum.Currency
         }
       ]
-    });
-
-    onMounted(() => {
-      state.userData.displayName = state.user.displayName as string;
     });
 
     return {

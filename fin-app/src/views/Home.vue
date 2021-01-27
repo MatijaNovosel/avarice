@@ -74,7 +74,6 @@
           :rowsPerPageOptions="state.transactionPageOption"
           :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
-          :alwaysShow="true"
           class="pb-5 mt-5"
         />
       </template>

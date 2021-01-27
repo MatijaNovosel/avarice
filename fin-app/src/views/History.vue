@@ -57,7 +57,7 @@
                     }}
                   </div>
                 </td>
-                <td class="px-6 whitespace-nowrap space-x-2 text-center">
+                <td class="whitespace-nowrap space-x-2 text-center">
                   <tag
                     v-for="(tag, i) in transaction.tagIds"
                     :key="i"
@@ -80,6 +80,15 @@
         </div>
       </div>
     </div>
+    <paginator
+      v-model:first="state.transactionsOffset"
+      v-model:rows="state.numberOfRows"
+      :totalRecords="state.totalTransactions"
+      :rowsPerPageOptions="state.pageOptions"
+      :pageLinkSize="state.numberOfPages"
+      @page="pageChanged"
+      class="pb-2 mt-1"
+    />
   </div>
 </template>
 
@@ -91,13 +100,16 @@ import { defineComponent, onMounted, reactive } from "vue";
 import { formatTag } from "@/helpers/helpers";
 import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
+import { Pagination } from "@/models/pagination";
 
 interface State {
   transactions: FinancialChangeItem[];
   loading: boolean;
   totalTransactions: number;
-  transactionsNumberOfPages: number;
+  numberOfPages: number;
   numberOfRows: number;
+  pageOptions: number[];
+  transactionsOffset: number;
 }
 
 export default defineComponent({
@@ -107,8 +119,10 @@ export default defineComponent({
       transactions: [],
       loading: false,
       totalTransactions: 0,
-      transactionsNumberOfPages: 0,
-      numberOfRows: 16
+      numberOfPages: 0,
+      numberOfRows: 10,
+      pageOptions: [10, 15],
+      transactionsOffset: 0
     });
 
     const headers: TableHeaderItem[] = [
@@ -143,11 +157,16 @@ export default defineComponent({
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
-      state.transactionsNumberOfPages = Math.floor(
+      state.numberOfPages = Math.floor(
         state.totalTransactions / state.numberOfRows
       );
 
       state.loading = false;
+    }
+
+    function pageChanged(paginationInfo: Pagination) {
+      const { page, rows } = { ...paginationInfo };
+      getTransactions(page * rows, state.numberOfRows);
     }
 
     onMounted(() => {
@@ -159,7 +178,8 @@ export default defineComponent({
       formatTag,
       formatDistance,
       parse,
-      headers
+      headers,
+      pageChanged
     };
   }
 });
