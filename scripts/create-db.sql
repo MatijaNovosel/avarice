@@ -104,7 +104,7 @@ DELIMITER;
 
 DELIMITER $$
 DROP FUNCTION IF EXISTS getPercentageOfTag $$
-CREATE FUNCTION getPercentageOfTag(id INT, userId INT) RETURNS DECIMAL(5, 2)
+CREATE FUNCTION getPercentageOfTag(id INT, userId INT) RETURNS DECIMAL(5, 5)
 DETERMINISTIC
 BEGIN
 	DECLARE totalRecords INT DEFAULT 0;
@@ -134,7 +134,7 @@ BEGIN
 	CREATE TEMPORARY TABLE tagPercentages (
 		id INT, 
 		`description` VARCHAR(255), 
-		percentage DECIMAL(5, 2)
+		percentage DECIMAL(5, 5)
 	);
 	
 	OPEN curTags;
@@ -149,5 +149,3 @@ BEGIN
 	SELECT * FROM tagPercentages;
 END; $$
 DELIMITER ;
-
-CALL getTagPercentages(1) 
