@@ -110,8 +110,19 @@ BEGIN
 	DECLARE totalRecords INT DEFAULT 0;
 	DECLARE requestedRecords INT DEFAULT 0;
 	
-	SET totalRecords = (SELECT COUNT(DISTINCT(financialChangeId)) FROM financialchangetag);
-	SET requestedRecords = (SELECT COUNT(*) FROM financialchangetag WHERE tagId = id);
+	SET totalRecords = (
+		SELECT COUNT(DISTINCT(financialChangeId)) 
+		FROM financialchangetag fct 
+		JOIN financialchange fc ON fc.id = fct.financialChangeId 
+		WHERE expense = 1
+	);
+	
+	SET requestedRecords = (
+		SELECT COUNT(*) 
+		FROM financialchangetag fct 
+		JOIN financialchange fc ON fc.id = fct.financialChangeId 
+		WHERE expense = 1 AND tagId = id
+	);
 	
 	RETURN requestedRecords / totalRecords;
 END; $$
