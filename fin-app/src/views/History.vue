@@ -63,7 +63,7 @@
                     :key="i"
                     :text-color="transaction.expense ? '#c52626' : '#428733'"
                     :color="transaction.expense ? '#ff9494' : '#bedeb7'"
-                    >{{ formatTag(tag) }}</tag
+                    >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
                   >
                 </td>
                 <td
@@ -97,10 +97,11 @@ import { getService, Types } from "@/di-container";
 import { FinancialChangeItem } from "@/models/change-item";
 import { IChangeService } from "@/services/interfaces/transaction-service";
 import { defineComponent, onMounted, reactive } from "vue";
-import { formatTag } from "@/helpers/helpers";
 import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
+import { TagEnum } from "@/constants/tag-enum";
+import { createSelectFromEnum } from "@/helpers/helpers";
 
 interface State {
   transactions: FinancialChangeItem[];
@@ -171,15 +172,16 @@ export default defineComponent({
 
     onMounted(() => {
       getTransactions(0, state.numberOfRows);
+      console.log(createSelectFromEnum("tags", TagEnum));
     });
 
     return {
       state,
-      formatTag,
       formatDistance,
       parse,
       headers,
-      pageChanged
+      pageChanged,
+      TagEnum
     };
   }
 });

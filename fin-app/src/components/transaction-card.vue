@@ -26,7 +26,7 @@
         :key="i"
         :text-color="state.expense ? '#c52626' : '#428733'"
         :color="state.expense ? '#ff9494' : '#bedeb7'"
-        >{{ formatTag(tag) }}</tag
+        >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
       >
     </div>
   </div>
@@ -35,7 +35,6 @@
 <script lang="ts">
 import { TagEnum } from "@/constants/tag-enum";
 import { defineComponent, reactive, watch } from "vue";
-import { formatTag } from "@/helpers/helpers";
 import mdiIcon from "./mdi-icon.vue";
 
 interface Props {
@@ -96,7 +95,7 @@ export default defineComponent({
 
     return {
       state,
-      formatTag
+      TagEnum
     };
   }
 });

@@ -1,26 +1,20 @@
 export default {
-  message: {
-    hello: "Hello world!"
-  },
-  account: {
-    pocket: "Pocket",
-    checking: "Checking account",
-    gyro: "Gyro account",
-    total: "Total",
-    euros: "Euros"
-  },
-  months: {
-    november: "November",
-    december: "December"
-  },
   tags: {
-    food: "Food",
-    gifts: "Gifts",
-    games: "Games",
-    publicTransport: "Public transport",
-    other: "Other",
-    drink: "Drink",
-    groceries: "Groceries"
+    Food: "Food",
+    Gifts: "Gifts",
+    Games: "Games",
+    PublicTransport: "Public transport",
+    Other: "Other",
+    Drink: "Drink",
+    Groceries: "Groceries",
+    Transfer: "Transfer",
+    AcademicHelp: "Academic help",
+    TechnologyAndDevices: "Technology and devices",
+    Salary: "Salary",
+    Medicine: "Medicine",
+    Cosmetics: "Cosmetics",
+    Rent: "Rent",
+    Debt: "Debt"
   },
   tag: "Tag",
   filterAndOtherOptions: "Filtering and other options",

@@ -1,26 +1,20 @@
 export default {
-  message: {
-    hello: "Pozdrav svijete!"
-  },
-  account: {
-    pocket: "Džep",
-    checking: "Tekući račun",
-    gyro: "Žiro račun",
-    total: "Ukupno",
-    euros: "Euri"
-  },
-  months: {
-    november: "Studeni",
-    december: "Prosinac"
-  },
   tags: {
-    food: "Hrana",
-    gifts: "Darovi",
-    games: "Igre",
-    publicTransport: "Javni prijevoz",
-    other: "Ostalo",
-    drink: "Piće",
-    groceries: "Namirnice"
+    Food: "Hrana",
+    Gifts: "Darovi",
+    Games: "Igre",
+    PublicTransport: "Javni prijevoz",
+    Other: "Ostalo",
+    Drink: "Piće",
+    Groceries: "Namirnice",
+    Transfer: "Prijenos",
+    AcademicHelp: "Akademska pomoć",
+    TechnologyAndDevices: "Tehnologija i uređaji",
+    Salary: "Plaća",
+    Medicine: "Lijekovi",
+    Cosmetics: "Kozmetika",
+    Rent: "Najam",
+    Debt: "Dug"
   },
   tag: "Kategorija",
   filterAndOtherOptions: "Filtriranje i ostale mogućnosti",

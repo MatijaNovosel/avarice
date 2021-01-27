@@ -124,7 +124,6 @@ import {
 } from "vue";
 import { TagEnum } from "../constants/tag-enum";
 import { CreateFinancialChangeItemDto } from "../models/change-item";
-import { createSelectFromEnum } from "../helpers/helpers";
 import { required, numeric, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
@@ -187,8 +186,6 @@ export default defineComponent({
       (val) => (state.dialog = val)
     );
 
-    const tags = createSelectFromEnum(TagEnum, "tag");
-
     function resetDialog() {
       state.dialog = false;
       entry.amount = 0;
@@ -228,7 +225,6 @@ export default defineComponent({
     return {
       state,
       addTransaction,
-      tags,
       hideDialog,
       model,
       entry

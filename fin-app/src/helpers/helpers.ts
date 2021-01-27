@@ -1,7 +1,5 @@
-import { stringFormatCollection } from "../models/string-format-collection";
-import { TagEnum } from "@/constants/tag-enum";
 import { SelectItem } from "@/models/select-item";
-import { IndexableCollectionByString } from "@/models/indexable-collection-by-string";
+import { useI18n } from "vue-i18n";
 import { Color } from "./color";
 import Solver from "./solver";
 
@@ -61,6 +59,38 @@ export function randomHexColor(): string {
   return "#000000".replace(/0/g, () => (~~(Math.random() * 16)).toString(16));
 }
 
+interface EnumObjectArrayItem {
+  id: number;
+  name: string;
+}
+
+export function enumToObjectArray<T>(enumeration: T): EnumObjectArrayItem[] {
+  return Object.entries(enumeration)
+    .filter(e => !isNaN(parseInt(e[0])))
+    .map(e => ({ name: e[1], id: parseInt(e[0]) }));
+}
+
+export function createSelectFromEnum<T>(
+  translationPrefix: string,
+  enumType: T
+) {
+  const objectTypes: SelectItem<number>[] = [];
+  const { t } = useI18n();
+
+  const enumObjectArray = enumToObjectArray<T>(enumType);
+
+  enumObjectArray
+    .map(x => x.name)
+    .forEach((name: string) => {
+      objectTypes.push({
+        text: String(t(translationPrefix + "." + name)),
+        val: enumObjectArray.filter(x => x.name == name)[0].id
+      });
+    });
+
+  return objectTypes;
+}
+
 export function hexToCssFilter(hex: string) {
   const rgb = hexToRgb(hex);
   const color = new Color(
@@ -70,26 +100,6 @@ export function hexToCssFilter(hex: string) {
   );
   const solver = new Solver(color);
   return solver.solve().filter;
-}
-
-export function formatTag(val: TagEnum): string {
-  return stringFormatCollection["tag"][TagEnum[val]];
-}
-
-export function createSelectFromEnum<T extends IndexableCollectionByString>(
-  inVal: T,
-  formatKey: string
-): SelectItem<T>[] {
-  const returnVal: SelectItem<T>[] = [];
-  const names = Object.keys(inVal).filter(x => isNaN(Number(x)));
-  names.forEach(x => {
-    returnVal.push({
-      text: stringFormatCollection[formatKey][x],
-      val: inVal[x]
-    });
-  });
-
-  return returnVal;
 }
 
 /**
