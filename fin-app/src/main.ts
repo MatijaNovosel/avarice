@@ -26,6 +26,7 @@ import ContextMenu from "primevue/contextmenu";
 import Calendar from "primevue/calendar";
 import RadioButton from "primevue/radiobutton";
 import ProgressBar from "primevue/progressbar";
+import Skeleton from "primevue/skeleton";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -83,6 +84,7 @@ app.component("context-menu", ContextMenu);
 app.component("calendar", Calendar);
 app.component("radio-button", RadioButton);
 app.component("progress-bar", ProgressBar);
+app.component("skeleton", Skeleton);
 
 // Directives
 app.directive("tooltip", Tooltip);
