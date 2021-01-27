@@ -20,42 +20,34 @@
       class="flex flex-col space-y-5"
       v-if="state.activeTab == TabsEnum.Account"
     >
-      <div class="flex justify-between">
-        <span class="text-gray-500 font-bold mr-3">Display name</span>
-        <span>{{ state.user.displayName }}</span>
-        <span>
-          <button
-            class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
-            v-ripple
-          >
-            Update
-          </button>
-        </span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-gray-500 font-bold mr-3">Email:</span>
-        <span>{{ state.user.email }}</span>
-        <span>
-          <button
-            class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
-            v-ripple
-          >
-            Update
-          </button>
-        </span>
+      <div class="flex items-center">
+        <div class="flex flex-col">
+          <span class="text-gray-500 font-bold mb-3">Display name</span>
+          <input-text v-model="state.userData.displayName" />
+        </div>
+        <img
+          class="inline-block h-32 w-32 rounded-full ml-6"
+          :src="state.user.photoURL"
+          alt=""
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { AppUser } from "@/models/user";
+import { computed, defineComponent, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 
 enum TabsEnum {
   Appearance = 1,
   Currency = 2,
   Account = 3
+}
+
+interface UserData {
+  displayName: string;
 }
 
 interface TabHeaderItem {
@@ -66,6 +58,8 @@ interface TabHeaderItem {
 interface State {
   tabHeaders: TabHeaderItem[];
   activeTab: TabsEnum;
+  userData: UserData;
+  user: AppUser;
 }
 
 export default defineComponent({
@@ -74,6 +68,9 @@ export default defineComponent({
     const store = useStore();
 
     const state: State = reactive({
+      userData: {
+        displayName: ""
+      },
       user: computed(() => store.getters.user),
       activeTab: TabsEnum.Account,
       tabHeaders: [
@@ -90,6 +87,10 @@ export default defineComponent({
           value: TabsEnum.Currency
         }
       ]
+    });
+
+    onMounted(() => {
+      state.userData.displayName = state.user.displayName as string;
     });
 
     return {
