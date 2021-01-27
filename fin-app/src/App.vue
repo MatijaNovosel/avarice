@@ -1,11 +1,11 @@
 <template>
   <toast position="top-right" />
   <div class="grid grid-cols-12">
-    <div class="col-span-2 bg-gray-600 space-y-2">
+    <div class="col-span-2 bg-gray-600 space-y-2" v-if="state.isAuthenticated">
       <sidebar :items="state.sidebarItems" />
     </div>
-    <div class="col-span-10">
-      <navbar class="mb-5" />
+    <div :class="`col-span-${state.isAuthenticated ? '10' : '12'}`">
+      <navbar v-if="state.isAuthenticated" class="mb-5" />
       <router-view :class="{ 'offset-top': state.isAuthenticated }" />
     </div>
   </div>
