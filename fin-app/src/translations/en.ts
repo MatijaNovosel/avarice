@@ -14,7 +14,8 @@ export default {
     Medicine: "Medicine",
     Cosmetics: "Cosmetics",
     Rent: "Rent",
-    Debt: "Debt"
+    Debt: "Debt",
+		Clothes: "Clothes"
   },
   tag: "Tag",
   filterAndOtherOptions: "Filtering and other options",

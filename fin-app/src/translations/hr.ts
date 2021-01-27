@@ -14,7 +14,8 @@ export default {
     Medicine: "Lijekovi",
     Cosmetics: "Kozmetika",
     Rent: "Najam",
-    Debt: "Dug"
+    Debt: "Dug",
+		Clothes: "Odjeća"
   },
   tag: "Kategorija",
   filterAndOtherOptions: "Filtriranje i ostale mogućnosti",
