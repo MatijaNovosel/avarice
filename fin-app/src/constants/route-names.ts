@@ -1,6 +1,6 @@
 export class RouteNames {
   static readonly HOME = "home";
-  static readonly LOGIN = "home";
+  static readonly LOGIN = "login";
   static readonly ACCOUNTS = "accounts";
   static readonly TEST = "test";
   static readonly HISTORY = "history";

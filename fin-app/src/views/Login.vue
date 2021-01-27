@@ -61,8 +61,8 @@
         <span class="p-invalid" v-if="model.password.$invalid">{{
           model.password.$errors.map((x) => x.$message).join(" • ")
         }}</span>
-        <btn class="login-btn" label="Sign in" />
-        <btn class="login-btn" label="Register" />
+        <button class="login-button" label="Sign in" />
+        <button class="login-button" label="Register" />
       </div>
     </div>
   </div>
@@ -78,6 +78,7 @@ import { getService, Types } from "../di-container";
 import { IAuthService } from "../services/interfaces/auth-service";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
+import { AppUser } from "@/models/user";
 
 interface Input {
   email: string;
@@ -116,11 +117,20 @@ export default defineComponent({
 
     async function login() {
       state.loading = true;
-      let userData;
+      let userData: AppUser;
       try {
+        /*
         userData = await getService<IAuthService>(
           Types.AuthService
         ).signInGoogle();
+        */
+        userData = {
+          uid: "xyz",
+          email: "mnovosel5@gmail.com",
+          photoURL:
+            "https://avatars.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4",
+          displayName: "Matija Novosel"
+        };
         store.dispatch("setUser", userData);
         toast.add({
           severity: "success",
@@ -207,7 +217,7 @@ export default defineComponent({
   display: flex
   flex-direction: column
 
-.login-btn
+.login-button
   background: linear-gradient(90deg, #ff8a00, #e52e71)
   &:hover
     background: linear-gradient(90deg, #ff8a00, #e52e71) !important

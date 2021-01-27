@@ -147,7 +147,7 @@ export default defineComponent({
         currency: "HRK",
         icon: "scale",
         currentAmount: 0,
-        visible: false
+        visible: true
       },
       totalDataset: null,
       transactionsNumberOfPages: 0,

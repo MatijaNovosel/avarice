@@ -1,13 +1,15 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
     <span class="mb-3 text-xl font-semibold"> Accounts </span>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div v-if="state.loading" class="text-center my-16">
+      <progress-spinner strokeWidth="10" class="h-24 w-24" />
+    </div>
+    <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <dashboard-amount-card
         v-for="(account, i) in state.accounts"
         :key="i"
         :icon="account.icon"
         :title="account.description"
-        :loading="state.loading"
         color="#acb0bf"
         :amount="account.amount"
         amount-visible
@@ -27,7 +29,8 @@
             v-for="tagPercentage in state.tagPercentages"
             :key="tagPercentage.id"
           >
-            <span class="font-bold">{{ tagPercentage.description }}</span> • {{ tagPercentage.percentage * 100 }}%
+            <span class="font-bold">{{ tagPercentage.description }}</span> •
+            {{ tagPercentage.percentage * 100 }}%
           </span>
         </div>
         <chart

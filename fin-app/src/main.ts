@@ -25,6 +25,7 @@ import ProgressSpinner from "primevue/progressspinner";
 import ContextMenu from "primevue/contextmenu";
 import Calendar from "primevue/calendar";
 import RadioButton from "primevue/radiobutton";
+import ProgressBar from "primevue/progressbar";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -81,6 +82,7 @@ app.component("progress-spinner", ProgressSpinner);
 app.component("context-menu", ContextMenu);
 app.component("calendar", Calendar);
 app.component("radio-button", RadioButton);
+app.component("progress-bar", ProgressBar);
 
 // Directives
 app.directive("tooltip", Tooltip);

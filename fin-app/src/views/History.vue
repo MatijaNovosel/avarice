@@ -23,7 +23,10 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody
+              v-if="!state.loading"
+              class="bg-white divide-y divide-gray-200"
+            >
               <tr
                 v-for="transaction in state.transactions"
                 :key="transaction.id"
@@ -73,6 +76,7 @@
               </tr>
             </tbody>
           </table>
+          <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
         </div>
       </div>
     </div>
