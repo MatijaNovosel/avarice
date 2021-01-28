@@ -131,6 +131,7 @@ import { IChangeService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
+import { createSelectFromEnum } from "@/helpers/helpers";
 
 interface Props {
   dialog: boolean;
@@ -222,21 +223,21 @@ export default defineComponent({
       ).getAllByUserId(1);
     });
 
+    const tags = createSelectFromEnum("tags", TagEnum);
+
     return {
       state,
       addTransaction,
       hideDialog,
       model,
-      entry
+      entry,
+      tags
     };
   }
 });
 </script>
 
 <style scoped lang="sass">
-.expense-input
-  width: 100%
-
 .spinner
   width: 25px
   height: 25px
