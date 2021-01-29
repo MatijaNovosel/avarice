@@ -1,10 +1,8 @@
 <template>
-  <div class="flex flex-col mb-5">
+  <div class="flex flex-col">
     <div class="overflow-x-auto">
       <div class="min-w-full sm:px-6 lg:px-8">
-        <div
-          class="shadow overflow-hidden rounded-t-lg"
-        >
+        <div class="shadow overflow-hidden rounded-t-lg">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
@@ -87,7 +85,7 @@
       :rowsPerPageOptions="state.pageOptions"
       :pageLinkSize="state.numberOfPages"
       @page="pageChanged"
-      class="pb-2 bg-gray-200 sm:mx-6 lg:mx-8 rounded-b-lg border border-gray-200"
+      class="pb-2 bg-gray-200 sm:mx-6 lg:mx-8 rounded-b-lg"
     />
   </div>
 </template>
