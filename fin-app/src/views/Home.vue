@@ -144,7 +144,7 @@ export default defineComponent({
   },
   setup() {
     const state: State = reactive({
-      transactionPageOption: [15, 30],
+      transactionPageOption: [10, 15],
       recentWithdrawals: 0,
       recentGains: 0,
       dateRange: [],
@@ -160,7 +160,7 @@ export default defineComponent({
       transactionsNumberOfPages: 0,
       transactionsOffset: 0,
       totalTransactions: 0,
-      numberOfRows: 30,
+      numberOfRows: 15,
       refresh: inject("refresh"),
       transactions: [],
       loading: false,

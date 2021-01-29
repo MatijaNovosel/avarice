@@ -27,8 +27,7 @@ import Calendar from "primevue/calendar";
 import RadioButton from "primevue/radiobutton";
 import ProgressBar from "primevue/progressbar";
 import Skeleton from "primevue/skeleton";
-import Dropdown from 'primevue/dropdown';
-import Menu from 'primevue/menu';
+import Menu from "primevue/menu";
 
 // Custom component import
 import Tag from "@/components/tag.vue";

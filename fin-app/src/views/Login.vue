@@ -74,8 +74,6 @@ import MdiIcon from "../components/mdi-icon.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { getService, Types } from "../di-container";
-import { IAuthService } from "../services/interfaces/auth-service";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
 import { AppUser } from "@/models/user";
@@ -118,6 +116,7 @@ export default defineComponent({
     async function login() {
       state.loading = true;
       let userData: AppUser;
+      
       try {
         /*
         userData = await getService<IAuthService>(
@@ -146,7 +145,6 @@ export default defineComponent({
           detail: "Something went wrong!",
           life: 3000
         });
-        state.loading = false;
       } finally {
         state.loading = false;
       }

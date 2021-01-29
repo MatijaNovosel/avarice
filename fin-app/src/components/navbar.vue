@@ -69,12 +69,18 @@ import mdiIcon from "./mdi-icon.vue";
 import TransactionDialog from "@/components/transaction-dialog.vue";
 import TransferDialog from "@/components/transfer-dialog.vue";
 import { RouteNames } from "@/constants/route-names";
+import { MenuItem } from "@/models/menu-item";
+
+interface MenuNode {
+  toggle: Function;
+}
 
 interface State {
   newTransactionDialog: boolean;
   transferDialog: boolean;
   currentRoute: string | symbol | null | undefined;
   timeOfDay: string;
+  menuItems: MenuItem[];
 }
 
 export default defineComponent({
@@ -108,7 +114,8 @@ export default defineComponent({
         {
           label: "Log out",
           command: () => {
-            //
+            store.dispatch("unsetUser");
+            router.push({ name: RouteNames.LOGIN });
           }
         }
       ],
@@ -129,7 +136,7 @@ export default defineComponent({
       })
     });
 
-    const overlayMenu: Ref<any> = ref(null);
+    const overlayMenu: Ref<MenuNode | null> = ref(null);
 
     async function logout() {
       await getService<IAuthService>(Types.AuthService).signOut();
@@ -137,8 +144,8 @@ export default defineComponent({
       router.push({ name: "login" });
     }
 
-    function openMenu(event: any) {
-      overlayMenu.value.toggle(event);
+    function openMenu(event: Event) {
+      overlayMenu?.value?.toggle(event);
     }
 
     const accountsRoute = RouteNames.ACCOUNTS;
