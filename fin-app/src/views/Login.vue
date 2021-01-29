@@ -1,40 +1,43 @@
 <template>
-  <div class="login-container">
-    <div class="loading-screen" v-if="state.loading">
+  <div class="flex flex-col items-center justify-around min-h-screen">
+    <div class="flex flex-col" v-if="state.loading">
       <progress-spinner strokeWidth="10" style="height: 100px; width: 100px" />
-      <span class="loading-title gradient-text">Signing you in ...</span>
+      <span class="text-center text-5xl font-bold gradient-text">
+        Signing you in ...
+      </span>
     </div>
-    <div class="login-screen" v-else>
-      <div class="app-title">
-        <span
-          ><span class="app-title-text gradient-text">FinApp</span>
-          <span class="author-text">by Matija Novosel</span></span
-        >
+    <div class="flex flex-col w-2/4 space-y-4" v-else>
+      <div>
+        <span class="text-5xl font-bold gradient-text mr-2">FinApp</span>
+        <span>by Matija Novosel</span>
       </div>
-      <div class="login-form cursor-pointer expand" @click="login">
-        <div class="login-icon">
+      <div
+        class="flex rounded-lg p-3 shadow bg-white cursor-pointer expand"
+        @click="login"
+      >
+        <div class="self-center ml-3 mr-4">
           <mdi-icon color="#fc9219" name="google" />
         </div>
-        <div class="login-content">
+        <div class="flex flex-col">
           <span class="login-content-title">Google OAuth</span>
           <span class="login-content-subtitle">Sign in with Google</span>
         </div>
       </div>
-      <div class="login-form cursor-pointer expand">
-        <div class="login-icon">
+      <div class="flex rounded-lg p-3 shadow bg-white cursor-pointer expand">
+        <div class="self-center ml-3 mr-4">
           <mdi-icon color="#4267b2" name="facebook" />
         </div>
-        <div class="login-content">
+        <div class="flex flex-col">
           <span class="login-content-title">Facebook</span>
           <span class="login-content-subtitle">Sign in with Facebook</span>
         </div>
       </div>
-      <div class="login-form-standard">
-        <span class="login-title">Sign in with email</span>
+      <div class="flex flex-col px-3 pb-3 rounded-lg shadow bg-white space-y-3">
+        <span class="text-center pt-5">Sign in with email</span>
         <span class="p-float-label">
           <input-text
             v-model="model.email.$model"
-            class="login-input"
+            class="w-full"
             name="email"
             :class="{
               'p-invalid': model.email.$invalid
@@ -49,7 +52,7 @@
         <span class="p-float-label">
           <input-text
             v-model="model.password.$model"
-            class="login-input"
+            class="w-full"
             name="password"
             :class="{
               'p-invalid': model.password.$invalid
@@ -61,8 +64,12 @@
         <span class="p-invalid" v-if="model.password.$invalid">{{
           model.password.$errors.map((x) => x.$message).join(" • ")
         }}</span>
-        <button class="login-button" label="Sign in" />
-        <button class="login-button" label="Register" />
+        <button class="bg-gray-600 rounded-lg shadow p-2 text-white">
+          Sign in
+        </button>
+        <button class="bg-gray-700 rounded-lg shadow p-2 text-white">
+          Register
+        </button>
       </div>
     </div>
   </div>
@@ -116,7 +123,7 @@ export default defineComponent({
     async function login() {
       state.loading = true;
       let userData: AppUser;
-      
+
       try {
         /*
         userData = await getService<IAuthService>(
@@ -158,82 +165,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="sass">
-.author-text
-  color: white
-
-.loading-screen
-  display: flex
-  flex-direction: column
-
-.loading-title
-  font-size: 1.6rem
-  text-align: center
-  color: white
-  font-family: "ProximaNovaBold" !important
-
-.app-title-text
-  font-size: 3.2rem
-  font-family: "ProximaNovaBold" !important
-
-.login-screen
-  display: flex
-  flex-direction: column
-  align-content: center
-  width: 50em
-
-.login-container
-  min-height: 100vh
-  display: flex
-  flex-direction: column
-  align-items: center
-  justify-content: space-around
-
-.login-icon
-  align-self: center
-
-.login-form
-  padding: 1.4rem 1.8rem
-  background-color: #1e1e1e
-  border-radius: 12px
-  display: flex
-
-.login-input
-  width: 100%
-
-.login-title
-  font-size: 1.2rem
-  text-align: center
-  color: white
-  font-family: "ProximaNovaBold" !important
-
-.login-form-standard
-  padding: 1.4rem 1.8rem
-  background-color: #1e1e1e
-  border-radius: 12px
-  display: flex
-  flex-direction: column
-
-.login-button
-  background: linear-gradient(90deg, #ff8a00, #e52e71)
-  &:hover
-    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
-  &:active
-    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
-  &:focus
-    background: linear-gradient(90deg, #ff8a00, #e52e71) !important
-
-.login-content
-  display: flex
-  flex-direction: column
-
-  &-title
-    user-select: none
-    font-size: 1.3em
-    color: white
-
-  &-subtitle
-    user-select: none
-    color: rgb(170, 170, 170)
-</style>
