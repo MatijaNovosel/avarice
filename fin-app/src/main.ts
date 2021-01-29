@@ -28,6 +28,7 @@ import RadioButton from "primevue/radiobutton";
 import ProgressBar from "primevue/progressbar";
 import Skeleton from "primevue/skeleton";
 import Dropdown from 'primevue/dropdown';
+import Menu from 'primevue/menu';
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -86,6 +87,7 @@ app.component("calendar", Calendar);
 app.component("radio-button", RadioButton);
 app.component("progress-bar", ProgressBar);
 app.component("skeleton", Skeleton);
+app.component("p-menu", Menu);
 
 // Directives
 app.directive("tooltip", Tooltip);

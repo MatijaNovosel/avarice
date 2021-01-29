@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col mb-5">
     <div class="overflow-x-auto">
-      <div class="py-2 min-w-full sm:px-6 lg:px-8">
+      <div class="min-w-full sm:px-6 lg:px-8">
         <div
-          class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+          class="shadow overflow-hidden border-b border-gray-200 rounded-t-lg"
         >
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -87,7 +87,7 @@
       :rowsPerPageOptions="state.pageOptions"
       :pageLinkSize="state.numberOfPages"
       @page="pageChanged"
-      class="pb-2 mt-1"
+      class="pb-2 bg-gray-200 sm:mx-6 lg:mx-8 rounded-b-lg"
     />
   </div>
 </template>
@@ -101,7 +101,6 @@ import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
-import { createSelectFromEnum } from "@/helpers/helpers";
 
 interface State {
   transactions: FinancialChangeItem[];
@@ -172,7 +171,6 @@ export default defineComponent({
 
     onMounted(() => {
       getTransactions(0, state.numberOfRows);
-      console.log(createSelectFromEnum("tags", TagEnum));
     });
 
     return {

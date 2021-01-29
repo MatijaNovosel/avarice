@@ -2,6 +2,33 @@ DROP DATABASE IF EXISTS finapp;
 CREATE DATABASE finapp;
 USE finapp;
 
+CREATE TABLE `tag` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `appuser` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `uid` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `photoURL` varchar(255) DEFAULT NULL,
+  `displayName` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `paymentsource` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `currency` varchar(50) NOT NULL DEFAULT 'HRK',
+  `icon` varchar(50) NOT NULL DEFAULT 'eye',
+  `description` varchar(255) DEFAULT NULL,
+  `appUserId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `appUserId` (`appUserId`),
+  CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `appsetting` (
   `id` int NOT NULL AUTO_INCREMENT,
   `checkingGraphColor` varchar(50) DEFAULT NULL,
@@ -16,16 +43,6 @@ CREATE TABLE `appsetting` (
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `appuser` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `uid` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `photoURL` varchar(255) DEFAULT NULL,
-  `displayName` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `financialchange` (
@@ -67,23 +84,6 @@ CREATE TABLE `financialhistory` (
   CONSTRAINT `financialhistory_ibfk_1` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`),
   CONSTRAINT `financialhistory_ibfk_2` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4725 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `paymentsource` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `currency` varchar(50) NOT NULL DEFAULT 'HRK',
-  `icon` varchar(50) NOT NULL DEFAULT 'eye',
-  `description` varchar(255) DEFAULT NULL,
-  `appUserId` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `appUserId` (`appUserId`),
-  CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `tag` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELIMITER $$ 
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
