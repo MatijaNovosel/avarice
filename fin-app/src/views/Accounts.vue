@@ -36,13 +36,15 @@
             :key="tagPercentage.id"
           >
             <span class="font-bold">{{ tagPercentage.description }}</span> •
-            {{ tagPercentage.percentage * 100 }}%
+            {{ tagPercentage.percentage }}%
           </span>
         </div>
         <chart
+          class="ml-5"
           type="doughnut"
           :data="state.graphData"
           :options="state.graphOptions"
+          :height="250"
         />
       </template>
     </div>
@@ -122,6 +124,11 @@ export default defineComponent({
         (a, b) => b.percentage - a.percentage
       );
 
+      tagPercentages = tagPercentages.map((x) => {
+        x.percentage = parseFloat((x.percentage * 100).toFixed(3));
+        return x;
+      });
+
       state.tagPercentages = tagPercentages;
 
       state.graphData = {
@@ -129,9 +136,9 @@ export default defineComponent({
         datasets: [
           {
             backgroundColor: tagPercentages.map(
-              (x, i) => "#" + adjustHexColor(color, i * 8)
+              (x, i) => "#" + adjustHexColor(color, i * 7)
             ),
-            data: tagPercentages.map((x) => x.percentage * 100)
+            data: tagPercentages.map((x) => x.percentage)
           }
         ]
       };
