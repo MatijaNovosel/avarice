@@ -124,6 +124,7 @@ import { IChangeService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
+import { RefreshController } from "@/helpers/refresh";
 
 interface Props {
   dialog: boolean;
@@ -131,8 +132,7 @@ interface Props {
 
 interface State {
   dialog: boolean;
-  // eslint-disable-next-line
-  refresh: any;
+  refresh: RefreshController;
   saving: boolean;
   paymentSources: PaymentSource[];
 }
@@ -168,7 +168,7 @@ export default defineComponent({
 
     const state: State = reactive({
       dialog: props.dialog,
-      refresh: inject("refresh"),
+      refresh: inject("refresh") as RefreshController,
       saving: false,
       paymentSources: []
     });

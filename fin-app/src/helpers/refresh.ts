@@ -1,6 +1,15 @@
 import { reactive, readonly } from "vue";
 
-const state = reactive({
+export interface RefreshState {
+  refresh: boolean;
+}
+
+export interface RefreshController {
+  state: RefreshState;
+  refresh: Function;
+}
+
+const state: RefreshState = reactive({
   refresh: false
 });
 

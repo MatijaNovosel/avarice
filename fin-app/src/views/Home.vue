@@ -109,6 +109,7 @@ import { GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
 import MdiIcon from "@/components/mdi-icon.vue";
+import { RefreshController } from "@/helpers/refresh";
 
 interface GraphData {
   labels: string[];
@@ -123,8 +124,7 @@ interface State {
   transactionsLoading: boolean;
   graphData: GraphData | null;
   transactions: FinancialChangeItem[];
-  // eslint-disable-next-line
-  refresh: any;
+  refresh: RefreshController;
   transactionsNumberOfPages: number;
   totalTransactions: number;
   numberOfRows: number;
@@ -161,7 +161,7 @@ export default defineComponent({
       transactionsOffset: 0,
       totalTransactions: 0,
       numberOfRows: 15,
-      refresh: inject("refresh"),
+      refresh: inject("refresh") as RefreshController,
       transactions: [],
       loading: false,
       transactionsLoading: false,

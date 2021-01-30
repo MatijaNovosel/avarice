@@ -132,6 +132,7 @@ import { IPaymentSourceService } from "@/services/interfaces/payment-source-serv
 import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
 import { createSelectFromEnum } from "@/helpers/helpers";
+import { RefreshController } from "@/helpers/refresh";
 
 interface Props {
   dialog: boolean;
@@ -139,8 +140,7 @@ interface Props {
 
 interface State {
   dialog: boolean;
-  // eslint-disable-next-line
-  refresh: any;
+  refresh: RefreshController;
   saving: boolean;
   paymentSources: PaymentSource[];
 }
@@ -177,7 +177,7 @@ export default defineComponent({
 
     const state: State = reactive({
       dialog: props.dialog,
-      refresh: inject("refresh"),
+      refresh: inject("refresh") as RefreshController,
       saving: false,
       paymentSources: []
     });
