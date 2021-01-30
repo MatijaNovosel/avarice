@@ -191,7 +191,7 @@ export default defineComponent({
       getTransactions(0, state.numberOfRows);
     });
 
-    const search = debounce(getTransactions, 2000);
+    const search = debounce(pageChanged, 2000);
 
     return {
       state,

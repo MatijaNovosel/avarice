@@ -7,7 +7,7 @@ import { Tag } from "./../entities/tag";
 import { Financialchange } from "./../entities/financialchange";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { createQueryBuilder, getRepository, Repository } from "typeorm";
+import { createQueryBuilder, getRepository, Like, Repository } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
 import { Appuser } from "src/entities/appuser";
@@ -48,18 +48,26 @@ export class FinancialChangeService {
   async findAllByUserId(
     id: number,
     skip?: number,
-    take?: number
+    take?: number,
+    description?: string
   ): Promise<PaginatedFinancialChange> {
+    const filter = {
+      appUserId: id,
+      ...(description && { description: Like(`%${description}%`) })
+    };
+
     const data = await this.financialChangeRepository.find({
-      where: { appUserId: id },
+      where: filter,
       order: { createdAt: "DESC" },
       skip,
       take,
       relations: ["financialchangetags"]
     });
+
     const count = await this.financialChangeRepository.count({
       where: { appUserId: id }
     });
+    
     return new PaginatedFinancialChange(
       data.map((fc) => ({
         id: fc.id,

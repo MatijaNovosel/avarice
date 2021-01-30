@@ -16,9 +16,10 @@ export class FinancialChangeResolver {
   async getAllByUserId(
     @Args("id", { type: () => Int }) id: number,
     @Args("skip", { type: () => Int, nullable: true }) skip: number,
-    @Args("take", { type: () => Int, nullable: true }) take: number
+    @Args("take", { type: () => Int, nullable: true }) take: number,
+    @Args("description", { nullable: true }) description: string
   ) {
-    return this.financialChangeService.findAllByUserId(id, skip, take);
+    return this.financialChangeService.findAllByUserId(id, skip, take, description);
   }
 
   @Query(() => Float, { name: "recentWithdrawals" })
