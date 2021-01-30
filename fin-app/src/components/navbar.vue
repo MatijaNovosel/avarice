@@ -1,5 +1,7 @@
 <template>
-  <div class="shadow-md bg-white px-8 flex justify-between h-24 z-50 sticky w-full top-0">
+  <div
+    class="shadow-md bg-white px-8 flex justify-between h-24 z-50 sticky w-full top-0 rounded-bl-2xl"
+  >
     <div
       class="flex items-center w-full"
       v-show="state.currentRoute == homeRoute"
@@ -39,12 +41,7 @@
         <span class="text-black ml-4 mr-3 font-bold">
           {{ state.user.displayName }}
         </span>
-        <mdi-icon
-          name="chevron-down"
-          color="#000000"
-          aria-haspopup="true"
-          aria-controls="overlayMenu"
-        />
+        <mdi-icon name="chevron-down" color="#000000" />
       </div>
       <p-menu
         class="rounded-md"
