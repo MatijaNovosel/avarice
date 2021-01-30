@@ -12,7 +12,17 @@
       color="#97afcf"
     />
     <span class="text-gray-400 font-bold">{{ state.title }} </span>
-    <span class="text-gray-300">{{ state.date }}</span>
+    <span class="text-gray-300">{{
+      state.describeDate
+        ? formatDistance(
+            parse(state.date, "dd.MM.yyyy. HH:mm", new Date()),
+            new Date(),
+            {
+              addSuffix: true
+            }
+          )
+        : state.date
+    }}</span>
     <span class="text-xl">{{
       `${
         state.show
@@ -36,6 +46,7 @@
 import { TagEnum } from "@/constants/tag-enum";
 import { defineComponent, reactive, watch } from "vue";
 import mdiIcon from "./mdi-icon.vue";
+import { formatDistance, parse } from "date-fns";
 
 interface Props {
   amount?: number | null;
@@ -45,6 +56,7 @@ interface Props {
   transfer?: boolean;
   tags?: TagEnum[] | null;
   show?: boolean;
+  describeDate?: boolean;
 }
 
 interface State {
@@ -55,12 +67,17 @@ interface State {
   transfer?: boolean;
   tags?: TagEnum[] | null;
   show?: boolean;
+  describeDate?: boolean;
 }
 
 export default defineComponent({
   components: { mdiIcon },
   name: "transaction-card",
   props: {
+    describeDate: {
+      type: Boolean,
+      default: false
+    },
     amount: Number,
     title: String,
     tags: null,
@@ -80,7 +97,8 @@ export default defineComponent({
       tags: props.tags,
       expense: props.expense,
       transfer: props.transfer,
-      show: props.show
+      show: props.show,
+      describeDate: props.describeDate
     });
 
     watch(
@@ -95,7 +113,9 @@ export default defineComponent({
 
     return {
       state,
-      TagEnum
+      TagEnum,
+      parse,
+      formatDistance
     };
   }
 });
