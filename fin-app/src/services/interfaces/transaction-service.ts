@@ -14,7 +14,8 @@ export interface IChangeService {
   getChanges(
     appUserId: number,
     skip?: number,
-    take?: number
+    take?: number,
+    description?: string
   ): Promise<ItemCollection<FinancialChangeItem>>;
   getHistory(
     appUserId: number,

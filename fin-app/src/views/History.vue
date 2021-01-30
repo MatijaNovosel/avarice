@@ -4,6 +4,7 @@
       <span class="p-float-label">
         <input-text
           v-model="state.search.description"
+          @input="search"
           name="description"
           id="description"
         />
@@ -109,6 +110,7 @@ import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
+import { debounce } from "@/helpers/helpers";
 
 interface Search {
   description: string;
@@ -169,7 +171,7 @@ export default defineComponent({
 
       const itemCollection = await getService<IChangeService>(
         Types.ChangeService
-      ).getChanges(1, skip, take);
+      ).getChanges(1, skip, take, state.search.description);
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
@@ -189,13 +191,16 @@ export default defineComponent({
       getTransactions(0, state.numberOfRows);
     });
 
+    const search = debounce(getTransactions, 2000);
+
     return {
       state,
       formatDistance,
       parse,
       headers,
       pageChanged,
-      TagEnum
+      TagEnum,
+      search
     };
   }
 });

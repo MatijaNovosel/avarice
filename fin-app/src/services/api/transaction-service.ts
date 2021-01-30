@@ -88,7 +88,8 @@ export class ChangeService implements IChangeService {
   async getChanges(
     appUserId: number,
     skip?: number,
-    take?: number
+    take?: number,
+    description?: string
   ): Promise<ItemCollection<FinancialChangeItem>> {
     const { data: { data: { financialChanges } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
