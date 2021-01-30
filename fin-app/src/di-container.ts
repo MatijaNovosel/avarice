@@ -6,12 +6,12 @@ import { SettingsService } from "./services/api/settings-service";
 import { ISettingsService } from "./services/interfaces/settings-service";
 import { AuthService } from "./services/api/auth-service";
 import { IAuthService } from "./services/interfaces/auth-service";
-import { IChangeService } from "./services/interfaces/transaction-service";
+import { ITransactionService } from "./services/interfaces/transaction-service";
 import { ChangeService } from "./services/api/transaction-service";
 
 export class Types {
   static readonly AuthService = Symbol("IAuthService");
-  static readonly ChangeService = Symbol("IChangeService");
+  static readonly ChangeService = Symbol("ITransactionService");
   static readonly SettingsService = Symbol("ISettingsService");
   static readonly PaymentSourceService = Symbol("IPaymentSourceService");
 }
@@ -22,7 +22,7 @@ DIContainer.bind<IAuthService>(Types.AuthService).toConstantValue(
   new AuthService()
 );
 
-DIContainer.bind<IChangeService>(Types.ChangeService).toConstantValue(
+DIContainer.bind<ITransactionService>(Types.ChangeService).toConstantValue(
   new ChangeService()
 );
 

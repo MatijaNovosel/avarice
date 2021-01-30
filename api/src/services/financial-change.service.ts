@@ -1,13 +1,22 @@
 import { TransferInputType } from "./../input-types/financial-change.input-type";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
-import { Paymentsource } from "./../entities/paymentsource";
+import {
+  Paymentsource,
+  TransactionAmountRange
+} from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
 import { Tag } from "./../entities/tag";
 import { Financialchange } from "./../entities/financialchange";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { createQueryBuilder, getRepository, Like, Repository } from "typeorm";
+import {
+  Between,
+  createQueryBuilder,
+  getRepository,
+  Like,
+  Repository
+} from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
 import { format } from "date-fns";
 import { Appuser } from "src/entities/appuser";
@@ -25,7 +34,7 @@ export class FinancialChangeService {
     private appUserRepository: Repository<Appuser>
   ) {}
 
-  async getRecentWithdrawalValues(appUserId: number) {
+  async getRecentWithdrawalValues(appUserId: number): Promise<number> {
     const res = await createQueryBuilder("financialchange")
       .select("ROUND(SUM(amount), 2) total")
       .where(
@@ -35,7 +44,7 @@ export class FinancialChangeService {
     return res.total;
   }
 
-  async getRecentGains(appUserId: number) {
+  async getRecentGains(appUserId: number): Promise<number> {
     const res = await createQueryBuilder("financialchange")
       .select("ROUND(SUM(amount), 2) total")
       .where(
@@ -45,14 +54,40 @@ export class FinancialChangeService {
     return res.total;
   }
 
+  async getTransactionAmountRange(
+    appUserId: number,
+    expense?: boolean
+  ): Promise<TransactionAmountRange> {
+    let where = "";
+
+    if (expense !== undefined) {
+      where = `expense = ${expense ? 1 : 0}`;
+    }
+
+    const { min, max } = await createQueryBuilder("financialchange")
+      .select("MAX(amount) max, MIN(amount) min")
+      .where(where)
+      .getRawOne();
+
+    return {
+      max,
+      min
+    };
+  }
+
   async findAllByUserId(
     id: number,
     skip?: number,
     take?: number,
-    description?: string
+    description?: string,
+    min?: number,
+    max?: number
   ): Promise<PaginatedFinancialChange> {
+    const range = await this.getTransactionAmountRange(id);
+
     const filter = {
       appUserId: id,
+      amount: Between(min || range.min, max || range.max),
       ...(description && { description: Like(`%${description}%`) })
     };
 
@@ -65,9 +100,9 @@ export class FinancialChangeService {
     });
 
     const count = await this.financialChangeRepository.count({
-      where: { appUserId: id }
+      where: filter
     });
-    
+
     return new PaginatedFinancialChange(
       data.map((fc) => ({
         id: fc.id,

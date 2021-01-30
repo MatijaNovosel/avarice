@@ -104,7 +104,7 @@ import { FinancialChangeItem } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
-import { IChangeService } from "../services/interfaces/transaction-service";
+import { ITransactionService } from "../services/interfaces/transaction-service";
 import { GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
@@ -189,7 +189,7 @@ export default defineComponent({
     async function getTransactions(skip?: number, take?: number) {
       state.transactionsLoading = true;
 
-      const itemCollection = await getService<IChangeService>(
+      const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
       ).getChanges(1, skip, take);
 
@@ -206,7 +206,7 @@ export default defineComponent({
       state.loading = true;
       getTransactions(0, state.numberOfRows);
 
-      const history = await getService<IChangeService>(
+      const history = await getService<ITransactionService>(
         Types.ChangeService
       ).getHistory(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
 
@@ -228,11 +228,11 @@ export default defineComponent({
         datasets: [state.totalDataset]
       };
 
-      state.recentWithdrawals = await getService<IChangeService>(
+      state.recentWithdrawals = await getService<ITransactionService>(
         Types.ChangeService
       ).getRecentWithdrawals(1);
 
-      state.recentGains = await getService<IChangeService>(
+      state.recentGains = await getService<ITransactionService>(
         Types.ChangeService
       ).getRecentGains(1);
 

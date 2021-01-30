@@ -87,6 +87,11 @@ type GTagPercentage {
   percentage: Float!
 }
 
+type TransactionAmountRange {
+  min: Float!
+  max: Float!
+}
+
 type AccessToken {
   accessToken: String!
 }
@@ -104,9 +109,10 @@ type Query {
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
-  financialChanges(description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
+  financialChanges(max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
   recentWithdrawals(id: Int!): Float!
   recentGains(id: Int!): Float!
+  transactionAmountRange(expense: Boolean, appUserId: Int!): TransactionAmountRange!
   tags: [GTag!]!
 }
 

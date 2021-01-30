@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
@@ -93,4 +93,13 @@ export class GTagPercentage {
 
   @Field()
   percentage?: number;
+}
+
+@ObjectType()
+export class TransactionAmountRange {
+  @Field(() => Float)
+  min?: number;
+  
+  @Field(() => Float)
+  max?: number;
 }

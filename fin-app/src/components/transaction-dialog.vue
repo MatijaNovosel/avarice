@@ -127,7 +127,7 @@ import { CreateFinancialChangeItemDto } from "../models/change-item";
 import { required, numeric, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
-import { IChangeService } from "../services/interfaces/transaction-service";
+import { ITransactionService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
@@ -210,7 +210,7 @@ export default defineComponent({
         ...entry
       };
 
-      await getService<IChangeService>(Types.ChangeService).addChange(payload);
+      await getService<ITransactionService>(Types.ChangeService).addChange(payload);
 
       hideDialog();
       state.saving = false;

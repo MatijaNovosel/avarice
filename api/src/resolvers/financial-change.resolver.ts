@@ -1,3 +1,4 @@
+import { TransactionAmountRange } from "./../entities/paymentsource";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import {
   FinancialChangeInputType,
@@ -17,9 +18,18 @@ export class FinancialChangeResolver {
     @Args("id", { type: () => Int }) id: number,
     @Args("skip", { type: () => Int, nullable: true }) skip: number,
     @Args("take", { type: () => Int, nullable: true }) take: number,
-    @Args("description", { nullable: true }) description: string
+    @Args("description", { nullable: true }) description: string,
+    @Args("min", { type: () => Float, nullable: true }) min: number,
+    @Args("max", { type: () => Float, nullable: true }) max: number
   ) {
-    return this.financialChangeService.findAllByUserId(id, skip, take, description);
+    return this.financialChangeService.findAllByUserId(
+      id,
+      skip,
+      take,
+      description,
+      min,
+      max
+    );
   }
 
   @Query(() => Float, { name: "recentWithdrawals" })
@@ -30,6 +40,14 @@ export class FinancialChangeResolver {
   @Query(() => Float, { name: "recentGains" })
   async getRecentGains(@Args("id", { type: () => Int }) id: number) {
     return this.financialChangeService.getRecentGains(id);
+  }
+
+  @Query(() => TransactionAmountRange, { name: "transactionAmountRange" })
+  async getTransactionAmountRange(
+    @Args("appUserId", { type: () => Int }) appUserId: number,
+    @Args("expense", { nullable: true }) expense: boolean
+  ) {
+    return this.financialChangeService.getTransactionAmountRange(appUserId, expense);
   }
 
   @Mutation(() => VoidScalar, { nullable: true })

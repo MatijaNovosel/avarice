@@ -1,4 +1,4 @@
-import { CreateTransferDto } from './../../models/change-item';
+import { CreateTransferDto, TransactionAmountRange } from './../../models/change-item';
 import { ItemCollection } from "../../models/item-collection";
 import {
   CreateFinancialChangeItemDto,
@@ -7,10 +7,10 @@ import {
 import { FinancialHistory } from "@/models/history-item";
 import axios from "axios";
 import environmentVariables from "@/constants/environment-variables.json";
-import { IChangeService } from "../interfaces/transaction-service";
+import { ITransactionService } from "../interfaces/transaction-service";
 import { format } from "date-fns";
 
-export class ChangeService implements IChangeService {
+export class ChangeService implements ITransactionService {
   async getRecentWithdrawals(appUserId: number): Promise<number> {
     const { data: { data: { recentWithdrawals } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
@@ -87,14 +87,16 @@ export class ChangeService implements IChangeService {
   
   async getChanges(
     appUserId: number,
-    skip?: number,
-    take?: number,
-    description?: string
+    skip: number | null = null,
+    take: number | null = null,
+    description = "",
+    min: number | null = null,
+    max: number | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
     const { data: { data: { financialChanges } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-          financialChanges(id: ${appUserId}, take: ${take || null}, skip: ${skip || null}, description: "${description || ''}") {
+          financialChanges(id: ${appUserId}, take: ${take}, skip: ${skip}, description: "${description}", min: ${min}, max: ${max}) {
             count
             items {
               id
@@ -129,5 +131,19 @@ export class ChangeService implements IChangeService {
       `
     });
     return financialHistory;
+  }
+
+  async getTransactionAmountRange(appUserId: number, expense: boolean | null = null): Promise<TransactionAmountRange> {
+    const { data: { data: { transactionAmountRange } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          transactionAmountRange(appUserId: ${appUserId}, expense: ${expense}) {
+            min
+            max
+          }
+        }
+      `
+    });
+    return transactionAmountRange;
   }
 }

@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col sm:px-6 lg:px-8">
-    <div class="flex mb-5">
-      <span class="p-float-label">
+    <div class="mb-5 grid grid-cols-2 gap-5 items-center">
+      <span class="p-float-label w-full">
         <input-text
+          class="rounded-lg"
           v-model="state.search.description"
           @input="search"
           name="description"
@@ -10,6 +11,19 @@
         />
         <label for="description">Description</label>
       </span>
+      <div class="flex flex-col space-y-4">
+        <slider
+          class="mx-5"
+          :max="state.transactionAmountRange.max"
+          :min="state.transactionAmountRange.min"
+          :range="true"
+          v-model="state.sliderRange"
+        />
+        <div class="flex justify-between">
+          <span>{{ state.sliderRange[0] }} HRK</span>
+          <span>{{ state.sliderRange[1] }} HRK</span>
+        </div>
+      </div>
     </div>
     <div class="overflow-x-auto">
       <div class="min-w-full">
@@ -103,8 +117,11 @@
 
 <script lang="ts">
 import { getService, Types } from "@/di-container";
-import { FinancialChangeItem } from "@/models/change-item";
-import { IChangeService } from "@/services/interfaces/transaction-service";
+import {
+  FinancialChangeItem,
+  TransactionAmountRange
+} from "@/models/change-item";
+import { ITransactionService } from "@/services/interfaces/transaction-service";
 import { defineComponent, onMounted, reactive } from "vue";
 import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
@@ -125,18 +142,27 @@ interface State {
   pageOptions: number[];
   transactionsOffset: number;
   search: Search;
+  sliderRange: number[];
+  transactionAmountRange: TransactionAmountRange;
+  currentPage: number;
 }
 
 export default defineComponent({
   name: "History",
   setup() {
     const state: State = reactive({
+      transactionAmountRange: {
+        min: 0,
+        max: 100
+      },
+      sliderRange: [0, 100],
       transactions: [],
       loading: false,
       totalTransactions: 0,
       numberOfPages: 0,
       numberOfRows: 10,
       pageOptions: [10, 15],
+      currentPage: 0,
       transactionsOffset: 0,
       search: {
         description: ""
@@ -166,12 +192,19 @@ export default defineComponent({
       }
     ];
 
-    async function getTransactions(skip?: number, take?: number) {
+    async function getTransactions() {
       state.loading = true;
 
-      const itemCollection = await getService<IChangeService>(
+      const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
-      ).getChanges(1, skip, take, state.search.description);
+      ).getChanges(
+        1,
+        state.currentPage * state.numberOfRows,
+        state.numberOfRows,
+        state.search.description,
+        state.sliderRange[0],
+        state.sliderRange[1]
+      );
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
@@ -183,15 +216,27 @@ export default defineComponent({
     }
 
     function pageChanged(paginationInfo: Pagination) {
-      const { page, rows } = { ...paginationInfo };
-      getTransactions(page * rows, state.numberOfRows);
+      const { page } = { ...paginationInfo };
+      state.currentPage = page;
+      getTransactions();
     }
 
-    onMounted(() => {
-      getTransactions(0, state.numberOfRows);
+    onMounted(async () => {
+      getTransactions();
+      state.transactionAmountRange = await getService<ITransactionService>(
+        Types.ChangeService
+      ).getTransactionAmountRange(1);
+      state.sliderRange = [
+        state.transactionAmountRange.min,
+        state.transactionAmountRange.max
+      ];
     });
 
-    const search = debounce(pageChanged, 2000);
+    const search = debounce(() => {
+      state.currentPage = 0;
+      state.transactionsOffset = 0;
+      getTransactions();
+    }, 2000);
 
     return {
       state,

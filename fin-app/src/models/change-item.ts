@@ -24,3 +24,8 @@ export interface CreateTransferDto {
   accountFromId: number;
   accountToId: number;
 }
+
+export interface TransactionAmountRange {
+  min: number;
+  max: number;
+}
