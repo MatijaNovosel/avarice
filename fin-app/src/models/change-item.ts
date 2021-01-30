@@ -26,6 +26,11 @@ export interface CreateTransferDto {
 }
 
 export interface TransactionAmountRange {
-  min: number;
-  max: number;
+  min: number | null;
+  max: number | null;
+}
+
+export interface RecentDepositsAndWithdrawals {
+  withdrawals: number;
+  deposits: number;
 }

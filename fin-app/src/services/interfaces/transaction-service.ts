@@ -2,6 +2,7 @@ import {
   CreateFinancialChangeItemDto,
   CreateTransferDto,
   FinancialChangeItem,
+  RecentDepositsAndWithdrawals,
   TransactionAmountRange
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
@@ -9,8 +10,7 @@ import { ItemCollection } from "@/models/item-collection";
 
 export interface ITransactionService {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
-  getRecentWithdrawals(appUserId: number): Promise<number>;
-  getRecentGains(appUserId: number): Promise<number>;
+  getRecentDepositsAndWithdrawals(appUserId: number): Promise<RecentDepositsAndWithdrawals>;
   getTransactionAmountRange(
     appUserId: number,
     expense?: boolean | null

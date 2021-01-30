@@ -1,4 +1,4 @@
-import { TransactionAmountRange } from "./../entities/paymentsource";
+import { RecentDepositsAndWithdrawals, TransactionAmountRange } from "./../entities/paymentsource";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import {
   FinancialChangeInputType,
@@ -32,14 +32,9 @@ export class FinancialChangeResolver {
     );
   }
 
-  @Query(() => Float, { name: "recentWithdrawals" })
-  async getRecentWithdrawals(@Args("id", { type: () => Int }) id: number) {
-    return this.financialChangeService.getRecentWithdrawalValues(id);
-  }
-
-  @Query(() => Float, { name: "recentGains" })
-  async getRecentGains(@Args("id", { type: () => Int }) id: number) {
-    return this.financialChangeService.getRecentGains(id);
+  @Query(() => RecentDepositsAndWithdrawals, { name: "recentDepositsAndWithdrawals" })
+  async getRecentDepositsAndWithdrawals(@Args("appUserId", { type: () => Int }) appUserId: number) {
+    return this.financialChangeService.getRecentDepositsAndWithdrawals(appUserId);
   }
 
   @Query(() => TransactionAmountRange, { name: "transactionAmountRange" })

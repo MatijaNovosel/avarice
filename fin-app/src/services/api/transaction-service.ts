@@ -1,4 +1,4 @@
-import { CreateTransferDto, TransactionAmountRange } from './../../models/change-item';
+import { CreateTransferDto, RecentDepositsAndWithdrawals, TransactionAmountRange } from './../../models/change-item';
 import { ItemCollection } from "../../models/item-collection";
 import {
   CreateFinancialChangeItemDto,
@@ -11,26 +11,18 @@ import { ITransactionService } from "../interfaces/transaction-service";
 import { format } from "date-fns";
 
 export class ChangeService implements ITransactionService {
-  async getRecentWithdrawals(appUserId: number): Promise<number> {
-    const { data: { data: { recentWithdrawals } } } = await axios.post(environmentVariables.apiUrl, {
+  async getRecentDepositsAndWithdrawals(appUserId: number): Promise<RecentDepositsAndWithdrawals> {
+    const { data: { data: { recentDepositsAndWithdrawals } } } = await axios.post(environmentVariables.apiUrl, {
       query: `
         query {
-          recentWithdrawals(id: ${appUserId})
+          recentDepositsAndWithdrawals(appUserId: ${appUserId}) {
+            deposits
+            withdrawals
+          }
         }
       `
     });
-    return recentWithdrawals;
-  }
-
-  async getRecentGains(appUserId: number): Promise<number> {
-    const { data: { data: { recentGains } } } = await axios.post(environmentVariables.apiUrl, {
-      query: `
-        query {
-          recentGains(id: ${appUserId})
-        }
-      `
-    });
-    return recentGains;
+    return recentDepositsAndWithdrawals;
   }
 
   async transfer(payload: CreateTransferDto): Promise<void> {

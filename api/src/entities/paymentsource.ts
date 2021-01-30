@@ -103,3 +103,12 @@ export class TransactionAmountRange {
   @Field(() => Float)
   max?: number;
 }
+
+@ObjectType()
+export class RecentDepositsAndWithdrawals {
+  @Field(() => Float)
+  withdrawals?: number;
+
+  @Field(() => Float)
+  deposits?: number;
+}

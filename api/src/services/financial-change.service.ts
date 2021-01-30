@@ -3,6 +3,7 @@ import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
 import {
   Paymentsource,
+  RecentDepositsAndWithdrawals,
   TransactionAmountRange
 } from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
@@ -34,24 +35,27 @@ export class FinancialChangeService {
     private appUserRepository: Repository<Appuser>
   ) {}
 
-  async getRecentWithdrawalValues(appUserId: number): Promise<number> {
-    const res = await createQueryBuilder("financialchange")
-      .select("ROUND(SUM(amount), 2) total")
+  async getRecentDepositsAndWithdrawals(
+    appUserId: number
+  ): Promise<RecentDepositsAndWithdrawals> {
+    const { withdrawals } = await createQueryBuilder("financialchange")
+      .select("ROUND(SUM(amount), 2) withdrawals")
       .where(
         `expense = 1 AND transfer = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )
       .getRawOne();
-    return res.total;
-  }
 
-  async getRecentGains(appUserId: number): Promise<number> {
-    const res = await createQueryBuilder("financialchange")
-      .select("ROUND(SUM(amount), 2) total")
+    const { deposits } = await createQueryBuilder("financialchange")
+      .select("ROUND(SUM(amount), 2) deposits")
       .where(
         `expense = 0 AND transfer = 0 AND createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() AND appUserId = ${appUserId}`
       )
       .getRawOne();
-    return res.total;
+
+    return {
+      deposits,
+      withdrawals
+    };
   }
 
   async getTransactionAmountRange(

@@ -28,7 +28,7 @@
                 >Withdrawals (Last 30 days)</span
               >
               <span class="font-semibold text-xl text-red-400"
-                >- {{ state.recentWithdrawals }} HRK</span
+                >- {{ state.recentDepositsAndWithdrawals.withdrawals }} HRK</span
               >
             </div>
           </div>
@@ -41,7 +41,7 @@
             <div class="flex flex-col ml-5">
               <span class="font-bold text-gray-400">Gains (Last 30 days)</span>
               <span class="font-semibold text-xl text-green-500"
-                >+ {{ state.recentGains }} HRK</span
+                >+ {{ state.recentDepositsAndWithdrawals.deposits }} HRK</span
               >
             </div>
           </div>
@@ -100,7 +100,10 @@ import { defineComponent, reactive, watch, inject, onMounted } from "vue";
 import { hexToRgba, adjustHexColor } from "../helpers/helpers";
 import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
-import { FinancialChangeItem } from "../models/change-item";
+import {
+  FinancialChangeItem,
+  RecentDepositsAndWithdrawals
+} from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
@@ -117,8 +120,7 @@ interface GraphData {
 }
 
 interface State {
-  recentWithdrawals: number;
-  recentGains: number;
+  recentDepositsAndWithdrawals: RecentDepositsAndWithdrawals;
   dateRange: Array<Date | null>;
   loading: boolean;
   transactionsLoading: boolean;
@@ -145,8 +147,10 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       transactionPageOption: [10, 15],
-      recentWithdrawals: 0,
-      recentGains: 0,
+      recentDepositsAndWithdrawals: {
+        withdrawals: 0,
+        deposits: 0
+      },
       dateRange: [],
       total: {
         id: 1,
@@ -228,13 +232,9 @@ export default defineComponent({
         datasets: [state.totalDataset]
       };
 
-      state.recentWithdrawals = await getService<ITransactionService>(
+      state.recentDepositsAndWithdrawals = await getService<ITransactionService>(
         Types.ChangeService
-      ).getRecentWithdrawals(1);
-
-      state.recentGains = await getService<ITransactionService>(
-        Types.ChangeService
-      ).getRecentGains(1);
+      ).getRecentDepositsAndWithdrawals(1);
 
       state.loading = false;
     }

@@ -148,7 +148,7 @@ interface State {
   pageOptions: number[];
   transactionsOffset: number;
   search: Search;
-  sliderRange: number[];
+  sliderRange: Array<number | null>;
   transactionAmountRange: TransactionAmountRange;
   currentPage: number;
 }
@@ -158,10 +158,10 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       transactionAmountRange: {
-        min: 0,
-        max: 100
+        min: null,
+        max: null
       },
-      sliderRange: [0, 100],
+      sliderRange: [null, null],
       transactions: [],
       loading: false,
       totalTransactions: 0,
@@ -233,8 +233,8 @@ export default defineComponent({
         Types.ChangeService
       ).getTransactionAmountRange(1);
       state.sliderRange = [
-        state.transactionAmountRange.min,
-        state.transactionAmountRange.max
+        state.transactionAmountRange.min as number,
+        state.transactionAmountRange.max as number
       ];
     });
 

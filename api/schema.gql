@@ -92,6 +92,11 @@ type TransactionAmountRange {
   max: Float!
 }
 
+type RecentDepositsAndWithdrawals {
+  withdrawals: Float!
+  deposits: Float!
+}
+
 type AccessToken {
   accessToken: String!
 }
@@ -110,8 +115,7 @@ type Query {
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
-  recentWithdrawals(id: Int!): Float!
-  recentGains(id: Int!): Float!
+  recentDepositsAndWithdrawals(appUserId: Int!): RecentDepositsAndWithdrawals!
   transactionAmountRange(expense: Boolean, appUserId: Int!): TransactionAmountRange!
   tags: [GTag!]!
 }
