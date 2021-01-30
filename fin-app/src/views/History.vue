@@ -100,6 +100,12 @@
             </tbody>
           </table>
           <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
+          <div
+            v-if="!state.loading && state.transactions.length == 0"
+            class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
+          >
+            <span>No records found!</span>
+          </div>
         </div>
       </div>
     </div>
@@ -201,7 +207,7 @@ export default defineComponent({
         1,
         state.currentPage * state.numberOfRows,
         state.numberOfRows,
-        state.search.description,
+        state.search.description.trim(),
         state.sliderRange[0],
         state.sliderRange[1]
       );

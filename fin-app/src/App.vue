@@ -4,9 +4,12 @@
     <div class="col-span-2 bg-gray-600 space-y-2" v-if="state.isAuthenticated">
       <sidebar :items="state.sidebarItems" />
     </div>
-    <div :class="`col-span-${state.isAuthenticated ? '10' : '12'}`">
-      <navbar v-if="state.isAuthenticated" class="mb-5" />
-      <router-view :class="{ 'offset-top': state.isAuthenticated }" />
+    <div
+      class="relative"
+      :class="`col-span-${state.isAuthenticated ? '10' : '12'}`"
+    >
+      <navbar v-if="state.isAuthenticated" />
+      <router-view :class="{ 'mt-6': state.isAuthenticated }" />
     </div>
   </div>
 </template>

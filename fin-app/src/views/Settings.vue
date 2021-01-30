@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col px-6">
+  <div class="flex flex-col px-6 pt-4">
     <div class="flex border-b border-gray-300">
       <span
         :class="{
