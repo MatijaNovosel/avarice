@@ -1,7 +1,17 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col sm:px-6 lg:px-8">
+    <div class="flex mb-5">
+      <span class="p-float-label">
+        <input-text
+          v-model="state.search.description"
+          name="description"
+          id="description"
+        />
+        <label for="description">Description</label>
+      </span>
+    </div>
     <div class="overflow-x-auto">
-      <div class="min-w-full sm:px-6 lg:px-8">
+      <div class="min-w-full">
         <div class="shadow overflow-hidden rounded-t-lg">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -85,7 +95,7 @@
       :rowsPerPageOptions="state.pageOptions"
       :pageLinkSize="state.numberOfPages"
       @page="pageChanged"
-      class="pb-2 bg-gray-200 sm:mx-6 lg:mx-8 rounded-b-lg"
+      class="pb-2 bg-gray-200 rounded-b-lg"
     />
   </div>
 </template>
@@ -100,6 +110,10 @@ import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
 
+interface Search {
+  description: string;
+}
+
 interface State {
   transactions: FinancialChangeItem[];
   loading: boolean;
@@ -108,6 +122,7 @@ interface State {
   numberOfRows: number;
   pageOptions: number[];
   transactionsOffset: number;
+  search: Search;
 }
 
 export default defineComponent({
@@ -120,7 +135,10 @@ export default defineComponent({
       numberOfPages: 0,
       numberOfRows: 10,
       pageOptions: [10, 15],
-      transactionsOffset: 0
+      transactionsOffset: 0,
+      search: {
+        description: ""
+      }
     });
 
     const headers: TableHeaderItem[] = [
