@@ -27,7 +27,7 @@
               <span class="text-gray-500 font-bold">Display name</span>
             </td>
             <td class="text-left">
-              <span>{{ state.user.displayName }}</span>
+              {{ state.user.displayName }}
             </td>
             <td class="text-right">
               <button
@@ -43,7 +43,7 @@
               <span class="text-gray-500 font-bold">Email</span>
             </td>
             <td class="text-left">
-              <span>{{ state.user.email }}</span>
+              {{ state.user.email }}
             </td>
             <td class="text-right">
               <button
@@ -59,7 +59,7 @@
               <span class="text-gray-500 font-bold">Date format</span>
             </td>
             <td class="text-left">
-              <span>dd.MM.yyyy. HH:mm</span>
+              {{ state.user.dateFormat }}
             </td>
             <td class="text-right">
               <button
@@ -75,7 +75,23 @@
               <span class="text-gray-500 font-bold">Preferred currency</span>
             </td>
             <td class="text-left">
-              <span>HRK</span>
+              {{ state.user.preferredCurrency }}
+            </td>
+            <td class="text-right">
+              <button
+                class="text-white rounded-md bg-gray-500 hover:bg-gray-600 py-1 px-6 shadow-md select-none p-ripple"
+                v-ripple
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-3">
+              <span class="text-gray-500 font-bold">Language</span>
+            </td>
+            <td class="text-left">
+              {{ LanguageEnum[state.user.language] }}
             </td>
             <td class="text-right">
               <button
@@ -93,8 +109,10 @@
 </template>
 
 <script lang="ts">
+import { AppUser } from "@/models/user";
 import { computed, defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
+import { LanguageEnum } from "@/constants/language";
 
 enum TabsEnum {
   Appearance = 1,
@@ -109,6 +127,7 @@ interface TabHeaderItem {
 interface State {
   tabHeaders: TabHeaderItem[];
   activeTab: TabsEnum;
+  user: AppUser;
 }
 
 export default defineComponent({
@@ -133,7 +152,8 @@ export default defineComponent({
 
     return {
       state,
-      TabsEnum
+      TabsEnum,
+      LanguageEnum
     };
   }
 });

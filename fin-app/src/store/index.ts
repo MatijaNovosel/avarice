@@ -1,3 +1,4 @@
+import { LanguageEnum } from "./../constants/language";
 import { AppUser } from "./../models/user";
 import { createStore, ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
@@ -10,7 +11,13 @@ interface State {
 const state: State = {
   user: {
     email: null,
-    uid: null
+    uid: null,
+    accessToken: "",
+    dateFormat: "",
+    displayName: "",
+    language: LanguageEnum.English,
+    photoURL: "",
+    preferredCurrency: "HRK"
   }
 };
 
