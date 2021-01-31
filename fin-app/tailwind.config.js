@@ -27,6 +27,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      borderRadius: ['first', 'last'],
       opacity: ['disabled'],
       backgroundColor: [
         "disabled"

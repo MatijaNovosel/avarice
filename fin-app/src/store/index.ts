@@ -10,10 +10,7 @@ interface State {
 const state: State = {
   user: {
     email: null,
-    uid: null,
-    displayName: null,
-    photoURL: null,
-    accessToken: null
+    uid: null
   }
 };
 
@@ -22,7 +19,7 @@ const mutations = {
     state.user = { ...user };
   },
   unsetUser(state: State) {
-    setAllPropertiesToVal(state.user, null);
+    setAllPropertiesToVal(state.user, undefined);
   }
 };
 

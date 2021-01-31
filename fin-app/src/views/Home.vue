@@ -17,7 +17,7 @@
         color="#acb0bf"
         :amount="state.total.currentAmount"
         :amount-visible="state.total.visible"
-        currency="HRK"
+        :currency="state.user.preferredCurrency"
       />
       <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
         <div class="w-full flex items-center content-between justify-between">
@@ -39,7 +39,7 @@
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
             <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400">Gains (Last 30 days)</span>
+              <span class="font-bold text-gray-400">Deposits (Last 30 days)</span>
               <span class="font-semibold text-xl text-green-500"
                 >+ {{ state.recentDepositsAndWithdrawals.deposits }} HRK</span
               >
@@ -54,7 +54,7 @@
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-5">
+        <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5">
           <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, inject, onMounted } from "vue";
+import { defineComponent, reactive, watch, inject, onMounted, computed } from "vue";
 import { hexToRgba, adjustHexColor } from "../helpers/helpers";
 import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
@@ -113,6 +113,8 @@ import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
 import MdiIcon from "@/components/mdi-icon.vue";
 import { RefreshController } from "@/helpers/refresh";
+import { useStore } from "vuex";
+import { AppUser } from "@/models/user";
 
 interface GraphData {
   labels: string[];
@@ -135,6 +137,7 @@ interface State {
   graphOptions: GraphOptions;
   total: PaymentSource;
   transactionPageOption: number[];
+  user: AppUser;
 }
 
 export default defineComponent({
@@ -145,7 +148,10 @@ export default defineComponent({
     MdiIcon
   },
   setup() {
+    const user = useStore();
+
     const state: State = reactive({
+      user: computed(() => user.getters.user),
       transactionPageOption: [10, 15],
       recentDepositsAndWithdrawals: {
         withdrawals: 0,
@@ -239,7 +245,7 @@ export default defineComponent({
       state.loading = false;
     }
 
-    function pageChanged(paginationInfo: Pagination) {
+    const pageChanged = (paginationInfo: Pagination) => {
       const { page, rows } = { ...paginationInfo };
       getTransactions(page * rows, state.numberOfRows);
     }

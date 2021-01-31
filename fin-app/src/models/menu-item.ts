@@ -1,5 +1,5 @@
 export interface MenuItem {
   label?: string;
-  command?: Function;
+  command?: ((payload: MouseEvent) => void) | undefined;
   separator?: boolean;
 }

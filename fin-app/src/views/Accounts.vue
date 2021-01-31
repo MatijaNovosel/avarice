@@ -19,7 +19,7 @@
         color="#acb0bf"
         :amount="account.amount"
         amount-visible
-        :currency="account.currency"
+        :currency="state.user.preferredCurrency"
       />
     </div>
     <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive, onMounted, computed } from "vue";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import {
   AccountLatestValue,
@@ -63,6 +63,8 @@ import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
 import { GraphOptions } from "@/models/graph";
 import { adjustHexColor } from "@/helpers/helpers";
+import { AppUser } from "@/models/user";
+import { useStore } from "vuex";
 
 interface GraphData {
   labels: string[];
@@ -75,6 +77,7 @@ interface State {
   graphData: GraphData | null;
   graphOptions: GraphOptions;
   tagPercentages: TagPercentageRecord[];
+  user: AppUser;
 }
 
 export default defineComponent({
@@ -83,7 +86,10 @@ export default defineComponent({
     DashboardAmountCard
   },
   setup() {
+    const store = useStore();
+
     const state: State = reactive({
+      user: computed(() => store.getters.user),
       tagPercentages: [],
       loading: false,
       graphOptions: {

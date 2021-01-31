@@ -84,6 +84,7 @@ import { useToast } from "primevue/usetoast";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
 import { AppUser } from "@/models/user";
+import { LanguageEnum } from "@/constants/language";
 
 interface Input {
   email: string;
@@ -135,7 +136,10 @@ export default defineComponent({
           email: "mnovosel5@gmail.com",
           photoURL:
             "https://avatars.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4",
-          displayName: "Matija Novosel"
+          displayName: "Matija Novosel",
+          language: LanguageEnum.English,
+          dateFormat: "dd.MM.yyyy. HH:mm",
+          preferredCurrency: "HRK"
         };
         store.dispatch("setUser", userData);
         toast.add({

@@ -172,3 +172,19 @@ export const debounce = <T extends (...args: any[]) => any>(
     return result;
   };
 };
+
+interface HTMLElementOffset {
+  top: number;
+  left: number;
+}
+
+export function getOffset(el: HTMLElement): HTMLElementOffset {
+  var _x = 0;
+  var _y = 0;
+  while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+    _x += el.offsetLeft - el.scrollLeft;
+    _y += el.offsetTop - el.scrollTop;
+    el = el.offsetParent as HTMLElement;
+  }
+  return { top: _y, left: _x };
+}

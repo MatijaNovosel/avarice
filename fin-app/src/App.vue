@@ -1,7 +1,7 @@
 <template>
   <toast position="top-right" />
   <div class="grid grid-cols-12">
-    <div class="col-span-2 bg-gray-600 space-y-2" v-if="state.isAuthenticated">
+    <div id="sidebar" class="col-span-2 bg-gray-600 space-y-2" v-if="state.isAuthenticated">
       <sidebar :items="state.sidebarItems" />
     </div>
     <div
@@ -26,6 +26,7 @@ import refresh from "@/helpers/refresh";
 interface State {
   visible: boolean;
   sidebarItems: SidebarItem[];
+  isAuthenticated: boolean;
 }
 
 export default defineComponent({

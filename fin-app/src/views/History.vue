@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col sm:px-6 lg:px-8">
+  <div class="flex flex-col sm:px-6 lg:px-8 mb-5">
     <div class="mb-5 grid grid-cols-2 gap-5 items-center">
       <span class="p-float-label w-full">
         <input-text

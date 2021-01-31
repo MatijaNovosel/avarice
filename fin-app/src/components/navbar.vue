@@ -33,6 +33,8 @@
         color="#94a3b8"
       />
       <img
+        ref="overlayMenuTrigger"
+        id="overlayMenuTrigger"
         class="inline-block h-8 w-8 rounded-full"
         :src="state.user.photoURL"
         alt=""
@@ -43,21 +45,33 @@
         </span>
         <mdi-icon name="chevron-down" color="#000000" />
       </div>
-      <p-menu
-        class="rounded-md"
-        id="overlayMenu"
-        ref="overlayMenu"
-        :model="state.menuItems"
-        :popup="true"
-      />
     </div>
     <transaction-dialog v-model:dialog="state.newTransactionDialog" />
     <transfer-dialog v-model:dialog="state.transferDialog" />
+    <div
+      :style="state.menuStyle"
+      class="rounded-lg bg-white shadow-md absolute flex flex-col top-20 border w-44"
+    >
+      <div
+        :class="{
+          'py-1 px-4 bg-white first:rounded-t-lg last:rounded-b-lg cursor-pointer hover:bg-gray-100 hover:rounded-lg p-ripple': !menuItem.separator,
+          'border-t border-gray-200': menuItem.separator
+        }"
+        v-for="(menuItem, i) in state.menuItems"
+        :key="i"
+        v-ripple
+        @click="menuItem.command"
+      >
+        <span v-if="!menuItem.separator">
+          {{ menuItem.label }}
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref, Ref } from "vue";
+import { defineComponent, reactive, computed, Ref, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -67,9 +81,11 @@ import TransactionDialog from "@/components/transaction-dialog.vue";
 import TransferDialog from "@/components/transfer-dialog.vue";
 import { RouteNames } from "@/constants/route-names";
 import { MenuItem } from "@/models/menu-item";
+import { AppUser } from "@/models/user";
+import { getOffset } from "@/helpers/helpers";
 
-interface MenuNode {
-  toggle: Function;
+interface MenuStyle {
+  left: string;
 }
 
 interface State {
@@ -78,6 +94,9 @@ interface State {
   currentRoute: string | symbol | null | undefined;
   timeOfDay: string;
   menuItems: MenuItem[];
+  user: AppUser;
+  menuVisible: boolean;
+  menuStyle: MenuStyle;
 }
 
 export default defineComponent({
@@ -88,7 +107,15 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
+    const overlayMenuTrigger: Ref<HTMLElement | null> = ref(
+      document.getElementById("overlayMenuTrigger")
+    );
+
     const state: State = reactive({
+      menuVisible: false,
+      menuStyle: {
+        left: "0px"
+      },
       menuItems: [
         {
           label: "New transaction",
@@ -110,7 +137,8 @@ export default defineComponent({
         },
         {
           label: "Log out",
-          command: () => {
+          command: async () => {
+            await getService<IAuthService>(Types.AuthService).signOut();
             store.dispatch("unsetUser");
             router.push({ name: RouteNames.LOGIN });
           }
@@ -133,29 +161,20 @@ export default defineComponent({
       })
     });
 
-    const overlayMenu: Ref<MenuNode | null> = ref(null);
-
-    async function logout() {
-      await getService<IAuthService>(Types.AuthService).signOut();
-      store.dispatch("unsetUser");
-      router.push({ name: "login" });
-    }
-
     function openMenu(event: Event) {
-      overlayMenu?.value?.toggle(event);
+      const { top, left } = getOffset(overlayMenuTrigger?.value as HTMLElement);
+      const sidebarWidth =
+        document.getElementById("sidebar")?.getBoundingClientRect().width || 0;
+      state.menuStyle.left = `${left - sidebarWidth}px`;
     }
 
-    const accountsRoute = RouteNames.ACCOUNTS;
     const homeRoute = RouteNames.HOME;
 
     return {
       state,
-      logout,
-      store,
-      accountsRoute,
       openMenu,
-      overlayMenu,
-      homeRoute
+      homeRoute,
+      overlayMenuTrigger
     };
   }
 });
