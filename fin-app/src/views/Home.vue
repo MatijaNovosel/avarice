@@ -28,7 +28,8 @@
                 >Withdrawals (Last 30 days)</span
               >
               <span class="font-semibold text-xl text-red-400"
-                >- {{ state.recentDepositsAndWithdrawals.withdrawals }} HRK</span
+                >-
+                {{ state.recentDepositsAndWithdrawals.withdrawals }} HRK</span
               >
             </div>
           </div>
@@ -39,7 +40,9 @@
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
             <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400">Deposits (Last 30 days)</span>
+              <span class="font-bold text-gray-400"
+                >Deposits (Last 30 days)</span
+              >
               <span class="font-semibold text-xl text-green-500"
                 >+ {{ state.recentDepositsAndWithdrawals.deposits }} HRK</span
               >
@@ -96,7 +99,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, inject, onMounted, computed } from "vue";
+import {
+  defineComponent,
+  reactive,
+  watch,
+  inject,
+  onMounted,
+  computed
+} from "vue";
 import { hexToRgba, adjustHexColor } from "../helpers/helpers";
 import { add, startOfMonth } from "date-fns";
 import { DatasetItem } from "../models/dataset";
@@ -245,10 +255,10 @@ export default defineComponent({
       state.loading = false;
     }
 
-    const pageChanged = (paginationInfo: Pagination) => {
-      const { page, rows } = { ...paginationInfo };
+    const pageChanged: (...payload: unknown[]) => unknown = (payload) => {
+      const { page, rows } = { ...(payload as Pagination) };
       getTransactions(page * rows, state.numberOfRows);
-    }
+    };
 
     onMounted(async () => {
       state.dateRange = [

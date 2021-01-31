@@ -85,9 +85,6 @@
           </template>
         </list-box>
       </div>
-      <span class="p-invalid" v-if="model.tagIds.$invalid">{{
-        model.tags.$errors.map((x) => x.$message).join(" • ")
-      }}</span>
       <span class="flex justify-center items-center">
         <span class="text-black"> Expense </span>
         <input-switch
@@ -210,7 +207,9 @@ export default defineComponent({
         ...entry
       };
 
-      await getService<ITransactionService>(Types.ChangeService).addChange(payload);
+      await getService<ITransactionService>(Types.ChangeService).addChange(
+        payload
+      );
 
       hideDialog();
       state.saving = false;

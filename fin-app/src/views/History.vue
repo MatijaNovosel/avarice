@@ -221,11 +221,11 @@ export default defineComponent({
       state.loading = false;
     }
 
-    function pageChanged(paginationInfo: Pagination) {
-      const { page } = { ...paginationInfo };
+    const pageChanged: (...payload: unknown[]) => unknown = (payload) => {
+      const { page } = { ...(payload as Pagination) };
       state.currentPage = page;
       getTransactions();
-    }
+    };
 
     onMounted(async () => {
       getTransactions();
