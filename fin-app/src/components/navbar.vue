@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center w-full justify-end">
+    <div class="flex items-center w-full justify-end select-none">
       <mdi-icon
         class="cursor-pointer mr-3"
         name="bell-outline"
@@ -40,7 +40,7 @@
         alt=""
       />
       <div @click="openMenu" class="cursor-pointer flex p-ripple" v-ripple>
-        <span class="text-black ml-4 mr-3 font-bold">
+        <span class="text-black ml-4 mr-3 mt-1 font-bold">
           {{ state.user.displayName }}
         </span>
         <mdi-icon name="chevron-down" color="#000000" />
@@ -49,15 +49,19 @@
     <transaction-dialog v-model:dialog="state.newTransactionDialog" />
     <transfer-dialog v-model:dialog="state.transferDialog" />
     <div
+      :class="{
+        hidden: !state.menuVisible
+      }"
       :style="state.menuStyle"
-      class="rounded-lg bg-white shadow-md absolute flex flex-col top-20 border w-44"
+      class="rounded-lg bg-white shadow-md absolute flex flex-col top-16 border w-44"
     >
       <div
         :class="{
-          'py-1 px-4 bg-white first:rounded-t-lg last:rounded-b-lg cursor-pointer hover:bg-gray-100 hover:rounded-lg p-ripple': !menuItem.separator,
+          'py-1 px-5 bg-white first:rounded-t-lg last:rounded-b-lg cursor-pointer hover:bg-gray-100 hover:rounded-lg p-ripple': !menuItem.separator,
           'border-t border-gray-200': menuItem.separator
         }"
         v-for="(menuItem, i) in state.menuItems"
+        class="select-none"
         :key="i"
         v-ripple
         @click="menuItem.command"
@@ -121,6 +125,7 @@ export default defineComponent({
           label: "New transaction",
           command: () => {
             state.newTransactionDialog = true;
+            state.menuVisible = false;
           }
         },
         {
@@ -130,6 +135,7 @@ export default defineComponent({
           label: "New transfer",
           command: () => {
             state.transferDialog = true;
+            state.menuVisible = false;
           }
         },
         {
@@ -138,6 +144,7 @@ export default defineComponent({
         {
           label: "Log out",
           command: async () => {
+            state.menuVisible = false;
             await getService<IAuthService>(Types.AuthService).signOut();
             store.dispatch("unsetUser");
             router.push({ name: RouteNames.LOGIN });
@@ -162,9 +169,12 @@ export default defineComponent({
     });
 
     function openMenu() {
+      state.menuVisible = !state.menuVisible;
+
       const { left } = getOffset(overlayMenuTrigger?.value as HTMLElement);
       const sidebarWidth =
         document.getElementById("sidebar")?.getBoundingClientRect().width || 0;
+
       state.menuStyle.left = `${left - sidebarWidth}px`;
     }
 
