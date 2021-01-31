@@ -19,7 +19,7 @@
         :amount-visible="state.total.visible"
         :currency="state.user.preferredCurrency"
       />
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
+      <div class="flex px-5 py-6 bg-white rounded-lg shadow">
         <div class="w-full flex items-center content-between justify-between">
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
@@ -28,14 +28,14 @@
                 >Withdrawals (Last 30 days)</span
               >
               <span class="font-semibold text-xl text-red-400"
-                >-
-                {{ state.recentDepositsAndWithdrawals.withdrawals }} HRK</span
+                >- {{ state.recentDepositsAndWithdrawals.withdrawals }}
+                {{ state.user.preferredCurrency }}</span
               >
             </div>
           </div>
         </div>
       </div>
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
+      <div class="flex px-5 py-6 bg-white rounded-lg shadow">
         <div class="w-full flex items-center content-between justify-between">
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
@@ -44,7 +44,8 @@
                 >Deposits (Last 30 days)</span
               >
               <span class="font-semibold text-xl text-green-500"
-                >+ {{ state.recentDepositsAndWithdrawals.deposits }} HRK</span
+                >+ {{ state.recentDepositsAndWithdrawals.deposits }}
+                {{ state.user.preferredCurrency }}</span
               >
             </div>
           </div>
@@ -68,6 +69,7 @@
             :date="change.createdAt"
             :transfer="change.transfer"
             :describeDate="true"
+            :currency="state.user.preferredCurrency"
           />
         </div>
         <paginator

@@ -1,7 +1,6 @@
 <template>
   <p-dialog
     @hide="hideDialog"
-    :maximizable="true"
     :modal="true"
     v-model:visible="state.dialog"
     :style="{ width: '50vw' }"
@@ -35,38 +34,7 @@
         />
         <label class="text-gray-400" for="description"> Description </label>
       </span>
-      <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
-        <template
-          v-for="paymentSource in state.paymentSources"
-          :key="paymentSource.id"
-        >
-          <div
-            class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer"
-          >
-            <div
-              class="w-full flex items-center content-between justify-between"
-            >
-              <div class="flex items-center">
-                <mdi-icon
-                  :size="28"
-                  color="#acb0bf"
-                  :name="paymentSource.icon"
-                />
-                <div class="flex flex-col ml-5">
-                  <span class="text-lg text-gray-400 font-bold">{{
-                    paymentSource.description
-                  }}</span>
-                </div>
-              </div>
-              <radio-button
-                name="category"
-                :value="paymentSource.id"
-                v-model="model.paymentSourceId.$model"
-              />
-            </div>
-          </div>
-        </template>
-      </div>
+      <account-select v-model:selection="model.paymentSourceId.$model" />
       <div
         class="flex flex-col rounded-lg shadow-md border border-gray-200 bg-white items-center"
       >
@@ -126,10 +94,10 @@ import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { ITransactionService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
-import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
 import { createSelectFromEnum } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
+import AccountSelect from "./account-select.vue";
 
 interface Props {
   dialog: boolean;
@@ -146,7 +114,7 @@ export default defineComponent({
   name: "transaction-dialog",
   emits: ["update:dialog"],
   components: {
-    MdiIcon
+    AccountSelect
   },
   props: {
     dialog: Boolean

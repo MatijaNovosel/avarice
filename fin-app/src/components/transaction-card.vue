@@ -3,7 +3,7 @@
     :class="{
       'bg-gray-50': state.transfer
     }"
-    class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow-md border-gray-200 border"
+    class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow border-gray-200 border"
   >
     <mdi-icon
       v-if="state.transfer"
@@ -28,7 +28,7 @@
         state.show
           ? state.amount.toLocaleString("en")
           : ("" + state.amount).replace(/[0-9]/gi, "*")
-      } HRK`
+      } ${state.currency}`
     }}</span>
     <div class="flex self-end space-x-2 mt-3">
       <tag
@@ -57,6 +57,7 @@ interface Props {
   tags?: TagEnum[] | null;
   show?: boolean;
   describeDate?: boolean;
+  currency?: string;
 }
 
 interface State {
@@ -68,6 +69,7 @@ interface State {
   tags?: TagEnum[] | null;
   show?: boolean;
   describeDate?: boolean;
+  currency?: string;
 }
 
 export default defineComponent({
@@ -87,6 +89,10 @@ export default defineComponent({
     show: {
       type: Boolean,
       default: true
+    },
+    currency: {
+      type: String,
+      default: ""
     }
   },
   setup(props: Props) {
@@ -98,7 +104,8 @@ export default defineComponent({
       expense: props.expense,
       transfer: props.transfer,
       show: props.show,
-      describeDate: props.describeDate
+      describeDate: props.describeDate,
+      currency: props.currency
     });
 
     watch(

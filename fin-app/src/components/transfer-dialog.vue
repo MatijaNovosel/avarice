@@ -1,7 +1,6 @@
 <template>
   <p-dialog
     @hide="hideDialog"
-    :maximizable="true"
     :modal="true"
     v-model:visible="state.dialog"
     :style="{ width: '50vw' }"
@@ -25,71 +24,9 @@
         <label class="text-gray-400" for="amount"> Amount </label>
       </span>
       <span class="text-lg text-gray-500">Account from</span>
-      <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
-        <template
-          v-for="paymentSource in state.paymentSources"
-          :key="paymentSource.id"
-        >
-          <div
-            class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer"
-          >
-            <div
-              class="w-full flex items-center content-between justify-between"
-            >
-              <div class="flex items-center">
-                <mdi-icon
-                  :size="28"
-                  color="#acb0bf"
-                  :name="paymentSource.icon"
-                />
-                <div class="flex flex-col ml-5">
-                  <span class="text-lg text-gray-400 font-bold">{{
-                    paymentSource.description
-                  }}</span>
-                </div>
-              </div>
-              <radio-button
-                name="accountFromId"
-                :value="paymentSource.id"
-                v-model="model.accountFromId.$model"
-              />
-            </div>
-          </div>
-        </template>
-      </div>
+      <account-select v-model:selection="model.accountFromId.$model" />
       <span class="text-lg text-gray-500">Account to</span>
-      <div class="flex justify-center items-center gap-4 grid grid-cols-2 pb-3">
-        <template
-          v-for="paymentSource in state.paymentSources"
-          :key="paymentSource.id"
-        >
-          <div
-            class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow-md cursor-pointer"
-          >
-            <div
-              class="w-full flex items-center content-between justify-between"
-            >
-              <div class="flex items-center">
-                <mdi-icon
-                  :size="28"
-                  color="#acb0bf"
-                  :name="paymentSource.icon"
-                />
-                <div class="flex flex-col ml-5">
-                  <span class="text-lg text-gray-400 font-bold">{{
-                    paymentSource.description
-                  }}</span>
-                </div>
-              </div>
-              <radio-button
-                name="accountToId"
-                :value="paymentSource.id"
-                v-model="model.accountToId.$model"
-              />
-            </div>
-          </div>
-        </template>
-      </div>
+      <account-select v-model:selection="model.accountToId.$model" />
     </div>
     <template #footer>
       <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
@@ -122,9 +59,9 @@ import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { ITransactionService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
-import MdiIcon from "../components/mdi-icon.vue";
 import { PaymentSource } from "@/models/payment-source";
 import { RefreshController } from "@/helpers/refresh";
+import AccountSelect from "./account-select.vue";
 
 interface Props {
   dialog: boolean;
@@ -141,7 +78,7 @@ export default defineComponent({
   name: "transfer-dialog",
   emits: ["update:dialog"],
   components: {
-    MdiIcon
+    AccountSelect
   },
   props: {
     dialog: {
@@ -199,7 +136,9 @@ export default defineComponent({
         ...entry
       };
 
-      await getService<ITransactionService>(Types.ChangeService).transfer(payload);
+      await getService<ITransactionService>(Types.ChangeService).transfer(
+        payload
+      );
 
       hideDialog();
       state.saving = false;
@@ -216,8 +155,7 @@ export default defineComponent({
       state,
       addTransaction,
       hideDialog,
-      model,
-      entry
+      model
     };
   }
 });

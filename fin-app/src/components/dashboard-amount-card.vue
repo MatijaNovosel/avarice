@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-5 py-6 bg-white rounded-lg shadow-md">
+  <div class="flex px-5 py-6 bg-white rounded-lg shadow">
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="w-full flex items-center justify-between">
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, watch } from "vue";
+import { defineComponent, reactive, watch } from "vue";
 import mdiIcon from "@/components/mdi-icon.vue";
 import { MDIIcon } from "@/types/index";
 
@@ -58,7 +58,6 @@ interface State {
 
 export default defineComponent({
   name: "dashboard-amount-card",
-  emits: ["update:enabled", "update:amountVisible"],
   components: {
     mdiIcon
   },
@@ -72,7 +71,7 @@ export default defineComponent({
     noEnabling: Boolean,
     amountVisible: Boolean
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props: Props) {
     const state: State = reactive({
       amount: props.amount,
       icon: props.icon,
@@ -86,7 +85,6 @@ export default defineComponent({
 
     function amountVisibleChanged() {
       state.amountVisible = !state.amountVisible;
-      context.emit("update:amountVisible", state.amountVisible);
     }
 
     watch(
