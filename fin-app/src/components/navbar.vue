@@ -161,8 +161,8 @@ export default defineComponent({
       })
     });
 
-    function openMenu(event: Event) {
-      const { top, left } = getOffset(overlayMenuTrigger?.value as HTMLElement);
+    function openMenu() {
+      const { left } = getOffset(overlayMenuTrigger?.value as HTMLElement);
       const sidebarWidth =
         document.getElementById("sidebar")?.getBoundingClientRect().width || 0;
       state.menuStyle.left = `${left - sidebarWidth}px`;
