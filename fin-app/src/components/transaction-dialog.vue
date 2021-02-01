@@ -149,7 +149,7 @@ export default defineComponent({
 
     watch(
       () => props.dialog,
-      (val) => (state.dialog = val)
+      val => (state.dialog = val)
     );
 
     function resetDialog() {
@@ -197,7 +197,6 @@ export default defineComponent({
       addTransaction,
       hideDialog,
       model,
-      entry,
       tags
     };
   }

@@ -52,7 +52,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, computed } from "vue";
+import {
+  defineComponent,
+  reactive,
+  onMounted,
+  computed,
+  inject,
+  watch
+} from "vue";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import {
   AccountLatestValue,
@@ -65,6 +72,7 @@ import { GraphOptions } from "@/models/graph";
 import { adjustHexColor } from "@/helpers/helpers";
 import { AppUser } from "@/models/user";
 import { useStore } from "vuex";
+import { RefreshController } from "@/helpers/refresh";
 
 interface GraphData {
   labels: string[];
@@ -78,6 +86,7 @@ interface State {
   graphOptions: GraphOptions;
   tagPercentages: TagPercentageRecord[];
   user: AppUser;
+  refresh: RefreshController;
 }
 
 export default defineComponent({
@@ -89,6 +98,7 @@ export default defineComponent({
     const store = useStore();
 
     const state: State = reactive({
+      refresh: inject("refresh") as RefreshController,
       user: computed(() => store.getters.user),
       tagPercentages: [],
       loading: false,
@@ -113,7 +123,7 @@ export default defineComponent({
       }
     });
 
-    onMounted(async () => {
+    async function updateData() {
       state.loading = true;
 
       state.accounts = await getService<IPaymentSourceService>(
@@ -130,7 +140,7 @@ export default defineComponent({
         (a, b) => b.percentage - a.percentage
       );
 
-      tagPercentages = tagPercentages.map((x) => {
+      tagPercentages = tagPercentages.map(x => {
         x.percentage = parseFloat((x.percentage * 100).toFixed(3));
         return x;
       });
@@ -138,19 +148,29 @@ export default defineComponent({
       state.tagPercentages = tagPercentages;
 
       state.graphData = {
-        labels: tagPercentages.map((x) => x.description),
+        labels: tagPercentages.map(x => x.description),
         datasets: [
           {
             backgroundColor: tagPercentages.map(
               (x, i) => "#" + adjustHexColor(color, i * 7)
             ),
-            data: tagPercentages.map((x) => x.percentage)
+            data: tagPercentages.map(x => x.percentage)
           }
         ]
       };
 
       state.loading = false;
+    }
+
+    onMounted(() => {
+      updateData();
     });
+
+    watch(
+      () => state.refresh,
+      () => updateData(),
+      { deep: true }
+    );
 
     return {
       state

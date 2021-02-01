@@ -1,31 +1,50 @@
 <template>
-  <div class="flex flex-col sm:px-6 lg:px-8 mb-5">
-    <div class="mb-5 grid grid-cols-2 gap-5 items-center">
-      <span class="p-float-label w-full">
-        <input-text
-          class="rounded-lg"
-          v-model="state.search.description"
-          @input="search"
-          name="description"
-          id="description"
-        />
-        <label for="description">Description</label>
-      </span>
-      <div class="flex flex-col space-y-4">
-        <slider
-          class="mx-5"
-          :max="state.transactionAmountRange.max"
-          :min="state.transactionAmountRange.min"
-          :range="true"
-          v-model="state.sliderRange"
-        />
-        <div class="flex justify-between">
-          <span>{{ state.sliderRange[0] }} HRK</span>
-          <span>{{ state.sliderRange[1] }} HRK</span>
+  <div class="px-6 grid grid-cols-12 space-x-5">
+    <div
+      class="col-span-3 rounded-lg bg-white border border-gray-300 text-center"
+    >
+      <div
+        class="w-full bg-gray-100 rounded-t-lg py-2 border-b border-gray-300"
+      >
+        <span class="text-gray-400 uppercase tracking-wider">Filters</span>
+      </div>
+      <div class="px-5 pt-5 space-y-5">
+        <span class="p-float-label w-full">
+          <input-text
+            class="rounded-lg"
+            v-model="state.search.description"
+            @input="search"
+            name="description"
+            id="description"
+          />
+          <label for="description">Description</label>
+        </span>
+        <span class="p-float-label">
+          <calendar
+            dateFormat="dd.mm.yy"
+            class="w-full"
+            v-model="state.dateRange"
+            selectionMode="range"
+            :manualInput="false"
+          />
+          <label for="description">Date range</label>
+        </span>
+        <div class="flex flex-col pt-3">
+          <slider
+            class="mx-3"
+            :max="state.transactionAmountRange.max"
+            :min="state.transactionAmountRange.min"
+            :range="true"
+            v-model="state.sliderRange"
+          />
+          <div class="flex justify-between mt-3">
+            <span>{{ state.sliderRange[0] }} HRK</span>
+            <span>{{ state.sliderRange[1] }} HRK</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto col-span-9">
       <div class="min-w-full">
         <div class="shadow overflow-hidden rounded-t-lg border-gray-300 border">
           <table class="min-w-full divide-y divide-gray-200">
@@ -101,23 +120,23 @@
           </table>
           <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
           <div
-            v-if="!state.loading && state.transactions.length == 0"
+            v-if="!state.loading && state.totalTransactions == 0"
             class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
           >
-            {{ $t("noItemsFound") }}!
+            {{ $t("noItemsFound") }}
           </div>
         </div>
+        <paginator
+          v-model:first="state.transactionsOffset"
+          v-model:rows="state.numberOfRows"
+          :totalRecords="state.totalTransactions"
+          :rowsPerPageOptions="state.pageOptions"
+          :pageLinkSize="state.numberOfPages"
+          @page="pageChanged"
+          class="pb-2 bg-gray-200 rounded-b-lg border-gray-300 border-b border-l border-r"
+        />
       </div>
     </div>
-    <paginator
-      v-model:first="state.transactionsOffset"
-      v-model:rows="state.numberOfRows"
-      :totalRecords="state.totalTransactions"
-      :rowsPerPageOptions="state.pageOptions"
-      :pageLinkSize="state.numberOfPages"
-      @page="pageChanged"
-      class="pb-2 bg-gray-200 rounded-b-lg border-gray-300 border-b border-l border-r"
-    />
   </div>
 </template>
 
@@ -128,12 +147,13 @@ import {
   TransactionAmountRange
 } from "@/models/change-item";
 import { ITransactionService } from "@/services/interfaces/transaction-service";
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, reactive, inject, watch } from "vue";
 import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
 import { debounce } from "@/helpers/helpers";
+import { RefreshController } from "@/helpers/refresh";
 
 interface Search {
   description: string;
@@ -151,12 +171,16 @@ interface State {
   sliderRange: Array<number | null>;
   transactionAmountRange: TransactionAmountRange;
   currentPage: number;
+  dateRange: Date[] | null;
+  refresh: RefreshController;
 }
 
 export default defineComponent({
   name: "History",
   setup() {
     const state: State = reactive({
+      refresh: inject("refresh") as RefreshController,
+      dateRange: null,
       transactionAmountRange: {
         min: null,
         max: null
@@ -227,7 +251,7 @@ export default defineComponent({
       getTransactions();
     };
 
-    onMounted(async () => {
+    async function updateData() {
       getTransactions();
       state.transactionAmountRange = await getService<ITransactionService>(
         Types.ChangeService
@@ -236,6 +260,10 @@ export default defineComponent({
         state.transactionAmountRange.min as number,
         state.transactionAmountRange.max as number
       ];
+    }
+
+    onMounted(() => {
+      updateData();
     });
 
     const search = debounce(() => {
@@ -243,6 +271,12 @@ export default defineComponent({
       state.transactionsOffset = 0;
       getTransactions();
     }, 2000);
+
+    watch(
+      () => state.refresh,
+      () => updateData(),
+      { deep: true }
+    );
 
     return {
       state,

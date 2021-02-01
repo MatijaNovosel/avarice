@@ -27,7 +27,7 @@
             v-if="!state.loading && state.totalItems == 0"
             class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
           >
-            {{ $t("noItemsFound") }}!
+            {{ $t("noItemsFound") }}
           </div>
         </div>
       </div>

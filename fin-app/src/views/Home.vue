@@ -1,6 +1,8 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
-    <span class="mb-3 text-xl font-semibold"> {{ $t("overview") }} </span>
+    <span class="mb-3 text-xl font-semibold text-gray-400 select-none">
+      {{ $t("overview") }}
+    </span>
     <div v-if="state.loading" class="grid gap-4 grid-cols-3">
       <skeleton
         :key="n"
@@ -52,7 +54,7 @@
         </div>
       </div>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold">
+    <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
       {{ $t("recentTransactions") }}
     </span>
     <div class="rounded-lg bg-white px-6 shadow-md">
@@ -85,7 +87,7 @@
         />
       </template>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold">
+    <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
       {{ $t("financialChangesVisualized") }}
     </span>
     <div
