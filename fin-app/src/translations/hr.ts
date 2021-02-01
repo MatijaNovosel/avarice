@@ -36,5 +36,6 @@ export default {
   newTransaction: "Nova transakcija",
   newTransfer: "Novi prijenos",
   verifiedAccount: "Aktivirani račun",
-  good: "Dobar"
+  good: "Dobar",
+  noItemsFound: "Nije pronađen ni jedan zapis"
 };

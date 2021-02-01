@@ -21,71 +21,17 @@
                 </th>
               </tr>
             </thead>
-            <tbody
-              v-if="!state.loading"
-              class="bg-white divide-y divide-gray-200"
-            >
-              <tr v-for="item in state.items" :key="item.id">
-                <td class="pl-6 py-5 whitespace-nowrap">
-                  {{ item.description }}
-                </td>
-                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
-                  {{ item.amount }} HRK
-                </td>
-                <td class="px-6 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">
-                    {{ item.createdAt }}
-                  </div>
-                  <div class="text-sm text-gray-500">
-                    {{
-                      formatDistance(
-                        parse(item.createdAt, "dd.MM.yyyy. HH:mm", new Date()),
-                        new Date(),
-                        {
-                          addSuffix: true
-                        }
-                      )
-                    }}
-                  </div>
-                </td>
-                <td class="whitespace-nowrap space-x-2 text-center">
-                  <tag
-                    v-for="(tag, i) in item.tagIds"
-                    :key="i"
-                    :text-color="item.expense ? '#c52626' : '#428733'"
-                    :color="item.expense ? '#ff9494' : '#bedeb7'"
-                    >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
-                  >
-                </td>
-                <td
-                  class="px-6 whitespace-nowrap text-center text-sm font-medium"
-                >
-                  <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                    >Edit</a
-                  >
-                </td>
-              </tr>
-            </tbody>
           </table>
           <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
           <div
             v-if="!state.loading && state.totalItems == 0"
             class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
           >
-            <span>No items found!</span>
+            {{ $t("noItemsFound") }}!
           </div>
         </div>
       </div>
     </div>
-    <paginator
-      v-model:first="state.offset"
-      v-model:rowsPerPage="state.rowsPerPage"
-      :totalItems="state.totalItems"
-      :rowsPerPageOptions="state.pageOptions"
-      :pageLinkSize="state.pages"
-      @page="pageChanged"
-      class="pb-2 bg-gray-200 rounded-b-lg border-gray-300 border-b border-l border-r"
-    />
   </div>
 </template>
 

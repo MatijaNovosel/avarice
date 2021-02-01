@@ -104,7 +104,7 @@
             v-if="!state.loading && state.transactions.length == 0"
             class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
           >
-            <span>No records found!</span>
+            {{ $t("noItemsFound") }}!
           </div>
         </div>
       </div>
