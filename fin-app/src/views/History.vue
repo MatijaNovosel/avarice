@@ -8,7 +8,8 @@
       >
         <span class="text-gray-400 uppercase tracking-wider">Filters</span>
       </div>
-      <div class="px-5 pt-5 space-y-5">
+      <progress-spinner class="w-10 h-10 mt-5" strokeWidth="10" v-if="state.loading" />
+      <div class="px-5 pt-5 space-y-5" v-else>
         <span class="p-float-label w-full">
           <input-text
             class="rounded-lg"
