@@ -47,7 +47,7 @@
           <label for="email">Email</label>
         </span>
         <span class="p-invalid" v-if="model.email.$invalid">{{
-          model.email.$errors.map((x) => x.$message).join(" • ")
+          model.email.$errors.map(x => x.$message).join(" • ")
         }}</span>
         <span class="p-float-label">
           <input-text
@@ -62,7 +62,7 @@
           <label for="password">Password</label>
         </span>
         <span class="p-invalid" v-if="model.password.$invalid">{{
-          model.password.$errors.map((x) => x.$message).join(" • ")
+          model.password.$errors.map(x => x.$message).join(" • ")
         }}</span>
         <button class="bg-gray-600 rounded-lg shadow p-2 text-white">
           Sign in

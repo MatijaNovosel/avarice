@@ -61,7 +61,7 @@ export default defineComponent({
 
     watch(
       () => props.selection,
-      (val) => (state.selection = val)
+      val => (state.selection = val)
     );
 
     onMounted(async () => {

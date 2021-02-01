@@ -240,7 +240,7 @@ export default defineComponent({
 
       state.totalDataset = {
         label: t("total"),
-        data: history.map((x) => x.total),
+        data: history.map(x => x.total),
         fill: true,
         borderColor: "#ff8a00",
         backgroundColor: hexToRgba(
@@ -250,18 +250,18 @@ export default defineComponent({
       };
 
       state.graphData = {
-        labels: history.map((x) => x.createdAt),
+        labels: history.map(x => x.createdAt),
         datasets: [state.totalDataset]
       };
 
-      state.recentDepositsAndWithdrawals = await getService<ITransactionService>(
-        Types.ChangeService
-      ).getRecentDepositsAndWithdrawals(1);
+      state.recentDepositsAndWithdrawals = await getService<
+        ITransactionService
+      >(Types.ChangeService).getRecentDepositsAndWithdrawals(1);
 
       state.loading = false;
     }
 
-    const pageChanged: (...payload: unknown[]) => unknown = (payload) => {
+    const pageChanged: (...payload: unknown[]) => unknown = payload => {
       const { page, rows } = { ...(payload as Pagination) };
       getTransactions(page * rows, state.numberOfRows);
     };
@@ -285,5 +285,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="sass">
-</style>
+<style lang="sass"></style>

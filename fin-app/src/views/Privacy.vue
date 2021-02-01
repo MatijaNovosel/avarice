@@ -6,12 +6,9 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "test",
+  name: "Privacy",
   setup() {
     return {};
   }
 });
 </script>
-
-<style lang="sass">
-</style>
