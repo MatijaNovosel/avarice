@@ -27,22 +27,22 @@
     </div>
     <div class="overflow-x-auto">
       <div class="min-w-full">
-        <div class="shadow overflow-hidden rounded-t-lg">
+        <div class="shadow overflow-hidden rounded-t-lg border-gray-300 border">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
                 <th
-                  v-for="(tableHeader, i) in headers"
+                  v-for="(header, i) in headers"
                   :key="i"
                   scope="col"
                   :class="{
-                    'text-left': tableHeader.align == 'left',
-                    'text-center': tableHeader.align == 'center',
-                    'text-right': tableHeader.align == 'right'
+                    'text-left': header.align == 'left',
+                    'text-center': header.align == 'center',
+                    'text-right': header.align == 'right'
                   }"
                   class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  {{ tableHeader.text }}
+                  {{ header.text }}
                 </th>
               </tr>
             </thead>
@@ -116,7 +116,7 @@
       :rowsPerPageOptions="state.pageOptions"
       :pageLinkSize="state.numberOfPages"
       @page="pageChanged"
-      class="pb-2 bg-gray-200 rounded-b-lg"
+      class="pb-2 bg-gray-200 rounded-b-lg border-gray-300 border-b border-l border-r"
     />
   </div>
 </template>
@@ -221,7 +221,7 @@ export default defineComponent({
       state.loading = false;
     }
 
-    const pageChanged: (...payload: unknown[]) => unknown = (payload) => {
+    const pageChanged: (...payload: unknown[]) => unknown = payload => {
       const { page } = { ...(payload as Pagination) };
       state.currentPage = page;
       getTransactions();

@@ -22,13 +22,12 @@ import ColorPicker from "primevue/colorpicker";
 import Paginator from "primevue/paginator";
 import DataView from "primevue/dataview";
 import ProgressSpinner from "primevue/progressspinner";
-import ContextMenu from "primevue/contextmenu";
 import Calendar from "primevue/calendar";
 import RadioButton from "primevue/radiobutton";
 import ProgressBar from "primevue/progressbar";
 import Skeleton from "primevue/skeleton";
 import Menu from "primevue/menu";
-import Slider from 'primevue/slider';
+import Slider from "primevue/slider";
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -82,7 +81,6 @@ app.component("p-color-picker", ColorPicker);
 app.component("paginator", Paginator);
 app.component("data-view", DataView);
 app.component("progress-spinner", ProgressSpinner);
-app.component("context-menu", ContextMenu);
 app.component("calendar", Calendar);
 app.component("radio-button", RadioButton);
 app.component("progress-bar", ProgressBar);
