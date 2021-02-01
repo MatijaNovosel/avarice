@@ -110,7 +110,7 @@ import {
   computed
 } from "vue";
 import { hexToRgba, adjustHexColor } from "../helpers/helpers";
-import { add, startOfMonth } from "date-fns";
+import { sub } from "date-fns";
 import { DatasetItem } from "../models/dataset";
 import {
   FinancialChangeItem,
@@ -230,7 +230,7 @@ export default defineComponent({
 
       const history = await getService<ITransactionService>(
         Types.ChangeService
-      ).getHistory(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
+      ).getTotal(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
 
       state.total.currentAmount = history[history.length - 1].total;
 
@@ -264,8 +264,8 @@ export default defineComponent({
 
     onMounted(async () => {
       state.dateRange = [
-        startOfMonth(new Date()),
-        add(new Date(), { days: 1 })
+        sub(new Date(), { days: 30 }),
+        new Date()
       ];
       updateData();
     });

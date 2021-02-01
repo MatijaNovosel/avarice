@@ -125,6 +125,20 @@ export class ChangeService implements ITransactionService {
     return financialHistory;
   }
 
+  async getTotal(appUserId: number, from: Date, to: Date): Promise<FinancialHistory[]> {
+    const { data: { data: { financialHistory } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          financialHistory(id: ${appUserId}, from: "${format(from, "yyyy-MM-dd HH:mm:ss")}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
+            createdAt
+            total
+          }
+        }
+      `
+    });
+    return financialHistory;
+  }
+
   async getTransactionAmountRange(appUserId: number, expense: boolean | null = null): Promise<TransactionAmountRange> {
     const { data: { data: { transactionAmountRange } } } = await axios.post(environmentVariables.apiUrl, {
       query: `

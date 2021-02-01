@@ -10,7 +10,9 @@ import { ItemCollection } from "@/models/item-collection";
 
 export interface ITransactionService {
   addChange(payload: CreateFinancialChangeItemDto): Promise<void>;
-  getRecentDepositsAndWithdrawals(appUserId: number): Promise<RecentDepositsAndWithdrawals>;
+  getRecentDepositsAndWithdrawals(
+    appUserId: number
+  ): Promise<RecentDepositsAndWithdrawals>;
   getTransactionAmountRange(
     appUserId: number,
     expense?: boolean | null
@@ -25,6 +27,11 @@ export interface ITransactionService {
     max?: number | null
   ): Promise<ItemCollection<FinancialChangeItem>>;
   getHistory(
+    appUserId: number,
+    from: Date,
+    to: Date
+  ): Promise<FinancialHistory[]>;
+  getTotal(
     appUserId: number,
     from: Date,
     to: Date

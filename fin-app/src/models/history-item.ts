@@ -5,6 +5,6 @@ export interface PaymentSourceRecord {
 
 export interface FinancialHistory {
   createdAt: string;
-  paymentSources: PaymentSourceRecord[];
+  paymentSources?: PaymentSourceRecord[];
   total: number;
 }
