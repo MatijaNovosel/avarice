@@ -15,10 +15,26 @@ export default {
     Cosmetics: "Kozmetika",
     Rent: "Najam",
     Debt: "Dug",
-		Clothes: "Odjeća"
+    Clothes: "Odjeća"
   },
   tag: "Kategorija",
   filterAndOtherOptions: "Filtriranje i ostale mogućnosti",
   filter: "Filtriraj",
-  removeFilter: "Ukloni filtrirnaje"
+  removeFilter: "Ukloni filtrirnaje",
+  overview: "Pregled",
+  withdrawals: "Podizanja",
+  last30Days: "U zadnjih 30 dana",
+  deposits: "Polozi",
+  recentTransactions: "Nedavne transakcije",
+  financialChangesVisualized: "Vizualizirane financijske promjene",
+  totalAccountBalance: "Ukupna vrijednost svih računa",
+  total: "Ukupno",
+  logOut: "Odjavite se",
+  morning: "Jutro",
+  afternoon: "Poslijepodne",
+  evening: "Večer",
+  newTransaction: "Nova transakcija",
+  newTransfer: "Novi prijenos",
+  verifiedAccount: "Aktivirani račun",
+  good: "Dobar"
 };

@@ -13,7 +13,7 @@
       />
       <div class="flex flex-col ml-4">
         <span class="text-black font-bold text-2xl">
-          Good {{ state.timeOfDay }}, {{ state.user.displayName }}
+          {{ $t("good") }} {{ state.timeOfDay }}, {{ state.user.displayName }}
         </span>
         <div class="flex items-center text-gray-400 font-bold">
           <mdi-icon
@@ -22,7 +22,7 @@
             name="check-circle"
             color="#38bf8c"
           />
-          Verified account
+          {{ $t("verifiedAccount") }}
         </div>
       </div>
     </div>
@@ -33,8 +33,8 @@
         color="#94a3b8"
       />
       <img
-        ref="overlayMenuTrigger"
-        id="overlayMenuTrigger"
+        ref="userMenuAnchor"
+        id="userMenuAnchor"
         class="inline-block h-8 w-8 rounded-full"
         :src="state.user.photoURL"
         alt=""
@@ -87,6 +87,7 @@ import { RouteNames } from "@/constants/route-names";
 import { MenuItem } from "@/models/menu-item";
 import { AppUser } from "@/models/user";
 import { getOffset } from "@/helpers/helpers";
+import { useI18n } from "vue-i18n";
 
 interface MenuStyle {
   left: string;
@@ -110,9 +111,10 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
+    const { t } = useI18n();
 
-    const overlayMenuTrigger: Ref<HTMLElement | null> = ref(
-      document.getElementById("overlayMenuTrigger")
+    const userMenuAnchor: Ref<HTMLElement | null> = ref(
+      document.getElementById("userMenuAnchor")
     );
 
     const state: State = reactive({
@@ -122,7 +124,7 @@ export default defineComponent({
       },
       menuItems: [
         {
-          label: "New transaction",
+          label: t("newTransaction"),
           command: () => {
             state.newTransactionDialog = true;
             state.menuVisible = false;
@@ -132,7 +134,7 @@ export default defineComponent({
           separator: true
         },
         {
-          label: "New transfer",
+          label: t("newTransfer"),
           command: () => {
             state.transferDialog = true;
             state.menuVisible = false;
@@ -142,7 +144,7 @@ export default defineComponent({
           separator: true
         },
         {
-          label: "Log out",
+          label: t("logOut"),
           command: async () => {
             state.menuVisible = false;
             await getService<IAuthService>(Types.AuthService).signOut();
@@ -159,11 +161,11 @@ export default defineComponent({
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();
         if (hours >= 6 && hours <= 11 && minutes <= 59) {
-          return "Morning";
+          return t("morning");
         } else if (hours >= 12 && hours <= 17) {
-          return "Afternoon";
+          return t("afternoon");
         } else {
-          return "Evening";
+          return t("evening");
         }
       })
     });
@@ -171,7 +173,7 @@ export default defineComponent({
     function openMenu() {
       state.menuVisible = !state.menuVisible;
 
-      const { left } = getOffset(overlayMenuTrigger?.value as HTMLElement);
+      const { left } = getOffset(userMenuAnchor?.value as HTMLElement);
       const sidebarWidth =
         document.getElementById("sidebar")?.getBoundingClientRect().width || 0;
 
@@ -184,7 +186,7 @@ export default defineComponent({
       state,
       openMenu,
       homeRoute,
-      overlayMenuTrigger
+      userMenuAnchor
     };
   }
 });

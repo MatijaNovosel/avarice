@@ -1,6 +1,6 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
-    <span class="mb-3 text-xl font-semibold"> Overview </span>
+    <span class="mb-3 text-xl font-semibold"> {{ $t("overview") }} </span>
     <div v-if="state.loading" class="grid gap-4 grid-cols-3">
       <skeleton
         :key="n"
@@ -24,13 +24,13 @@
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
             <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400"
-                >Withdrawals (Last 30 days)</span
-              >
-              <span class="font-semibold text-xl text-red-400"
-                >- {{ state.recentDepositsAndWithdrawals.withdrawals }}
-                {{ state.user.preferredCurrency }}</span
-              >
+              <span class="font-bold text-gray-400">
+                {{ $t("withdrawals") }} ({{ $t("last30Days") }})
+              </span>
+              <span class="font-semibold text-xl text-red-400">
+                - {{ state.recentDepositsAndWithdrawals.withdrawals }}
+                {{ state.user.preferredCurrency }}
+              </span>
             </div>
           </div>
         </div>
@@ -40,19 +40,21 @@
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
             <div class="flex flex-col ml-5">
-              <span class="font-bold text-gray-400"
-                >Deposits (Last 30 days)</span
-              >
-              <span class="font-semibold text-xl text-green-500"
-                >+ {{ state.recentDepositsAndWithdrawals.deposits }}
-                {{ state.user.preferredCurrency }}</span
-              >
+              <span class="font-bold text-gray-400">
+                {{ $t("deposits") }} ({{ $t("last30Days") }})
+              </span>
+              <span class="font-semibold text-xl text-green-500">
+                + {{ state.recentDepositsAndWithdrawals.deposits }}
+                {{ state.user.preferredCurrency }}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold"> Recent transactions </span>
+    <span class="mb-3 my-5 text-xl font-semibold">
+      {{ $t("recentTransactions") }}
+    </span>
     <div class="rounded-lg bg-white px-6 shadow-md">
       <div v-if="state.transactionsLoading" class="text-center my-16">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
@@ -84,7 +86,7 @@
       </template>
     </div>
     <span class="mb-3 my-5 text-xl font-semibold">
-      Financial changes visualized
+      {{ $t("financialChangesVisualized") }}
     </span>
     <div
       class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
@@ -127,6 +129,7 @@ import MdiIcon from "@/components/mdi-icon.vue";
 import { RefreshController } from "@/helpers/refresh";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
+import { useI18n } from "vue-i18n";
 
 interface GraphData {
   labels: string[];
@@ -161,6 +164,7 @@ export default defineComponent({
   },
   setup() {
     const user = useStore();
+    const { t } = useI18n();
 
     const state: State = reactive({
       user: computed(() => user.getters.user),
@@ -172,7 +176,7 @@ export default defineComponent({
       dateRange: [],
       total: {
         id: 1,
-        description: "Total account balance",
+        description: t("totalAccountBalance"),
         currency: "HRK",
         icon: "scale",
         currentAmount: 0,
@@ -235,7 +239,7 @@ export default defineComponent({
       state.total.currentAmount = history[history.length - 1].total;
 
       state.totalDataset = {
-        label: "Total",
+        label: t("total"),
         data: history.map((x) => x.total),
         fill: true,
         borderColor: "#ff8a00",
@@ -263,10 +267,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      state.dateRange = [
-        sub(new Date(), { days: 30 }),
-        new Date()
-      ];
+      state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
       updateData();
     });
 

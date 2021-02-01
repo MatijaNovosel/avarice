@@ -20,5 +20,21 @@ export default {
   tag: "Tag",
   filterAndOtherOptions: "Filtering and other options",
   filter: "Filter",
-  removeFilter: "Remove filter"
+  removeFilter: "Remove filter",
+  overview: "Overview",
+  withdrawals: "Withdrawals",
+  last30Days: "Last 30 days",
+  deposits: "Deposits",
+  recentTransactions: "Recent transactions",
+  financialChangesVisualized: "Financial changes visualized",
+  totalAccountBalance: "Total account balance",
+  total: "Total",
+  logOut: "Log out",
+  morning: "Morning",
+  afternoon: "Afternoon",
+  evening: "Evening",
+  newTransaction: "New transaction",
+  newTransfer: "New transfer",
+  verifiedAccount: "Verified account",
+  good: "Good"
 };
