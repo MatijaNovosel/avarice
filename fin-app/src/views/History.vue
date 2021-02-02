@@ -1,7 +1,7 @@
 <template>
-  <div class="px-6 grid grid-cols-12 space-x-5">
+  <div class="px-6 grid grid-cols-12 space-x-0 lg:space-x-5 space-y-4 lg:space-y-0">
     <div
-      class="col-span-3 rounded-lg bg-white border border-gray-300 text-center"
+      class="col-span-12 lg:col-span-3 rounded-lg bg-white border border-gray-300 text-center"
     >
       <div
         class="w-full bg-gray-100 rounded-t-lg py-2 border-b border-gray-300"
@@ -30,7 +30,7 @@
           />
           <label for="description">Date range</label>
         </span>
-        <div class="flex flex-col pt-3">
+        <div class="flex flex-col pt-3 pb-5 lg:pb-0">
           <slider
             class="mx-3"
             :max="state.transactionAmountRange.max"
@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto col-span-9">
+    <div class="overflow-x-auto col-span-12 lg:col-span-9">
       <div class="min-w-full">
         <div class="shadow overflow-hidden rounded-t-lg border-gray-300 border">
           <table class="min-w-full divide-y divide-gray-200">

@@ -37,5 +37,7 @@ export default {
   newTransfer: "New transfer",
   verifiedAccount: "Verified account",
   good: "Good",
-  noItemsFound: "No items found"
+  noItemsFound: "No items found",
+  dailyChanges: "Daily changes",
+  amount: "Amount"
 };

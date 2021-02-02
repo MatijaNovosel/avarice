@@ -37,5 +37,7 @@ export default {
   newTransfer: "Novi prijenos",
   verifiedAccount: "Aktivirani račun",
   good: "Dobar",
-  noItemsFound: "Nije pronađen ni jedan zapis"
+  noItemsFound: "Nije pronađen ni jedan zapis",
+  dailyChanges: "Dnevne promjene",
+  amount: "Iznos"
 };
