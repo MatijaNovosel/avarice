@@ -58,7 +58,7 @@
       {{ $t("financialChangesVisualized") }}
     </span>
     <div
-      class="px-6 pt-24 pb-12 flex justify-center items-center space-x-10 bg-white rounded-lg shadow-md"
+      class="pt-12 pb-12 flex justify-center items-center space-x-10 bg-white rounded-lg shadow-md"
     >
       <chart
         ref="dailySpendingGraph"
