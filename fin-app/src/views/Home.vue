@@ -55,17 +55,26 @@
       </div>
     </div>
     <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
-      {{ $t("dailyChanges") }}
+      {{ $t("financialChangesVisualized") }}
     </span>
     <div
-      class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
+      class="px-6 pt-24 pb-12 flex justify-center items-center space-x-10 bg-white rounded-lg shadow-md"
     >
       <chart
-        :height="400"
-        :width="1000"
+        ref="dailySpendingGraph"
         type="bar"
         :data="state.graphDataDailyChanges"
         :options="dailyChangesgraphOptions"
+        :height="300"
+        :width="500"
+      />
+      <chart
+        ref="financialChangedVisualizedGraph"
+        type="line"
+        :data="state.graphData"
+        :options="state.graphOptions"
+        :height="300"
+        :width="500"
       />
     </div>
     <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
@@ -101,20 +110,6 @@
         />
       </template>
     </div>
-    <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
-      {{ $t("financialChangesVisualized") }}
-    </span>
-    <div
-      class="px-6 pt-24 pb-12 flex flex-col items-center bg-white rounded-lg shadow-md"
-    >
-      <chart
-        type="line"
-        :data="state.graphData"
-        :options="state.graphOptions"
-        :height="400"
-        :width="1000"
-      />
-    </div>
   </div>
 </template>
 
@@ -125,7 +120,9 @@ import {
   watch,
   inject,
   onMounted,
-  computed
+  computed,
+  ref,
+  Ref
 } from "vue";
 import { hexToRgba, adjustHexColor } from "../helpers/helpers";
 import { sub } from "date-fns";
@@ -138,7 +135,7 @@ import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
 import { ITransactionService } from "../services/interfaces/transaction-service";
-import { GraphOptions } from "@/models/graph";
+import { GraphHTMLElement, GraphOptions } from "@/models/graph";
 import { PaymentSource } from "@/models/payment-source";
 import { Pagination } from "@/models/pagination";
 import MdiIcon from "@/components/mdi-icon.vue";
@@ -210,10 +207,17 @@ export default defineComponent({
       loading: false,
       transactionsLoading: false,
       graphOptions: {
+        title: {
+          display: true,
+          text: t("totalAccountBalance")
+        },
         legend: {
           display: false
         },
         elements: {
+          point: {
+            radius: 0
+          },
           line: {
             tension: 0.6
           }
@@ -228,10 +232,6 @@ export default defineComponent({
           ],
           yAxes: [
             {
-              scaleLabel: {
-                display: true,
-                labelString: "Amount (HRK)"
-              },
               display: true
             }
           ]
@@ -241,6 +241,11 @@ export default defineComponent({
       graphData: null,
       graphDataDailyChanges: null
     });
+
+    const financialChangedVisualizedGraph: Ref<GraphHTMLElement | null> = ref(
+      null
+    );
+    const dailySpendingGraph: Ref<GraphHTMLElement | null> = ref(null);
 
     async function getTransactions(skip?: number, take?: number) {
       state.transactionsLoading = true;
@@ -272,10 +277,10 @@ export default defineComponent({
         label: t("total"),
         data: history.map(x => x.total),
         fill: true,
-        borderColor: "#ff8a00",
+        borderColor: "#acb0bf",
         backgroundColor: hexToRgba(
-          adjustHexColor("#ff8a00".replace("#", ""), -10),
-          0.4
+          adjustHexColor("#acb0bf".replace("#", ""), 30),
+          0.7
         ) as string
       };
 
@@ -287,17 +292,6 @@ export default defineComponent({
       state.recentDepositsAndWithdrawals = await getService<
         ITransactionService
       >(Types.ChangeService).getRecentDepositsAndWithdrawals(1);
-
-      state.loading = false;
-    }
-
-    const pageChanged: (...payload: unknown[]) => unknown = payload => {
-      const { page, rows } = { ...(payload as Pagination) };
-      getTransactions(page * rows, state.numberOfRows);
-    };
-
-    onMounted(async () => {
-      state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
 
       const dailyChanges = await getService<ITransactionService>(
         Types.ChangeService
@@ -311,18 +305,41 @@ export default defineComponent({
           {
             type: "bar",
             label: t("withdrawals"),
-            backgroundColor: "#DC2626",
+            borderColor: "#ff4f4f",
+            backgroundColor: hexToRgba(
+              adjustHexColor("#ff4f4f".replace("#", ""), 30),
+              0.7
+            ) as string,
+            fill: true,
             data: dailyChanges.reverse().map(x => x.withdrawals)
           },
           {
             type: "bar",
             label: t("deposits"),
-            backgroundColor: "#66BB6A",
+            borderColor: "#66BB6A",
+            backgroundColor: hexToRgba(
+              adjustHexColor("#66BB6A".replace("#", ""), 30),
+              0.7
+            ) as string,
+            fill: true,
             data: dailyChanges.reverse().map(x => x.deposits)
           }
         ]
       };
 
+      dailySpendingGraph?.value?.reinit();
+      financialChangedVisualizedGraph?.value?.reinit();
+
+      state.loading = false;
+    }
+
+    const pageChanged: (...payload: unknown[]) => unknown = payload => {
+      const { page, rows } = { ...(payload as Pagination) };
+      getTransactions(page * rows, state.numberOfRows);
+    };
+
+    onMounted(async () => {
+      state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
       updateData();
     });
 
@@ -332,7 +349,11 @@ export default defineComponent({
       { deep: true }
     );
 
-    const dailyChangesgraphOptions = {
+    const dailyChangesgraphOptions: GraphOptions = {
+      title: {
+        display: true,
+        text: t("dailyChanges")
+      },
       tooltips: {
         mode: "index",
         intersect: false
@@ -364,10 +385,10 @@ export default defineComponent({
     return {
       state,
       pageChanged,
-      dailyChangesgraphOptions
+      dailyChangesgraphOptions,
+      financialChangedVisualizedGraph,
+      dailySpendingGraph
     };
   }
 });
 </script>
-
-<style lang="sass"></style>
