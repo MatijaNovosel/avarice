@@ -160,3 +160,69 @@ BEGIN
 	SELECT * FROM tagPercentages;
 END; $$
 DELIMITER ;
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS getDailyAmount $$
+CREATE FUNCTION getDailyAmount(argCreatedAt DATE, argExpense BIT) RETURNS DECIMAL(10, 2)
+DETERMINISTIC
+BEGIN
+	DECLARE res DECIMAL(10,2) DEFAULT 0;
+	
+	SET res = (
+		SELECT ROUND(SUM(amount), 2)
+		FROM financialchange
+		WHERE DATE(createdAt) LIKE argCreatedAt AND
+		expense = argExpense AND
+		transfer = 0
+	);
+	
+	IF res IS NULL THEN
+		RETURN 0;
+	ELSE
+		RETURN res;
+	END IF;
+END; $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getDailyChanges;
+DELIMITER $$
+CREATE PROCEDURE getDailyChanges(userId INT)
+BEGIN
+	DECLARE tCreatedAt DATE;
+	DECLARE finished BOOL DEFAULT FALSE;
+
+	DECLARE curDates CURSOR FOR 
+	SELECT DATE(createdAt)
+	FROM financialhistory
+	GROUP BY DATE(createdAt)
+	ORDER BY createdAt DESC
+	LIMIT 30;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = TRUE;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT NULL;
+	
+	DROP TEMPORARY TABLE IF EXISTS dailyChanges;
+	CREATE TEMPORARY TABLE dailyChanges (
+		deposits DECIMAL(10, 2), 
+		withdrawals DECIMAL(10, 2), 
+		createdAt DATE
+	);
+	
+	OPEN curDates;
+	datesLoop:LOOP
+		FETCH curDates INTO tCreatedAt;
+		
+		IF finished = TRUE THEN LEAVE datesLoop; END IF;
+		
+		INSERT INTO dailyChanges (deposits, withdrawals, createdAt) 
+		VALUES (
+			(SELECT getDailyAmount(tCreatedAt, 0)), 
+			(SELECT getDailyAmount(tCreatedAt, 1)), 
+			tCreatedAt
+		);
+	END LOOP;
+	CLOSE curDates;
+	
+	SELECT * FROM dailyChanges;
+END; $$
+DELIMITER ;

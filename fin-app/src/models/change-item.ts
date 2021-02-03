@@ -34,3 +34,15 @@ export interface RecentDepositsAndWithdrawals {
   withdrawals: number;
   deposits: number;
 }
+
+export interface DailyChange {
+  withdrawals: number;
+  deposits: number;
+  createdAt: Date;
+}
+
+export interface DailyChangeDto {
+  withdrawals: number;
+  deposits: number;
+  createdAt: string;
+}

@@ -1,4 +1,4 @@
-import { CreateTransferDto, RecentDepositsAndWithdrawals, TransactionAmountRange } from './../../models/change-item';
+import { CreateTransferDto, DailyChange, RecentDepositsAndWithdrawals, TransactionAmountRange, DailyChangeDto } from './../../models/change-item';
 import { ItemCollection } from "../../models/item-collection";
 import {
   CreateFinancialChangeItemDto,
@@ -151,5 +151,24 @@ export class ChangeService implements ITransactionService {
       `
     });
     return transactionAmountRange;
+  }
+
+  async getDailyChanges(appUserId: number): Promise<DailyChange[]> {
+    const { data: { data: { dailyChanges } } } = await axios.post(environmentVariables.apiUrl, {
+      query: `
+        query {
+          dailyChanges(appUserId: ${appUserId}) {
+            withdrawals
+            deposits
+            createdAt
+          }
+        }
+      `
+    });
+    return dailyChanges.map((x: DailyChangeDto) => ({
+      withdrawals: x.withdrawals,
+      deposits: x.deposits,
+      createdAt: new Date(parseInt(x.createdAt))
+    }));
   }
 }

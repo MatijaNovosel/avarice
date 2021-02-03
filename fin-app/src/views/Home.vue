@@ -64,8 +64,8 @@
         :height="400"
         :width="1000"
         type="bar"
-        :data="stackedData"
-        :options="stackedOptions"
+        :data="state.graphDataDailyChanges"
+        :options="dailyChangesgraphOptions"
       />
     </div>
     <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
@@ -146,6 +146,7 @@ import { RefreshController } from "@/helpers/refresh";
 import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
 import { useI18n } from "vue-i18n";
+import { format } from "date-fns";
 
 interface GraphData {
   labels: string[];
@@ -158,6 +159,7 @@ interface State {
   loading: boolean;
   transactionsLoading: boolean;
   graphData: GraphData | null;
+  graphDataDailyChanges: GraphData | null;
   transactions: FinancialChangeItem[];
   refresh: RefreshController;
   transactionsNumberOfPages: number;
@@ -236,7 +238,8 @@ export default defineComponent({
         },
         responsive: true
       },
-      graphData: null
+      graphData: null,
+      graphDataDailyChanges: null
     });
 
     async function getTransactions(skip?: number, take?: number) {
@@ -295,6 +298,31 @@ export default defineComponent({
 
     onMounted(async () => {
       state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
+
+      const dailyChanges = await getService<ITransactionService>(
+        Types.ChangeService
+      ).getDailyChanges(1);
+
+      state.graphDataDailyChanges = {
+        labels: dailyChanges
+          .reverse()
+          .map(x => format(x.createdAt, "dd.MM.yyyy.")),
+        datasets: [
+          {
+            type: "bar",
+            label: t("withdrawals"),
+            backgroundColor: "#DC2626",
+            data: dailyChanges.reverse().map(x => x.withdrawals)
+          },
+          {
+            type: "bar",
+            label: t("deposits"),
+            backgroundColor: "#66BB6A",
+            data: dailyChanges.reverse().map(x => x.deposits)
+          }
+        ]
+      };
+
       updateData();
     });
 
@@ -304,247 +332,7 @@ export default defineComponent({
       { deep: true }
     );
 
-    const stackedData = {
-      labels: [
-        "06.01.2021.",
-        "06.01.2021.",
-        "07.01.2021.",
-        "07.01.2021.",
-        "08.01.2021.",
-        "08.01.2021.",
-        "09.01.2021.",
-        "09.01.2021.",
-        "11.01.2021.",
-        "11.01.2021.",
-        "11.01.2021.",
-        "11.01.2021.",
-        "11.01.2021.",
-        "12.01.2021.",
-        "12.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "13.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "17.01.2021.",
-        "18.01.2021.",
-        "18.01.2021.",
-        "18.01.2021.",
-        "19.01.2021.",
-        "19.01.2021.",
-        "19.01.2021.",
-        "20.01.2021.",
-        "20.01.2021.",
-        "20.01.2021.",
-        "21.01.2021.",
-        "21.01.2021.",
-        "21.01.2021.",
-        "22.01.2021.",
-        "22.01.2021.",
-        "22.01.2021.",
-        "22.01.2021.",
-        "24.01.2021.",
-        "24.01.2021.",
-        "24.01.2021.",
-        "24.01.2021.",
-        "24.01.2021.",
-        "25.01.2021.",
-        "25.01.2021.",
-        "25.01.2021.",
-        "26.01.2021.",
-        "26.01.2021.",
-        "27.01.2021.",
-        "27.01.2021.",
-        "27.01.2021.",
-        "28.01.2021.",
-        "29.01.2021.",
-        "29.01.2021.",
-        "30.01.2021.",
-        "30.01.2021.",
-        "31.01.2021.",
-        "01.02.2021.",
-        "01.02.2021.",
-        "01.02.2021.",
-        "02.02.2021.",
-        "02.02.2021.",
-        "02.02.2021.",
-        "02.02.2021."
-      ],
-      datasets: [
-        {
-          type: "bar",
-          label: t("withdrawals"),
-          backgroundColor: "#DC2626",
-          data: [
-            158,
-            165,
-            147,
-            29,
-            109,
-            95,
-            61,
-            58,
-            62,
-            186,
-            58,
-            108,
-            40,
-            33,
-            68,
-            148,
-            66,
-            9,
-            179,
-            60,
-            43,
-            11,
-            140,
-            91,
-            167,
-            30,
-            39,
-            164,
-            42,
-            171,
-            59,
-            67,
-            18,
-            58,
-            27,
-            60,
-            36,
-            159,
-            131,
-            118,
-            92,
-            118,
-            127,
-            136,
-            102,
-            188,
-            145,
-            123,
-            72,
-            88,
-            174,
-            98,
-            97,
-            189,
-            9,
-            152,
-            100,
-            191,
-            153,
-            77,
-            66,
-            119,
-            80,
-            175,
-            54,
-            20,
-            183,
-            66,
-            109,
-            28,
-            106,
-            17,
-            23
-          ]
-        },
-        {
-          type: "bar",
-          label: t("deposits"),
-          backgroundColor: "#66BB6A",
-          data: [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            130,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            71,
-            60,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
-        }
-      ]
-    };
-
-    const stackedOptions = {
+    const dailyChangesgraphOptions = {
       tooltips: {
         mode: "index",
         intersect: false
@@ -576,8 +364,7 @@ export default defineComponent({
     return {
       state,
       pageChanged,
-      stackedData,
-      stackedOptions
+      dailyChangesgraphOptions
     };
   }
 });

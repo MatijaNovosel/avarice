@@ -4,4 +4,5 @@ export interface DatasetItem {
   fill?: boolean;
   borderColor?: string | string[];
   backgroundColor?: string | string[];
+  type?: string;
 }

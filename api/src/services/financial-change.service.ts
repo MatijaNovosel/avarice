@@ -2,6 +2,7 @@ import { TransferInputType } from "./../input-types/financial-change.input-type"
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
 import {
+  GDailyChange,
   Paymentsource,
   RecentDepositsAndWithdrawals,
   TransactionAmountRange
@@ -14,6 +15,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import {
   Between,
   createQueryBuilder,
+  getConnection,
   getRepository,
   Like,
   Repository
@@ -244,5 +246,13 @@ export class FinancialChangeService {
             : current.amount
       });
     }
+  }
+
+  async getDailyChanges(appUserId: number): Promise<GDailyChange[]> {
+    const data = await getConnection().query("CALL getDailyChanges(?)", [
+      appUserId
+    ]);
+    const res: GDailyChange[] = data[0];
+    return res;
   }
 }

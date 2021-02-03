@@ -1,3 +1,4 @@
+import { DailyChange } from "./../../models/change-item";
 import {
   CreateFinancialChangeItemDto,
   CreateTransferDto,
@@ -36,4 +37,5 @@ export interface ITransactionService {
     from: Date,
     to: Date
   ): Promise<FinancialHistory[]>;
+  getDailyChanges(appUserId: number): Promise<DailyChange[]>;
 }

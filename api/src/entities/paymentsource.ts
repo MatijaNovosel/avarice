@@ -112,3 +112,15 @@ export class RecentDepositsAndWithdrawals {
   @Field(() => Float)
   deposits?: number;
 }
+
+@ObjectType()
+export class GDailyChange {
+  @Field(() => Float)
+  withdrawals?: number;
+
+  @Field(() => Float)
+  deposits?: number;
+
+  @Field()
+  createdAt?: string;
+}

@@ -1,4 +1,8 @@
-import { RecentDepositsAndWithdrawals, TransactionAmountRange } from "./../entities/paymentsource";
+import {
+  GDailyChange,
+  RecentDepositsAndWithdrawals,
+  TransactionAmountRange
+} from "./../entities/paymentsource";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import {
   FinancialChangeInputType,
@@ -32,9 +36,15 @@ export class FinancialChangeResolver {
     );
   }
 
-  @Query(() => RecentDepositsAndWithdrawals, { name: "recentDepositsAndWithdrawals" })
-  async getRecentDepositsAndWithdrawals(@Args("appUserId", { type: () => Int }) appUserId: number) {
-    return this.financialChangeService.getRecentDepositsAndWithdrawals(appUserId);
+  @Query(() => RecentDepositsAndWithdrawals, {
+    name: "recentDepositsAndWithdrawals"
+  })
+  async getRecentDepositsAndWithdrawals(
+    @Args("appUserId", { type: () => Int }) appUserId: number
+  ) {
+    return this.financialChangeService.getRecentDepositsAndWithdrawals(
+      appUserId
+    );
   }
 
   @Query(() => TransactionAmountRange, { name: "transactionAmountRange" })
@@ -42,7 +52,15 @@ export class FinancialChangeResolver {
     @Args("appUserId", { type: () => Int }) appUserId: number,
     @Args("expense", { nullable: true }) expense: boolean
   ) {
-    return this.financialChangeService.getTransactionAmountRange(appUserId, expense);
+    return this.financialChangeService.getTransactionAmountRange(
+      appUserId,
+      expense
+    );
+  }
+
+  @Query(() => [GDailyChange], { name: "dailyChanges" })
+  async getTagPercentages(@Args({ name: "appUserId" }) appUserId: number) {
+    return this.financialChangeService.getDailyChanges(appUserId);
   }
 
   @Mutation(() => VoidScalar, { nullable: true })

@@ -97,6 +97,12 @@ type RecentDepositsAndWithdrawals {
   deposits: Float!
 }
 
+type GDailyChange {
+  withdrawals: Float!
+  deposits: Float!
+  createdAt: String!
+}
+
 type AccessToken {
   accessToken: String!
 }
@@ -117,6 +123,7 @@ type Query {
   financialChanges(max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
   recentDepositsAndWithdrawals(appUserId: Int!): RecentDepositsAndWithdrawals!
   transactionAmountRange(expense: Boolean, appUserId: Int!): TransactionAmountRange!
+  dailyChanges(appUserId: Float!): [GDailyChange!]!
   tags: [GTag!]!
 }
 
