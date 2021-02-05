@@ -18,7 +18,7 @@
         :title="state.total.description"
         color="#acb0bf"
         :amount="state.total.currentAmount"
-        :amount-visible="state.total.visible"
+        :amount-visible="false"
         :currency="state.user.preferredCurrency"
       />
       <div class="flex px-5 py-6 bg-white rounded-lg shadow">
@@ -91,6 +91,7 @@
             :key="change.id"
             :expense="change.expense"
             :title="change.description"
+            :show="false"
             :amount="change.amount"
             :tags="change.tagIds"
             :date="change.createdAt"
@@ -195,7 +196,7 @@ export default defineComponent({
         currency: "HRK",
         icon: "scale",
         currentAmount: 0,
-        visible: true
+        visible: false
       },
       totalDataset: null,
       transactionsNumberOfPages: 0,
@@ -232,7 +233,7 @@ export default defineComponent({
           ],
           yAxes: [
             {
-              display: true
+              display: false
             }
           ]
         },
@@ -265,6 +266,8 @@ export default defineComponent({
 
     async function updateData() {
       state.loading = true;
+
+      state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
       getTransactions(0, state.numberOfRows);
 
       const history = await getService<ITransactionService>(
@@ -339,7 +342,6 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      state.dateRange = [sub(new Date(), { days: 30 }), new Date()];
       updateData();
     });
 
