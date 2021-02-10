@@ -169,6 +169,7 @@ export default defineComponent({
     }
 
     async function addTransaction() {
+      // TODO: Anomalija kod spremanja, ako prelazi iz sekunde u new Date() u novu sekundu onda se ne sprema dobro!
       state.saving = true;
 
       const payload: CreateFinancialChangeItemDto = {
