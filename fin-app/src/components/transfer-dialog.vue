@@ -34,7 +34,7 @@
         v-ripple
         v-else
         :disabled="model.$invalid"
-        @click="addTransaction"
+        @click="transfer"
         class="p-ripple shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
       >
         Save
@@ -112,7 +112,7 @@ export default defineComponent({
 
     watch(
       () => props.dialog,
-      (val) => (state.dialog = val)
+      val => (state.dialog = val)
     );
 
     function resetDialog() {
@@ -129,7 +129,7 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
-    async function addTransaction() {
+    async function transfer() {
       state.saving = true;
 
       const payload: CreateTransferDto = {
@@ -153,7 +153,7 @@ export default defineComponent({
 
     return {
       state,
-      addTransaction,
+      transfer,
       hideDialog,
       model
     };

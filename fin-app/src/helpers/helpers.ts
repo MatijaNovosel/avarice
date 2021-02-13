@@ -192,7 +192,9 @@ export function getOffset(el: HTMLElement): HTMLElementOffset {
 
 interface GqlRequestParam {
   name: string;
-  value: any;
+  quoted?: boolean;
+  value?: any;
+  subFields?: GqlRequestParam[];
 }
 
 interface GqlResponseParam {
@@ -203,8 +205,20 @@ interface GqlResponseParam {
 interface GqlRequest {
   type: GqlRequestType;
   name: string;
-  responseParams: GqlResponseParam[];
+  responseParams?: GqlResponseParam[];
   requestParams?: GqlRequestParam[];
+}
+
+export function formatRequestParam(param: GqlRequestParam): string {
+  if (!param.subFields) {
+    return `${param.name}: ${
+      param.quoted !== undefined ? `"${param.value}"` : param.value
+    }`;
+  } else {
+    return `${param.name}: { ${param?.subFields?.map(x =>
+      formatRequestParam(x)
+    )} }`;
+  }
 }
 
 export function formatResponseParam(param: GqlResponseParam): string {
@@ -224,10 +238,10 @@ export function formatGqlRequest({
   requestParams
 }: GqlRequest): string {
   const requestParamsFormatted = requestParams
-    ? requestParams.map(x => `${x.name}: ${x.value}`).join(", ")
+    ? requestParams.map(x => formatRequestParam(x))
     : "";
-  const requestResponseParamsFormatted = responseParams.map(x =>
-    formatResponseParam(x)
-  );
-  return `${type} { ${name}(${requestParamsFormatted}) { ${requestResponseParamsFormatted} } }`;
+  const requestResponseParamsFormatted = responseParams
+    ? `{ ${responseParams.map(x => formatResponseParam(x))} }`
+    : "";
+  return `${type} { ${name}(${requestParamsFormatted}) ${requestResponseParamsFormatted} }`;
 }
