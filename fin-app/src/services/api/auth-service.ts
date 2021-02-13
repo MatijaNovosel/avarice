@@ -1,8 +1,8 @@
 import firebase from "firebase";
 import { User } from "@firebase/auth-types";
-import axios from "axios";
-import environmentVariables from "@/constants/environment-variables.json";
+import axiosInstance from "axios";
 import { IAuthService } from "../interfaces/auth-service";
+import { formatGqlRequest } from "@/helpers/helpers";
 
 interface UserDto {
   accessToken: string;
@@ -10,16 +10,36 @@ interface UserDto {
 
 export class AuthService implements IAuthService {
   async register(email: string, password: string): Promise<number> {
-    const { data: { data: { register } } } = await axios.post(environmentVariables.apiUrl, {
-      query: `
-        mutation {
-          register(input: {
-            email: ${email}
-            password: ${password}
-          })
+    const query = formatGqlRequest({
+      type: "mutation",
+      name: "register",
+      requestParams: [
+        {
+          name: "input",
+          subFields: [
+            {
+              name: "email",
+              quoted: true,
+              value: email
+            },
+            {
+              name: "password",
+              quoted: true,
+              value: password
+            }
+          ]
         }
-      `
+      ]
     });
+
+    const {
+      data: {
+        data: { register }
+      }
+    } = await axiosInstance.post("", {
+      query
+    });
+
     return register;
   }
 
@@ -31,36 +51,90 @@ export class AuthService implements IAuthService {
       ...(credential.user as User)
     };
 
-    const { data: { data: { login } } } = await axios.post(environmentVariables.apiUrl, {
-      query: `
-        mutation {
-          googleLogin(input: {
-            uid: ${uid}
-            email: ${email}
-            photoURL: ${photoURL}
-            displayName: ${displayName}
-          }) {
-            accessToken
-          }
+    const query = formatGqlRequest({
+      type: "mutation",
+      name: "googleLogin",
+      requestParams: [
+        {
+          name: "input",
+          subFields: [
+            {
+              name: "email",
+              quoted: true,
+              value: email
+            },
+            {
+              name: "uid",
+              quoted: true,
+              value: uid
+            },
+            {
+              name: "photoURL",
+              quoted: true,
+              value: photoURL
+            },
+            {
+              name: "displayName",
+              quoted: true,
+              value: displayName
+            }
+          ]
         }
-      `
+      ],
+      responseParams: [
+        {
+          name: "accessToken"
+        }
+      ]
     });
+
+    const {
+      data: {
+        data: { login }
+      }
+    } = await axiosInstance.post("", {
+      query
+    });
+
     return login;
   }
 
   async signInEmail(email: string, password: number): Promise<UserDto> {
-    const { data: { data: { login } } } = await axios.post(environmentVariables.apiUrl, {
-      query: `
-        mutation {
-          login(input: {
-            email: ${email}
-            password: ${password}
-          }) {
-            accessToken
-          }
+    const query = formatGqlRequest({
+      type: "mutation",
+      name: "login",
+      requestParams: [
+        {
+          name: "input",
+          subFields: [
+            {
+              name: "email",
+              quoted: true,
+              value: email
+            },
+            {
+              name: "password",
+              quoted: true,
+              value: password
+            }
+          ]
         }
-      `
+      ],
+      responseParams: [
+        {
+          name: "accessToken"
+        }
+      ]
     });
+
+    const {
+      data: {
+        data: { login }
+      }
+    } = await axiosInstance.post("", {
+      query
+    });
+
     return login;
   }
 
