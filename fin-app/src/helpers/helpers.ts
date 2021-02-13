@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { SelectItem } from "@/models/select-item";
+import { GqlRequestType } from "@/types";
 import { useI18n } from "vue-i18n";
 import { Color } from "./color";
 import Solver from "./solver";
@@ -187,4 +188,46 @@ export function getOffset(el: HTMLElement): HTMLElementOffset {
     el = el.offsetParent as HTMLElement;
   }
   return { top: _y, left: _x };
+}
+
+interface GqlRequestParam {
+  name: string;
+  value: any;
+}
+
+interface GqlResponseParam {
+  name: string;
+  subFields?: GqlResponseParam[];
+}
+
+interface GqlRequest {
+  type: GqlRequestType;
+  name: string;
+  responseParams: GqlResponseParam[];
+  requestParams?: GqlRequestParam[];
+}
+
+export function formatResponseParam(param: GqlResponseParam): string {
+  if (!param.subFields) {
+    return param.name;
+  } else {
+    return `${param.name} { ${param?.subFields?.map(x =>
+      formatResponseParam(x)
+    )} }`;
+  }
+}
+
+export function formatGqlRequest({
+  type,
+  name,
+  responseParams,
+  requestParams
+}: GqlRequest): string {
+  const requestParamsFormatted = requestParams
+    ? requestParams.map(x => `${x.name}: ${x.value}`).join(", ")
+    : "";
+  const requestResponseParamsFormatted = responseParams.map(x =>
+    formatResponseParam(x)
+  );
+  return `${type} { ${name}(${requestParamsFormatted}) { ${requestResponseParamsFormatted} } }`;
 }

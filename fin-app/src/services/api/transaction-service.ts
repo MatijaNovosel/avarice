@@ -5,23 +5,31 @@ import {
   FinancialChangeItem
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
-import axios from "axios";
-import environmentVariables from "@/constants/environment-variables.json";
+import axiosInstance from "../axios-instance";
 import { ITransactionService } from "../interfaces/transaction-service";
 import { format } from "date-fns";
+import { formatGqlRequest } from '@/helpers/helpers';
 
 export class ChangeService implements ITransactionService {
   async getRecentDepositsAndWithdrawals(appUserId: number): Promise<RecentDepositsAndWithdrawals> {
-    const { data: { data: { recentDepositsAndWithdrawals } } } = await axios.post(environmentVariables.apiUrl, {
-      query: `
-        query {
-          recentDepositsAndWithdrawals(appUserId: ${appUserId}) {
-            deposits
-            withdrawals
-          }
-        }
-      `
+    const query = formatGqlRequest({
+      type: "query",
+      name: "recentDepositsAndWithdrawals",
+      requestParams: [{
+        name: "appUserId",
+        value: appUserId
+      }],
+      responseParams: [{
+        name: "deposits"
+      }, {
+        name: "withdrawals"
+      }]
     });
+
+    const { data: { data: { recentDepositsAndWithdrawals } } } = await axiosInstance.post("", {
+      query
+    });
+
     return recentDepositsAndWithdrawals;
   }
 
@@ -33,7 +41,7 @@ export class ChangeService implements ITransactionService {
       accountToId
     } = payload;
 
-    await axios.post(environmentVariables.apiUrl, {
+    await axiosInstance.post("", {
       query: `
         mutation {
           transfer(
@@ -59,7 +67,7 @@ export class ChangeService implements ITransactionService {
       tagIds
     } = payload;
 
-    await axios.post(environmentVariables.apiUrl, {
+    await axiosInstance.post("", {
       query: `
         mutation {
           addFinancialChange(
@@ -85,7 +93,7 @@ export class ChangeService implements ITransactionService {
     min: number | null = null,
     max: number | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
-    const { data: { data: { financialChanges } } } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { financialChanges } } } = await axiosInstance.post("", {
       query: `
         query {
           financialChanges(id: ${appUserId}, take: ${take}, skip: ${skip}, description: "${description}", min: ${min}, max: ${max}) {
@@ -108,7 +116,7 @@ export class ChangeService implements ITransactionService {
   }
 
   async getHistory(appUserId: number, from: Date, to: Date): Promise<FinancialHistory[]> {
-    const { data: { data: { financialHistory } } } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { financialHistory } } } = await axiosInstance.post("", {
       query: `
         query {
           financialHistory(id: ${appUserId}, from: "${format(from, "yyyy-MM-dd HH:mm:ss")}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
@@ -126,7 +134,7 @@ export class ChangeService implements ITransactionService {
   }
 
   async getTotal(appUserId: number, from: Date, to: Date): Promise<FinancialHistory[]> {
-    const { data: { data: { financialHistory } } } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { financialHistory } } } = await axiosInstance.post("", {
       query: `
         query {
           financialHistory(id: ${appUserId}, from: "${format(from, "yyyy-MM-dd HH:mm:ss")}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
@@ -140,7 +148,7 @@ export class ChangeService implements ITransactionService {
   }
 
   async getTransactionAmountRange(appUserId: number, expense: boolean | null = null): Promise<TransactionAmountRange> {
-    const { data: { data: { transactionAmountRange } } } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { transactionAmountRange } } } = await axiosInstance.post("", {
       query: `
         query {
           transactionAmountRange(appUserId: ${appUserId}, expense: ${expense}) {
@@ -154,7 +162,7 @@ export class ChangeService implements ITransactionService {
   }
 
   async getDailyChanges(appUserId: number): Promise<DailyChange[]> {
-    const { data: { data: { dailyChanges } } } = await axios.post(environmentVariables.apiUrl, {
+    const { data: { data: { dailyChanges } } } = await axiosInstance.post("", {
       query: `
         query {
           dailyChanges(appUserId: ${appUserId}) {

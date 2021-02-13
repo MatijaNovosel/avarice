@@ -199,7 +199,7 @@ export default defineComponent({
         visible: false
       },
       totalDataset: null,
-      transactionsNumberOfPages: 0,
+      transactionsNumberOfPages: 5,
       transactionsOffset: 0,
       totalTransactions: 0,
       numberOfRows: 15,
@@ -257,9 +257,6 @@ export default defineComponent({
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
-      state.transactionsNumberOfPages = Math.floor(
-        state.totalTransactions / state.numberOfRows
-      );
 
       state.transactionsLoading = false;
     }

@@ -190,7 +190,7 @@ export default defineComponent({
       transactions: [],
       loading: false,
       totalTransactions: 0,
-      numberOfPages: 0,
+      numberOfPages: 5,
       numberOfRows: 10,
       pageOptions: [10, 15],
       currentPage: 0,
@@ -239,9 +239,6 @@ export default defineComponent({
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
-      state.numberOfPages = Math.floor(
-        state.totalTransactions / state.numberOfRows
-      );
 
       state.loading = false;
     }
