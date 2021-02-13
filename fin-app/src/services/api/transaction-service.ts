@@ -146,29 +146,80 @@ export class ChangeService implements ITransactionService {
     min: number | null = null,
     max: number | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "financialChanges",
+      requestParams: [
+        {
+          name: "id",
+          value: appUserId
+        },
+        {
+          name: "take",
+          value: take
+        },
+        {
+          name: "skip",
+          value: skip
+        },
+        {
+          name: "description",
+          value: description,
+          quoted: true
+        },
+        {
+          name: "min",
+          value: min
+        },
+        {
+          name: "max",
+          value: max
+        }
+      ],
+      responseParams: [
+        {
+          name: "count"
+        },
+        {
+          name: "items",
+          subFields: [
+            {
+              name: "id"
+            },
+            {
+              name: "amount"
+            },
+            {
+              name: "transfer"
+            },
+            {
+              name: "createdAt"
+            },
+            {
+              name: "description"
+            },
+            {
+              name: "expense"
+            },
+            {
+              name: "paymentSourceId"
+            },
+            {
+              name: "tagIds"
+            }
+          ]
+        }
+      ]
+    });
+
     const {
       data: {
         data: { financialChanges }
       }
     } = await axiosInstance.post("", {
-      query: `
-        query {
-          financialChanges(id: ${appUserId}, take: ${take}, skip: ${skip}, description: "${description}", min: ${min}, max: ${max}) {
-            count
-            items {
-              id
-              amount
-              transfer
-              createdAt
-              description
-              expense
-              paymentSourceId
-              tagIds
-            }
-          }
-        }
-      `
+      query
     });
+
     return financialChanges;
   }
 
@@ -177,27 +228,54 @@ export class ChangeService implements ITransactionService {
     from: Date,
     to: Date
   ): Promise<FinancialHistory[]> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "financialHistory",
+      requestParams: [
+        {
+          name: "id",
+          value: appUserId
+        },
+        {
+          name: "from",
+          value: format(from, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        },
+        {
+          name: "to",
+          value: format(to, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        }
+      ],
+      responseParams: [
+        {
+          name: "createdAt"
+        },
+        {
+          name: "paymentSources",
+          subFields: [
+            {
+              name: "id"
+            },
+            {
+              name: "amount"
+            }
+          ]
+        },
+        {
+          name: "total"
+        }
+      ]
+    });
+
     const {
       data: {
         data: { financialHistory }
       }
     } = await axiosInstance.post("", {
-      query: `
-        query {
-          financialHistory(id: ${appUserId}, from: "${format(
-        from,
-        "yyyy-MM-dd HH:mm:ss"
-      )}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
-            createdAt
-            paymentSources {
-              id
-              amount
-            }
-            total
-          }
-        }
-      `
+      query
     });
+
     return financialHistory;
   }
 
@@ -206,23 +284,43 @@ export class ChangeService implements ITransactionService {
     from: Date,
     to: Date
   ): Promise<FinancialHistory[]> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "financialHistory",
+      requestParams: [
+        {
+          name: "id",
+          value: appUserId
+        },
+        {
+          name: "from",
+          value: format(from, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        },
+        {
+          name: "to",
+          value: format(to, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        }
+      ],
+      responseParams: [
+        {
+          name: "createdAt"
+        },
+        {
+          name: "total"
+        }
+      ]
+    });
+
     const {
       data: {
         data: { financialHistory }
       }
     } = await axiosInstance.post("", {
-      query: `
-        query {
-          financialHistory(id: ${appUserId}, from: "${format(
-        from,
-        "yyyy-MM-dd HH:mm:ss"
-      )}", to: "${format(to, "yyyy-MM-dd HH:mm:ss")}") {
-            createdAt
-            total
-          }
-        }
-      `
+      query
     });
+
     return financialHistory;
   }
 
@@ -230,39 +328,71 @@ export class ChangeService implements ITransactionService {
     appUserId: number,
     expense: boolean | null = null
   ): Promise<TransactionAmountRange> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "transactionAmountRange",
+      requestParams: [
+        {
+          name: "appUserId",
+          value: appUserId
+        },
+        {
+          name: "expense",
+          value: expense
+        }
+      ],
+      responseParams: [
+        {
+          name: "min"
+        },
+        {
+          name: "max"
+        }
+      ]
+    });
+
     const {
       data: {
         data: { transactionAmountRange }
       }
     } = await axiosInstance.post("", {
-      query: `
-        query {
-          transactionAmountRange(appUserId: ${appUserId}, expense: ${expense}) {
-            min
-            max
-          }
-        }
-      `
+      query
     });
+
     return transactionAmountRange;
   }
 
   async getDailyChanges(appUserId: number): Promise<DailyChange[]> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "dailyChanges",
+      requestParams: [
+        {
+          name: "appUserId",
+          value: appUserId
+        }
+      ],
+      responseParams: [
+        {
+          name: "withdrawals"
+        },
+        {
+          name: "deposits"
+        },
+        {
+          name: "createdAt"
+        }
+      ]
+    });
+
     const {
       data: {
         data: { dailyChanges }
       }
     } = await axiosInstance.post("", {
-      query: `
-        query {
-          dailyChanges(appUserId: ${appUserId}) {
-            withdrawals
-            deposits
-            createdAt
-          }
-        }
-      `
+      query
     });
+
     return dailyChanges.map((x: DailyChangeDto) => ({
       withdrawals: x.withdrawals,
       deposits: x.deposits,
