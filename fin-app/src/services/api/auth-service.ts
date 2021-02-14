@@ -81,11 +81,7 @@ export class AuthService implements IAuthService {
           ]
         }
       ],
-      responseParams: [
-        {
-          name: "accessToken"
-        }
-      ]
+      responseParams: ["accessToken"]
     });
 
     const {
@@ -120,11 +116,7 @@ export class AuthService implements IAuthService {
           ]
         }
       ],
-      responseParams: [
-        {
-          name: "accessToken"
-        }
-      ]
+      responseParams: ["accessToken"]
     });
 
     const {

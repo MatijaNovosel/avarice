@@ -29,14 +29,7 @@ export class ChangeService implements ITransactionService {
           value: appUserId
         }
       ],
-      responseParams: [
-        {
-          name: "deposits"
-        },
-        {
-          name: "withdrawals"
-        }
-      ]
+      responseParams: ["deposits", "withdrawals"]
     });
 
     const {
@@ -125,7 +118,7 @@ export class ChangeService implements ITransactionService {
               value: paymentSourceId
             },
             {
-              name: "paymentSourceId",
+              name: "tagIds",
               value: `[${tagIds.join(",")}]`
             }
           ]
@@ -248,9 +241,8 @@ export class ChangeService implements ITransactionService {
         }
       ],
       responseParams: [
-        {
-          name: "createdAt"
-        },
+        "createdAt",
+        "total",
         {
           name: "paymentSources",
           subFields: [
@@ -261,9 +253,6 @@ export class ChangeService implements ITransactionService {
               name: "amount"
             }
           ]
-        },
-        {
-          name: "total"
         }
       ]
     });
@@ -303,14 +292,7 @@ export class ChangeService implements ITransactionService {
           quoted: true
         }
       ],
-      responseParams: [
-        {
-          name: "createdAt"
-        },
-        {
-          name: "total"
-        }
-      ]
+      responseParams: ["createdAt", "total"]
     });
 
     const {
@@ -341,14 +323,7 @@ export class ChangeService implements ITransactionService {
           value: expense
         }
       ],
-      responseParams: [
-        {
-          name: "min"
-        },
-        {
-          name: "max"
-        }
-      ]
+      responseParams: ["min", "max"]
     });
 
     const {
@@ -372,17 +347,7 @@ export class ChangeService implements ITransactionService {
           value: appUserId
         }
       ],
-      responseParams: [
-        {
-          name: "withdrawals"
-        },
-        {
-          name: "deposits"
-        },
-        {
-          name: "createdAt"
-        }
-      ]
+      responseParams: ["withdrawals", "deposits", "createdAt"]
     });
 
     const {

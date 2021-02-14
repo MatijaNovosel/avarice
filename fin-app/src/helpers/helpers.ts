@@ -205,7 +205,7 @@ interface GqlResponseParam {
 interface GqlRequest {
   type: GqlRequestType;
   name: string;
-  responseParams?: GqlResponseParam[];
+  responseParams?: Array<string | GqlResponseParam>;
   requestParams?: GqlRequestParam[];
 }
 
@@ -240,8 +240,13 @@ export function formatGqlRequest({
   const requestParamsFormatted = requestParams
     ? requestParams.map(x => formatRequestParam(x))
     : "";
-  const requestResponseParamsFormatted = responseParams
-    ? `{ ${responseParams.map(x => formatResponseParam(x))} }`
+  const responseParamsFormatted = responseParams
+    ? `{ ${responseParams.map(x => {
+        if (typeof x == "string") {
+          return x;
+        }
+        return formatResponseParam(x);
+      })} }`
     : "";
-  return `${type} { ${name}(${requestParamsFormatted}) ${requestResponseParamsFormatted} }`;
+  return `${type} { ${name}(${requestParamsFormatted}) ${responseParamsFormatted} }`;
 }

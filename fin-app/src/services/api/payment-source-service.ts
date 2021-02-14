@@ -15,20 +15,7 @@ export class PaymentSourceService implements IPaymentSourceService {
           value: appUserId
         }
       ],
-      responseParams: [
-        {
-          name: "id"
-        },
-        {
-          name: "description"
-        },
-        {
-          name: "currency"
-        },
-        {
-          name: "icon"
-        }
-      ]
+      responseParams: ["id", "description", "currency", "icon"]
     });
 
     const {
@@ -52,20 +39,7 @@ export class PaymentSourceService implements IPaymentSourceService {
           value: appUserId
         }
       ],
-      responseParams: [
-        {
-          name: "amount"
-        },
-        {
-          name: "description"
-        },
-        {
-          name: "currency"
-        },
-        {
-          name: "icon"
-        }
-      ]
+      responseParams: ["amount", "description", "currency", "icon"]
     });
 
     const {
@@ -89,17 +63,7 @@ export class PaymentSourceService implements IPaymentSourceService {
           value: appUserId
         }
       ],
-      responseParams: [
-        {
-          name: "id"
-        },
-        {
-          name: "description"
-        },
-        {
-          name: "percentage"
-        }
-      ]
+      responseParams: ["id", "description", "percentage"]
     });
 
     const {
