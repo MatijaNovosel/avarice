@@ -199,7 +199,7 @@ interface GqlRequestParam {
 
 interface GqlResponseParam {
   name: string;
-  subFields?: GqlResponseParam[];
+  subFields?: Array<string | GqlResponseParam>;
 }
 
 interface GqlRequest {
@@ -222,11 +222,11 @@ export function formatRequestParam(param: GqlRequestParam): string {
 }
 
 export function formatResponseParam(param: GqlResponseParam): string {
-  if (!param.subFields) {
-    return param.name;
+  if (typeof param == "string") {
+    return param;
   } else {
     return `${param.name} { ${param?.subFields?.map(x =>
-      formatResponseParam(x)
+      formatResponseParam(x as GqlResponseParam)
     )} }`;
   }
 }

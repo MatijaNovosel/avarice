@@ -170,36 +170,18 @@ export class ChangeService implements ITransactionService {
         }
       ],
       responseParams: [
-        {
-          name: "count"
-        },
+        "count",
         {
           name: "items",
           subFields: [
-            {
-              name: "id"
-            },
-            {
-              name: "amount"
-            },
-            {
-              name: "transfer"
-            },
-            {
-              name: "createdAt"
-            },
-            {
-              name: "description"
-            },
-            {
-              name: "expense"
-            },
-            {
-              name: "paymentSourceId"
-            },
-            {
-              name: "tagIds"
-            }
+            "id",
+            "amount",
+            "transfer",
+            "createdAt",
+            "description",
+            "expense",
+            "paymentSourceId",
+            "tagIds"
           ]
         }
       ]
@@ -245,14 +227,7 @@ export class ChangeService implements ITransactionService {
         "total",
         {
           name: "paymentSources",
-          subFields: [
-            {
-              name: "id"
-            },
-            {
-              name: "amount"
-            }
-          ]
+          subFields: ["id", "amount"]
         }
       ]
     });
