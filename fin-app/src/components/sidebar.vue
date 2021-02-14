@@ -12,7 +12,7 @@
         <div
           v-else
           :class="{
-            'dark:bg-gray-800 bg-gray-700': state.currentRoute == sidebarItem.routeName,
+            'dark:bg-gray-800 bg-gray-600': state.currentRoute == sidebarItem.routeName,
             'dark:bg-gray-700 bg-gray-500': state.currentRoute != sidebarItem.routeName
           }"
           class="flex text-lg items-center cursor-pointer rounded-lg hover:bg-gray-600 dark:hover:bg-gray-800 py-2 px-3 mx-3 p-ripple"

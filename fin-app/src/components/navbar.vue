@@ -40,11 +40,18 @@
         :src="state.user.photoURL"
         alt=""
       />
-      <div @click="openMenu" class="cursor-pointer flex p-ripple rounded-lg ml-3" v-ripple>
+      <div
+        @click="openMenu"
+        class="cursor-pointer flex p-ripple rounded-lg ml-3"
+        v-ripple
+      >
         <span class="dark:text-white text-black pl-2 mr-3 mt-1 font-bold">
           {{ state.user.displayName }}
         </span>
-        <mdi-icon name="chevron-down" color="#000000" />
+        <mdi-icon
+          name="chevron-down"
+          :color="state.darkMode ? '#ffffff' : '#000000'"
+        />
       </div>
     </div>
     <transaction-dialog v-model:dialog="state.newTransactionDialog" />
@@ -54,12 +61,12 @@
         hidden: !state.menuVisible
       }"
       :style="state.menuStyle"
-      class="rounded-lg bg-white shadow-md absolute flex flex-col top-16 border w-44"
+      class="rounded-lg shadow-md absolute flex flex-col top-16 dark:border-0 border w-44"
     >
       <div
         :class="{
-          'py-1 px-5 bg-white first:rounded-t-lg last:rounded-b-lg cursor-pointer hover:bg-gray-100 hover:rounded-lg p-ripple': !menuItem.separator,
-          'border-t border-gray-200': menuItem.separator
+          'py-1 px-5 dark:bg-gray-700 bg-white first:rounded-t-lg last:rounded-b-lg cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-100 hover:rounded-lg p-ripple dark:text-gray-400': !menuItem.separator,
+          'border-t border-gray-200 dark:border-gray-900': menuItem.separator
         }"
         v-for="(menuItem, i) in state.menuItems"
         class="select-none"
@@ -76,7 +83,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref, ref, watch } from "vue";
+import {
+  defineComponent,
+  reactive,
+  computed,
+  Ref,
+  ref,
+  watch,
+  onMounted
+} from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -105,6 +120,7 @@ interface State {
   menuVisible: boolean;
   menuStyle: MenuStyle;
   darkModeSwitch: boolean;
+  darkMode: boolean;
 }
 
 export default defineComponent({
@@ -161,6 +177,7 @@ export default defineComponent({
       transferDialog: false,
       currentRoute: computed(() => route.name),
       user: computed(() => store.getters.user),
+      darkMode: computed(() => store.getters.darkMode),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();
@@ -184,8 +201,15 @@ export default defineComponent({
       state.menuStyle.left = `${left - sidebarWidth}px`;
     }
 
-    watch(() => state.darkModeSwitch, val => {
-      store.dispatch("setDarkMode", val);
+    watch(
+      () => state.darkModeSwitch,
+      val => {
+        store.dispatch("setDarkMode", val);
+      }
+    );
+
+    onMounted(() => {
+      state.darkModeSwitch = store.getters.darkMode;
     });
 
     const homeRoute = RouteNames.HOME;

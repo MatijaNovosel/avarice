@@ -6,7 +6,7 @@
         :key="n"
         v-for="n in 4"
         animation
-        class="rounded-lg bg-gray-300"
+        class="rounded-lg dark:bg-gray-700 bg-gray-300"
         height="100px"
       />
     </div>

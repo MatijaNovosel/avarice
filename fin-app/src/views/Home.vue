@@ -155,6 +155,7 @@ interface State {
   recentDepositsAndWithdrawals: RecentDepositsAndWithdrawals;
   dateRange: Array<Date | null>;
   loading: boolean;
+  darkMode: boolean;
   transactionsLoading: boolean;
   graphData: GraphData | null;
   graphDataDailyChanges: GraphData | null;
@@ -184,6 +185,7 @@ export default defineComponent({
 
     const state: State = reactive({
       user: computed(() => user.getters.user),
+      darkMode: computed(() => user.getters.darkMode),
       transactionPageOption: [10, 15],
       recentDepositsAndWithdrawals: {
         withdrawals: 0,
@@ -277,9 +279,12 @@ export default defineComponent({
         label: t("total"),
         data: history.map(x => x.total),
         fill: true,
-        borderColor: "#acb0bf",
+        borderColor: state.darkMode ? "#59c262" : "#acb0bf",
         backgroundColor: hexToRgba(
-          adjustHexColor("#acb0bf".replace("#", ""), 30),
+          adjustHexColor(
+            state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
+            30
+          ),
           0.7
         ) as string
       };
