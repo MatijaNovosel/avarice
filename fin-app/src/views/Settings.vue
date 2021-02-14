@@ -6,7 +6,7 @@
           'text-gray-400 border-b-2 border-gray-400':
             state.activeTab == tabHeaderItem.value
         }"
-        class="font-bold cursor-pointer p-3"
+        class="font-bold cursor-pointer p-3 dark:text-gray-400"
         @click="state.activeTab = tabHeaderItem.value"
         v-for="(tabHeaderItem, i) in state.tabHeaders"
         :key="i"
@@ -26,7 +26,7 @@
             <td class="py-3">
               <span class="text-gray-500 font-bold">Display name</span>
             </td>
-            <td class="text-left">
+            <td class="text-left dark:text-gray-400">
               {{ state.user.displayName }}
             </td>
             <td class="text-right">
@@ -42,7 +42,7 @@
             <td class="py-3">
               <span class="text-gray-500 font-bold">Email</span>
             </td>
-            <td class="text-left">
+            <td class="text-left dark:text-gray-400">
               {{ state.user.email }}
             </td>
             <td class="text-right">
@@ -58,7 +58,7 @@
             <td class="py-3">
               <span class="text-gray-500 font-bold">Date format</span>
             </td>
-            <td class="text-left">
+            <td class="text-left dark:text-gray-400">
               {{ state.user.dateFormat }}
             </td>
             <td class="text-right">
@@ -74,7 +74,7 @@
             <td class="py-3">
               <span class="text-gray-500 font-bold">Preferred currency</span>
             </td>
-            <td class="text-left">
+            <td class="text-left dark:text-gray-400">
               {{ state.user.preferredCurrency }}
             </td>
             <td class="text-right">
@@ -90,7 +90,7 @@
             <td class="py-3">
               <span class="text-gray-500 font-bold">Language</span>
             </td>
-            <td class="text-left">
+            <td class="text-left dark:text-gray-400">
               {{ LanguageEnum[state.user.language] }}
             </td>
             <td class="text-right">

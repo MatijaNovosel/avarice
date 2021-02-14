@@ -1,6 +1,6 @@
 <template>
   <div
-    class="shadow-md bg-white px-8 flex justify-between h-24 z-50 sticky w-full top-0 rounded-bl-2xl"
+    class="shadow-md dark:bg-gray-800 bg-white px-8 flex justify-between h-24 z-50 sticky w-full top-0 rounded-bl-2xl"
   >
     <div
       class="flex items-center w-full"
@@ -12,7 +12,7 @@
         alt=""
       />
       <div class="flex flex-col ml-4">
-        <span class="text-black font-bold text-2xl">
+        <span class="dark:text-white text-black font-bold text-2xl">
           {{ $t("good") }} {{ state.timeOfDay }}, {{ state.user.displayName }}
         </span>
         <div class="flex items-center text-gray-400 font-bold">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="flex items-center w-full justify-end select-none">
-      <dark-mode-switch />
+      <dark-mode-switch v-model:value="state.darkModeSwitch" />
       <mdi-icon
         class="cursor-pointer mx-3"
         name="bell-outline"
@@ -40,8 +40,8 @@
         :src="state.user.photoURL"
         alt=""
       />
-      <div @click="openMenu" class="cursor-pointer flex p-ripple" v-ripple>
-        <span class="text-black ml-4 mr-3 mt-1 font-bold">
+      <div @click="openMenu" class="cursor-pointer flex p-ripple rounded-lg ml-3" v-ripple>
+        <span class="dark:text-white text-black pl-2 mr-3 mt-1 font-bold">
           {{ state.user.displayName }}
         </span>
         <mdi-icon name="chevron-down" color="#000000" />
@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref, ref } from "vue";
+import { defineComponent, reactive, computed, Ref, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -104,6 +104,7 @@ interface State {
   user: AppUser;
   menuVisible: boolean;
   menuStyle: MenuStyle;
+  darkModeSwitch: boolean;
 }
 
 export default defineComponent({
@@ -120,6 +121,7 @@ export default defineComponent({
     );
 
     const state: State = reactive({
+      darkModeSwitch: false,
       menuVisible: false,
       menuStyle: {
         left: "0px"
@@ -181,6 +183,10 @@ export default defineComponent({
 
       state.menuStyle.left = `${left - sidebarWidth}px`;
     }
+
+    watch(() => state.darkModeSwitch, val => {
+      store.dispatch("setDarkMode", val);
+    });
 
     const homeRoute = RouteNames.HOME;
 

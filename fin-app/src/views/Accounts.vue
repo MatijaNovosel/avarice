@@ -1,6 +1,6 @@
 <template>
   <div class="mb-10 px-8 flex flex-col">
-    <span class="mb-3 text-xl font-semibold"> Accounts </span>
+    <span class="mb-3 text-xl font-semibold dark:text-gray-400"> Accounts </span>
     <div v-if="state.loading" class="grid gap-4 grid-cols-2 lg:grid-cols-4">
       <skeleton
         :key="n"
@@ -22,15 +22,15 @@
         :currency="state.user.preferredCurrency"
       />
     </div>
-    <span class="mb-3 mt-6 text-xl font-semibold"> Spending distribution </span>
+    <span class="mb-3 mt-6 text-xl font-semibold dark:text-gray-400"> Spending distribution </span>
     <div
-      class="rounded-lg p-10 bg-white shadow-md flex items-center justify-center"
+      class="rounded-lg p-10 dark:bg-gray-800 bg-white shadow-md flex items-center justify-center"
     >
       <div v-if="state.loading" class="text-center my-16">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="flex flex-col">
+        <div class="flex flex-col dark:text-gray-400">
           <span
             v-for="tagPercentage in state.tagPercentages"
             :key="tagPercentage.id"

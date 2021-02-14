@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-5 py-6 bg-white rounded-lg shadow">
+  <div class="flex px-5 py-6 dark:bg-gray-800 bg-white rounded-lg shadow">
     <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="w-full flex items-center justify-between">
@@ -7,7 +7,7 @@
           <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
             <span class="font-bold text-gray-400">{{ state.title }}</span>
-            <span class="font-semibold text-xl">{{
+            <span class="font-semibold text-xl dark:text-white">{{
               state.amountVisible
                 ? `${state.amount.toLocaleString("en")} ${state.currency}`
                 : `${state.amount} ${state.currency}`.replace(/[0-9]/gi, "*")

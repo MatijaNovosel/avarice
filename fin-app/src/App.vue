@@ -1,16 +1,19 @@
 <template>
   <toast position="top-right" />
-  <div class="grid grid-cols-12">
+  <div class="grid grid-cols-12 h-screen" :class="{ dark: state.darkMode }">
     <div
       id="sidebar"
-      class="col-span-2 bg-gray-600 space-y-2"
+      class="col-span-2 bg-gray-500 dark:bg-gray-700 space-y-2"
       v-if="state.isAuthenticated"
     >
       <sidebar :items="state.sidebarItems" />
     </div>
     <div
-      class="relative"
-      :class="`col-span-${state.isAuthenticated ? '10' : '12'}`"
+      class="relative dark:bg-gray-900 bg-gray-100"
+      :class="{
+        'col-span-10': state.isAuthenticated,
+        'col-span-12': !state.isAuthenticated
+      }"
     >
       <navbar v-if="state.isAuthenticated" />
       <router-view :class="{ 'mt-6': state.isAuthenticated }" />
@@ -31,6 +34,7 @@ interface State {
   visible: boolean;
   sidebarItems: SidebarItem[];
   isAuthenticated: boolean;
+  darkMode: boolean;
 }
 
 export default defineComponent({
@@ -47,6 +51,7 @@ export default defineComponent({
     const state: State = reactive({
       visible: false,
       isAuthenticated: computed(() => store.getters.isAuthenticated),
+      darkMode: computed(() => store.getters.darkMode),
       sidebarItems: [
         {
           text: "Home",

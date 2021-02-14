@@ -1,27 +1,33 @@
 <template>
   <div class="h-12 grid items-center">
-    <input type="checkbox" id="time" />
+    <input
+      @change="switchChanged"
+      v-model="state.value"
+      type="checkbox"
+      id="time"
+    />
     <label for="time">N</label>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "vue";
+import { defineComponent, reactive, SetupContext, watch } from "vue";
 
 interface Props {
-  value?: string | null;
+  value: boolean;
 }
 
 interface State {
-  value?: string | null;
+  value: boolean;
 }
 
 export default defineComponent({
   name: "dark-mode-switch",
+  emits: ["update:value"],
   props: {
-    value: String
+    value: Boolean
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       value: props.value
     });
@@ -31,8 +37,13 @@ export default defineComponent({
       val => (state.value = val)
     );
 
+    function switchChanged() {
+      context.emit("update:value", state.value);
+    }
+
     return {
-      state
+      state,
+      switchChanged
     };
   }
 });
@@ -83,7 +94,11 @@ $g: 1em;
       grid-column: 2;
       border-radius: 50%;
       transform: translatey(calc(var(--i) * (-100% - #{$p})));
-      background: radial-gradient(circle at 19% 19%, transparent 41%, rgb(238, 231, 193) 43%);
+      background: radial-gradient(
+        circle at 19% 19%,
+        transparent 41%,
+        rgb(238, 231, 193) 43%
+      );
     }
   }
 

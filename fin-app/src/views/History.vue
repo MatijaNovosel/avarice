@@ -1,14 +1,20 @@
 <template>
-  <div class="px-6 grid grid-cols-12 space-x-0 lg:space-x-5 space-y-4 lg:space-y-0">
+  <div
+    class="px-6 grid grid-cols-12 space-x-0 lg:space-x-5 space-y-4 lg:space-y-0"
+  >
     <div
-      class="col-span-12 lg:col-span-3 rounded-lg bg-white border border-gray-300 text-center"
+      class="col-span-12 lg:col-span-3 rounded-lg dark:bg-gray-800 bg-white border dark:border-0 border-gray-300 text-center"
     >
       <div
-        class="w-full bg-gray-100 rounded-t-lg py-2 border-b border-gray-300"
+        class="w-full dark:bg-gray-700 bg-gray-100 rounded-t-lg py-2 border-b dark:border-0 border-gray-300"
       >
         <span class="text-gray-400 uppercase tracking-wider">Filters</span>
       </div>
-      <progress-spinner class="w-10 h-10 mt-5" strokeWidth="10" v-if="state.loading" />
+      <progress-spinner
+        class="w-10 h-10 mt-5"
+        strokeWidth="10"
+        v-if="state.loading"
+      />
       <div class="px-5 pt-5 space-y-5" v-else>
         <span class="p-float-label w-full">
           <input-text
@@ -38,7 +44,7 @@
             :range="true"
             v-model="state.sliderRange"
           />
-          <div class="flex justify-between mt-3">
+          <div class="flex justify-between mt-3 dark:text-white">
             <span>{{ state.sliderRange[0] }} HRK</span>
             <span>{{ state.sliderRange[1] }} HRK</span>
           </div>
@@ -47,9 +53,11 @@
     </div>
     <div class="overflow-x-auto col-span-12 lg:col-span-9">
       <div class="min-w-full">
-        <div class="shadow overflow-hidden rounded-t-lg border-gray-300 border">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+        <div
+          class="shadow overflow-hidden rounded-t-lg dark:border-0 border-gray-300 border"
+        >
+          <table class="min-w-full divide-y dark:divide-gray-900">
+            <thead class="dark:bg-gray-700 bg-gray-50">
               <tr>
                 <th
                   v-for="(header, i) in headers"
@@ -60,7 +68,7 @@
                     'text-center': header.align == 'center',
                     'text-right': header.align == 'right'
                   }"
-                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
                 >
                   {{ header.text }}
                 </th>
@@ -68,7 +76,7 @@
             </thead>
             <tbody
               v-if="!state.loading"
-              class="bg-white divide-y divide-gray-200"
+              class="dark:bg-gray-800 bg-white divide-y dark:divide-gray-900 divide-gray-200 dark:text-gray-300"
             >
               <tr
                 v-for="transaction in state.transactions"
@@ -81,7 +89,7 @@
                   {{ transaction.amount }} HRK
                 </td>
                 <td class="px-6 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">
+                  <div class="text-sm text-gray-900 dark:text-white">
                     {{ transaction.createdAt }}
                   </div>
                   <div class="text-sm text-gray-500">
@@ -134,7 +142,7 @@
           :rowsPerPageOptions="state.pageOptions"
           :pageLinkSize="state.numberOfPages"
           @page="pageChanged"
-          class="pb-2 bg-gray-200 rounded-b-lg border-gray-300 border-b border-l border-r"
+          class="pb-2 dark:bg-gray-700 bg-gray-200 rounded-b-lg border-gray-300 dark:border-0 dark:text-gray-300 border-b border-l border-r"
         />
       </div>
     </div>

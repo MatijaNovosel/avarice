@@ -32,6 +32,7 @@ module.exports = {
       backgroundColor: [
         "disabled"
       ],
+      borderWidth: ['hover', 'focus', 'dark'],
     },
   },
   plugins: [],

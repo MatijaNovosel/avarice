@@ -8,7 +8,7 @@
         :key="n"
         v-for="n in 3"
         animation
-        class="rounded-lg bg-gray-300"
+        class="rounded-lg dark:bg-gray-700 bg-gray-300"
         height="100px"
       />
     </div>
@@ -21,7 +21,7 @@
         :amount-visible="false"
         :currency="state.user.preferredCurrency"
       />
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow">
+      <div class="flex px-5 py-6 dark:bg-gray-800 bg-white rounded-lg shadow">
         <div class="w-full flex items-center content-between justify-between">
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-out" />
@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="flex px-5 py-6 bg-white rounded-lg shadow">
+      <div class="flex px-5 py-6 dark:bg-gray-800 bg-white rounded-lg shadow">
         <div class="w-full flex items-center content-between justify-between">
           <div class="flex items-center select-none">
             <mdi-icon :size="36" color="#acb0bf" name="bank-transfer-in" />
@@ -58,7 +58,7 @@
       {{ $t("financialChangesVisualized") }}
     </span>
     <div
-      class="pt-12 pb-12 flex justify-center items-center space-x-10 bg-white rounded-lg shadow-md"
+      class="pt-12 pb-12 flex justify-center items-center space-x-10 dark:bg-gray-800 bg-white rounded-lg shadow-md"
     >
       <chart
         ref="dailySpendingGraph"
@@ -80,7 +80,7 @@
     <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
       {{ $t("recentTransactions") }}
     </span>
-    <div class="rounded-lg bg-white px-6 shadow-md">
+    <div class="rounded-lg dark:bg-gray-800 bg-white px-6 shadow-md">
       <div v-if="state.transactionsLoading" class="text-center my-16">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>

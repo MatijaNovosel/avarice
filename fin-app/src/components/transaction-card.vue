@@ -1,9 +1,9 @@
 <template>
   <div
     :class="{
-      'bg-gray-50': state.transfer
+      'dark:bg-gray-900 bg-gray-50': state.transfer
     }"
-    class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow border-gray-200 border"
+    class="relative select-none flex flex-col justify-center px-6 py-4 rounded-lg shadow dark:bg-gray-700 border-gray-200 border dark:border-0"
   >
     <mdi-icon
       v-if="state.transfer"
@@ -23,7 +23,7 @@
           )
         : state.date
     }}</span>
-    <span class="text-xl">{{
+    <span class="text-xl dark:text-white">{{
       `${
         state.show
           ? state.amount.toLocaleString("en")
@@ -36,8 +36,9 @@
         :key="i"
         :text-color="state.expense ? '#c52626' : '#428733'"
         :color="state.expense ? '#ff9494' : '#bedeb7'"
-        >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
       >
+        {{ $t(`tags.${TagEnum[tag]}`) }}
+      </tag>
     </div>
   </div>
 </template>
@@ -110,12 +111,12 @@ export default defineComponent({
 
     watch(
       () => props.show,
-      (val) => (state.show = val)
+      val => (state.show = val)
     );
 
     watch(
       () => props.tags,
-      (val) => (state.tags = val)
+      val => (state.tags = val)
     );
 
     return {
