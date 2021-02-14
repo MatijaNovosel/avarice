@@ -107,7 +107,7 @@
           :rowsPerPageOptions="state.transactionPageOption"
           :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
-          class="pb-5 mt-5"
+          class="pb-5 mt-5 dark:text-gray-400"
         />
       </template>
     </div>
