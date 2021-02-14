@@ -27,8 +27,9 @@
       </div>
     </div>
     <div class="flex items-center w-full justify-end select-none">
+      <dark-mode-switch />
       <mdi-icon
-        class="cursor-pointer mr-3"
+        class="cursor-pointer mx-3"
         name="bell-outline"
         color="#94a3b8"
       />
@@ -81,6 +82,7 @@ import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/services/interfaces/auth-service";
 import mdiIcon from "./mdi-icon.vue";
+import DarkModeSwitch from "./dark-mode-switch.vue";
 import TransactionDialog from "@/components/transaction-dialog.vue";
 import TransferDialog from "@/components/transfer-dialog.vue";
 import { RouteNames } from "@/constants/route-names";
@@ -105,7 +107,7 @@ interface State {
 }
 
 export default defineComponent({
-  components: { mdiIcon, TransactionDialog, TransferDialog },
+  components: { mdiIcon, TransactionDialog, TransferDialog, DarkModeSwitch },
   name: "navbar",
   setup() {
     const store = useStore();
