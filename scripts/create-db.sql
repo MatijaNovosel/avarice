@@ -31,14 +31,7 @@ CREATE TABLE `paymentsource` (
 
 CREATE TABLE `appsetting` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `checkingGraphColor` varchar(50) DEFAULT NULL,
-  `gyroGraphColor` varchar(50) DEFAULT NULL,
-  `pocketGraphColor` varchar(50) DEFAULT NULL,
-  `totalGraphColor` varchar(50) DEFAULT NULL,
-  `gyroGraphVisible` tinyint(1) DEFAULT NULL,
-  `checkingGraphVisible` tinyint(1) DEFAULT NULL,
-  `pocketGraphVisible` tinyint(1) DEFAULT NULL,
-  `totalGraphVisible` tinyint(1) DEFAULT NULL,
+  `darkMode` tinyint(1) DEFAULT NULL,
   `appUserId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
@@ -89,8 +82,8 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
 CREATE TRIGGER appUserAfterInsertTrigger AFTER INSERT ON appuser FOR EACH ROW 
 BEGIN
-  INSERT INTO appsetting (appUserId, checkingGraphColor, checkingGraphVisible, gyroGraphColor, gyroGraphVisible, pocketGraphColor, pocketGraphVisible, totalGraphColor, totalGraphVisible)
-  VALUES (NEW.id, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1, "#ffffff", 1);
+  INSERT INTO appsetting (appUserId, darkMode)
+  VALUES (NEW.id, 0);
 END $$ 
 DELIMITER;
 

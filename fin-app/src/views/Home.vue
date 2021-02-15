@@ -263,6 +263,22 @@ export default defineComponent({
       state.transactionsLoading = false;
     }
 
+    function reinitGraphs() {
+      const totalDataset = state.totalDataset as DatasetItem;
+
+      totalDataset.backgroundColor = hexToRgba(
+        adjustHexColor(
+          state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
+          30
+        ),
+        0.7
+      ) as string;
+      totalDataset.borderColor = state.darkMode ? "#59c262" : "#acb0bf";
+
+      dailySpendingGraph?.value?.reinit();
+      financialChangedVisualizedGraph?.value?.reinit();
+    }
+
     async function updateData() {
       state.loading = true;
 
@@ -332,9 +348,7 @@ export default defineComponent({
         ]
       };
 
-      dailySpendingGraph?.value?.reinit();
-      financialChangedVisualizedGraph?.value?.reinit();
-
+      reinitGraphs();
       state.loading = false;
     }
 
@@ -351,6 +365,11 @@ export default defineComponent({
       () => state.refresh,
       () => updateData(),
       { deep: true }
+    );
+
+    watch(
+      () => state.darkMode,
+      () => reinitGraphs()
     );
 
     const dailyChangesgraphOptions: GraphOptions = {

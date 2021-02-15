@@ -23,7 +23,7 @@ interface State {
 
 export default defineComponent({
   name: "dark-mode-switch",
-  emits: ["update:value"],
+  emits: ["update:value", "change"],
   props: {
     value: Boolean
   },
@@ -39,6 +39,7 @@ export default defineComponent({
 
     function switchChanged() {
       context.emit("update:value", state.value);
+      context.emit("change");
     }
 
     return {
@@ -67,7 +68,7 @@ $g: 1em;
     overflow: hidden;
     height: $d + 0.8em;
     border-radius: 2.2em;
-    background: hsl(199, 98%, calc(var(--j) * 48%));
+    background: hsl(199, 98%, calc(var(--j) * 41%));
     color: transparent;
     user-select: none;
     transition: 0.3s;

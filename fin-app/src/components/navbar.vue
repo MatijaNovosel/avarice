@@ -27,16 +27,14 @@
       </div>
     </div>
     <div class="flex items-center w-full justify-end select-none">
-      <dark-mode-switch v-model:value="state.darkModeSwitch" />
-      <mdi-icon
-        class="cursor-pointer mx-3"
-        name="bell-outline"
-        color="#94a3b8"
+      <dark-mode-switch
+        @change="toggleDarkMode"
+        v-model:value="state.darkModeSwitch"
       />
       <img
         ref="userMenuAnchor"
         id="userMenuAnchor"
-        class="inline-block h-8 w-8 rounded-full"
+        class="inline-block h-8 w-8 rounded-full ml-5"
         :src="state.user.photoURL"
         alt=""
       />
@@ -105,6 +103,7 @@ import { MenuItem } from "@/models/menu-item";
 import { AppUser } from "@/models/user";
 import { getOffset } from "@/helpers/helpers";
 import { useI18n } from "vue-i18n";
+import { debounce } from "@/helpers/helpers";
 
 interface MenuStyle {
   left: string;
@@ -201,12 +200,9 @@ export default defineComponent({
       state.menuStyle.left = `${left - sidebarWidth}px`;
     }
 
-    watch(
-      () => state.darkModeSwitch,
-      val => {
-        store.dispatch("setDarkMode", val);
-      }
-    );
+    const toggleDarkMode = debounce(() => {
+      store.dispatch("setDarkMode", state.darkModeSwitch);
+    }, 1000);
 
     onMounted(() => {
       state.darkModeSwitch = store.getters.darkMode;
@@ -218,7 +214,8 @@ export default defineComponent({
       state,
       openMenu,
       homeRoute,
-      userMenuAnchor
+      userMenuAnchor,
+      toggleDarkMode
     };
   }
 });
