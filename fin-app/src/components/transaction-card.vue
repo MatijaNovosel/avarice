@@ -23,14 +23,14 @@
           )
         : state.date
     }}</span>
-    <span class="text-xl dark:text-white">{{
+    <span class="dark:text-white mt-1">{{
       `${
         state.show
           ? state.amount.toLocaleString("en")
           : ("" + state.amount).replace(/[0-9]/gi, "*")
       } ${state.currency}`
     }}</span>
-    <div class="flex self-end space-x-2 mt-3">
+    <div class="flex self-end space-x-2 mt-3" v-if="state.showTags">
       <tag
         v-for="(tag, i) in state.tags"
         :key="i"
@@ -59,6 +59,7 @@ interface Props {
   show?: boolean;
   describeDate?: boolean;
   currency?: string;
+  showTags?: boolean;
 }
 
 interface State {
@@ -70,6 +71,7 @@ interface State {
   tags?: TagEnum[] | null;
   show?: boolean;
   describeDate?: boolean;
+  showTags?: boolean;
   currency?: string;
 }
 
@@ -78,6 +80,10 @@ export default defineComponent({
   name: "transaction-card",
   props: {
     describeDate: {
+      type: Boolean,
+      default: false
+    },
+    showTags: {
       type: Boolean,
       default: false
     },
@@ -104,15 +110,12 @@ export default defineComponent({
       tags: props.tags,
       expense: props.expense,
       transfer: props.transfer,
-      show: props.show,
-      describeDate: props.describeDate,
-      currency: props.currency
+      show: props.show !== undefined ? props.show : false,
+      describeDate:
+        props.describeDate !== undefined ? props.describeDate : false,
+      currency: props.currency,
+      showTags: props.showTags !== undefined ? props.showTags : false
     });
-
-    watch(
-      () => props.show,
-      val => (state.show = val)
-    );
 
     watch(
       () => props.tags,

@@ -5,7 +5,7 @@
       :key="paymentSource.id"
     >
       <div
-        class="flex px-5 py-3 bg-white rounded-lg border border-gray-200 shadow cursor-pointer"
+        class="flex px-5 py-3 dark:bg-gray-700 bg-white rounded-lg border dark:border-0 border-gray-200 shadow cursor-pointer"
       >
         <div class="w-full flex items-center content-between justify-between">
           <div class="flex items-center">

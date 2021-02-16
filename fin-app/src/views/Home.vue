@@ -91,13 +91,13 @@
             :key="change.id"
             :expense="change.expense"
             :title="change.description"
-            :show="false"
             :amount="change.amount"
             :tags="change.tagIds"
             :date="change.createdAt"
             :transfer="change.transfer"
-            :describeDate="true"
             :currency="state.user.preferredCurrency"
+            describe-date
+            show
           />
         </div>
         <paginator
