@@ -29,7 +29,7 @@
       <account-select v-model:selection="model.accountToId.$model" />
     </div>
     <template #footer>
-      <progress-spinner class="spinner" strokeWidth="10" v-if="state.saving" />
+      <progress-spinner class="h-8 w-8" strokeWidth="10" v-if="state.saving" />
       <button
         v-ripple
         v-else
@@ -160,12 +160,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="sass">
-.expense-input
-  width: 100%
-
-.spinner
-  width: 25px
-  height: 25px
-</style>

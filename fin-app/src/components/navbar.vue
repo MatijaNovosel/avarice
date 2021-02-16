@@ -87,7 +87,6 @@ import {
   computed,
   Ref,
   ref,
-  watch,
   onMounted
 } from "vue";
 import { useStore } from "vuex";

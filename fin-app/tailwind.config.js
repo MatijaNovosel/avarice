@@ -29,11 +29,12 @@ module.exports = {
     extend: {
       borderRadius: ['first', 'last'],
       opacity: ['disabled'],
+      outline: ['hover', 'active', 'focus', 'dark'],
       backgroundColor: [
         "disabled"
       ],
       borderWidth: ['hover', 'focus', 'dark'],
     },
   },
-  plugins: [],
+  plugins: []
 }

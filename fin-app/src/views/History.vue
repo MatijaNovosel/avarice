@@ -16,16 +16,13 @@
         v-if="state.loading"
       />
       <div class="px-5 pt-5 space-y-5" v-else>
-        <span class="p-float-label w-full">
-          <input-text
-            class="rounded-lg"
-            v-model="state.search.description"
-            @input="search"
-            name="description"
-            id="description"
-          />
-          <label for="description">Description</label>
-        </span>
+        <input
+          type="text"
+          placeholder="Description"
+          @input="search"
+          v-model="state.search.description"
+          class="w-full px-4 py-2 text-base dark:text-gray-400 text-black transition duration-500 ease-in-out transform dark:bg-gray-900 bg-gray-200 rounded-lg focus:outline-none"
+        />
         <span class="p-float-label">
           <calendar
             dateFormat="dd.mm.yy"
@@ -130,7 +127,7 @@
           <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
           <div
             v-if="!state.loading && state.totalTransactions == 0"
-            class="py-5 text-center w-full bg-white border-t border-b border-gray-200"
+            class="py-5 text-center w-full dark:bg-gray-800 bg-white border-t dark:text-gray-400 border-b dark:border-gray-900 border-gray-200"
           >
             {{ $t("noItemsFound") }}
           </div>
