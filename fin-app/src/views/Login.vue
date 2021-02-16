@@ -11,12 +11,10 @@
       class="flex items-center justify-center w-full h-screen px-6 bg-white md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 lg:px-16 xl:px-12"
     >
       <div class="w-full h-100">
-        <h1
-          class="mt-12 text-2xl font-semibold text-black tracking-ringtighter sm:text-3xl title-font mb-5"
-        >
-          Log in to your account
-        </h1>
-        <div>
+        <span class="text-5xl proxima-bold font-bold gradient-text">
+          FinApp
+        </span>
+        <div class="mt-3">
           <label
             class="block text-sm font-medium leading-relaxed tracking-tighter text-gray-700"
           >
