@@ -21,7 +21,7 @@
           placeholder="Description"
           @input="search"
           v-model="state.search.description"
-          class="w-full px-4 py-2 text-base dark:text-gray-400 text-black transition duration-500 ease-in-out transform dark:bg-gray-900 bg-gray-200 rounded-lg focus:outline-none"
+          class="w-full px-4 py-2 text-base dark:text-gray-400 text-black transition duration-500 ease-in-out transform dark:bg-gray-900 bg-gray-100 rounded-lg focus:outline-none"
         />
         <span class="p-float-label">
           <calendar
