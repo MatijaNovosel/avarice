@@ -36,7 +36,7 @@
       </span>
       <account-select v-model:selection="model.paymentSourceId.$model" />
       <div
-        class="flex flex-col rounded-lg shadow-md border border-gray-200 bg-white items-center"
+        class="flex flex-col rounded-xl shadow-md border dark:border-0 border-gray-200 bg-white items-center"
       >
         <list-box
           :multiple="true"
