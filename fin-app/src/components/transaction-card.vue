@@ -23,13 +23,20 @@
           )
         : state.date
     }}</span>
-    <span class="dark:text-white mt-1">{{
-      `${
-        state.show
-          ? state.amount.toLocaleString("en")
-          : ("" + state.amount).replace(/[0-9]/gi, "*")
-      } ${state.currency}`
-    }}</span>
+    <span
+      :class="{
+        'text-green-500': !state.expense,
+        'text-red-400': state.expense
+      }"
+      class="mt-1"
+      >{{
+        `${
+          state.show
+            ? state.amount.toLocaleString("en")
+            : ("" + state.amount).replace(/[0-9]/gi, "*")
+        } ${state.currency}`
+      }}</span
+    >
     <div class="flex self-end space-x-2 mt-3" v-if="state.showTags">
       <tag
         v-for="(tag, i) in state.tags"
