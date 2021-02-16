@@ -80,12 +80,12 @@
     <span class="mb-3 my-5 text-xl font-semibold text-gray-400 select-none">
       {{ $t("recentTransactions") }}
     </span>
-    <div class="rounded-lg dark:bg-gray-800 bg-white px-6 shadow-md">
+    <div class="rounded-lg dark:bg-gray-800 bg-white shadow-md">
       <div v-if="state.transactionsLoading" class="text-center my-16">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5">
+        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5 px-5">
           <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
@@ -107,7 +107,7 @@
           :rowsPerPageOptions="state.transactionPageOption"
           :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
-          class="pb-5 mt-5 dark:text-gray-400"
+          class="pb-5 mt-5 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 pt-5"
         />
       </template>
     </div>
