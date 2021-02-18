@@ -211,7 +211,7 @@ export default defineComponent({
       graphOptions: {
         title: {
           display: true,
-          text: t("totalAccountBalance")
+          text: `${t("totalAccountBalance")} (Last 30 days)`
         },
         legend: {
           display: false
