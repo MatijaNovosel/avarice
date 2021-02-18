@@ -97,7 +97,6 @@
             :transfer="change.transfer"
             :currency="state.user.preferredCurrency"
             describe-date
-            show
           />
         </div>
         <paginator
@@ -180,12 +179,12 @@ export default defineComponent({
     MdiIcon
   },
   setup() {
-    const user = useStore();
+    const store = useStore();
     const { t } = useI18n();
 
     const state: State = reactive({
-      user: computed(() => user.getters.user),
-      darkMode: computed(() => user.getters.darkMode),
+      user: computed(() => store.getters.user),
+      darkMode: computed(() => store.getters.darkMode),
       transactionPageOption: [10, 15],
       recentDepositsAndWithdrawals: {
         withdrawals: 0,

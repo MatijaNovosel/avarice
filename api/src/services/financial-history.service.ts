@@ -23,11 +23,14 @@ export class FinancialHistoryService {
   ): Promise<GFinancialHistory[]> {
     const historyItems: GFinancialHistory[] = [];
 
+    let filterString = "";
+    if (from && to) {
+      filterString = `financialhistory.createdAt >= '${from}' AND financialhistory.createdAt <= '${to}'`;
+    }
+
     const res = await createQueryBuilder("financialhistory")
       .select("financialhistory.createdAt")
-      .where(
-        `financialhistory.createdAt >= '${from}' AND financialhistory.createdAt <= '${to}'`
-      )
+      .where(filterString)
       .groupBy("financialhistory.createdAt")
       .orderBy("financialHistory.createdAt", "ASC")
       .getRawMany();

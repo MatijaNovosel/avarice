@@ -245,8 +245,8 @@ export class ChangeService implements ITransactionService {
 
   async getTotal(
     appUserId: number,
-    from: Date,
-    to: Date
+    from: Date | null = null,
+    to: Date | null = null
   ): Promise<FinancialHistory[]> {
     const query = formatGqlRequest({
       type: "query",
@@ -258,18 +258,18 @@ export class ChangeService implements ITransactionService {
         },
         {
           name: "from",
-          value: format(from, "yyyy-MM-dd HH:mm:ss"),
-          quoted: true
+          value: from && format(from, "yyyy-MM-dd HH:mm:ss"),
+          quoted: !!from
         },
         {
           name: "to",
-          value: format(to, "yyyy-MM-dd HH:mm:ss"),
-          quoted: true
+          value: to && format(to, "yyyy-MM-dd HH:mm:ss"),
+          quoted: !!to
         }
       ],
       responseParams: ["createdAt", "total"]
     });
-
+    
     const {
       data: {
         data: { financialHistory }

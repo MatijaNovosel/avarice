@@ -34,8 +34,8 @@ export interface ITransactionService {
   ): Promise<FinancialHistory[]>;
   getTotal(
     appUserId: number,
-    from: Date,
-    to: Date
+    from?: Date | null,
+    to?: Date | null
   ): Promise<FinancialHistory[]>;
   getDailyChanges(appUserId: number): Promise<DailyChange[]>;
 }

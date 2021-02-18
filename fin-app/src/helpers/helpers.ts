@@ -212,7 +212,9 @@ interface GqlRequest {
 export function formatRequestParam(param: GqlRequestParam): string {
   if (!param.subFields) {
     return `${param.name}: ${
-      param.quoted !== undefined ? `"${param.value}"` : param.value
+      param.quoted !== undefined && param.quoted == true
+        ? `"${param.value}"`
+        : param.value
     }`;
   } else {
     return `${param.name}: { ${param?.subFields?.map(x =>

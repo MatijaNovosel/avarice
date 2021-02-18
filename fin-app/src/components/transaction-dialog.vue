@@ -54,7 +54,7 @@
         </list-box>
       </div>
       <span class="flex justify-center items-center">
-        <span class="dark:text-gray-400"> Expense </span>
+        <span class="dark:text-gray-400 text-black"> Expense </span>
         <input-switch
           class="ml-4"
           id="expense"

@@ -102,7 +102,7 @@ export default defineComponent({
     transfer: Boolean,
     show: {
       type: Boolean,
-      default: true
+      default: false
     },
     currency: {
       type: String,
