@@ -85,7 +85,9 @@
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5 px-5">
+        <div
+          class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5 px-5"
+        >
           <transaction-card
             v-for="change in state.transactions"
             :key="change.id"
@@ -331,7 +333,7 @@ export default defineComponent({
               0.7
             ) as string,
             fill: true,
-            data: dailyChanges.reverse().map(x => x.withdrawals)
+            data: dailyChanges.map(x => x.withdrawals)
           },
           {
             type: "bar",
@@ -342,7 +344,7 @@ export default defineComponent({
               0.7
             ) as string,
             fill: true,
-            data: dailyChanges.reverse().map(x => x.deposits)
+            data: dailyChanges.map(x => x.deposits)
           }
         ]
       };
