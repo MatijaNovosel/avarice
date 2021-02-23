@@ -1,12 +1,5 @@
 <template>
   <section class="flex flex-col items-center h-screen md:flex-row ">
-    <div class="hidden w-full h-screen bg-white lg:block md:w-1/3 lg:w-2/3">
-      <img
-        src="https://www.thebalance.com/thmb/JyaUrq-ucrDj1ZQmz_lMZj5V0jY=/3870x2575/filters:fill(auto,1)/Financial-Ratio-Categories-56a091f03df78cafdaa2d0d5.jpg"
-        alt=""
-        class="object-cover w-full h-full"
-      />
-    </div>
     <div
       class="flex items-center justify-center w-full h-screen px-6 bg-white md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 lg:px-16 xl:px-12"
     >
@@ -125,6 +118,13 @@
           </a>
         </p>
       </div>
+    </div>
+    <div class="hidden w-full h-screen bg-white lg:block md:w-1/3 lg:w-2/3">
+      <img
+        src="https://www.thebalance.com/thmb/JyaUrq-ucrDj1ZQmz_lMZj5V0jY=/3870x2575/filters:fill(auto,1)/Financial-Ratio-Categories-56a091f03df78cafdaa2d0d5.jpg"
+        alt=""
+        class="object-cover w-full h-full"
+      />
     </div>
   </section>
 </template>
