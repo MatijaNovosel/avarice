@@ -9,31 +9,26 @@
       <span class="text-lg text-gray-400 font-bold">New transaction</span>
     </template>
     <div class="flex flex-col grid gap-4 mt-5">
-      <span class="p-float-label">
-        <input-number
-          locale="hr-HR"
-          mode="currency"
-          currency="HRK"
-          id="amount"
-          :class="{
-            'p-invalid': model.amount.$invalid
-          }"
-          v-model="model.amount.$model"
-          class="w-full"
-        />
-        <label class="text-gray-400" for="amount"> Amount </label>
-      </span>
-      <span class="p-float-label">
-        <text-area
-          class="w-full"
-          :class="{
-            'p-invalid': model.description.$invalid
-          }"
-          v-model="model.description.$model"
-          id="description"
-        />
-        <label class="text-gray-400" for="description"> Description </label>
-      </span>
+      <input-number
+        locale="hr-HR"
+        mode="currency"
+        currency="HRK"
+        id="amount"
+        :class="{
+          'p-invalid': model.amount.$invalid
+        }"
+        v-model="model.amount.$model"
+        class="w-full"
+      />
+      <text-area
+        placeholder="Description"
+        class="w-full"
+        :class="{
+          'p-invalid': model.description.$invalid
+        }"
+        v-model="model.description.$model"
+        id="description"
+      />
       <account-select v-model:selection="model.paymentSourceId.$model" />
       <div
         class="flex flex-col rounded-xl shadow-md border dark:border-0 border-gray-200 bg-white items-center"

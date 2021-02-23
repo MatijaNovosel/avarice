@@ -23,17 +23,15 @@
           v-model="state.search.description"
           class="w-full px-4 py-2 text-base dark:text-gray-400 text-black transition duration-500 ease-in-out transform dark:bg-gray-900 bg-gray-100 rounded-lg focus:outline-none"
         />
-        <span class="p-float-label">
-          <calendar
-            dateFormat="dd.mm.yy"
-            class="w-full"
-            v-model="state.dateRange"
-            selectionMode="range"
-            :manualInput="false"
-          />
-          <label for="description">Date range</label>
-        </span>
-        <div class="flex flex-col pt-3 pb-5 lg:pb-0">
+        <calendar
+          dateFormat="dd.mm.yy"
+          class="w-full"
+          v-model="state.dateRange"
+          placeholder="Time period"
+          selectionMode="range"
+          :manualInput="false"
+        />
+        <div class="flex flex-col px-5 pt-5 pb-3 dark:bg-gray-900 bg-gray-100 rounded-lg">
           <slider
             class="mx-3"
             :max="state.transactionAmountRange.max"
@@ -41,7 +39,7 @@
             :range="true"
             v-model="state.sliderRange"
           />
-          <div class="flex justify-between mt-3 dark:text-white">
+          <div class="flex justify-between mt-4 dark:text-gray-400">
             <span>{{ state.sliderRange[0] }} HRK</span>
             <span>{{ state.sliderRange[1] }} HRK</span>
           </div>

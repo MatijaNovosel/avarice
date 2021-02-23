@@ -183,6 +183,10 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const { t } = useI18n();
+    const financialChangedVisualizedGraph: Ref<GraphHTMLElement | null> = ref(
+      null
+    );
+    const dailySpendingGraph: Ref<GraphHTMLElement | null> = ref(null);
 
     const state: State = reactive({
       user: computed(() => store.getters.user),
@@ -245,11 +249,6 @@ export default defineComponent({
       graphData: null,
       graphDataDailyChanges: null
     });
-
-    const financialChangedVisualizedGraph: Ref<GraphHTMLElement | null> = ref(
-      null
-    );
-    const dailySpendingGraph: Ref<GraphHTMLElement | null> = ref(null);
 
     async function getTransactions(skip?: number, take?: number) {
       state.transactionsLoading = true;
@@ -349,7 +348,6 @@ export default defineComponent({
         ]
       };
 
-      reinitGraphs();
       state.loading = false;
     }
 
@@ -364,7 +362,10 @@ export default defineComponent({
 
     watch(
       () => state.refresh,
-      () => updateData(),
+      () => {
+        updateData();
+        reinitGraphs();
+      },
       { deep: true }
     );
 

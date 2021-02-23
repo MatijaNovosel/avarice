@@ -9,20 +9,17 @@
       <span class="text-lg text-gray-400 font-bold">New transfer</span>
     </template>
     <div class="flex flex-col grid gap-4 mt-5">
-      <span class="p-float-label">
-        <input-number
-          locale="hr-HR"
-          mode="currency"
-          currency="HRK"
-          id="amount"
-          :class="{
-            'p-invalid': model.amount.$invalid
-          }"
-          v-model="model.amount.$model"
-          class="w-full"
-        />
-        <label class="text-gray-400" for="amount"> Amount </label>
-      </span>
+      <input-number
+        locale="hr-HR"
+        mode="currency"
+        currency="HRK"
+        id="amount"
+        :class="{
+          'p-invalid': model.amount.$invalid
+        }"
+        v-model="model.amount.$model"
+        class="w-full"
+      />
       <span class="text-lg text-gray-500">Account from</span>
       <account-select v-model:selection="model.accountFromId.$model" />
       <span class="text-lg text-gray-500">Account to</span>

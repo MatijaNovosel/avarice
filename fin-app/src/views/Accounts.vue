@@ -32,6 +32,7 @@
       </div>
       <chart
         v-else
+        ref="totalAccountBalanceChart"
         type="line"
         :data="state.graphDataTotal"
         :options="state.graphOptionsTotal"
@@ -59,6 +60,7 @@
           </span>
         </div>
         <chart
+          ref="spendingChart"
           class="ml-5"
           type="doughnut"
           :data="state.graphData"
@@ -77,7 +79,9 @@ import {
   onMounted,
   computed,
   inject,
-  watch
+  watch,
+  ref,
+  Ref
 } from "vue";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
 import {
@@ -87,7 +91,7 @@ import {
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
-import { GraphOptions } from "@/models/graph";
+import { GraphHTMLElement, GraphOptions } from "@/models/graph";
 import { adjustHexColor, hexToRgba } from "@/helpers/helpers";
 import { AppUser } from "@/models/user";
 import { useStore } from "vuex";
@@ -122,6 +126,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const { t } = useI18n();
+    const totalAccountBalanceChart: Ref<GraphHTMLElement | null> = ref(null);
+    const spendingChart: Ref<GraphHTMLElement | null> = ref(null);
 
     const state: State = reactive({
       refresh: inject("refresh") as RefreshController,
@@ -189,6 +195,22 @@ export default defineComponent({
       }
     });
 
+    function reinitGraphs() {
+      const totalDataset = state.totalDataset as DatasetItem;
+
+      totalDataset.backgroundColor = hexToRgba(
+        adjustHexColor(
+          state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
+          30
+        ),
+        0.7
+      ) as string;
+      totalDataset.borderColor = state.darkMode ? "#59c262" : "#acb0bf";
+
+      totalAccountBalanceChart?.value?.reinit();
+      spendingChart?.value?.reinit();
+    }
+
     async function updateData() {
       state.loading = true;
 
@@ -255,15 +277,19 @@ export default defineComponent({
       updateData();
     });
 
-    // TODO: Refresh graphs!
     watch(
       () => state.refresh,
-      () => updateData(),
+      () => {
+        updateData();
+        reinitGraphs();
+      },
       { deep: true }
     );
 
     return {
-      state
+      state,
+      totalAccountBalanceChart,
+      spendingChart
     };
   }
 });
