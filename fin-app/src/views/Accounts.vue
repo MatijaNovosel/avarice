@@ -286,6 +286,11 @@ export default defineComponent({
       { deep: true }
     );
 
+    watch(
+      () => state.darkMode,
+      () => reinitGraphs()
+    );
+
     return {
       state,
       totalAccountBalanceChart,
