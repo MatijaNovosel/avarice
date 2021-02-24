@@ -3,7 +3,7 @@
   <div class="grid grid-cols-12 h-screen" :class="{ dark: state.darkMode }">
     <div
       id="sidebar"
-      class="col-span-2 bg-gray-500 dark:bg-gray-700 space-y-2"
+      class="col-span-2 bg-gray-500 dark:bg-gray-700 space-y-2 hidden lg:block"
       v-if="state.shouldDisplayNavigation"
     >
       <sidebar :items="state.sidebarItems" />
@@ -11,7 +11,7 @@
     <div
       class="relative dark:bg-gray-900 bg-gray-100"
       :class="{
-        'col-span-10': state.shouldDisplayNavigation,
+        'col-span-12 lg:col-span-10': state.shouldDisplayNavigation,
         'col-span-12': !state.shouldDisplayNavigation
       }"
     >

@@ -1,9 +1,9 @@
 <template>
   <div
-    class="px-6 grid grid-cols-12 space-x-0 lg:space-x-5 space-y-4 lg:space-y-0"
+    class="px-6 grid grid-cols-12 space-x-0 lg:space-x-5 space-y-4 lg:space-y-0 pb-6"
   >
     <div
-      class="col-span-12 lg:col-span-3 rounded-lg dark:bg-gray-800 bg-white border dark:border-0 border-gray-300 text-center"
+      class="col-span-12 lg:col-span-3 rounded-lg dark:bg-gray-800 bg-white border dark:border-0 border-gray-300 text-center lg:h-72 pb-6"
     >
       <div
         class="w-full dark:bg-gray-700 bg-gray-100 rounded-t-lg py-2 border-b dark:border-0 border-gray-300 flex items-center justify-center relative"
@@ -221,8 +221,8 @@ export default defineComponent({
       loading: false,
       totalTransactions: 0,
       numberOfPages: 5,
-      numberOfRows: 10,
-      pageOptions: [10, 15],
+      numberOfRows: 20,
+      pageOptions: [20, 30],
       currentPage: 0,
       transactionsOffset: 0,
       search: {

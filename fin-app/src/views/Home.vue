@@ -18,8 +18,8 @@
         :title="state.total.description"
         color="#acb0bf"
         :amount="state.total.currentAmount"
-        :amount-visible="false"
         :currency="state.user.preferredCurrency"
+        amount-visible
       />
       <div class="flex px-5 py-6 dark:bg-gray-800 bg-white rounded-lg shadow">
         <div class="w-full flex items-center content-between justify-between">
@@ -86,7 +86,7 @@
       </div>
       <template v-else>
         <div
-          class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mt-5 px-5"
+          class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 my-10 px-5"
         >
           <transaction-card
             v-for="change in state.transactions"
@@ -99,6 +99,7 @@
             :transfer="change.transfer"
             :currency="state.user.preferredCurrency"
             describe-date
+            show
           />
         </div>
         <paginator
@@ -108,7 +109,7 @@
           :rowsPerPageOptions="state.transactionPageOption"
           :pageLinkSize="state.transactionsNumberOfPages"
           @page="pageChanged"
-          class="py-3 mt-5 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 dark:bg-gray-700 bg-gray-100 rounded-b-xl"
+          class="py-3 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 dark:bg-gray-700 bg-gray-100 rounded-b-xl"
         />
       </template>
     </div>

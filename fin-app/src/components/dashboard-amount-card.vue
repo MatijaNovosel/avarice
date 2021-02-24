@@ -79,7 +79,7 @@ export default defineComponent({
       color: props.color,
       loading: props.loading,
       noEnabling: props.noEnabling,
-      amountVisible: props.amountVisible,
+      amountVisible: props.amountVisible !== undefined ? props.amountVisible : false,
       currency: props.currency,
       formattedCurrencyDisplay: computed(() =>
         formatCurrencyDisplay(
