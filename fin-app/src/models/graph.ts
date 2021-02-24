@@ -3,7 +3,7 @@ interface GraphLegendOptions {
 }
 
 interface GraphAxesScaleLabelOptions {
-  display?: true;
+  display?: boolean;
   labelString?: string;
 }
 
