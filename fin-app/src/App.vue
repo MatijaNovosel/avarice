@@ -4,19 +4,19 @@
     <div
       id="sidebar"
       class="col-span-2 bg-gray-500 dark:bg-gray-700 space-y-2"
-      v-if="state.isAuthenticated"
+      v-if="state.shouldDisplayNavigation"
     >
       <sidebar :items="state.sidebarItems" />
     </div>
     <div
       class="relative dark:bg-gray-900 bg-gray-100"
       :class="{
-        'col-span-10': state.isAuthenticated,
-        'col-span-12': !state.isAuthenticated
+        'col-span-10': state.shouldDisplayNavigation,
+        'col-span-12': !state.shouldDisplayNavigation
       }"
     >
-      <navbar v-if="state.isAuthenticated" />
-      <router-view :class="{ 'mt-6': state.isAuthenticated }" />
+      <navbar v-if="state.shouldDisplayNavigation" />
+      <router-view :class="{ 'mt-6': state.shouldDisplayNavigation }" />
     </div>
   </div>
 </template>
@@ -29,12 +29,13 @@ import { RouteNames } from "@/constants/route-names";
 import navbar from "@/components/navbar.vue";
 import sidebar from "@/components/sidebar.vue";
 import refresh from "@/helpers/refresh";
+import { useRoute } from "vue-router";
 
 interface State {
   visible: boolean;
   sidebarItems: SidebarItem[];
-  isAuthenticated: boolean;
   darkMode: boolean;
+  shouldDisplayNavigation: boolean;
 }
 
 export default defineComponent({
@@ -47,10 +48,14 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const route = useRoute();
+    const nonDisplayableRouteNames = [RouteNames.LOGIN, RouteNames.NOT_FOUND];
 
     const state: State = reactive({
       visible: false,
-      isAuthenticated: computed(() => store.getters.isAuthenticated),
+      shouldDisplayNavigation: computed(() => {
+        return !nonDisplayableRouteNames.includes(route.name as string);
+      }),
       darkMode: computed(() => store.getters.darkMode),
       sidebarItems: [
         {
@@ -86,7 +91,8 @@ export default defineComponent({
 
     return {
       state,
-      store
+      store,
+      nonDisplayableRouteNames
     };
   }
 });

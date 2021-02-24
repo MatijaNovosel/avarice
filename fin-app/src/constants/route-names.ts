@@ -6,4 +6,5 @@ export class RouteNames {
   static readonly HISTORY = "history";
   static readonly SETTINGS = "settings";
   static readonly PRIVACY = "privacy";
+  static readonly NOT_FOUND = "notFound";
 }

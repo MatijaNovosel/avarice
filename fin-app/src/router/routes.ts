@@ -56,5 +56,10 @@ export default [
     meta: {
       auth: true
     }
+  },
+  {
+    path: "/:pathMatch(.*)",
+    name: RouteNames.NOT_FOUND,
+    component: () => import("../views/NotFound.vue")
   }
 ];
