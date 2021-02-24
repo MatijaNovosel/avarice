@@ -4,10 +4,7 @@ export default [
   {
     path: "/login",
     name: RouteNames.LOGIN,
-    component: () => import("../views/Login.vue"),
-    meta: {
-      auth: false
-    }
+    component: () => import("../views/Login.vue")
   },
   {
     path: "/",
@@ -53,6 +50,14 @@ export default [
     path: "/history",
     name: RouteNames.HISTORY,
     component: () => import("../views/History.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: "/start",
+    name: RouteNames.START,
+    component: () => import("../views/Start.vue"),
     meta: {
       auth: true
     }

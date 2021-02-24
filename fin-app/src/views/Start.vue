@@ -5,17 +5,20 @@
     >
       <div class="w-max">
         <div class="text-5xl dark:text-gray-400 font-bold">Welcome</div>
+        <p class="text-2xl md:text-3xl font-light leading-normal mt-2">
+          To start using the application,
+        </p>
         <p class="text-2xl md:text-3xl font-light leading-normal">
-          To start using the application, you will need to add at least one
-          financial account.
+          you will need at least one financial account.
         </p>
         <button
-          class="px-4 mt-5 inline py-2 text-sm font-medium leading-5 shadow text-white dark:text-gray-400 transition-colors duration-150 dark:border-0 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 dark:bg-gray-700 active:bg-blue-600 hover:bg-blue-700 dark:hover:bg-gray-800"
+          v-ripple
+          class="p-ripple px-4 mt-5 inline py-2 text-sm font-medium leading-5 shadow text-white dark:text-gray-400 transition-colors duration-150 dark:border-0 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 dark:bg-gray-700 active:bg-blue-600 hover:bg-blue-700 dark:hover:bg-gray-800"
         >
-          Create account
+          Create financial account
         </button>
       </div>
-      <div class="max-w-lg ml-5">
+      <div class="max-w-lg ml-7">
         <img src="/notFoundCat.svg" alt="" />
       </div>
     </div>

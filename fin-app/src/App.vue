@@ -49,7 +49,11 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const nonDisplayableRouteNames = [RouteNames.LOGIN, RouteNames.NOT_FOUND];
+    const nonDisplayableRouteNames = [
+      RouteNames.LOGIN,
+      RouteNames.NOT_FOUND,
+      RouteNames.START
+    ];
 
     const state: State = reactive({
       visible: false,
