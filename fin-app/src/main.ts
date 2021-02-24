@@ -28,6 +28,7 @@ import ProgressBar from "primevue/progressbar";
 import Skeleton from "primevue/skeleton";
 import Menu from "primevue/menu";
 import Slider from "primevue/slider";
+import Steps from 'primevue/steps';
 
 // Custom component import
 import Tag from "@/components/tag.vue";
@@ -87,6 +88,7 @@ app.component("progress-bar", ProgressBar);
 app.component("skeleton", Skeleton);
 app.component("p-menu", Menu);
 app.component("slider", Slider);
+app.component("steps", Steps);
 
 // Directives
 app.directive("tooltip", Tooltip);
