@@ -9,12 +9,18 @@
         class="w-full dark:bg-gray-700 bg-gray-100 rounded-t-lg py-2 border-b dark:border-0 border-gray-300 flex items-center justify-center relative"
       >
         <span class="text-gray-400 uppercase tracking-wider">Filters</span>
-        <mdi-icon class="cursor-pointer absolute top-2 right-5" :size="15" name="export" v-tooltip.bottom="'Export'" />
+        <mdi-icon
+          class="cursor-pointer absolute top-2 right-5"
+          :size="15"
+          name="export"
+          v-tooltip.bottom="'Export'"
+          :color="state.darkMode ? '#ffffff' : '#000000'"
+        />
       </div>
       <progress-spinner
         class="w-10 h-10 mt-5"
         strokeWidth="10"
-        v-if="state.loading"
+        v-if="state.optionsLoading"
       />
       <div class="px-5 pt-5 space-y-5" v-else>
         <input
@@ -140,7 +146,7 @@
           :rowsPerPageOptions="state.pageOptions"
           :pageLinkSize="state.numberOfPages"
           @page="pageChanged"
-          class="pb-2 dark:bg-gray-700 bg-gray-200 rounded-b-lg border-gray-300 dark:border-0 dark:text-gray-300 border-b border-l border-r"
+          class="pb-2 dark:bg-gray-700 bg-gray-100 rounded-b-lg border-gray-300 dark:border-0 dark:text-gray-300 border-b border-l border-r"
         />
       </div>
     </div>
@@ -154,7 +160,14 @@ import {
   TransactionAmountRange
 } from "@/models/change-item";
 import { ITransactionService } from "@/services/interfaces/transaction-service";
-import { defineComponent, onMounted, reactive, inject, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  inject,
+  watch,
+  computed
+} from "vue";
 import { formatDistance, parse } from "date-fns";
 import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
@@ -162,6 +175,7 @@ import { TagEnum } from "@/constants/tag-enum";
 import { debounce } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
 import MDIIcon from "@/components/mdi-icon.vue";
+import { useStore } from "vuex";
 
 interface Search {
   description: string;
@@ -170,6 +184,8 @@ interface Search {
 interface State {
   transactions: FinancialChangeItem[];
   loading: boolean;
+  optionsLoading: boolean;
+  darkMode: boolean;
   totalTransactions: number;
   numberOfPages: number;
   numberOfRows: number;
@@ -189,7 +205,11 @@ export default defineComponent({
     "mdi-icon": MDIIcon
   },
   setup() {
+    const store = useStore();
+
     const state: State = reactive({
+      optionsLoading: false,
+      darkMode: computed(() => store.getters.darkMode),
       refresh: inject("refresh") as RefreshController,
       dateRange: null,
       transactionAmountRange: {
@@ -259,8 +279,8 @@ export default defineComponent({
       getTransactions();
     };
 
-    async function updateData() {
-      getTransactions();
+    async function getSliderRange() {
+      state.optionsLoading = true;
       state.transactionAmountRange = await getService<ITransactionService>(
         Types.ChangeService
       ).getTransactionAmountRange(1);
@@ -268,6 +288,12 @@ export default defineComponent({
         state.transactionAmountRange.min as number,
         state.transactionAmountRange.max as number
       ];
+      state.optionsLoading = false;
+    }
+
+    async function updateData() {
+      getTransactions();
+      getSliderRange();
     }
 
     onMounted(() => {
@@ -293,7 +319,8 @@ export default defineComponent({
       headers,
       pageChanged,
       TagEnum,
-      search
+      search,
+      getSliderRange
     };
   }
 });

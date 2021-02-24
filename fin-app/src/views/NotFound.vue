@@ -10,7 +10,7 @@
         </p>
         <button
           @click="backToHomePage"
-          class="px-4 mt-5 inline py-2 text-sm font-medium leading-5 shadow text-white dark:text-gray-400 transition-colors duration-150 dark:border-0 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 dark:bg-gray-800 active:bg-blue-600 hover:bg-blue-700 dark:hover:bg-gray-900"
+          class="px-4 mt-5 inline py-2 text-sm font-medium leading-5 shadow text-white dark:text-gray-400 transition-colors duration-150 dark:border-0 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 dark:bg-gray-700 active:bg-blue-600 hover:bg-blue-700 dark:hover:bg-gray-800"
         >
           Back to homepage
         </button>

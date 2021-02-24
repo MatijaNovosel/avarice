@@ -15,6 +15,7 @@ CREATE TABLE `appuser` (
   `photoURL` varchar(255) DEFAULT NULL,
   `displayName` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `emailConfirmed` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -29,13 +30,22 @@ CREATE TABLE `paymentsource` (
   CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `locale` (
+	`id` int NOT NULL AUTO_INCREMENT,
+  `text` varchar(50) NOT NULL,
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `appsetting` (
   `id` int NOT NULL AUTO_INCREMENT,
   `darkMode` tinyint(1) DEFAULT NULL,
+  `localeId` int DEFAULT NULL,
+  `preferredCurrency` varchar(50) NOT NULL DEFAULT 'HRK',
+  `dateFormat` varchar(50) NOT NULL DEFAULT 'dd.MM.yyyy. HH:mm',
   `appUserId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
-  CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
+  CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
+  CONSTRAINT `appsetting_ibfk_2` FOREIGN KEY (`localeId`) REFERENCES `locale` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `financialchange` (
@@ -128,7 +138,8 @@ BEGIN
 	DECLARE tId INT DEFAULT 0;
 	DECLARE tDescription VARCHAR(255) DEFAULT "";
 	DECLARE finished BOOL DEFAULT FALSE;
-
+	DECLARE transferTagId INT DEFAULT 0;
+	
 	DECLARE curTags CURSOR FOR SELECT id, `description` FROM tag;
 	
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = TRUE;
@@ -141,12 +152,16 @@ BEGIN
 		percentage DECIMAL(5, 5)
 	);
 	
+	SET transferTagId = (SELECT id FROM tag WHERE `description` LIKE 'Transfer');
+	
 	OPEN curTags;
 	tagLoop:LOOP
 		FETCH curTags INTO tId, tDescription;
 		IF finished = TRUE THEN LEAVE tagLoop; END IF;
-		INSERT INTO tagPercentages (id, `description`, percentage) 
-		VALUES (tId, tDescription, getPercentageOfTag(tId, userId));
+		IF getPercentageOfTag(tId, userId) > 0 && transferTagId != tId THEN
+			INSERT INTO tagPercentages (id, `description`, percentage) 
+			VALUES (tId, tDescription, getPercentageOfTag(tId, userId));
+		END IF;
 	END LOOP;
 	CLOSE curTags;
 	
