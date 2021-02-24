@@ -262,3 +262,7 @@ export function formatCurrencyDisplay(
     ? `${val.toLocaleString("en")} ${currency}`
     : `${val} ${currency}`.replace(/[0-9]/gi, "*");
 }
+
+export function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * max) + min;
+}

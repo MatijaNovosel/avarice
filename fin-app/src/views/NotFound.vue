@@ -17,7 +17,7 @@
         </button>
       </div>
       <div class="max-w-lg ml-5">
-        <img src="/notFoundCat.svg" alt="" />
+        <img :src="`/notFoundCat${randInt(1, 3)}.svg`" alt="" />
       </div>
     </div>
   </div>
@@ -27,6 +27,7 @@
 import { RouteNames } from "@/constants/route-names";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
+import { randInt } from "@/helpers/helpers";
 
 export default defineComponent({
   name: "NotFound",
@@ -38,7 +39,7 @@ export default defineComponent({
       router.push({ name: RouteNames.HOME });
     }
 
-    return { backToHomePage };
+    return { backToHomePage, randInt };
   }
 });
 </script>
