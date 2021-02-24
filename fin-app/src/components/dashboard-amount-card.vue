@@ -7,11 +7,9 @@
           <mdi-icon :size="28" :color="state.color" :name="state.icon" />
           <div class="flex flex-col ml-5">
             <span class="font-bold text-gray-400">{{ state.title }}</span>
-            <span class="font-semibold text-xl dark:text-white">{{
-              state.amountVisible
-                ? `${state.amount.toLocaleString("en")} ${state.currency}`
-                : `${state.amount} ${state.currency}`.replace(/[0-9]/gi, "*")
-            }}</span>
+            <span class="font-semibold text-xl dark:text-white">
+              {{ state.formattedCurrencyDisplay }}
+            </span>
           </div>
         </div>
         <div class="flex space-x-4">
@@ -30,9 +28,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "vue";
+import { computed, defineComponent, reactive, watch } from "vue";
 import mdiIcon from "@/components/mdi-icon.vue";
 import { MDIIcon } from "@/types/index";
+import { formatCurrencyDisplay } from "@/helpers/helpers";
 
 interface Props {
   amount?: number | null;
@@ -54,6 +53,7 @@ interface State {
   loading?: boolean;
   noEnabling?: boolean;
   amountVisible?: boolean;
+  formattedCurrencyDisplay: string;
 }
 
 export default defineComponent({
@@ -80,7 +80,14 @@ export default defineComponent({
       loading: props.loading,
       noEnabling: props.noEnabling,
       amountVisible: props.amountVisible,
-      currency: props.currency
+      currency: props.currency,
+      formattedCurrencyDisplay: computed(() =>
+        formatCurrencyDisplay(
+          state.amountVisible as boolean,
+          state.amount as number,
+          state.currency as string
+        )
+      )
     });
 
     function amountVisibleChanged() {
@@ -89,22 +96,22 @@ export default defineComponent({
 
     watch(
       () => props.amount,
-      (val) => (state.amount = val)
+      val => (state.amount = val)
     );
 
     watch(
       () => props.color,
-      (val) => (state.color = val)
+      val => (state.color = val)
     );
 
     watch(
       () => props.loading,
-      (val) => (state.loading = val)
+      val => (state.loading = val)
     );
 
     watch(
       () => props.currency,
-      (val) => (state.currency = val)
+      val => (state.currency = val)
     );
 
     return {

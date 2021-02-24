@@ -32,7 +32,7 @@
         v-else
         :disabled="model.$invalid"
         @click="transfer"
-        class="p-ripple shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 rounded-md py-1 px-6"
+        class="p-ripple shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 dark:bg-green-600 dark:disabled:bg-gray-500 dark:hover:bg-green-700 rounded-md py-1 px-6"
       >
         Save
       </button>

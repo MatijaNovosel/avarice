@@ -252,3 +252,13 @@ export function formatGqlRequest({
     : "";
   return `${type} { ${name}(${requestParamsFormatted}) ${responseParamsFormatted} }`;
 }
+
+export function formatCurrencyDisplay(
+  visible: boolean,
+  val: number,
+  currency: string
+): string {
+  return visible
+    ? `${val.toLocaleString("en")} ${currency}`
+    : `${val} ${currency}`.replace(/[0-9]/gi, "*");
+}

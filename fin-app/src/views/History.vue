@@ -6,9 +6,10 @@
       class="col-span-12 lg:col-span-3 rounded-lg dark:bg-gray-800 bg-white border dark:border-0 border-gray-300 text-center"
     >
       <div
-        class="w-full dark:bg-gray-700 bg-gray-100 rounded-t-lg py-2 border-b dark:border-0 border-gray-300"
+        class="w-full dark:bg-gray-700 bg-gray-100 rounded-t-lg py-2 border-b dark:border-0 border-gray-300 flex items-center justify-center relative"
       >
         <span class="text-gray-400 uppercase tracking-wider">Filters</span>
+        <mdi-icon class="cursor-pointer absolute top-2 right-5" :size="15" name="export" v-tooltip.bottom="'Export'" />
       </div>
       <progress-spinner
         class="w-10 h-10 mt-5"
@@ -31,7 +32,9 @@
           selectionMode="range"
           :manualInput="false"
         />
-        <div class="flex flex-col px-5 pt-5 pb-3 dark:bg-gray-900 bg-gray-100 rounded-lg">
+        <div
+          class="flex flex-col px-5 pt-5 pb-3 dark:bg-gray-900 bg-gray-100 rounded-lg"
+        >
           <slider
             class="mx-3"
             :max="state.transactionAmountRange.max"
@@ -158,6 +161,7 @@ import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
 import { debounce } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
+import MDIIcon from "@/components/mdi-icon.vue";
 
 interface Search {
   description: string;
@@ -181,6 +185,9 @@ interface State {
 
 export default defineComponent({
   name: "History",
+  components: {
+    "mdi-icon": MDIIcon
+  },
   setup() {
     const state: State = reactive({
       refresh: inject("refresh") as RefreshController,

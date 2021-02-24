@@ -22,7 +22,8 @@ const mdiIcons = [
   "piggy-bank",
   "bank-transfer-in",
   "bank-transfer-out",
-  "swap"
+  "swap",
+  "export"
 ] as const;
 
 const Alignment = ["left", "center", "right"] as const;
