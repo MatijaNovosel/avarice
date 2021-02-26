@@ -3,90 +3,91 @@ CREATE DATABASE finapp;
 USE finapp;
 
 CREATE TABLE `tag` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `appuser` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `uid` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `photoURL` varchar(255) DEFAULT NULL,
-  `displayName` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `emailConfirmed` tinyint NOT NULL DEFAULT '0',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `uid` VARCHAR(255) DEFAULT NULL,
+  `email` VARCHAR(255) DEFAULT NULL,
+  `photoURL` VARCHAR(255) DEFAULT NULL,
+  `displayName` VARCHAR(255) DEFAULT NULL,
+  `password` VARCHAR(255) DEFAULT NULL,
+  `emailConfirmed` TINYINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `paymentsource` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `currency` varchar(50) NOT NULL DEFAULT 'HRK',
-  `icon` varchar(50) NOT NULL DEFAULT 'eye',
-  `description` varchar(255) DEFAULT NULL,
-  `appUserId` int DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `currency` VARCHAR(50) NOT NULL DEFAULT 'HRK',
+  `icon` VARCHAR(50) NOT NULL DEFAULT 'eye',
+  `description` VARCHAR(255) DEFAULT NULL,
+  `appUserId` INT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `locale` (
-	`id` int NOT NULL AUTO_INCREMENT,
-  `text` varchar(50) NOT NULL,
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `text` VARCHAR(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `appsetting` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `darkMode` tinyint(1) DEFAULT NULL,
-  `localeId` int DEFAULT NULL,
-  `preferredCurrency` varchar(50) NOT NULL DEFAULT 'HRK',
-  `dateFormat` varchar(50) NOT NULL DEFAULT 'dd.MM.yyyy. HH:mm',
-  `appUserId` int DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `darkMode` TINYINT(1) DEFAULT NULL,
+  `localeId` INT DEFAULT NULL,
+  `preferredCurrency` VARCHAR(50) NOT NULL DEFAULT 'HRK',
+  `dateFormat` VARCHAR(50) NOT NULL DEFAULT 'dd.MM.yyyy. HH:mm',
+  `appUserId` INT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
   CONSTRAINT `appsetting_ibfk_2` FOREIGN KEY (`localeId`) REFERENCES `locale` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `financialchange` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `amount` double DEFAULT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `description` varchar(255) DEFAULT NULL,
-  `expense` tinyint(1) DEFAULT NULL,
-  `paymentSourceId` int DEFAULT NULL,
-  `appUserId` int DEFAULT NULL,
-  `transfer` tinyint NOT NULL DEFAULT '0',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `amount` DOUBLE DEFAULT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `expense` TINYINT(1) DEFAULT NULL,
+  `paymentSourceId` INT DEFAULT NULL,
+  `appUserId` INT DEFAULT NULL,
+  `transfer` TINYINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
   KEY `paymentSourceId` (`paymentSourceId`),
   CONSTRAINT `financialchange_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
   CONSTRAINT `financialchange_ibfk_2` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `financialchangetag` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `financialChangeId` int DEFAULT NULL,
-  `tagId` int DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `financialChangeId` INT DEFAULT NULL,
+  `tagId` INT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `financialChangeId` (`financialChangeId`),
   KEY `tagId` (`tagId`),
   CONSTRAINT `financialchangetag_ibfk_1` FOREIGN KEY (`financialChangeId`) REFERENCES `financialchange` (`id`),
   CONSTRAINT `financialchangetag_ibfk_2` FOREIGN KEY (`tagId`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=223 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `financialhistory` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `paymentSourceId` int DEFAULT NULL,
-  `amount` double NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `appUserId` int DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `paymentSourceId` INT DEFAULT NULL,
+  `amount` DOUBLE NOT NULL DEFAULT '0',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `appUserId` INT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `paymentSourceId` (`paymentSourceId`),
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `financialhistory_ibfk_1` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`),
   CONSTRAINT `financialhistory_ibfk_2` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4725 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELIMITER $$ 
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
