@@ -36,6 +36,7 @@ export default {
   newTransaction: "New transaction",
   newTransfer: "New transfer",
   verifiedAccount: "Verified account",
+  notVerifiedAccount: "Account not verified",
   good: "Good",
   noItemsFound: "No items found",
   dailyChanges: "Daily changes",

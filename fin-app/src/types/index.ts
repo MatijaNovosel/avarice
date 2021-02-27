@@ -23,7 +23,8 @@ const mdiIcons = [
   "bank-transfer-in",
   "bank-transfer-out",
   "swap",
-  "export"
+  "export",
+  "close-circle"
 ] as const;
 
 const Alignment = ["left", "center", "right"] as const;

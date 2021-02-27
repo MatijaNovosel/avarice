@@ -8,7 +8,7 @@
     >
       <img
         class="h-26 w-16 rounded-full flex-none"
-        :src="state.user.photoURL"
+        :src="state.user.photoURL || '/default-user.png'"
         alt=""
       />
       <div class="flex flex-col ml-4">
@@ -19,10 +19,14 @@
           <mdi-icon
             class="mr-1"
             :size="18"
-            name="check-circle"
-            color="#38bf8c"
+            :name="state.emailConfirmed ? 'check-circle' : 'close-circle'"
+            :color="state.emailConfirmed ? '#38bf8c' : '#d93232'"
           />
-          {{ $t("verifiedAccount") }}
+          {{
+            state.emailConfirmed
+              ? $t("verifiedAccount")
+              : $t("notVerifiedAccount")
+          }}
         </div>
       </div>
     </div>
@@ -35,7 +39,7 @@
         ref="userMenuAnchor"
         id="userMenuAnchor"
         class="inline-block h-8 w-8 rounded-full ml-5"
-        :src="state.user.photoURL"
+        :src="state.user.photoURL || '/default-user.png'"
         alt=""
       />
       <div
@@ -81,14 +85,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  Ref,
-  ref,
-  onMounted
-} from "vue";
+import { defineComponent, reactive, computed, Ref, ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getService, Types } from "@/di-container";
@@ -119,6 +116,7 @@ interface State {
   menuStyle: MenuStyle;
   darkModeSwitch: boolean;
   darkMode: boolean;
+  emailConfirmed: boolean;
 }
 
 export default defineComponent({
@@ -176,6 +174,7 @@ export default defineComponent({
       currentRoute: computed(() => route.name),
       user: computed(() => store.getters.user),
       darkMode: computed(() => store.getters.darkMode),
+      emailConfirmed: computed(() => store.getters.emailConfirmed),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();

@@ -20,8 +20,8 @@
         :title="account.description"
         color="#acb0bf"
         :amount="account.amount"
-        :amount-visible="false"
         :currency="state.user.preferredCurrency"
+        amount-visible
       />
     </div>
     <div
