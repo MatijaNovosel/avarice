@@ -12,6 +12,9 @@ export class FinancialChangeInputType {
   description?: string;
 
   @Field()
+  createdAt?: string;
+
+  @Field()
   expense?: boolean;
 
   @Field(() => Int)

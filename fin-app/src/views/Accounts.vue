@@ -161,7 +161,6 @@ export default defineComponent({
               }
             }
           ],
-
           yAxes: [
             {
               scaleLabel: {

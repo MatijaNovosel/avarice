@@ -86,7 +86,8 @@ export class ChangeService implements ITransactionService {
       description,
       expense,
       paymentSourceId,
-      tagIds
+      tagIds,
+      createdAt
     } = payload;
 
     const query = formatGqlRequest({
@@ -120,6 +121,10 @@ export class ChangeService implements ITransactionService {
             {
               name: "tagIds",
               value: `[${tagIds.join(",")}]`
+            },
+            {
+              name: "createdAt",
+              value: createdAt
             }
           ]
         }

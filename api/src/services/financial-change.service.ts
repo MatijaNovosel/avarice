@@ -21,7 +21,7 @@ import {
   Repository
 } from "typeorm";
 import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { Appuser } from "src/entities/appuser";
 
 @Injectable()
@@ -206,13 +206,14 @@ export class FinancialChangeService {
   }
 
   async create(payload: FinancialChangeInputType): Promise<void> {
+    const date = parse(payload.createdAt, "dd.MM.yyyy. HH:mm", new Date());
     const financialChange = await this.financialChangeRepository.save({
       amount: payload.amount,
       description: payload.description,
       expense: payload.expense,
       paymentSourceId: payload.paymentSourceId,
       appUserId: payload.appUserId,
-      createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss")
+      createdAt: format(date, "yyyy-MM-dd HH:mm:ss")
     });
 
     payload.tagIds.forEach(async (tagId) => {
@@ -235,7 +236,7 @@ export class FinancialChangeService {
         order: { createdAt: "DESC" }
       });
       await this.financialChangeHistoryRepository.save({
-        createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        createdAt: format(date, "yyyy-MM-dd HH:mm:ss"),
         appUserId: payload.appUserId,
         paymentSourceId: id,
         amount:
