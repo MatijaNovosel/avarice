@@ -25,6 +25,9 @@ export class Appuser {
   @Column("varchar", { name: "password", nullable: true, length: 255 })
   public password?: string | null;
 
+  @Column("tinyint", { name: "emailConfirmed", default: () => "'0'" })
+  public emailConfirmed?: number;
+
   @OneToMany(() => Appsetting, (appsetting) => appsetting.appUser)
   public appsettings?: Appsetting[];
 

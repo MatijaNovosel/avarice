@@ -1,4 +1,3 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
@@ -8,36 +7,34 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Appuser } from "./appuser";
+import { Locale } from "./locale";
 
+@Index("appsetting_ibfk_2", ["localeId"], {})
 @Index("appUserId", ["appUserId"], {})
 @Entity("appsetting", { schema: "finapp" })
 export class Appsetting {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   public id?: number;
 
-  @Column("varchar", { name: "checkingGraphColor", nullable: true, length: 50 })
-  public checkingGraphColor?: string | null;
+  @Column("tinyint", { name: "darkMode", nullable: true, width: 1 })
+  public darkMode?: boolean | null;
 
-  @Column("varchar", { name: "gyroGraphColor", nullable: true, length: 50 })
-  public gyroGraphColor?: string | null;
+  @Column("int", { name: "localeId", nullable: true })
+  public localeId?: number | null;
 
-  @Column("varchar", { name: "pocketGraphColor", nullable: true, length: 50 })
-  public pocketGraphColor?: string | null;
+  @Column("varchar", {
+    name: "preferredCurrency",
+    length: 50,
+    default: () => "'HRK'"
+  })
+  public preferredCurrency?: string;
 
-  @Column("varchar", { name: "totalGraphColor", nullable: true, length: 50 })
-  public totalGraphColor?: string | null;
-
-  @Column("tinyint", { name: "gyroGraphVisible", nullable: true, width: 1 })
-  public gyroGraphVisible?: boolean | null;
-
-  @Column("tinyint", { name: "checkingGraphVisible", nullable: true, width: 1 })
-  public checkingGraphVisible?: boolean | null;
-
-  @Column("tinyint", { name: "pocketGraphVisible", nullable: true, width: 1 })
-  public pocketGraphVisible?: boolean | null;
-
-  @Column("tinyint", { name: "totalGraphVisible", nullable: true, width: 1 })
-  public totalGraphVisible?: boolean | null;
+  @Column("varchar", {
+    name: "dateFormat",
+    length: 50,
+    default: () => "'dd.MM.yyyy. HH:mm'"
+  })
+  public dateFormat?: string;
 
   @Column("int", { name: "appUserId", nullable: true })
   public appUserId?: number | null;
@@ -48,37 +45,11 @@ export class Appsetting {
   })
   @JoinColumn([{ name: "appUserId", referencedColumnName: "id" }])
   public appUser?: Appuser;
-}
 
-@ObjectType()
-export class GAppsetting {
-  @Field(() => Int)
-  public id?: number;
-
-  @Field()
-  public checkingGraphColor?: string;
-
-  @Field()
-  public gyroGraphColor?: string;
-
-  @Field()
-  public pocketGraphColor?: string;
-
-  @Field()
-  public totalGraphColor?: string;
-
-  @Field()
-  public gyroGraphVisible?: boolean;
-
-  @Field()
-  public checkingGraphVisible?: boolean;
-
-  @Field()
-  public pocketGraphVisible?: boolean;
-
-  @Field()
-  public totalGraphVisible?: boolean;
-
-  @Field(() => Int)
-  public appUserId?: number;
+  @ManyToOne(() => Locale, (locale) => locale.appsettings, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION"
+  })
+  @JoinColumn([{ name: "localeId", referencedColumnName: "id" }])
+  public locale?: Locale;
 }

@@ -31,12 +31,8 @@ export class Financialchange {
   @Column("tinyint", { name: "expense", nullable: true, width: 1 })
   public expense?: boolean | null;
 
-  @Column("tinyint", {
-    name: "transfer",
-    nullable: false,
-    width: 1
-  })
-  public transfer?: boolean | null;
+  @Column("tinyint", { name: "transfer", default: () => "'0'" })
+  public transfer?: number;
 
   @Column("int", { name: "paymentSourceId", nullable: true })
   public paymentSourceId?: number | null;
