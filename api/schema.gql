@@ -20,17 +20,16 @@ type GFinancialChange {
   tagIds: [Int!]!
 }
 
+type GLocale {
+  id: Float!
+  text: String!
+}
+
 type GAppsetting {
-  id: Int!
-  checkingGraphColor: String!
-  gyroGraphColor: String!
-  pocketGraphColor: String!
-  totalGraphColor: String!
-  gyroGraphVisible: Boolean!
-  checkingGraphVisible: Boolean!
-  pocketGraphVisible: Boolean!
-  totalGraphVisible: Boolean!
-  appUserId: Int!
+  darkMode: Boolean!
+  locale: GLocale!
+  preferredCurrency: String!
+  dateFormat: String!
 }
 
 type GUserPaymentSource {
@@ -61,6 +60,7 @@ type GAppUser {
   id: Int!
   uid: String!
   email: String!
+  emailConfirmed: Boolean!
   photoUrl: String!
   password: String!
   displayName: String!
@@ -167,14 +167,10 @@ input AppUserInputType {
 scalar Void
 
 input AppSettingInputType {
-  checkingGraphColor: String
-  gyroGraphColor: String
-  pocketGraphColor: String
-  totalGraphColor: String
-  gyroGraphVisible: Boolean
-  checkingGraphVisible: Boolean
-  pocketGraphVisible: Boolean
-  totalGraphVisible: Boolean
+  dateFormat: String
+  preferredCurrency: String
+  localeId: Float
+  darkMode: Boolean
   appUserId: Int!
 }
 

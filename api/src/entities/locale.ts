@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Appsetting } from "./appsetting";
 
@@ -11,4 +12,13 @@ export class Locale {
 
   @OneToMany(() => Appsetting, (appsetting) => appsetting.locale)
   public appsettings?: Appsetting[];
+}
+
+@ObjectType()
+export class GLocale {
+  @Field()
+  id?: number | null;
+
+  @Field()
+  text?: string | null;
 }

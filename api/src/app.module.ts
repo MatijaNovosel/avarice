@@ -17,6 +17,7 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { VoidScalar } from "src/scalars/void";
 import { FinancialChangeHttpModule } from "src/modules/http/financial-change-http.module";
 import { TagHttpModule } from "src/modules/http/tag-http.module";
+import { Locale } from "./entities/locale";
 
 const { host, port, username, password, database } = { ...serverConfig };
 
@@ -40,7 +41,8 @@ const { host, port, username, password, database } = { ...serverConfig };
         Financialchangetag,
         Financialhistory,
         Paymentsource,
-        Tag
+        Tag,
+        Locale
       ],
       synchronize: false
     }),

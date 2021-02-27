@@ -12,7 +12,10 @@ export class AppSettingService {
   ) {}
 
   async findByUserId(id: number): Promise<Appsetting> {
-    return await this.repository.findOne(id);
+    return await this.repository.findOne({
+      relations: ["locale"],
+      where: { appUserId: id }
+    });
   }
 
   async update(appSetting: AppSettingInputType): Promise<void> {
@@ -20,25 +23,10 @@ export class AppSettingService {
       where: { appUserId: appSetting.appUserId }
     });
 
-    // Graph colors
-    appSettingRepo.checkingGraphColor =
-      appSetting.checkingGraphColor || appSettingRepo.checkingGraphColor;
-    appSettingRepo.gyroGraphColor =
-      appSetting.gyroGraphColor || appSettingRepo.gyroGraphColor;
-    appSettingRepo.totalGraphColor =
-      appSetting.totalGraphColor || appSettingRepo.totalGraphColor;
-    appSettingRepo.pocketGraphColor =
-      appSetting.pocketGraphColor || appSettingRepo.pocketGraphColor;
-
-    // Graph visibility
-    appSettingRepo.checkingGraphVisible =
-      appSetting.checkingGraphVisible || appSettingRepo.checkingGraphVisible;
-    appSettingRepo.gyroGraphVisible =
-      appSetting.gyroGraphVisible || appSettingRepo.gyroGraphVisible;
-    appSettingRepo.pocketGraphVisible =
-      appSetting.pocketGraphVisible || appSettingRepo.pocketGraphVisible;
-    appSettingRepo.totalGraphVisible =
-      appSetting.totalGraphVisible || appSettingRepo.totalGraphVisible;
+    appSettingRepo.darkMode = appSetting.darkMode || appSettingRepo.darkMode;
+    appSettingRepo.localeId = appSetting.localeId || appSettingRepo.localeId;
+    appSettingRepo.dateFormat = appSetting.dateFormat || appSettingRepo.dateFormat;
+    appSettingRepo.preferredCurrency = appSetting.preferredCurrency || appSettingRepo.preferredCurrency;
 
     await this.repository.update(appSettingRepo.id, appSettingRepo);
   }

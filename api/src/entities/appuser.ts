@@ -59,6 +59,9 @@ export class GAppUser {
   email?: string;
 
   @Field()
+  emailConfirmed?: boolean;
+
+  @Field()
   photoUrl?: string;
 
   @Field()

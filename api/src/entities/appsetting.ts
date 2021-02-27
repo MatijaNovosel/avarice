@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
@@ -7,7 +8,7 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Appuser } from "./appuser";
-import { Locale } from "./locale";
+import { GLocale, Locale } from "./locale";
 
 @Index("appsetting_ibfk_2", ["localeId"], {})
 @Index("appUserId", ["appUserId"], {})
@@ -52,4 +53,19 @@ export class Appsetting {
   })
   @JoinColumn([{ name: "localeId", referencedColumnName: "id" }])
   public locale?: Locale;
+}
+
+@ObjectType()
+export class GAppsetting {
+  @Field()
+  public darkMode?: boolean;
+
+  @Field()
+  public locale?: GLocale;
+
+  @Field()
+  public preferredCurrency?: string;
+
+  @Field()
+  public dateFormat?: string;
 }

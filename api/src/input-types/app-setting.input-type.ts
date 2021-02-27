@@ -4,28 +4,16 @@ import { IsNotEmpty } from "class-validator";
 @InputType()
 export class AppSettingInputType {
   @Field({ nullable: true })
-  public checkingGraphColor?: string;
+  public dateFormat?: string;
 
   @Field({ nullable: true })
-  public gyroGraphColor?: string;
+  public preferredCurrency?: string;
 
   @Field({ nullable: true })
-  public pocketGraphColor?: string;
+  public localeId?: number;
 
   @Field({ nullable: true })
-  public totalGraphColor?: string;
-
-  @Field({ nullable: true })
-  public gyroGraphVisible?: boolean;
-
-  @Field({ nullable: true })
-  public checkingGraphVisible?: boolean;
-
-  @Field({ nullable: true })
-  public pocketGraphVisible?: boolean;
-
-  @Field({ nullable: true })
-  public totalGraphVisible?: boolean;
+  public darkMode?: boolean;
 
   @Field(() => Int)
   @IsNotEmpty()
