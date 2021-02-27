@@ -66,6 +66,16 @@ type GAppUser {
   displayName: String!
 }
 
+type GAppUserLoginDto {
+  id: Int!
+  uid: String!
+  email: String!
+  emailConfirmed: Boolean!
+  photoUrl: String!
+  accessToken: String!
+  displayName: String!
+}
+
 type GLatestAccountValue {
   amount: Float!
   description: String!
@@ -129,7 +139,7 @@ type Query {
 
 type Mutation {
   create(description: String!): Int!
-  login(input: AuthEmailLoginInputType!): AccessToken!
+  login(input: AuthEmailLoginInputType!): GAppUserLoginDto!
   googleLogin(input: AuthGoogleLoginInputType!): AccessToken!
   register(input: AuthRegisterInputType!): Int!
   addUser(user: AppUserInputType!): Int!

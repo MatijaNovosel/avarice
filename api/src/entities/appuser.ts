@@ -25,8 +25,8 @@ export class Appuser {
   @Column("varchar", { name: "password", nullable: true, length: 255 })
   public password?: string | null;
 
-  @Column("tinyint", { name: "emailConfirmed", default: () => "'0'" })
-  public emailConfirmed?: number;
+  @Column("tinyint", { name: "emailConfirmed" })
+  public emailConfirmed?: boolean;
 
   @OneToMany(() => Appsetting, (appsetting) => appsetting.appUser)
   public appsettings?: Appsetting[];
@@ -66,6 +66,30 @@ export class GAppUser {
 
   @Field()
   password?: string;
+
+  @Field()
+  displayName?: string;
+}
+
+@ObjectType()
+export class GAppUserLoginDto {
+  @Field(() => Int)
+  id?: number;
+
+  @Field()
+  uid?: string;
+
+  @Field()
+  email?: string;
+
+  @Field()
+  emailConfirmed?: boolean;
+
+  @Field()
+  photoUrl?: string;
+
+  @Field()
+  accessToken?: string;
 
   @Field()
   displayName?: string;

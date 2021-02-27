@@ -19,7 +19,8 @@ const state: State = {
     displayName: "",
     language: LanguageEnum.English,
     photoURL: "",
-    preferredCurrency: "HRK"
+    preferredCurrency: "HRK",
+    emailConfirmed: false
   }
 };
 

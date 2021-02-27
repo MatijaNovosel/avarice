@@ -18,6 +18,7 @@
             placeholder="Your Email "
             class="w-full px-4 py-2 mt-2 text-base text-black transition duration-500 ease-in-out transform bg-gray-100 border-transparent rounded-lg focus:border-gray-500 focus:bg-white focus:outline-none focus:shadow-outline focus:ring-1 ring-offset-current ring-offset-1"
             autofocus
+            v-model="model.email.$model"
           />
         </div>
         <div class="mt-4">
@@ -31,6 +32,7 @@
             placeholder="Your Password"
             :minlength="6"
             class="w-full px-4 py-2 text-base text-black transition duration-500 ease-in-out transform bg-gray-100 border-transparent rounded-lg focus:border-gray-500 focus:bg-white focus:outline-none focus:shadow-outline focus:ring-1 ring-offset-current ring-offset-1"
+            v-model="model.password.$model"
           />
         </div>
         <div class="mt-2 text-right">
@@ -139,8 +141,9 @@ import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
-import { AppUser } from "@/models/user";
 import { LanguageEnum } from "@/constants/language";
+import { getService, Types } from "@/di-container";
+import { IAuthService } from "@/services/interfaces/auth-service";
 
 interface Input {
   email: string;
@@ -176,31 +179,30 @@ export default defineComponent({
 
     async function login() {
       state.loading = true;
-      let userData: AppUser;
 
       try {
-        /*
-        userData = await getService<IAuthService>(
+        const userData = await getService<IAuthService>(
           Types.AuthService
-        ).signInGoogle();
-        */
-        userData = {
-          uid: "xyz",
-          email: "mnovosel5@gmail.com",
-          photoURL:
-            "https://avatars.githubusercontent.com/u/36193643?s=460&u=476cacf3518a2a0914c512b60ea1b046413900cf&v=4",
-          displayName: "Matija Novosel",
-          language: LanguageEnum.English,
+        ).signInEmail(entry.email, entry.password);
+
+        store.dispatch("setUser", {
+          uid: userData.uid,
+          email: userData.email,
+          photoURL: userData.photoURL,
+          displayName: userData.displayName,
+          emailConfirmed: userData.emailConfirmed,
+          language: LanguageEnum,
           dateFormat: "dd.MM.yyyy. HH:mm",
           preferredCurrency: "HRK"
-        };
-        store.dispatch("setUser", userData);
+        });
+
         toast.add({
           severity: "success",
           summary: "Login successful!",
           detail: "You have been successfully authenticated!",
           life: 3000
         });
+
         router.push({ name: "home" });
       } catch (e) {
         toast.add({

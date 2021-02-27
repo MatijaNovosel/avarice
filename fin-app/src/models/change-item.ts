@@ -16,6 +16,7 @@ export interface CreateFinancialChangeItemDto {
   expense: boolean;
   paymentSourceId: number;
   tagIds: number[];
+  createdAt: string;
 }
 
 export interface CreateTransferDto {

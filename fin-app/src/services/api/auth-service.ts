@@ -1,12 +1,9 @@
 import firebase from "firebase";
 import { User } from "@firebase/auth-types";
-import axiosInstance from "axios";
+import axiosInstance from "../axios-instance";
 import { IAuthService } from "../interfaces/auth-service";
 import { formatGqlRequest } from "@/helpers/helpers";
-
-interface UserDto {
-  accessToken: string;
-}
+import { UserDto } from "@/models/user";
 
 export class AuthService implements IAuthService {
   async register(email: string, password: string): Promise<number> {
@@ -95,7 +92,7 @@ export class AuthService implements IAuthService {
     return login;
   }
 
-  async signInEmail(email: string, password: number): Promise<UserDto> {
+  async signInEmail(email: string, password: string): Promise<UserDto> {
     const query = formatGqlRequest({
       type: "mutation",
       name: "login",
@@ -116,7 +113,16 @@ export class AuthService implements IAuthService {
           ]
         }
       ],
-      responseParams: ["accessToken"]
+      responseParams: [
+        "accessToken",
+        "id",
+        "uid",
+        "email",
+        "emailConfirmed",
+        "photoUrl",
+        "accessToken",
+        "displayName"
+      ]
     });
 
     const {

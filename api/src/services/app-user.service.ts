@@ -1,10 +1,8 @@
-import { Financialhistory } from "./../entities/financialhistory";
 import { AppUserInputType } from "./../input-types/app-user.input-type";
 import { Appuser } from "src/entities/appuser";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { format } from "date-fns";
 
 @Injectable()
 export class AppUserService {

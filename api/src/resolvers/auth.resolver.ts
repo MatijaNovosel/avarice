@@ -1,3 +1,4 @@
+import { GAppUserLoginDto } from './../entities/appuser';
 import { AuthRegisterInputType } from "./../input-types/auth.input-type";
 import { AuthService } from "./../services/auth.service";
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
@@ -12,7 +13,7 @@ import { ValidationPipe } from "@nestjs/common";
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @Mutation(() => AccessToken)
+  @Mutation(() => GAppUserLoginDto)
   async login(
     @Args("input", new ValidationPipe()) input: AuthEmailLoginInputType
   ) {

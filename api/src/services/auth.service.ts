@@ -1,4 +1,4 @@
-import { Appuser } from "src/entities/appuser";
+import { Appuser, GAppUserLoginDto } from "src/entities/appuser";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -24,7 +24,7 @@ export class AuthService {
       throw new HttpException("User was not found!", HttpStatus.NOT_FOUND);
     }
 
-    const match = bcrypt.compare(password, repoUser.password);
+    const match = await bcrypt.compare(password, repoUser.password);
 
     if (!match) {
       throw new HttpException(
@@ -36,18 +36,20 @@ export class AuthService {
     return repoUser;
   }
 
-  async login(email: string, password: string): Promise<any> {
+  async login(email: string, password: string): Promise<GAppUserLoginDto> {
     const user = await this.validateUser(email, password);
 
     const payload = {
-      id: user.id,
-      displayName: user.displayName,
-      email: user.email,
-      sub: {
-        permissions: [1, 2, 3]
-      }
+      permissions: [1, 2, 3]
     };
+
     return {
+      id: user.id,
+      uid: user.uid,
+      email: user.email,
+      photoUrl: user.photoUrl,
+      displayName: user.displayName,
+      emailConfirmed: user.emailConfirmed,
       accessToken: this.jwtService.sign(payload)
     };
   }

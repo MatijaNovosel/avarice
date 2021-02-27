@@ -93,6 +93,7 @@ import { PaymentSource } from "@/models/payment-source";
 import { createSelectFromEnum } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
 import AccountSelect from "./account-select.vue";
+import { format } from "date-fns";
 
 interface Props {
   dialog: boolean;
@@ -164,11 +165,12 @@ export default defineComponent({
     }
 
     async function addTransaction() {
-      // TODO: Anomalija kod spremanja, ako prelazi iz sekunde u new Date() u novu sekundu onda se ne sprema dobro!
+      // TODO: Anomalija kod spremanja, ako prelazi iz sekunde u new Date() u novu sekundu onda se ne sprema dobro! Pošalji datum s klijentske strane!
       state.saving = true;
 
       const payload: CreateFinancialChangeItemDto = {
-        ...entry
+        ...entry,
+        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm")
       };
 
       await getService<ITransactionService>(Types.ChangeService).addChange(
