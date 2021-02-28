@@ -188,6 +188,7 @@ input FinancialChangeInputType {
   appUserId: Int!
   amount: Float!
   description: String!
+  createdAt: String!
   expense: Boolean!
   paymentSourceId: Int!
   tagIds: [Int!]!

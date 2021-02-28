@@ -124,7 +124,8 @@ export class ChangeService implements ITransactionService {
             },
             {
               name: "createdAt",
-              value: createdAt
+              value: createdAt,
+              quoted: true
             }
           ]
         }
