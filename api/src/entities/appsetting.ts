@@ -33,7 +33,7 @@ export class Appsetting {
   @Column("varchar", {
     name: "dateFormat",
     length: 50,
-    default: () => "'dd.MM.yyyy. HH:mm'"
+    default: () => "'dd.MM.yyyy. HH:mm:ss'"
   })
   public dateFormat?: string;
 

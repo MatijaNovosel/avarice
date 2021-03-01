@@ -15,7 +15,7 @@
     <span class="text-gray-300">{{
       state.describeDate
         ? formatDistance(
-            parse(state.date, "dd.MM.yyyy. HH:mm", new Date()),
+            parse(state.date, "dd.MM.yyyy. HH:mm:ss", new Date()),
             new Date(),
             {
               addSuffix: true

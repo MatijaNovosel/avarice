@@ -1,6 +1,6 @@
 <template>
   <div class="flex px-5 py-6 dark:bg-gray-800 bg-white rounded-lg shadow">
-    <progress-spinner class="spinner" strokeWidth="10" v-if="state.loading" />
+    <progress-spinner class="h-12 w-12" strokeWidth="10" v-if="state.loading" />
     <template v-else>
       <div class="w-full flex items-center justify-between">
         <div class="flex items-center select-none">
@@ -121,9 +121,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="sass">
-.spinner
-  width: 25px
-  height: 25px
-</style>

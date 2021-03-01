@@ -115,7 +115,7 @@ export class FinancialChangeService {
         transfer: fc.transfer,
         amount: fc.amount,
         description: fc.description,
-        createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm"),
+        createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm:ss"),
         expense: fc.expense,
         paymentSourceId: fc.paymentSourceId,
         tagIds: fc.financialchangetags.map((fct) => fct.tagId)
@@ -197,7 +197,7 @@ export class FinancialChangeService {
       }
 
       await this.financialChangeHistoryRepository.save({
-        createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        createdAt: createdAt,
         appUserId: payload.appUserId,
         paymentSourceId: id,
         amount: finalAmount

@@ -101,7 +101,7 @@
                       formatDistance(
                         parse(
                           transaction.createdAt,
-                          "dd.MM.yyyy. HH:mm",
+                          "dd.MM.yyyy. HH:mm:ss",
                           new Date()
                         ),
                         new Date(),

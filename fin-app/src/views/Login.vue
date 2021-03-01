@@ -192,7 +192,7 @@ export default defineComponent({
           displayName: userData.displayName,
           emailConfirmed: userData.emailConfirmed,
           language: LanguageEnum,
-          dateFormat: "dd.MM.yyyy. HH:mm",
+          dateFormat: "dd.MM.yyyy. HH:mm:ss",
           preferredCurrency: "HRK"
         });
 

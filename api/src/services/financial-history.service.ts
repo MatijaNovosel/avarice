@@ -54,7 +54,7 @@ export class FinancialHistoryService {
       }
 
       historyItems.push({
-        createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
+        createdAt: format(createdAt, "dd.MM.yyyy. HH:mm:ss"),
         paymentSources: userPaymentSources,
         total: parseFloat(total.toFixed(2))
       });
@@ -92,7 +92,7 @@ export class FinancialHistoryService {
     }
 
     return {
-      createdAt: format(createdAt, "dd.MM.yyyy. HH:mm"),
+      createdAt: format(createdAt, "dd.MM.yyyy. HH:mm:ss"),
       paymentSources: userPaymentSources,
       total
     };
