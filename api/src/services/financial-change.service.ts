@@ -206,7 +206,7 @@ export class FinancialChangeService {
   }
 
   async create(payload: FinancialChangeInputType): Promise<void> {
-    const date = parse(payload.createdAt, "dd.MM.yyyy. HH:mm", new Date());
+    const date = parse(payload.createdAt, "dd.MM.yyyy. HH:mm:ss", new Date());
     const financialChange = await this.financialChangeRepository.save({
       amount: payload.amount,
       description: payload.description,

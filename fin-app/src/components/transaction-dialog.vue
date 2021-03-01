@@ -169,7 +169,7 @@ export default defineComponent({
 
       const payload: CreateFinancialChangeItemDto = {
         ...entry,
-        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm")
+        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
       };
 
       await getService<ITransactionService>(Types.ChangeService).addChange(
