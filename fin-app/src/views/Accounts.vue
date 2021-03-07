@@ -92,7 +92,7 @@ import { IPaymentSourceService } from "@/services/interfaces/payment-source-serv
 import { getService, Types } from "@/di-container";
 import { DatasetItem } from "@/models/dataset";
 import { GraphHTMLElement, GraphOptions } from "@/models/graph";
-import { adjustHexColor, hexToRgba } from "@/helpers/helpers";
+import { adjustHexColor } from "@/helpers/helpers";
 import { AppUser } from "@/models/user";
 import { useStore } from "vuex";
 import { RefreshController } from "@/helpers/refresh";
@@ -147,20 +147,13 @@ export default defineComponent({
         },
         elements: {
           point: {
-            radius: 3
+            radius: 0
           },
           line: {
-            tension: 0
+            tension: 0.6
           }
         },
         scales: {
-          xAxes: [
-            {
-              gridLines: {
-                display: false
-              }
-            }
-          ],
           yAxes: [
             {
               scaleLabel: {
@@ -175,15 +168,13 @@ export default defineComponent({
       },
       graphOptions: {
         cutoutPercentage: 75,
+        elements: {
+          arc: {
+            borderWidth: 0
+          }
+        },
         legend: {
           display: false
-        },
-        scales: {
-          yAxes: [
-            {
-              display: false
-            }
-          ]
         },
         responsive: true
       },
@@ -196,16 +187,7 @@ export default defineComponent({
 
     function reinitGraphs() {
       const totalDataset = state.totalDataset as DatasetItem;
-
-      totalDataset.backgroundColor = hexToRgba(
-        adjustHexColor(
-          state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
-          30
-        ),
-        0.7
-      ) as string;
-      totalDataset.borderColor = state.darkMode ? "#59c262" : "#acb0bf";
-
+      totalDataset.borderColor = state.darkMode ? "#4a9650" : "#acb0bf";
       totalAccountBalanceChart?.value?.reinit();
       spendingChart?.value?.reinit();
     }
@@ -215,13 +197,13 @@ export default defineComponent({
 
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getLatestValues(1);
+      ).getLatestValues(state.user.id as number);
 
       let tagPercentages = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getTagPercentages(1);
+      ).getTagPercentages(state.user.id as number);
 
-      const color = "#475569";
+      const color = "#4a9650";
 
       tagPercentages = tagPercentages.sort(
         (a, b) => b.percentage - a.percentage
@@ -238,6 +220,7 @@ export default defineComponent({
         labels: tagPercentages.map(x => x.description),
         datasets: [
           {
+            borderWidth: 0,
             backgroundColor: tagPercentages.map(
               (_, i) => "#" + adjustHexColor(color, i * 7)
             ),
@@ -248,20 +231,14 @@ export default defineComponent({
 
       const history = await getService<ITransactionService>(
         Types.ChangeService
-      ).getTotal(1);
+      ).getTotal(state.user.id as number);
 
       state.totalDataset = {
         label: t("total"),
         data: history.map(x => x.total),
-        fill: true,
-        borderColor: state.darkMode ? "#59c262" : "#acb0bf",
-        backgroundColor: hexToRgba(
-          adjustHexColor(
-            state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
-            30
-          ),
-          0.7
-        ) as string
+        fill: false,
+        borderWidth: 6,
+        borderColor: state.darkMode ? "#4a9650" : "#acb0bf"
       };
 
       state.graphDataTotal = {

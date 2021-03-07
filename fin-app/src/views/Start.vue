@@ -21,7 +21,7 @@
         </button>
       </div>
       <div class="max-w-lg lg:ml-8">
-        <img src="/notFoundCat.svg" alt="" />
+        <img src="/notFoundCat1.svg" alt="" />
       </div>
     </div>
     <div
@@ -30,7 +30,9 @@
     >
       <div v-if="state.loading" class="text-center flex items-center flex-col">
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
-        <span class="text-gray-400 text-xl mt-10">Creating financial account...</span>
+        <span class="text-gray-400 text-xl mt-10">
+          Creating financial account...
+        </span>
       </div>
       <template v-else>
         <div class="w-max">
@@ -75,7 +77,7 @@
           </div>
         </div>
         <div class="max-w-lg lg:ml-8">
-          <img src="/notFoundCat.svg" alt="" />
+          <img src="/notFoundCat1.svg" alt="" />
         </div>
       </template>
     </div>
@@ -97,7 +99,7 @@
         </button>
       </div>
       <div class="max-w-lg lg:ml-8">
-        <img src="/notFoundCat.svg" alt="" />
+        <img src="/notFoundCat1.svg" alt="" />
       </div>
     </div>
     <div
@@ -118,7 +120,7 @@
         </button>
       </div>
       <div class="max-w-lg lg:ml-8">
-        <img src="/notFoundCat.svg" alt="" />
+        <img src="/notFoundCat1.svg" alt="" />
       </div>
     </div>
   </div>

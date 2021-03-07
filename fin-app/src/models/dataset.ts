@@ -5,4 +5,5 @@ export interface DatasetItem {
   borderColor?: string | string[];
   backgroundColor?: string | string[];
   type?: string;
+  borderWidth?: number;
 }

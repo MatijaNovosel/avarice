@@ -59,6 +59,7 @@ import { IPaymentSourceService } from "@/services/interfaces/payment-source-serv
 import { PaymentSource } from "@/models/payment-source";
 import { RefreshController } from "@/helpers/refresh";
 import AccountSelect from "./account-select.vue";
+import { useStore } from "vuex";
 
 interface Props {
   dialog: boolean;
@@ -84,6 +85,8 @@ export default defineComponent({
     }
   },
   setup(props: Props, context: SetupContext) {
+    const store = useStore();
+
     const entry = reactive({
       appUserId: 1,
       accountFromId: 1,
@@ -145,7 +148,7 @@ export default defineComponent({
     onMounted(async () => {
       state.paymentSources = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getAllByUserId(1);
+      ).getAllByUserId(store.getters.user.id);
     });
 
     return {

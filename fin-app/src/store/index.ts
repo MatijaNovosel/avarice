@@ -12,6 +12,7 @@ interface State {
 const state: State = {
   darkMode: false,
   user: {
+    id: null,
     email: null,
     uid: null,
     accessToken: "",

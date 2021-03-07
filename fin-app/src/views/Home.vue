@@ -218,7 +218,7 @@ export default defineComponent({
       graphOptions: {
         title: {
           display: true,
-          text: `${t("totalAccountBalance")} (Last 30 days)`
+          text: t("totalAccountBalance")
         },
         legend: {
           display: false
@@ -231,20 +231,6 @@ export default defineComponent({
             tension: 0.6
           }
         },
-        scales: {
-          xAxes: [
-            {
-              gridLines: {
-                display: false
-              }
-            }
-          ],
-          yAxes: [
-            {
-              display: false
-            }
-          ]
-        },
         responsive: true
       },
       graphData: null,
@@ -256,7 +242,7 @@ export default defineComponent({
 
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
-      ).getChanges(1, skip, take);
+      ).getChanges(state.user.id as number, skip, take);
 
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
@@ -266,16 +252,7 @@ export default defineComponent({
 
     function reinitGraphs() {
       const totalDataset = state.totalDataset as DatasetItem;
-
-      totalDataset.backgroundColor = hexToRgba(
-        adjustHexColor(
-          state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
-          30
-        ),
-        0.7
-      ) as string;
-      totalDataset.borderColor = state.darkMode ? "#59c262" : "#acb0bf";
-
+      totalDataset.borderColor = state.darkMode ? "#4a9650" : "#acb0bf";
       dailySpendingGraph?.value?.reinit();
       financialChangedVisualizedGraph?.value?.reinit();
     }
@@ -288,22 +265,20 @@ export default defineComponent({
 
       const history = await getService<ITransactionService>(
         Types.ChangeService
-      ).getTotal(1, state.dateRange[0] as Date, state.dateRange[1] as Date);
+      ).getTotal(
+        state.user.id as number,
+        state.dateRange[0] as Date,
+        state.dateRange[1] as Date
+      );
 
       state.total.currentAmount = history[history.length - 1].total;
 
       state.totalDataset = {
         label: t("total"),
         data: history.map(x => x.total),
-        fill: true,
-        borderColor: state.darkMode ? "#59c262" : "#acb0bf",
-        backgroundColor: hexToRgba(
-          adjustHexColor(
-            state.darkMode ? "#59c262" : "#acb0bf".replace("#", ""),
-            30
-          ),
-          0.7
-        ) as string
+        fill: false,
+        borderWidth: 4,
+        borderColor: state.darkMode ? "#4a9650" : "#acb0bf"
       };
 
       state.graphData = {
@@ -313,11 +288,13 @@ export default defineComponent({
 
       state.recentDepositsAndWithdrawals = await getService<
         ITransactionService
-      >(Types.ChangeService).getRecentDepositsAndWithdrawals(1);
+      >(Types.ChangeService).getRecentDepositsAndWithdrawals(
+        state.user.id as number
+      );
 
       const dailyChanges = await getService<ITransactionService>(
         Types.ChangeService
-      ).getDailyChanges(1);
+      ).getDailyChanges(state.user.id as number);
 
       state.graphDataDailyChanges = {
         labels: dailyChanges
@@ -333,7 +310,7 @@ export default defineComponent({
               0.7
             ) as string,
             fill: true,
-            data: dailyChanges.map(x => x.withdrawals)
+            data: dailyChanges.map(x => -x.withdrawals)
           },
           {
             type: "bar",

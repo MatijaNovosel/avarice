@@ -283,7 +283,7 @@ export default defineComponent({
       state.optionsLoading = true;
       state.transactionAmountRange = await getService<ITransactionService>(
         Types.ChangeService
-      ).getTransactionAmountRange(1);
+      ).getTransactionAmountRange(store.getters.user.id);
       state.sliderRange = [
         state.transactionAmountRange.min as number,
         state.transactionAmountRange.max as number

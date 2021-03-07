@@ -6,7 +6,7 @@
     :style="{ width: '50vw' }"
   >
     <template #header>
-      <span class="text-lg text-gray-400 font-bold">New transaction</span>
+      <span class="text-lg text-gray-400 font-bold">New account</span>
     </template>
     <div class="flex flex-col grid gap-4 mt-5">
       <input-number
@@ -20,42 +20,6 @@
         v-model="model.amount.$model"
         class="w-full"
       />
-      <text-area
-        placeholder="Description"
-        class="w-full"
-        :class="{
-          'p-invalid': model.description.$invalid
-        }"
-        v-model="model.description.$model"
-        id="description"
-      />
-      <account-select v-model:selection="model.paymentSourceId.$model" />
-      <div
-        class="flex flex-col rounded-xl shadow-md border dark:border-0 border-gray-200 bg-white items-center"
-      >
-        <list-box
-          :multiple="true"
-          v-model="model.tagIds.$model"
-          :options="tags"
-          dataKey="val"
-          listStyle="max-height: 250px"
-          optionValue="val"
-          optionLabel="text"
-          class="w-full rounded-lg"
-        >
-          <template #option="slotProps">
-            {{ slotProps.option.text }}
-          </template>
-        </list-box>
-      </div>
-      <span class="flex justify-center items-center">
-        <span class="dark:text-gray-400 text-black"> Expense </span>
-        <input-switch
-          class="ml-4"
-          id="expense"
-          v-model="model.expense.$model"
-        />
-      </span>
     </div>
     <template #footer>
       <progress-spinner class="h-8 w-8" strokeWidth="10" v-if="state.saving" />
@@ -63,7 +27,7 @@
         v-ripple
         v-else
         :disabled="model.$invalid"
-        @click="addTransaction"
+        @click="transfer"
         class="p-ripple shadow-md disabled:bg-gray-400 bg-green-400 hover:bg-green-500 dark:bg-green-600 dark:disabled:bg-gray-500 dark:hover:bg-green-700 rounded-md py-1 px-6"
       >
         Save
@@ -82,18 +46,14 @@ import {
   Ref,
   onMounted
 } from "vue";
-import { TagEnum } from "../constants/tag-enum";
-import { CreateFinancialChangeItemDto } from "../models/change-item";
-import { required, numeric, minLength } from "@vuelidate/validators";
+import { CreateTransferDto } from "../models/change-item";
+import { required, numeric } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { getService, Types } from "../di-container";
 import { ITransactionService } from "../services/interfaces/transaction-service";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { PaymentSource } from "@/models/payment-source";
-import { createSelectFromEnum } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
-import AccountSelect from "./account-select.vue";
-import { format } from "date-fns";
 import { useStore } from "vuex";
 
 interface Props {
@@ -108,32 +68,24 @@ interface State {
 }
 
 export default defineComponent({
-  name: "transaction-dialog",
+  name: "new-account-dialog",
   emits: ["update:dialog"],
-  components: {
-    AccountSelect
-  },
   props: {
-    dialog: Boolean
+    dialog: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props: Props, context: SetupContext) {
     const store = useStore();
 
     const entry = reactive({
       appUserId: 1,
-      paymentSourceId: 1,
-      tagIds: [TagEnum.Food],
-      description: null,
-      amount: 0,
-      expense: true
-    } as CreateFinancialChangeItemDto);
+      amount: 0
+    } as CreateTransferDto);
 
     const rules = {
-      amount: { required, numeric },
-      paymentSourceId: { required },
-      tagIds: { required },
-      description: { required, minLength: minLength(4) },
-      expense: { required }
+      amount: { required, numeric }
     };
 
     // eslint-disable-next-line
@@ -155,10 +107,6 @@ export default defineComponent({
       state.dialog = false;
       entry.amount = 0;
       entry.appUserId = 1;
-      entry.description = null;
-      entry.paymentSourceId = 1;
-      entry.tagIds = [TagEnum.Other];
-      entry.expense = true;
       model.value.$reset;
     }
 
@@ -167,15 +115,14 @@ export default defineComponent({
       context.emit("update:dialog", state.dialog);
     }
 
-    async function addTransaction() {
+    async function transfer() {
       state.saving = true;
 
-      const payload: CreateFinancialChangeItemDto = {
-        ...entry,
-        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
+      const payload: CreateTransferDto = {
+        ...entry
       };
 
-      await getService<ITransactionService>(Types.ChangeService).addChange(
+      await getService<ITransactionService>(Types.ChangeService).transfer(
         payload
       );
 
@@ -190,14 +137,11 @@ export default defineComponent({
       ).getAllByUserId(store.getters.user.id);
     });
 
-    const tags = createSelectFromEnum("tags", TagEnum);
-
     return {
       state,
-      addTransaction,
+      transfer,
       hideDialog,
-      model,
-      tags
+      model
     };
   }
 });

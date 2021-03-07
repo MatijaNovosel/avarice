@@ -36,9 +36,14 @@ interface GraphElementPointOptions {
   radius?: number;
 }
 
+interface GraphElementArcOptions {
+  borderWidth?: number;
+}
+
 interface GraphElementsOptions {
   line?: GraphElementsLineOptions;
   point?: GraphElementPointOptions;
+  arc?: GraphElementArcOptions;
 }
 
 interface GraphTitleOptions {

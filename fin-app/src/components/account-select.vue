@@ -33,6 +33,7 @@ import { getService, Types } from "@/di-container";
 import { PaymentSource } from "@/models/payment-source";
 import { IPaymentSourceService } from "@/services/interfaces/payment-source-service";
 import { defineComponent, onMounted, reactive, watch } from "vue";
+import { useStore } from "vuex";
 import MdiIcon from "../components/mdi-icon.vue";
 
 interface Props {
@@ -54,6 +55,8 @@ export default defineComponent({
     MdiIcon
   },
   setup(props: Props, context) {
+    const store = useStore();
+
     const state: State = reactive({
       paymentSources: [],
       selection: props.selection
@@ -67,7 +70,7 @@ export default defineComponent({
     onMounted(async () => {
       state.paymentSources = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getAllByUserId(1);
+      ).getAllByUserId(store.getters.user.id);
     });
 
     function valueChanged() {

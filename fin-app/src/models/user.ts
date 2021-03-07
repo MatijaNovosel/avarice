@@ -2,6 +2,7 @@ import { LanguageEnum } from "@/constants/language";
 import { Currency } from "@/types";
 
 export interface AppUser {
+  id: number | null;
   uid?: string | null;
   email?: string | null;
   photoURL?: string;
@@ -14,6 +15,7 @@ export interface AppUser {
 }
 
 export interface UserDto {
+  id: number | null;
   uid?: string;
   email?: string;
   photoURL?: string;

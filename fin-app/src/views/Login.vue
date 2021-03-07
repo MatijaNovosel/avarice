@@ -186,6 +186,7 @@ export default defineComponent({
         ).signInEmail(entry.email, entry.password);
 
         store.dispatch("setUser", {
+          id: userData.id,
           uid: userData.uid,
           email: userData.email,
           photoURL: userData.photoURL,
