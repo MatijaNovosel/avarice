@@ -57,88 +57,10 @@
     </div>
     <div class="overflow-x-auto col-span-12 lg:col-span-9">
       <div class="min-w-full">
-        <div
-          class="shadow overflow-hidden rounded-t-lg dark:border-0 border-gray-300 border"
-        >
-          <table class="min-w-full divide-y dark:divide-gray-900">
-            <thead class="dark:bg-gray-700 bg-gray-50">
-              <tr>
-                <th
-                  v-for="(header, i) in headers"
-                  :key="i"
-                  scope="col"
-                  :class="{
-                    'text-left': header.align == 'left',
-                    'text-center': header.align == 'center',
-                    'text-right': header.align == 'right'
-                  }"
-                  class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
-                >
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              v-if="!state.loading"
-              class="dark:bg-gray-800 bg-white divide-y dark:divide-gray-900 divide-gray-200 dark:text-gray-300"
-            >
-              <tr
-                v-for="transaction in state.transactions"
-                :key="transaction.id"
-              >
-                <td class="pl-6 py-5 whitespace-nowrap">
-                  {{ transaction.description }}
-                </td>
-                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
-                  {{ transaction.amount }} HRK
-                </td>
-                <td class="px-6 whitespace-nowrap">
-                  <div class="text-sm text-gray-900 dark:text-white">
-                    {{ transaction.createdAt }}
-                  </div>
-                  <div class="text-sm text-gray-500">
-                    {{
-                      formatDistance(
-                        parse(
-                          transaction.createdAt,
-                          "dd.MM.yyyy. HH:mm:ss",
-                          new Date()
-                        ),
-                        new Date(),
-                        {
-                          addSuffix: true
-                        }
-                      )
-                    }}
-                  </div>
-                </td>
-                <td class="whitespace-nowrap space-x-2 text-center">
-                  <tag
-                    v-for="(tag, i) in transaction.tagIds"
-                    :key="i"
-                    :text-color="transaction.expense ? '#c52626' : '#428733'"
-                    :color="transaction.expense ? '#ff9494' : '#bedeb7'"
-                    >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
-                  >
-                </td>
-                <td
-                  class="px-6 whitespace-nowrap text-center text-sm font-medium"
-                >
-                  <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                    >Edit</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <progress-bar v-if="state.loading" mode="indeterminate" class="h-2" />
-          <div
-            v-if="!state.loading && state.totalTransactions == 0"
-            class="py-5 text-center w-full dark:bg-gray-800 bg-white border-t dark:text-gray-400 border-b dark:border-gray-900 border-gray-200"
-          >
-            {{ $t("noItemsFound") }}
-          </div>
-        </div>
+        <transactions-table
+          :transactions="state.transactions"
+          :loading="state.loading"
+        />
         <paginator
           v-model:first="state.transactionsOffset"
           v-model:rows="state.numberOfRows"
@@ -169,13 +91,13 @@ import {
   computed
 } from "vue";
 import { formatDistance, parse } from "date-fns";
-import { TableHeaderItem } from "@/models/table";
 import { Pagination } from "@/models/pagination";
 import { TagEnum } from "@/constants/tag-enum";
 import { debounce } from "@/helpers/helpers";
 import { RefreshController } from "@/helpers/refresh";
 import MDIIcon from "@/components/mdi-icon.vue";
 import { useStore } from "vuex";
+import TransactionsTable from "../components/transactions-table.vue";
 
 interface Search {
   description: string;
@@ -202,7 +124,8 @@ interface State {
 export default defineComponent({
   name: "History",
   components: {
-    "mdi-icon": MDIIcon
+    "mdi-icon": MDIIcon,
+    TransactionsTable
   },
   setup() {
     const store = useStore();
@@ -221,37 +144,14 @@ export default defineComponent({
       loading: false,
       totalTransactions: 0,
       numberOfPages: 5,
-      numberOfRows: 20,
-      pageOptions: [20, 30],
+      numberOfRows: 10,
+      pageOptions: [10, 15],
       currentPage: 0,
       transactionsOffset: 0,
       search: {
         description: ""
       }
     });
-
-    const headers: TableHeaderItem[] = [
-      {
-        text: "Description",
-        align: "left"
-      },
-      {
-        text: "Amount",
-        align: "left"
-      },
-      {
-        text: "Date",
-        align: "left"
-      },
-      {
-        text: "Tags",
-        align: "center"
-      },
-      {
-        text: "",
-        align: "left"
-      }
-    ];
 
     async function getTransactions() {
       state.loading = true;
@@ -316,7 +216,6 @@ export default defineComponent({
       state,
       formatDistance,
       parse,
-      headers,
       pageChanged,
       TagEnum,
       search,

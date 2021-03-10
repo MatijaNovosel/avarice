@@ -85,32 +85,14 @@
         <progress-spinner strokeWidth="10" class="h-24 w-24" />
       </div>
       <template v-else>
-        <div
-          class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 my-10 px-5"
-        >
-          <transaction-card
-            v-for="change in state.transactions"
-            :key="change.id"
-            :expense="change.expense"
-            :title="change.description"
-            :amount="change.amount"
-            :tags="change.tagIds"
-            :date="change.createdAt"
-            :transfer="change.transfer"
-            :currency="state.user.preferredCurrency"
-            describe-date
-            show
-          />
+        <div class="overflow-x-auto col-span-12 lg:col-span-9">
+          <div class="min-w-full">
+            <transactions-table
+              :transactions="state.transactions"
+              :loading="state.loading"
+            />
+          </div>
         </div>
-        <paginator
-          v-model:first="state.transactionsOffset"
-          v-model:rows="state.numberOfRows"
-          :totalRecords="state.totalTransactions"
-          :rowsPerPageOptions="state.transactionPageOption"
-          :pageLinkSize="state.transactionsNumberOfPages"
-          @page="pageChanged"
-          class="py-3 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 dark:bg-gray-700 bg-gray-100 rounded-b-xl"
-        />
       </template>
     </div>
   </div>
@@ -135,7 +117,6 @@ import {
   RecentDepositsAndWithdrawals
 } from "../models/change-item";
 import DashboardAmountCard from "@/components/dashboard-amount-card.vue";
-import TransactionCard from "../components/transaction-card.vue";
 import { getService, Types } from "../di-container";
 import { ITransactionService } from "../services/interfaces/transaction-service";
 import { GraphHTMLElement, GraphOptions } from "@/models/graph";
@@ -147,6 +128,7 @@ import { useStore } from "vuex";
 import { AppUser } from "@/models/user";
 import { useI18n } from "vue-i18n";
 import { format } from "date-fns";
+import TransactionsTable from "../components/transactions-table.vue";
 
 interface GraphData {
   labels: string[];
@@ -178,8 +160,8 @@ export default defineComponent({
   name: "Home",
   components: {
     DashboardAmountCard,
-    TransactionCard,
-    MdiIcon
+    MdiIcon,
+    TransactionsTable
   },
   setup() {
     const store = useStore();
