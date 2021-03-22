@@ -11,11 +11,16 @@ interface GraphAxesGridLinesOptions {
   display?: boolean;
 }
 
+interface GraphAxesTicksOptions {
+  display?: boolean;
+}
+
 interface GraphAxesOptions {
   gridLines?: GraphAxesGridLinesOptions;
   display?: boolean;
   stacked?: boolean;
   scaleLabel?: GraphAxesScaleLabelOptions;
+  ticks?: GraphAxesTicksOptions;
 }
 
 interface GraphScalesOptions {

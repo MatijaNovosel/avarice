@@ -26,7 +26,7 @@
       >
         <tr v-for="transaction in state.transactions" :key="transaction.id">
           <td class="pl-6 py-5 whitespace-nowrap">
-            {{ transaction.description }}
+            {{ 'Sample' }}
           </td>
           <td class="px-6 whitespace-nowrap text-sm text-gray-500">
             {{ transaction.amount }} HRK
@@ -143,5 +143,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style></style>
