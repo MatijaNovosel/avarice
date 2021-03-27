@@ -6,7 +6,7 @@ CREATE TABLE `tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `description` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `appuser` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -17,7 +17,7 @@ CREATE TABLE `appuser` (
   `password` VARCHAR(255) DEFAULT NULL,
   `emailConfirmed` TINYINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `paymentsource` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -28,13 +28,13 @@ CREATE TABLE `paymentsource` (
   PRIMARY KEY (`id`),
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `paymentsource_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `locale` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `text` VARCHAR(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `appsetting` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -47,7 +47,7 @@ CREATE TABLE `appsetting` (
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `appsetting_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
   CONSTRAINT `appsetting_ibfk_2` FOREIGN KEY (`localeId`) REFERENCES `locale` (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `financialchange` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -63,7 +63,7 @@ CREATE TABLE `financialchange` (
   KEY `paymentSourceId` (`paymentSourceId`),
   CONSTRAINT `financialchange_ibfk_1` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`),
   CONSTRAINT `financialchange_ibfk_2` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `financialchangetag` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -74,7 +74,7 @@ CREATE TABLE `financialchangetag` (
   KEY `tagId` (`tagId`),
   CONSTRAINT `financialchangetag_ibfk_1` FOREIGN KEY (`financialChangeId`) REFERENCES `financialchange` (`id`),
   CONSTRAINT `financialchangetag_ibfk_2` FOREIGN KEY (`tagId`) REFERENCES `tag` (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `financialhistory` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -87,7 +87,7 @@ CREATE TABLE `financialhistory` (
   KEY `appUserId` (`appUserId`),
   CONSTRAINT `financialhistory_ibfk_1` FOREIGN KEY (`paymentSourceId`) REFERENCES `paymentsource` (`id`),
   CONSTRAINT `financialhistory_ibfk_2` FOREIGN KEY (`appUserId`) REFERENCES `appuser` (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 DELIMITER $$ 
 DROP TRIGGER IF EXISTS appUserAfterInsertTrigger $$ 
