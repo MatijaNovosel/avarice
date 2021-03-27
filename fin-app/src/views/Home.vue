@@ -64,7 +64,7 @@
         ref="dailySpendingGraph"
         type="bar"
         :data="state.graphDataDailyChanges"
-        :options="dailyChangesgraphOptions"
+        :options="dailyChangesGraphOptions"
         :height="300"
         :width="500"
       />
@@ -334,7 +334,7 @@ export default defineComponent({
       () => reinitGraphs()
     );
 
-    const dailyChangesgraphOptions: GraphOptions = {
+    const dailyChangesGraphOptions: GraphOptions = {
       title: {
         display: true,
         text: t("dailyChanges")
@@ -370,7 +370,7 @@ export default defineComponent({
     return {
       state,
       pageChanged,
-      dailyChangesgraphOptions,
+      dailyChangesGraphOptions,
       financialChangedVisualizedGraph,
       dailySpendingGraph
     };
