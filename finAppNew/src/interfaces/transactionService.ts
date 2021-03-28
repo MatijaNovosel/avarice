@@ -1,4 +1,4 @@
-import { DailyChange } from "./../../models/change-item";
+import { DailyChange } from "@/models/change-item";
 import {
   CreateFinancialChangeItemDto,
   CreateTransferDto,

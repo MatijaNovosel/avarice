@@ -1,8 +1,6 @@
-import firebase from "firebase";
-import { User } from "@firebase/auth-types";
-import axiosInstance from "../axios-instance";
+import axios from "axios";
 import { IAuthService } from "../interfaces/authService";
-import { formatGqlRequest } from "@/helpers/helpers";
+import { formatGqlRequest } from "@/helpers";
 import { UserDto } from "@/models/user";
 
 export class AuthService implements IAuthService {
@@ -33,63 +31,11 @@ export class AuthService implements IAuthService {
       data: {
         data: { register }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
     return register;
-  }
-
-  async signInGoogle(): Promise<UserDto> {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const credential = await firebase.auth().signInWithPopup(provider);
-
-    const { uid, email, photoURL, displayName } = {
-      ...(credential.user as User)
-    };
-
-    const query = formatGqlRequest({
-      type: "mutation",
-      name: "googleLogin",
-      requestParams: [
-        {
-          name: "input",
-          subFields: [
-            {
-              name: "email",
-              quoted: true,
-              value: email
-            },
-            {
-              name: "uid",
-              quoted: true,
-              value: uid
-            },
-            {
-              name: "photoURL",
-              quoted: true,
-              value: photoURL
-            },
-            {
-              name: "displayName",
-              quoted: true,
-              value: displayName
-            }
-          ]
-        }
-      ],
-      responseParams: ["accessToken"]
-    });
-
-    const {
-      data: {
-        data: { login }
-      }
-    } = await axiosInstance.post("", {
-      query
-    });
-
-    return login;
   }
 
   async signInEmail(email: string, password: string): Promise<UserDto> {
@@ -129,7 +75,7 @@ export class AuthService implements IAuthService {
       data: {
         data: { login }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 

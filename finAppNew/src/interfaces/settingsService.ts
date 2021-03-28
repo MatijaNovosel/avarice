@@ -1,7 +1,7 @@
 import {
   UpdateUserSettingsDto,
   UserSettings
-} from "./../../models/user-settings";
+} from "@/models/user-settings";
 
 export interface ISettingsService {
   getSettings(appUserId: number): Promise<UserSettings>;

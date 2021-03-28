@@ -1,8 +1,7 @@
 ﻿<template>
-  <v-app-bar dense app clipped-left>
-    <v-app-bar-nav-icon @click="toggleDrawer" />
+  <v-app-bar dense app class="elevation-1">
     <v-toolbar-title>
-      {{ $t("appTitle") }}
+      Good afternoon Username!
     </v-toolbar-title>
     <v-spacer />
   </v-app-bar>
@@ -12,28 +11,19 @@
 import { defineComponent, reactive, SetupContext } from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
 
-interface UserMenu {
-  open: boolean;
-}
-
 interface State {
   routeNames: RouteNames;
 }
 
 export default defineComponent({
   name: "app-bar",
-  setup(props, context: SetupContext) {
+  setup() {
     const state: State = reactive({
       routeNames: RouteNames
     });
 
-    function toggleDrawer() {
-      context.emit("toggle-drawer");
-    }
-
     return {
-      state,
-      toggleDrawer
+      state
     };
   }
 });

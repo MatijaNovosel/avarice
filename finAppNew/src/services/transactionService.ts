@@ -4,17 +4,17 @@ import {
   RecentDepositsAndWithdrawals,
   TransactionAmountRange,
   DailyChangeDto
-} from "./../../models/change-item";
-import { ItemCollection } from "../../models/item-collection";
+} from "@/models/change-item";
+import { ItemCollection } from "@/models/item-collection";
 import {
   CreateFinancialChangeItemDto,
   FinancialChangeItem
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
-import axiosInstance from "../axios-instance";
-import { ITransactionService } from "../interfaces/transactionService";
+import { ITransactionService } from "@/interfaces/transactionService";
 import { format } from "date-fns";
-import { formatGqlRequest } from "@/helpers/helpers";
+import { formatGqlRequest } from "@/helpers";
+import axios from "axios";
 
 export class ChangeService implements ITransactionService {
   async getRecentDepositsAndWithdrawals(
@@ -36,7 +36,7 @@ export class ChangeService implements ITransactionService {
       data: {
         data: { recentDepositsAndWithdrawals }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -74,7 +74,7 @@ export class ChangeService implements ITransactionService {
       ]
     });
 
-    await axiosInstance.post("", {
+    await axios.post("", {
       query
     });
   }
@@ -132,7 +132,7 @@ export class ChangeService implements ITransactionService {
       ]
     });
 
-    await axiosInstance.post("", {
+    await axios.post("", {
       query
     });
   }
@@ -197,7 +197,7 @@ export class ChangeService implements ITransactionService {
       data: {
         data: { financialChanges }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -242,7 +242,7 @@ export class ChangeService implements ITransactionService {
       data: {
         data: { financialHistory }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -275,12 +275,12 @@ export class ChangeService implements ITransactionService {
       ],
       responseParams: ["createdAt", "total"]
     });
-    
+
     const {
       data: {
         data: { financialHistory }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -311,7 +311,7 @@ export class ChangeService implements ITransactionService {
       data: {
         data: { transactionAmountRange }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -335,7 +335,7 @@ export class ChangeService implements ITransactionService {
       data: {
         data: { dailyChanges }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 

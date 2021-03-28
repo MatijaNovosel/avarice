@@ -5,7 +5,7 @@ import messages from '../translations'
 Vue.use(VueI18n);
 
 export default new VueI18n({
-  locale: "hr",
+  locale: "en",
   messages,
   silentFallbackWarn: true
 });

@@ -1,3 +1,5 @@
+import { GqlRequestType } from "./types";
+
 export function getContentDispositionName(response: {
   data?: BlobPart;
   headers?;
@@ -285,4 +287,67 @@ export function formatDecimal(value, options?: Intl.NumberFormatOptions) {
   });
 
   return formatter.format(value);
+}
+
+interface GqlRequestParam {
+  name: string;
+  quoted?: boolean;
+  value?: any;
+  subFields?: GqlRequestParam[];
+}
+
+interface GqlResponseParam {
+  name: string;
+  subFields?: Array<string | GqlResponseParam>;
+}
+
+interface GqlRequest {
+  type: GqlRequestType;
+  name: string;
+  responseParams?: Array<string | GqlResponseParam>;
+  requestParams?: GqlRequestParam[];
+}
+
+export function formatRequestParam(param: GqlRequestParam): string {
+  if (!param.subFields) {
+    return `${param.name}: ${
+      param.quoted !== undefined && param.quoted == true
+        ? `"${param.value}"`
+        : param.value
+    }`;
+  } else {
+    return `${param.name}: { ${param?.subFields?.map(x =>
+      formatRequestParam(x)
+    )} }`;
+  }
+}
+
+export function formatResponseParam(param: GqlResponseParam): string {
+  if (typeof param == "string") {
+    return param;
+  } else {
+    return `${param.name} { ${param?.subFields?.map(x =>
+      formatResponseParam(x as GqlResponseParam)
+    )} }`;
+  }
+}
+
+export function formatGqlRequest({
+  type,
+  name,
+  responseParams,
+  requestParams
+}: GqlRequest): string {
+  const requestParamsFormatted = requestParams
+    ? requestParams.map(x => formatRequestParam(x))
+    : "";
+  const responseParamsFormatted = responseParams
+    ? `{ ${responseParams.map(x => {
+        if (typeof x == "string") {
+          return x;
+        }
+        return formatResponseParam(x);
+      })} }`
+    : "";
+  return `${type} { ${name}(${requestParamsFormatted}) ${responseParamsFormatted} }`;
 }

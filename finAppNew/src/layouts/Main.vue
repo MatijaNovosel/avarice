@@ -1,8 +1,10 @@
 <template>
   <v-main>
-    <navigation-drawer :links="links" :drawer="state.drawer" />
     <app-bar />
-    <router-view />
+    <navigation-drawer :links="links" :drawer="state.drawer" />
+    <v-container>
+      <router-view />
+    </v-container>
     <snackbar />
   </v-main>
 </template>

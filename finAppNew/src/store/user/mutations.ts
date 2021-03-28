@@ -1,11 +1,11 @@
 import IWebStorage from "@/interfaces/webStorageService";
 import { getService, Types } from '@/di-container';
-import IUser from "@/models/user";
+import { AppUser } from "@/models/user";
 
 const storage = getService<IWebStorage>(Types.WebStorageService);
 
 export default {
-  login: (state, data: IUser) => {
+  login: (state, data: AppUser) => {
     storage.saveState("user", JSON.stringify(data));
     state.data = data;
   },

@@ -16,18 +16,9 @@ export default new Vuetify({
     t: (key, ...params) => i18n.t(key, params).toString()
   },
   theme: {
+    dark: true,
     options: {
       customProperties: false
-    },
-    themes: {
-      light: {
-        accent: "#0e76bc",
-        primary: "#105fa9",
-        success: "#4fb749",
-        warning: "#d66716",
-        error: "#c73826",
-        info: "#3DC6F4"
-      }
     }
   }
 });

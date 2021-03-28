@@ -1,6 +1,6 @@
-import IUser from "@/models/user";
+import { AppUser } from "@/models/user";
 
 export default {
-  data: state => state.data as IUser,
+  data: state => state.data as AppUser,
   isAuthenticated: state => state.isAuthenticated
 };

@@ -1,9 +1,8 @@
 export default {
   en: {
-    hello: "hello world"
+    appTitle: "FinApp"
   },
   hr: {
-    hello: "pozdrav",
     appTitle: "FinApp",
     $vuetify: {
       carousel: {

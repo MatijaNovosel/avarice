@@ -1,8 +1,8 @@
-import { TagPercentageRecord } from "./../../models/payment-source";
-import axiosInstance from "../axios-instance";
-import { IPaymentSourceService } from "../interfaces/paymentSourceService";
+import { TagPercentageRecord } from "@/models/payment-source";
+import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 import { AccountLatestValue, PaymentSource } from "@/models/payment-source";
-import { formatGqlRequest } from "@/helpers/helpers";
+import { formatGqlRequest } from "@/helpers";
+import axios from "axios";
 
 export class PaymentSourceService implements IPaymentSourceService {
   async getAllByUserId(appUserId: number): Promise<PaymentSource[]> {
@@ -22,7 +22,7 @@ export class PaymentSourceService implements IPaymentSourceService {
       data: {
         data: { paymentSources }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -46,7 +46,7 @@ export class PaymentSourceService implements IPaymentSourceService {
       data: {
         data: { latestValues }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
@@ -70,7 +70,7 @@ export class PaymentSourceService implements IPaymentSourceService {
       data: {
         data: { tagPercentages }
       }
-    } = await axiosInstance.post("", {
+    } = await axios.post("", {
       query
     });
 
