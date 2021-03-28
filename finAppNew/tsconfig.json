@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "chai",
+      "node",
+      "mocha",
+      "reflect-metadata",
+      "vuetify",
+      "webpack-env"
+    ],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "src/plugins/bus.ts",
+    "src/permissions.ts"
+  ],
+  "exclude": ["node_modules"]
+}
