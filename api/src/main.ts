@@ -7,9 +7,10 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // app.use(helmet());
+  // app.use(csurf());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
-  // app.use(csurf());
+  app.setGlobalPrefix("api");
   await app.listen(3000);
 }
 

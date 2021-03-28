@@ -3,7 +3,7 @@ import { Args, Query, Resolver } from "@nestjs/graphql";
 import {
   GFinancialHistory,
   GFinancialHistoryCurrentAmount
-} from "src/entities/financialhistory";
+} from "../entities/financialhistory";
 
 @Resolver(() => GFinancialHistory)
 export class FinancialHistoryResolver {

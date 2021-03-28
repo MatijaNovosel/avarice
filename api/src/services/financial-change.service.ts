@@ -20,9 +20,9 @@ import {
   Like,
   Repository
 } from "typeorm";
-import { FinancialChangeInputType } from "src/input-types/financial-change.input-type";
+import { FinancialChangeInputType } from "../input-types/financial-change.input-type";
 import { format, parse } from "date-fns";
-import { Appuser } from "src/entities/appuser";
+import { Appuser } from "../entities/appuser";
 
 @Injectable()
 export class FinancialChangeService {

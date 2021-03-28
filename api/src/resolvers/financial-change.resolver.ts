@@ -7,11 +7,11 @@ import { PaginatedFinancialChange } from "./../models/item-collection";
 import {
   FinancialChangeInputType,
   TransferInputType
-} from "src/input-types/financial-change.input-type";
-import { VoidScalar } from "src/scalars/void";
-import { GFinancialChange } from "src/entities/financialchange";
+} from "../input-types/financial-change.input-type";
+import { VoidScalar } from "../scalars/void";
+import { GFinancialChange } from "../entities/financialchange";
 import { Args, Float, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { FinancialChangeService } from "src/services/financial-change.service";
+import { FinancialChangeService } from "../services/financial-change.service";
 
 @Resolver(() => GFinancialChange)
 export class FinancialChangeResolver {

@@ -1,4 +1,4 @@
-import { Financialchange } from "src/entities/financialchange";
+import { Financialchange } from "../../entities/financialchange";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 

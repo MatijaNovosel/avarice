@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Financialchangetag } from "src/entities/financialchangetag";
+import { Financialchangetag } from "../../entities/financialchangetag";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Financialchangetag])],

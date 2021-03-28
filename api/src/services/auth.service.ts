@@ -1,11 +1,11 @@
-import { Appuser, GAppUserLoginDto } from "src/entities/appuser";
+import { Appuser, GAppUserLoginDto } from "../entities/appuser";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
-import { AuthGoogleLoginInputType } from "src/input-types/auth.input-type";
-import { AccessToken } from "src/entities/auth";
+import { AuthGoogleLoginInputType } from "../input-types/auth.input-type";
+import { AccessToken } from "../entities/auth";
 
 @Injectable()
 export class AuthService {

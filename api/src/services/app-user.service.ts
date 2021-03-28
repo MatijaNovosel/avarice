@@ -1,5 +1,5 @@
 import { AppUserInputType } from "./../input-types/app-user.input-type";
-import { Appuser } from "src/entities/appuser";
+import { Appuser } from "../entities/appuser";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";

@@ -1,4 +1,4 @@
-import { Paymentsource } from 'src/entities/paymentsource';
+import { Paymentsource } from '../../entities/paymentsource';
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 

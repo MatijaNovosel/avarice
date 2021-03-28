@@ -2,21 +2,21 @@ import { PaymentSourceHttpModule } from "./modules/http/payment-source-http.modu
 import { FinancialHistoryHttpModule } from "./modules/http/financial-history-http.module";
 import { AuthModule } from "./auth/auth.module";
 import { AppUserHttpModule } from "./modules/http/app-user-http.module";
-import { AppSettingHttpModule } from "src/modules/http/app-setting-http.module";
-import { Tag } from "src/entities/tag";
-import { Paymentsource } from "src/entities/paymentsource";
-import { Financialhistory } from "src/entities/financialhistory";
-import { Financialchangetag } from "src/entities/financialchangetag";
-import { Financialchange } from "src/entities/financialchange";
-import { Appuser } from "src/entities/appuser";
-import { Appsetting } from "src/entities/appsetting";
+import { AppSettingHttpModule } from "./modules/http/app-setting-http.module";
+import { Tag } from "./entities/tag";
+import { Paymentsource } from "./entities/paymentsource";
+import { Financialhistory } from "./entities/financialhistory";
+import { Financialchangetag } from "./entities/financialchangetag";
+import { Financialchange } from "./entities/financialchange";
+import { Appuser } from "./entities/appuser";
+import { Appsetting } from "./entities/appsetting";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import serverConfig from "src/config/server-config.json";
+import serverConfig from "./config/server-config.json";
 import { GraphQLModule } from "@nestjs/graphql";
-import { VoidScalar } from "src/scalars/void";
-import { FinancialChangeHttpModule } from "src/modules/http/financial-change-http.module";
-import { TagHttpModule } from "src/modules/http/tag-http.module";
+import { VoidScalar } from "./scalars/void";
+import { FinancialChangeHttpModule } from "./modules/http/financial-change-http.module";
+import { TagHttpModule } from "./modules/http/tag-http.module";
 import { Locale } from "./entities/locale";
 
 const { host, port, username, password, database } = { ...serverConfig };
@@ -25,6 +25,8 @@ const { host, port, username, password, database } = { ...serverConfig };
   imports: [
     GraphQLModule.forRoot({
       debug: false,
+      useGlobalPrefix: true,
+      context: ({ req }) => ({ req }),
       autoSchemaFile: "schema.gql"
     }),
     TypeOrmModule.forRoot({
@@ -56,4 +58,5 @@ const { host, port, username, password, database } = { ...serverConfig };
   ],
   providers: [VoidScalar]
 })
+
 export class AppModule {}

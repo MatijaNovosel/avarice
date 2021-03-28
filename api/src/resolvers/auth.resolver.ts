@@ -5,8 +5,8 @@ import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import {
   AuthEmailLoginInputType,
   AuthGoogleLoginInputType
-} from "src/input-types/auth.input-type";
-import { AccessToken } from "src/entities/auth";
+} from "../input-types/auth.input-type";
+import { AccessToken } from "../entities/auth";
 import { ValidationPipe } from "@nestjs/common";
 
 @Resolver()
