@@ -1,17 +1,20 @@
 import {
   extend,
-  setInteractionMode,
-  localize
+  setInteractionMode
 } from "vee-validate/dist/vee-validate.full";
 import { isAfter, isBefore, isSameDay, parseISO } from "date-fns";
-import translations from "../translations/index";
+// import translations from "../translations/index";
 
 setInteractionMode("eager");
 
-localize("hr", {
-  code: "hr",
-  ...translations.hr.validation
-});
+/*
+
+  localize("hr", {
+    code: "hr",
+    ...translations.hr.validation
+  });
+
+*/
 
 extend("numberWithComma", {
   validate: value => {

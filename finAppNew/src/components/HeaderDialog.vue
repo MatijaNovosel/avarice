@@ -1,24 +1,23 @@
 <template>
   <v-dialog
     persistent
-    v-model="state.isOpen"
+    v-model="state.open"
     :max-width="state.maxWidth"
     :fullscreen="$vuetify.breakpoint.xs"
   >
     <v-card :style="{ 'max-height': state['max-height'] }">
-      <v-card-title style="background-color: #9999992e">
+      <v-card-title>
         <span
-          class="black--text"
           :style="{
             'font-size':
               $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? '15px' : '20px'
           }"
-          >{{ state.title }}</span
         >
+          {{ state.title }}
+        </span>
         <v-spacer />
         <v-btn
           v-if="state.haveCloseButton"
-          color="black"
           @click="close"
           small
           icon
@@ -29,7 +28,7 @@
       </v-card-title>
       <v-divider />
       <v-card-text class="pb-0">
-        <slot></slot>
+        <slot />
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -40,8 +39,7 @@ import {
   defineComponent,
   SetupContext,
   reactive,
-  watch,
-  computed
+  watch
 } from "@vue/composition-api";
 
 interface Props {
@@ -50,23 +48,23 @@ interface Props {
   open: false;
   title: string;
   haveCloseButton?: boolean;
+  value: boolean;
 }
 
 export default defineComponent({
   name: "header-dialog",
-
   props: {
     maxWidth: null,
     "max-height": null,
     open: null,
     title: null,
-    haveCloseButton: null
+    haveCloseButton: null,
+    value: null
   },
-
   setup(props: Props, context: SetupContext) {
     const state = reactive({
       title: props.title,
-      isOpen: false,
+      open: props.value,
       "max-height": props["max-height"],
       maxWidth: props.maxWidth,
       haveCloseButton:
@@ -76,16 +74,13 @@ export default defineComponent({
     });
 
     watch(
-      () => props.open,
-      (value) => (state.isOpen = props.open)
-    );
-
-    watch(
-      () => props.title,
-      (value) => (state.title = props.title)
+      () => props.value,
+      val => (state.open = val)
     );
 
     function close() {
+      state.open = false;
+      context.emit("input", state.open);
       context.emit("close");
     }
 

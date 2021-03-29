@@ -1,5 +1,13 @@
 export default {
   en: {
+    expense: "Expense",
+    paymentSource: "Payment source",
+    tags: "Tags",
+    newTransaction: "New transaction",
+    description: "Description",
+    amount: "Amount",
+    save: "Save",
+    create: "Create",
     appTitle: "FinApp",
     good: "Good",
     morning: "Morning",
@@ -78,24 +86,6 @@ export default {
           icon: "Rating {0} of {1}"
         }
       }
-    },
-    tags: {
-      Food: "Food",
-      Gifts: "Gifts",
-      Games: "Games",
-      PublicTransport: "Public transport",
-      Other: "Other",
-      Drink: "Drink",
-      Groceries: "Groceries",
-      Transfer: "Transfer",
-      AcademicHelp: "Academic help",
-      TechnologyAndDevices: "Technology and devices",
-      Salary: "Salary",
-      Medicine: "Medicine",
-      Cosmetics: "Cosmetics",
-      Rent: "Rent",
-      Debt: "Debt",
-      Clothes: "Clothes"
     }
   },
   hr: {

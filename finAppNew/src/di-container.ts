@@ -12,6 +12,8 @@ import { SettingsService } from "./services/settingsService";
 import { IPaymentSourceService } from "./interfaces/paymentSourceService";
 import { ISettingsService } from "./interfaces/settingsService";
 import { PaymentSourceService } from "./services/paymentSourceService";
+import { TagService } from "./services/tagService";
+import { ITagService } from "./interfaces/tagService";
 
 export function getService<T>(symbol): T {
   return DIContainer.get<T>(symbol);
@@ -24,6 +26,7 @@ export class Types {
   static readonly ChangeService = Symbol("ITransactionService");
   static readonly SettingsService = Symbol("ISettingsService");
   static readonly PaymentSourceService = Symbol("IPaymentSourceService");
+  static readonly TagService = Symbol("ITagService");
 }
 
 const DIContainer = new Container();
@@ -46,6 +49,10 @@ DIContainer.bind<ITransactionService>(Types.ChangeService).toConstantValue(
 
 DIContainer.bind<ISettingsService>(Types.SettingsService).toConstantValue(
   new SettingsService()
+);
+
+DIContainer.bind<ITagService>(Types.TagService).toConstantValue(
+  new TagService()
 );
 
 DIContainer.bind<IPaymentSourceService>(

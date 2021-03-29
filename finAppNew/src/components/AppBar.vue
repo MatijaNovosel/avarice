@@ -22,7 +22,7 @@
         </v-btn>
       </template>
       <v-list dense>
-        <v-list-item>
+        <v-list-item @click="state.newTransactionDialog = true">
           <v-list-item-title>
             New transaction
           </v-list-item-title>
@@ -39,6 +39,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
+    <new-transaction-dialog v-model="state.newTransactionDialog" />
   </v-app-bar>
 </template>
 
@@ -50,18 +51,24 @@ import {
   reactive
 } from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
+import NewTransactionDialog from "@/components/NewTransactionDialog.vue";
 
 interface State {
   routeNames: RouteNames;
   timeOfDay: string;
+  newTransactionDialog: boolean;
 }
 
 export default defineComponent({
   name: "app-bar",
+  components: {
+    NewTransactionDialog
+  },
   setup() {
     const vm = getCurrentInstance();
 
     const state: State = reactive({
+      newTransactionDialog: false,
       routeNames: RouteNames,
       timeOfDay: computed(() => {
         const hours = new Date().getHours();

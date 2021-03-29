@@ -2,7 +2,6 @@
   <v-row>
     <v-col cols="12">
       <v-data-table
-        dense
         :headers="state.headers"
         :items="state.transactions"
         :items-per-page="15"
@@ -22,15 +21,18 @@
             }})
           </span>
         </template>
+        <template #item.amount="{ item }">
+          {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+        </template>
         <template #item.tagIds="{ item }">
           <v-chip
-            x-small
+            small
             v-for="(tag, i) in item.tagIds"
             :key="i"
             class="mr-2"
             :color="item.expense ? 'error' : 'success'"
           >
-            {{ $t(`tags.${TagEnum[tag]}`) }}
+            {{ tag }}
           </v-chip>
         </template>
       </v-data-table>
@@ -51,6 +53,7 @@ import {
 } from "@vue/composition-api";
 import { formatDistance, parse } from "date-fns";
 import { TagEnum } from "@/constants/tag-enum";
+import { formatCurrencyDisplay } from "@/helpers";
 
 interface State {
   transactions: FinancialChangeItem[];
@@ -104,7 +107,8 @@ export default defineComponent({
       state,
       formatDistance,
       parse,
-      TagEnum
+      TagEnum,
+      formatCurrencyDisplay
     };
   }
 });

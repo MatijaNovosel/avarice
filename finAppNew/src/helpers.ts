@@ -339,7 +339,7 @@ export function formatGqlRequest({
   requestParams
 }: GqlRequest): string {
   const requestParamsFormatted = requestParams
-    ? requestParams.map(x => formatRequestParam(x))
+    ? `(${requestParams.map(x => formatRequestParam(x))})`
     : "";
   const responseParamsFormatted = responseParams
     ? `{ ${responseParams.map(x => {
@@ -349,7 +349,7 @@ export function formatGqlRequest({
         return formatResponseParam(x);
       })} }`
     : "";
-  return `${type} { ${name}(${requestParamsFormatted}) ${responseParamsFormatted} }`;
+  return `${type} { ${name}${requestParamsFormatted} ${responseParamsFormatted} }`;
 }
 
 export function formatCurrencyDisplay(
