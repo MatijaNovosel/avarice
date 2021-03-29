@@ -1,3 +1,4 @@
+import { GTag } from './tag';
 import { Appuser } from "./appuser";
 import {
   Column,
@@ -85,6 +86,6 @@ export class GFinancialChange {
   @Field(() => Int)
   paymentSourceId?: number;
 
-  @Field(() => [Int])
-  tagIds?: number[];
+  @Field(() => [GTag])
+  tags?: GTag[];
 }

@@ -17,7 +17,7 @@ type GFinancialChange {
   expense: Boolean!
   transfer: Boolean!
   paymentSourceId: Int!
-  tagIds: [Int!]!
+  tags: [GTag!]!
 }
 
 type GLocale {

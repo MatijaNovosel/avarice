@@ -102,7 +102,13 @@ export class FinancialChangeService {
       order: { createdAt: "DESC" },
       skip,
       take,
-      relations: ["financialchangetags"]
+      join: {
+        alias: "transactions",
+        leftJoinAndSelect: {
+          "financialchangetags": "transactions.financialchangetags",
+          "tag": "financialchangetags.tag"
+        }
+      }
     });
 
     const count = await this.financialChangeRepository.count({
@@ -118,7 +124,10 @@ export class FinancialChangeService {
         createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm:ss"),
         expense: fc.expense,
         paymentSourceId: fc.paymentSourceId,
-        tagIds: fc.financialchangetags.map((fct) => fct.tagId)
+        tags: fc.financialchangetags.map((fct) => ({
+          id: fct.tagId,
+          description: fct.tag.description
+        }))
       })),
       count
     );

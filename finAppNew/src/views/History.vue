@@ -27,12 +27,12 @@
         <template #item.tagIds="{ item }">
           <v-chip
             small
-            v-for="(tag, i) in item.tagIds"
+            v-for="(tag, i) in item.tags"
             :key="i"
             class="mr-2"
             :color="item.expense ? 'error' : 'success'"
           >
-            {{ tag }}
+            {{ tag.description }}
           </v-chip>
         </template>
       </v-data-table>

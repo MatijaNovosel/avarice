@@ -185,7 +185,10 @@ export class ChangeService implements ITransactionService {
             "description",
             "expense",
             "paymentSourceId",
-            "tagIds"
+            {
+              name: "tags",
+              subFields: ["id", "description"]
+            }
           ]
         }
       ]
