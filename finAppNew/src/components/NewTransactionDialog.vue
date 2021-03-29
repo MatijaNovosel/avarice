@@ -5,8 +5,8 @@
     :title="$t('newTransaction')"
     @close="resetNewTransactionDialog"
   >
-    <validation-observer ref="newTransactionFormRef">
-      <form @submit.prevent="addNewTransaction">
+    <validation-observer ref="newTransactionFormRef" v-slot="{ handleSubmit }">
+      <form @submit.prevent="handleSubmit(addNewTransaction)">
         <v-row class="mt-1">
           <v-col cols="12">
             <validation-provider
@@ -129,6 +129,7 @@
 <script lang="ts">
 import {
   defineComponent,
+  getCurrentInstance,
   onMounted,
   reactive,
   Ref,
@@ -142,6 +143,9 @@ import { getService, Types } from "@/di-container";
 import { ITagService } from "@/interfaces/tagService";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 import { PaymentSource } from "@/models/payment-source";
+import { format } from "date-fns";
+import { CreateFinancialChangeItemDto } from "@/models/change-item";
+import { ITransactionService } from "@/interfaces/transactionService";
 
 interface State {
   amount: string | null;
@@ -169,6 +173,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const newTransactionFormRef: Ref<any> = ref(null);
+    const vm = getCurrentInstance();
 
     const state: State = reactive({
       tagIds: [],
@@ -183,13 +188,34 @@ export default defineComponent({
     });
 
     function resetNewTransactionDialog() {
-      // newTransactionFormRef.value.reset();
-      state.open = false;
-      context.emit("input", state.open);
-      context.emit("close");
+      vm?.$nextTick(() => {
+        state.amount = null;
+        state.description = null;
+        state.tagIds = null;
+        state.paymentSource = null;
+        state.expense = true;
+        newTransactionFormRef.value.reset();
+        state.open = false;
+        context.emit("input", state.open);
+        context.emit("close");
+      });
     }
 
-    function addNewTransaction() {
+    async function addNewTransaction() {
+      const payload: CreateFinancialChangeItemDto = {
+        amount: parseFloat(state.amount as string),
+        appUserId: 1,
+        description: state.description,
+        expense: state.expense,
+        paymentSourceId: state.paymentSource as number,
+        tagIds: state.tagIds as number[],
+        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
+      };
+
+      await getService<ITransactionService>(Types.ChangeService).addChange(
+        payload
+      );
+
       resetNewTransactionDialog();
     }
 
