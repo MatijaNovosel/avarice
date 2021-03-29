@@ -1,8 +1,22 @@
 export default {
   en: {
-    appTitle: "FinApp"
+    appTitle: "FinApp",
+    good: "Good",
+    morning: "Morning",
+    afternoon: "Afternoon",
+    evening: "Evening",
+    routeNames: {
+      home: "Home",
+      history: "History",
+      accounts: "Accounts"
+    }
   },
   hr: {
+    routeNames: {
+      home: "Početna",
+      history: "Povijest",
+      accounts: "Računi"
+    },
     appTitle: "FinApp",
     $vuetify: {
       carousel: {
@@ -80,6 +94,10 @@ export default {
         numberWithComma: "Polje {_field_} mora biti brojčani zapis",
         integer: "Polje {_field_} mora biti cjelobrojan"
       }
-    }
+    },
+    good: "Dobro",
+    morning: "Jutro",
+    afternoon: "Popodne",
+    evening: "Večer"
   }
 };

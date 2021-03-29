@@ -5,7 +5,9 @@
         <v-img alt="" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title> Good evening <b>username</b>! </v-list-item-title>
+        <v-list-item-title>
+          {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }}, <b>Username</b>!
+        </v-list-item-title>
         <v-list-item-subtitle>
           <v-icon small color="success">mdi-check-circle</v-icon>
           Verified account
@@ -41,18 +43,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from "@vue/composition-api";
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  reactive
+} from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
 
 interface State {
   routeNames: RouteNames;
+  timeOfDay: string;
 }
 
 export default defineComponent({
   name: "app-bar",
   setup() {
+    const vm = getCurrentInstance();
+
     const state: State = reactive({
-      routeNames: RouteNames
+      routeNames: RouteNames,
+      timeOfDay: computed(() => {
+        const hours = new Date().getHours();
+        const minutes = new Date().getMinutes();
+        if (hours >= 6 && hours <= 11 && minutes <= 59) {
+          return vm?.$t("morning") as string;
+        } else if (hours >= 12 && hours <= 17) {
+          return vm?.$t("afternoon") as string;
+        } else {
+          return vm?.$t("evening") as string;
+        }
+      })
     });
 
     return {

@@ -9,11 +9,13 @@
               <v-icon>mdi-bank</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>
+              <v-list-item-title class="font-weight-bold">
                 {{
                   formatCurrencyDisplay(
                     true,
-                    state.history[state.history.length - 1].total,
+                    state.history && state.history.length != 0
+                      ? state.history[state.history.length - 1].total
+                      : 0,
                     "HRK"
                   )
                 }}
@@ -32,7 +34,7 @@
               <v-icon>mdi-bank-transfer-in</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title class="green--text">
+              <v-list-item-title class="green--text font-weight-bold">
                 {{
                   formatCurrencyDisplay(
                     true,
@@ -55,7 +57,7 @@
               <v-icon>mdi-bank-transfer-out</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title class="red--text">
+              <v-list-item-title class="red--text font-weight-bold">
                 {{
                   formatCurrencyDisplay(
                     true,

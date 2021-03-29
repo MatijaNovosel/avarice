@@ -1,9 +1,12 @@
 <template>
   <v-main>
+    <v-overlay v-model="state.loading">
+      <v-progress-circular indeterminate size="60" width="10" color="primary" />
+    </v-overlay>
     <app-bar />
-    <navigation-drawer :links="links" :drawer="state.drawer" />
+    <navigation-drawer :links="links" />
     <v-container>
-      <router-view />
+      <router-view @set-loading="setLoading" />
     </v-container>
     <snackbar />
   </v-main>
@@ -18,7 +21,7 @@ import NavigationLink from "@/models/navigationLink";
 import RouteNames from "@/constants/routeNames";
 
 interface State {
-  drawer: boolean;
+  loading: boolean;
 }
 
 export default defineComponent({
@@ -50,12 +53,17 @@ export default defineComponent({
     ];
 
     const state: State = reactive({
-      drawer: true
+      loading: false
     });
+
+    function setLoading(val) {
+      state.loading = val;
+    }
 
     return {
       state,
-      links
+      links,
+      setLoading
     };
   }
 });
