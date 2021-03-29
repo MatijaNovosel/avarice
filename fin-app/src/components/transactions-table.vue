@@ -53,12 +53,13 @@
           </td>
           <td class="whitespace-nowrap space-x-2 text-center">
             <tag
-              v-for="(tag, i) in transaction.tagIds"
+              v-for="(tag, i) in transaction.tags"
               :key="i"
               :text-color="transaction.expense ? '#c52626' : '#428733'"
               :color="transaction.expense ? '#ff9494' : '#bedeb7'"
-              >{{ $t(`tags.${TagEnum[tag]}`) }}</tag
             >
+              {{ tag.description }}
+            </tag>
           </td>
         </tr>
       </tbody>

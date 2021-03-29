@@ -1,3 +1,5 @@
+import { Tag } from "./tag";
+
 export interface FinancialChangeItem {
   id: number;
   amount: number;
@@ -6,7 +8,7 @@ export interface FinancialChangeItem {
   expense: boolean;
   transfer: boolean;
   paymentSourceId: number;
-  tagIds: number[];
+  tags: Tag[];
 }
 
 export interface CreateFinancialChangeItemDto {
