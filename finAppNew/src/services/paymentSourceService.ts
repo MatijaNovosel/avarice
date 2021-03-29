@@ -1,6 +1,5 @@
-import { TagPercentageRecord } from "@/models/payment-source";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
-import { AccountLatestValue, PaymentSource } from "@/models/payment-source";
+import { AccountLatestValue, PaymentSource, TagPercentageRecord } from "@/models/payment-source";
 import { formatGqlRequest } from "@/helpers";
 import axios from "axios";
 

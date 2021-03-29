@@ -1,18 +1,18 @@
 import axios from "axios";
 import store from "../store";
-// import Constants from '../constants/constants'
+import Constants from "../constants/constants";
 import router from "../router";
 import RouteNames from "../constants/routeNames";
 
 axios.interceptors.request.use(
   config => {
-    // config.url = Constants.API_BASE_URL + '/api' + config.url;
+    config.url = Constants.API_BASE_URL + config.url;
     if (config.method === "get") {
       config.url +=
         (config.url?.indexOf("?") !== -1 ? "&t=" : "?t=") +
         new Date().getTime();
     }
-    config.withCredentials = true;
+    // config.withCredentials = true;
     return config;
   },
   function(error) {
