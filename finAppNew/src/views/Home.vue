@@ -82,7 +82,12 @@ import { getService, Types } from "@/di-container";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { RecentDepositsAndWithdrawals } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
-import { defineComponent, onMounted, reactive } from "@vue/composition-api";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  SetupContext
+} from "@vue/composition-api";
 import { sub } from "date-fns";
 import { formatCurrencyDisplay } from "@/helpers";
 
@@ -94,7 +99,7 @@ interface State {
 
 export default defineComponent({
   name: "Home",
-  setup() {
+  setup(props, context: SetupContext) {
     const state: State = reactive({
       loading: false,
       history: [],
@@ -105,14 +110,14 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      state.loading = true;
+      context.emit("set-loading", true);
       state.history = await getService<ITransactionService>(
         Types.ChangeService
       ).getTotal(1, sub(new Date(), { days: 30 }), new Date());
       state.recentDepositsAndWithdrawals = await getService<
         ITransactionService
       >(Types.ChangeService).getRecentDepositsAndWithdrawals(1);
-      state.loading = false;
+      context.emit("set-loading", false);
     });
 
     return { state, formatCurrencyDisplay };

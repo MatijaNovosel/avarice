@@ -14,5 +14,5 @@ export enum TagEnum {
   Cosmetics = 13,
   Rent = 14,
   Debt = 15,
-	Clothes = 16
+  Clothes = 16
 }
