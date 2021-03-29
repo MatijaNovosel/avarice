@@ -31,8 +31,20 @@ export default defineComponent({
     const links: NavigationLink[] = [
       {
         icon: "mdi-home",
-        text: "Početna",
+        text: "Home",
         route: { name: RouteNames.HOME },
+        sublinks: []
+      },
+      {
+        icon: "mdi-account",
+        text: "Accounts",
+        route: { name: RouteNames.ACCOUNTS },
+        sublinks: []
+      },
+      {
+        icon: "mdi-clock",
+        text: "History",
+        route: { name: RouteNames.HISTORY },
         sublinks: []
       }
     ];

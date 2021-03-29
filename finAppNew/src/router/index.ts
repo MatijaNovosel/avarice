@@ -18,7 +18,34 @@ const routes: Array<RouteConfig> = [
         component: () => import("../views/Home.vue"),
         meta: {
           isAuth: false,
-          title: "home.title"
+          title: "routeNames.home"
+        }
+      },
+      {
+        path: "settings",
+        name: RouteNames.SETTINGS,
+        component: () => import("../views/Settings.vue"),
+        meta: {
+          isAuth: false,
+          title: "routeNames.settings"
+        }
+      },
+      {
+        path: "accounts",
+        name: RouteNames.ACCOUNTS,
+        component: () => import("../views/Accounts.vue"),
+        meta: {
+          isAuth: false,
+          title: "routeNames.accounts"
+        }
+      },
+      {
+        path: "history",
+        name: RouteNames.HISTORY,
+        component: () => import("../views/History.vue"),
+        meta: {
+          isAuth: false,
+          title: "routeNames.history"
         }
       },
       {
@@ -36,7 +63,7 @@ const routes: Array<RouteConfig> = [
         component: () => import("../views/NoPermissions.vue"),
         meta: {
           isAuth: false,
-          title: "noPermissions.title"
+          title: "routeNames.noPermissions"
         }
       },
       {

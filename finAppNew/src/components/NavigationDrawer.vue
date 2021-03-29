@@ -1,16 +1,13 @@
 <template>
   <v-navigation-drawer app disable-resize-watcher>
     <template #prepend>
-      <v-list-item class="my-2">
-        <v-list-item-avatar>
-          <v-icon size="3em">mdi-account-circle</v-icon>
-        </v-list-item-avatar>
+      <v-list-item class="my-2 text-center">
         <v-list-item-content>
-          <v-list-item-title>
-            Matija Novosel
+          <v-list-item-title class="font-weight-bold">
+            FinApp
           </v-list-item-title>
-          <v-list-item-subtitle>
-            Bruh
+          <v-list-item-subtitle class="mt-1">
+            v0.1.1
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

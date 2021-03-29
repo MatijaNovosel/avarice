@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Home</h1>
+    <h1>History</h1>
   </div>
 </template>
 
@@ -8,9 +8,9 @@
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
-  name: "Home",
+  name: "History",
   setup() {
-    return { };
+    return {};
   }
 });
 </script>
