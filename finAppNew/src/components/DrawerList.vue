@@ -45,7 +45,8 @@ export default defineComponent({
     });
 
     function logOut() {
-      //
+      // await context.root.$store.dispatch("user/logout");
+      // context.root.$router.push({ name: RouteNames.LOGIN });
     }
 
     return {

@@ -6,7 +6,9 @@
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>
-          {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }}, <b>Username</b>!
+          {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }},
+          <b>{{ state.displayName }}</b
+          >!
         </v-list-item-title>
         <v-list-item-subtitle>
           <v-icon small color="success">mdi-check-circle</v-icon>
@@ -49,15 +51,18 @@ import {
   computed,
   defineComponent,
   getCurrentInstance,
-  reactive
+  reactive,
+  SetupContext
 } from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
 import NewTransactionDialog from "@/components/NewTransactionDialog.vue";
 import NewTransferDialog from "@/components/NewTransferDialog.vue";
+import { AppUser } from "@/models/user";
 
 interface State {
   routeNames: RouteNames;
   timeOfDay: string;
+  displayName: string;
   newTransactionDialog: boolean;
   newTransferDialog: boolean;
 }
@@ -68,13 +73,17 @@ export default defineComponent({
     NewTransactionDialog,
     NewTransferDialog
   },
-  setup() {
+  setup(props, context: SetupContext) {
     const vm = getCurrentInstance();
 
     const state: State = reactive({
       newTransactionDialog: false,
       newTransferDialog: false,
       routeNames: RouteNames,
+      displayName: computed(() => {
+        const user = context.root.$store.getters["user/data"] as AppUser;
+        return user.displayName as string;
+      }),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
         const minutes = new Date().getMinutes();

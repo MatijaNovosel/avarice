@@ -70,7 +70,7 @@ export class AuthService implements IAuthService {
         "displayName"
       ]
     });
-
+    
     const {
       data: {
         data: { login }

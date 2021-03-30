@@ -94,6 +94,9 @@
 </template>
 
 <script lang="ts">
+import RouteNames from "@/constants/routeNames";
+import { getService, Types } from "@/di-container";
+import { IAuthService } from "@/interfaces/authService";
 import {
   computed,
   defineComponent,
@@ -138,8 +141,22 @@ export default defineComponent({
     });
 
     async function login() {
-      console.log("hello");
-      // await context.root.$store.dispatch("user/login");
+      try {
+        state.loading = true;
+        const data = await getService<IAuthService>(
+          Types.AuthService
+        ).signInEmail(state.username as string, state.password as string);
+        await context.root.$store.dispatch("user/login", data);
+        state.loading = false;
+        context.root.$router.push({ name: RouteNames.HISTORY });
+      } catch (e) {
+        context.emit("show-snackbar", {
+          message: "Failed to log in",
+          color: "error"
+        });
+      } finally {
+        state.loading = false;
+      }
     }
 
     return {

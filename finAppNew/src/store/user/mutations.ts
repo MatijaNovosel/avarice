@@ -12,6 +12,5 @@ export default {
   logout: (state) => {
     storage.removeSavedState("user");
     state.data = null;
-    state.isAuthenticated = false;
   }
 }
