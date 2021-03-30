@@ -28,7 +28,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "@vue/composition-api";
+import RouteNames from "@/constants/routeNames";
+import { defineComponent, reactive, SetupContext } from "@vue/composition-api";
 
 interface Props {
   items: any;
@@ -39,14 +40,14 @@ export default defineComponent({
   props: {
     items: null
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const state = reactive({
       items: props.items
     });
 
-    function logOut() {
-      // await context.root.$store.dispatch("user/logout");
-      // context.root.$router.push({ name: RouteNames.LOGIN });
+    async function logOut() {
+      await context.root.$store.dispatch("user/logout");
+      context.root.$router.push({ name: RouteNames.LOGIN });
     }
 
     return {
