@@ -1,5 +1,8 @@
 export default {
   en: {
+    username: "Username",
+    password: "Password",
+    submit: "Submit",
     accountFrom: "Account from",
     accountTo: "Account to",
     newTransfer: "New transfer",

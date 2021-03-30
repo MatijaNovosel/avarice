@@ -3,8 +3,10 @@
     <v-overlay v-model="state.loading">
       <v-progress-circular indeterminate size="60" width="10" color="primary" />
     </v-overlay>
-    <app-bar />
-    <navigation-drawer :links="links" />
+    <template v-if="state.shouldShowUi">
+      <app-bar />
+      <navigation-drawer :links="links" />
+    </template>
     <v-container>
       <router-view @set-loading="setLoading" />
     </v-container>
@@ -13,7 +15,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "@vue/composition-api";
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  reactive,
+  SetupContext
+} from "@vue/composition-api";
 import Snackbar from "@/components/Snackbar.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -22,6 +30,7 @@ import RouteNames from "@/constants/routeNames";
 
 interface State {
   loading: boolean;
+  shouldShowUi: boolean;
 }
 
 export default defineComponent({
@@ -31,6 +40,8 @@ export default defineComponent({
     AppBar
   },
   setup() {
+    const vm = getCurrentInstance();
+
     const links: NavigationLink[] = [
       {
         icon: "mdi-home",
@@ -53,7 +64,10 @@ export default defineComponent({
     ];
 
     const state: State = reactive({
-      loading: false
+      loading: false,
+      shouldShowUi: computed(() => {
+        return ![RouteNames.LOGIN].includes(vm?.$route.name as string);
+      })
     });
 
     function setLoading(val) {

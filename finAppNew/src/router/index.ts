@@ -89,6 +89,7 @@ const router = new VueRouter({
   }
 });
 
+/*
 router.beforeEach((to, from, next) => {
   if (to.matched.length == 0) {
     if (store.getters["user/isAuthenticated"]) {
@@ -116,6 +117,7 @@ router.beforeEach((to, from, next) => {
     next({ name: RouteNames.HOME });
   }
 });
+*/
 
 router.afterEach(to => {
   document.title =

@@ -35,7 +35,7 @@
             <validation-provider
               vid="accountFrom"
               :name="$t('accountFrom')"
-              rules="required"
+              rules="required|differentFrom:@accountTo"
               v-slot="{ errors, valid, untouched, required, failed }"
             >
               <v-select
@@ -61,7 +61,7 @@
             <validation-provider
               vid="accountTo"
               :name="$t('accountTo')"
-              rules="required"
+              rules="required|differentFrom:@accountFrom"
               v-slot="{ errors, valid, untouched, required, failed }"
             >
               <v-select
