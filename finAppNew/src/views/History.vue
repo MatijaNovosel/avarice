@@ -87,7 +87,8 @@ export default defineComponent({
           {
             text: "Tags",
             value: "tagIds",
-            sortable: false
+            sortable: false,
+            align: "center"
           }
         ];
       })

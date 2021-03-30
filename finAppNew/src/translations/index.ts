@@ -1,5 +1,8 @@
 export default {
   en: {
+    accountFrom: "Account from",
+    accountTo: "Account to",
+    newTransfer: "New transfer",
     expense: "Expense",
     paymentSource: "Payment source",
     tags: "Tags",

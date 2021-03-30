@@ -2,11 +2,11 @@
   <header-dialog
     max-width="50%"
     v-model="state.open"
-    :title="$t('newTransaction')"
-    @close="resetNewTransactionDialog"
+    :title="$t('newTransfer')"
+    @close="resetNewTransferDialog"
   >
-    <validation-observer ref="newTransactionFormRef" v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(addNewTransaction)">
+    <validation-observer ref="newTransferFormRef" v-slot="{ handleSubmit }">
+      <form @submit.prevent="handleSubmit(addNewTransfer)">
         <v-row class="mt-1">
           <v-col cols="12">
             <validation-provider
@@ -33,57 +33,8 @@
           </v-col>
           <v-col cols="12">
             <validation-provider
-              vid="description"
-              :name="$t('description')"
-              rules="required|min:4"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-textarea
-                outlined
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                v-model="state.description"
-                clearable
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("description") }}</span>
-                </template>
-              </v-textarea>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12">
-            <validation-provider
-              vid="tags"
-              :name="$t('tags')"
-              rules="required"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-select
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                item-text="description"
-                item-value="id"
-                :return-object="false"
-                :items="state.tags"
-                v-model="state.tagIds"
-                clearable
-                multiple
-                outlined
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("tags") }}</span>
-                </template>
-              </v-select>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12">
-            <validation-provider
-              vid="paymentSource"
-              :name="$t('paymentSource')"
+              vid="accountFrom"
+              :name="$t('accountFrom')"
               rules="required"
               v-slot="{ errors, valid, untouched, required, failed }"
             >
@@ -95,19 +46,42 @@
                 item-value="id"
                 :return-object="false"
                 :items="state.paymentSources"
-                v-model="state.paymentSource"
+                v-model="state.accountFrom"
                 clearable
                 outlined
               >
                 <template #label>
                   <required-icon v-show="required" />
-                  <span>{{ $t("paymentSource") }}</span>
+                  <span>{{ $t("accountFrom") }}</span>
                 </template>
               </v-select>
             </validation-provider>
           </v-col>
-          <v-col cols="12" class="py-0">
-            <v-switch dense v-model="state.expense" :label="$t('expense')" />
+          <v-col cols="12">
+            <validation-provider
+              vid="accountTo"
+              :name="$t('accountTo')"
+              rules="required"
+              v-slot="{ errors, valid, untouched, required, failed }"
+            >
+              <v-select
+                :error-messages="errors"
+                :hide-details="valid || (untouched && !failed)"
+                dense
+                item-text="description"
+                item-value="id"
+                :return-object="false"
+                :items="state.paymentSources"
+                v-model="state.accountTo"
+                clearable
+                outlined
+              >
+                <template #label>
+                  <required-icon v-show="required" />
+                  <span>{{ $t("accountTo") }}</span>
+                </template>
+              </v-select>
+            </validation-provider>
           </v-col>
           <v-col cols="12" class="text-center text-md-right mt-2">
             <v-btn
@@ -138,25 +112,19 @@ import {
   watch
 } from "@vue/composition-api";
 import HeaderDialog from "@/components/HeaderDialog.vue";
-import { Tag } from "@/models/tag";
 import { getService, Types } from "@/di-container";
-import { ITagService } from "@/interfaces/tagService";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 import { PaymentSource } from "@/models/payment-source";
-import { format } from "date-fns";
-import { CreateFinancialChangeItemDto } from "@/models/change-item";
+import { CreateTransferDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 
 interface State {
   amount: string | null;
-  description: string | null;
   loading: boolean;
   open?: boolean;
-  tags: Tag[];
-  tagIds: number[] | null;
-  paymentSource: number | null;
+  accountTo: number | null;
+  accountFrom: number | null;
   paymentSources: PaymentSource[];
-  expense: boolean;
 }
 
 interface Props {
@@ -164,7 +132,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: "new-transaction-dialog",
+  name: "new-transfer-dialog",
   props: {
     value: null
   },
@@ -172,55 +140,46 @@ export default defineComponent({
     HeaderDialog
   },
   setup(props: Props, context: SetupContext) {
-    const newTransactionFormRef: Ref<any> = ref(null);
+    const newTransferFormRef: Ref<any> = ref(null);
     const vm = getCurrentInstance();
 
     const state: State = reactive({
-      tagIds: [],
       paymentSources: [],
-      paymentSource: null,
+      accountFrom: null,
+      accountTo: null,
       amount: null,
-      description: null,
       loading: false,
-      open: false,
-      tags: [],
-      expense: true
+      open: false
     });
 
-    function resetNewTransactionDialog() {
+    function resetNewTransferDialog() {
       vm?.$nextTick(() => {
         state.amount = null;
-        state.description = null;
-        state.tagIds = null;
-        state.paymentSource = null;
-        state.expense = true;
-        newTransactionFormRef.value.reset();
+        state.accountFrom = null;
+        state.accountTo = null;
+        newTransferFormRef.value.reset();
         state.open = false;
         context.emit("input", state.open);
         context.emit("close");
       });
     }
 
-    async function addNewTransaction() {
-      const payload: CreateFinancialChangeItemDto = {
+    async function addNewTransfer() {
+      const payload: CreateTransferDto = {
         amount: parseFloat(state.amount as string),
         appUserId: 1,
-        description: state.description,
-        expense: state.expense,
-        paymentSourceId: state.paymentSource as number,
-        tagIds: state.tagIds as number[],
-        createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
+        accountFromId: state.accountFrom as number,
+        accountToId: state.accountTo as number
       };
 
-      await getService<ITransactionService>(Types.ChangeService).addChange(
+      await getService<ITransactionService>(Types.ChangeService).transfer(
         payload
       );
 
-      resetNewTransactionDialog();
+      resetNewTransferDialog();
     }
 
     onMounted(async () => {
-      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
       state.paymentSources = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getAllByUserId(1);
@@ -233,9 +192,9 @@ export default defineComponent({
 
     return {
       state,
-      resetNewTransactionDialog,
-      newTransactionFormRef,
-      addNewTransaction
+      resetNewTransferDialog,
+      newTransferFormRef,
+      addNewTransfer
     };
   }
 });

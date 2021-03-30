@@ -5,6 +5,5 @@ import { AppUser } from '@/models/user';
 const storage = getService<IWebStorage>(Types.WebStorageService);
 
 export default {    
-  data: JSON.parse(storage.getSavedState("user")) as AppUser,
-  isAuthenticated: document.cookie.indexOf("uc=true") != -1
+  data: JSON.parse(storage.getSavedState("user")) as AppUser
 }

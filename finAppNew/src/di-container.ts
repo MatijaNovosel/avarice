@@ -2,8 +2,6 @@ import { Container } from "inversify";
 import "reflect-metadata";
 import IWebStorage from "@/interfaces/webStorageService";
 import SessionStorage from "@/services/sessionStorageService";
-import { AppService } from "./services/appService";
-import { IAppService } from "./interfaces/appService";
 import { AuthService } from "./services/authService";
 import { IAuthService } from "./interfaces/authService";
 import { ITransactionService } from "./interfaces/transactionService";
@@ -20,7 +18,6 @@ export function getService<T>(symbol): T {
 }
 
 export class Types {
-  static readonly AppService = Symbol("IAppService");
   static readonly WebStorageService = Symbol("IWebStorageService");
   static readonly AuthService = Symbol("IAuthService");
   static readonly ChangeService = Symbol("ITransactionService");
@@ -30,10 +27,6 @@ export class Types {
 }
 
 const DIContainer = new Container();
-
-DIContainer.bind<IAppService>(Types.AppService).toConstantValue(
-  new AppService()
-);
 
 DIContainer.bind<IWebStorage>(Types.WebStorageService).toConstantValue(
   new SessionStorage()

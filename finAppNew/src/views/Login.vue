@@ -1,25 +1,21 @@
 <template>
   <div>
-    <h1>Hello</h1>
+    <h1>Login</h1>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, onMounted } from "@vue/composition-api";
-import RouteNames from "../constants/routeNames";
+import { defineComponent, SetupContext } from "@vue/composition-api";
 
 export default defineComponent({
   setup(props, context: SetupContext) {
-    onMounted(async () => {
-      if (context.root.$store.getters["user/data"] == null) {
-        await context.root.$store.dispatch("user/login");
-      }
-      context.root.$router.push({
-        name: RouteNames.HOME
-      });
-    });
+    async function login() {
+      await context.root.$store.dispatch("user/login");
+    }
 
-    return {};
+    return {
+      login
+    };
   }
 });
 </script>

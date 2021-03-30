@@ -1,12 +1,7 @@
-import { getService, Types } from "@/di-container";
-import { IAppService } from "@/interfaces/appService";
-
+import { AppUser } from '@/models/user';
 export default {
-  login: async context => {
-    const userData = await getService<IAppService>(
-      Types.AppService
-    ).getUserData();
-    context.commit("login", userData);
+  login: async (context, data: AppUser) => {
+    context.commit("login", data);
   },
   logout: async context => {
     context.commit("logout");
