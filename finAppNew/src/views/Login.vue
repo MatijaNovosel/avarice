@@ -148,7 +148,7 @@ export default defineComponent({
         ).signInEmail(state.username as string, state.password as string);
         await context.root.$store.dispatch("user/login", data);
         state.loading = false;
-        context.root.$router.push({ name: RouteNames.HISTORY });
+        context.root.$router.push({ name: RouteNames.HOME });
       } catch (e) {
         context.emit("show-snackbar", {
           message: "Failed to log in",

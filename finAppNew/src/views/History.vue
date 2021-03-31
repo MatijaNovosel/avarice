@@ -2,10 +2,10 @@
   <v-row>
     <v-col cols="12">
       <v-data-table
-        :headers="state.headers"
+        :headers="headers"
         :items="state.transactions"
         :items-per-page="15"
-        class="elevation-2"
+        class="rounded-lg"
       >
         <template #item.createdAt="{ item }">
           {{ item.createdAt }}
@@ -58,7 +58,6 @@ import { formatCurrencyDisplay } from "@/helpers";
 interface State {
   transactions: FinancialChangeItem[];
   totalTransactions: number;
-  headers: any;
 }
 
 export default defineComponent({
@@ -66,32 +65,7 @@ export default defineComponent({
   setup(props, context: SetupContext) {
     const state: State = reactive({
       transactions: [],
-      totalTransactions: 0,
-      headers: computed(() => {
-        return [
-          {
-            text: "Description",
-            value: "description",
-            sortable: false
-          },
-          {
-            text: "Amount",
-            value: "amount",
-            sortable: false
-          },
-          {
-            text: "Created at",
-            value: "createdAt",
-            sortable: false
-          },
-          {
-            text: "Tags",
-            value: "tagIds",
-            sortable: false,
-            align: "center"
-          }
-        ];
-      })
+      totalTransactions: 0
     });
 
     onMounted(async () => {
@@ -104,11 +78,36 @@ export default defineComponent({
       context.emit("set-loading", false);
     });
 
+    const headers = [
+      {
+        text: "Description",
+        value: "description",
+        sortable: false
+      },
+      {
+        text: "Amount",
+        value: "amount",
+        sortable: false
+      },
+      {
+        text: "Created at",
+        value: "createdAt",
+        sortable: false
+      },
+      {
+        text: "Tags",
+        value: "tagIds",
+        sortable: false,
+        align: "center"
+      }
+    ];
+
     return {
       state,
       formatDistance,
       parse,
       TagEnum,
+      headers,
       formatCurrencyDisplay
     };
   }

@@ -8,6 +8,7 @@
       <navigation-drawer :links="links" />
     </template>
     <v-container
+      class="px-10"
       :class="{
         'py-0': !state.shouldShowUi
       }"

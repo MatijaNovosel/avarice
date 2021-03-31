@@ -1,3 +1,10 @@
+import { DatasetItem } from "./dataset";
+
+export interface GraphData {
+  labels: string[];
+  datasets: DatasetItem[];
+}
+
 interface GraphLegendOptions {
   display?: boolean;
 }
@@ -9,6 +16,7 @@ interface GraphAxesScaleLabelOptions {
 
 interface GraphAxesGridLinesOptions {
   display?: boolean;
+  color?: string;
 }
 
 interface GraphAxesTicksOptions {
@@ -61,6 +69,7 @@ export interface GraphOptions {
   scales?: GraphScalesOptions;
   legend?: GraphLegendOptions;
   responsive?: boolean;
+  maintainAspectRatio?: boolean;
   elements?: GraphElementsOptions;
   title?: GraphTitleOptions;
 }

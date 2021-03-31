@@ -1,5 +1,5 @@
 ﻿<template>
-  <v-app-bar dense app class="elevation-1 rounded-bl-xl" height="70">
+  <v-app-bar dense app class="elevation-1" height="70">
     <v-list-item>
       <v-list-item-avatar>
         <v-img alt="" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />

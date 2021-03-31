@@ -1,5 +1,6 @@
 export default {
   en: {
+    dailyChanges: "Daily changes",
     username: "Username",
     password: "Password",
     submit: "Submit",
