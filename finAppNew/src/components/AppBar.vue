@@ -1,5 +1,5 @@
 ﻿<template>
-  <v-app-bar dense app class="elevation-1" height="70">
+  <v-app-bar dense app class="elevation-1" height="65">
     <v-list-item>
       <v-list-item-avatar>
         <v-img alt="" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
@@ -10,9 +10,13 @@
           <b>{{ state.displayName }}</b
           >!
         </v-list-item-title>
-        <v-list-item-subtitle>
-          <v-icon small color="success">mdi-check-circle</v-icon>
-          Verified account
+        <v-list-item-subtitle class="pt-1">
+          <v-icon
+            small
+            v-text="state.isVerified ? 'mdi-check-circle' : 'mdi-close-circle'"
+            :color="state.isVerified ? 'success' : 'error'"
+          />
+          {{ state.isVerified ? "Verified account" : "Unverified account" }}
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -65,6 +69,7 @@ interface State {
   displayName: string;
   newTransactionDialog: boolean;
   newTransferDialog: boolean;
+  isVerified: boolean;
 }
 
 export default defineComponent({
@@ -83,6 +88,10 @@ export default defineComponent({
       displayName: computed(() => {
         const user = context.root.$store.getters["user/data"] as AppUser;
         return user.displayName as string;
+      }),
+      isVerified: computed(() => {
+        const user = context.root.$store.getters["user/data"] as AppUser;
+        return user.emailConfirmed as boolean;
       }),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();
