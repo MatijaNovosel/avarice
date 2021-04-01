@@ -189,11 +189,13 @@ export default defineComponent({
 
     function resetNewTransactionDialog() {
       vm?.$nextTick(() => {
+        state.loading = true;
         state.amount = null;
         state.description = null;
         state.tagIds = null;
         state.paymentSource = null;
         state.expense = true;
+        state.loading = false;
         newTransactionFormRef.value.reset();
         state.open = false;
         context.emit("input", state.open);
