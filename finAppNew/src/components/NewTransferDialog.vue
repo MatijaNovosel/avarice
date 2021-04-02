@@ -117,6 +117,7 @@ import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 import { PaymentSource } from "@/models/payment-source";
 import { CreateTransferDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
+import { ValidationObserver } from "@/models/validationObserver";
 
 interface State {
   amount: string | null;
@@ -153,18 +154,18 @@ export default defineComponent({
     });
 
     function resetNewTransferDialog() {
-      vm?.$nextTick(() => {
-        state.amount = null;
-        state.accountFrom = null;
-        state.accountTo = null;
-        newTransferFormRef.value.reset();
-        state.open = false;
-        context.emit("input", state.open);
-        context.emit("close");
-      });
+      state.amount = null;
+      state.accountFrom = null;
+      state.accountTo = null;
+      ((vm?.$refs.newTransferFormRef as any) as ValidationObserver).reset();
+      state.open = false;
+      context.emit("input", state.open);
+      context.emit("close");
     }
 
     async function addNewTransfer() {
+      state.loading = true;
+
       const payload: CreateTransferDto = {
         amount: parseFloat(state.amount as string),
         appUserId: 1,
@@ -177,6 +178,7 @@ export default defineComponent({
       );
 
       resetNewTransferDialog();
+      state.loading = false;
     }
 
     onMounted(async () => {

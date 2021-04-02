@@ -146,6 +146,7 @@ import { PaymentSource } from "@/models/payment-source";
 import { format } from "date-fns";
 import { CreateFinancialChangeItemDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
+import { ValidationObserver } from "@/models/validationObserver";
 
 interface State {
   amount: string | null;
@@ -172,7 +173,6 @@ export default defineComponent({
     HeaderDialog
   },
   setup(props: Props, context: SetupContext) {
-    const newTransactionFormRef: Ref<any> = ref(null);
     const vm = getCurrentInstance();
 
     const state: State = reactive({
@@ -188,22 +188,20 @@ export default defineComponent({
     });
 
     function resetNewTransactionDialog() {
-      vm?.$nextTick(() => {
-        state.loading = true;
-        state.amount = null;
-        state.description = null;
-        state.tagIds = null;
-        state.paymentSource = null;
-        state.expense = true;
-        state.loading = false;
-        newTransactionFormRef.value.reset();
-        state.open = false;
-        context.emit("input", state.open);
-        context.emit("close");
-      });
+      state.amount = null;
+      state.description = null;
+      state.tagIds = null;
+      state.paymentSource = null;
+      state.expense = true;
+      ((vm?.$refs.newTransactionFormRef as any) as ValidationObserver).reset();
+      state.open = false;
+      context.emit("input", state.open);
+      context.emit("close");
     }
 
     async function addNewTransaction() {
+      state.loading = true;
+
       const payload: CreateFinancialChangeItemDto = {
         amount: parseFloat(state.amount as string),
         appUserId: 1,
@@ -219,6 +217,7 @@ export default defineComponent({
       );
 
       resetNewTransactionDialog();
+      state.loading = false;
     }
 
     onMounted(async () => {
@@ -236,7 +235,6 @@ export default defineComponent({
     return {
       state,
       resetNewTransactionDialog,
-      newTransactionFormRef,
       addNewTransaction
     };
   }
