@@ -17,6 +17,7 @@
         </span>
         <v-spacer />
         <v-btn
+          :disabled="state.disabled"
           v-if="state.haveCloseButton"
           @click="close"
           small
@@ -44,29 +45,41 @@ import {
 
 interface Props {
   maxWidth?: number;
-  "max-height"?: number;
-  open: false;
+  maxHeight?: number;
+  open: boolean;
   title: string;
   haveCloseButton?: boolean;
   value: boolean;
+  disabled: boolean;
+}
+
+interface State {
+  maxWidth?: number;
+  maxHeight?: number;
+  open: boolean;
+  title: string;
+  haveCloseButton?: boolean;
+  disabled: boolean;
 }
 
 export default defineComponent({
   name: "header-dialog",
   props: {
     maxWidth: null,
-    "max-height": null,
+    maxHeight: null,
     open: null,
     title: null,
     haveCloseButton: null,
-    value: null
+    value: null,
+    disabled: null
   },
   setup(props: Props, context: SetupContext) {
-    const state = reactive({
+    const state: State = reactive({
       title: props.title,
       open: props.value,
-      "max-height": props["max-height"],
+      maxHeight: props.maxHeight,
       maxWidth: props.maxWidth,
+      disabled: props.disabled,
       haveCloseButton:
         props.haveCloseButton != null && props.haveCloseButton != undefined
           ? props.haveCloseButton
@@ -76,6 +89,11 @@ export default defineComponent({
     watch(
       () => props.value,
       val => (state.open = val)
+    );
+
+    watch(
+      () => props.disabled,
+      val => (state.disabled = val)
     );
 
     function close() {

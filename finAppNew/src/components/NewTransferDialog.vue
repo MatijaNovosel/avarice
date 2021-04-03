@@ -2,6 +2,7 @@
   <header-dialog
     max-width="50%"
     v-model="state.open"
+    :disabled="state.loading"
     :title="$t('newTransfer')"
     @close="resetNewTransferDialog"
   >

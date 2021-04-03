@@ -1,6 +1,7 @@
 <template>
   <header-dialog
     max-width="50%"
+    :disabled="state.loading"
     v-model="state.open"
     :title="$t('newTransaction')"
     @close="resetNewTransactionDialog"
