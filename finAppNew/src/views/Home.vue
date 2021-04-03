@@ -153,7 +153,8 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
-  SetupContext
+  SetupContext,
+  watch
 } from "@vue/composition-api";
 import { format, sub, formatDistance, parse } from "date-fns";
 import { formatCurrencyDisplay } from "@/helpers";
@@ -192,7 +193,7 @@ export default defineComponent({
       }
     });
 
-    onMounted(async () => {
+    async function getData() {
       context.emit("set-loading", true);
 
       state.history = await getService<ITransactionService>(
@@ -249,7 +250,18 @@ export default defineComponent({
       state.transactions = itemCollection.items;
 
       context.emit("set-loading", false);
+    }
+
+    onMounted(() => {
+      getData();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getData();
+      }
+    );
 
     const graphTotalChangesOptions: GraphOptions = {
       title: {
@@ -282,7 +294,7 @@ export default defineComponent({
       },
       elements: {
         point: {
-          radius: 0
+          radius: 1
         },
         line: {
           tension: 0.2

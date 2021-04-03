@@ -217,6 +217,7 @@ export default defineComponent({
       );
 
       resetNewTransactionDialog();
+      await context.root.$store.dispatch("app/refresh");
       state.loading = false;
     }
 

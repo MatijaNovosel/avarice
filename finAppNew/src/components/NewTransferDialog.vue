@@ -178,6 +178,7 @@ export default defineComponent({
       );
 
       resetNewTransferDialog();
+      await context.root.$store.dispatch("app/refresh");
       state.loading = false;
     }
 
