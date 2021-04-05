@@ -1,4 +1,0 @@
-{
-  "apiUrlDevelopment": "http://localhost:3000/api/graphql",
-  "apiUrlProduction": "http://localhost:3000/api/graphql"
-}
