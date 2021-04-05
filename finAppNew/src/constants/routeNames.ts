@@ -1,5 +1,5 @@
 export default class RouteNames {  
-  static readonly HOME = "home";
+  static readonly DASHBOARD = "dashboard";
   static readonly NO_PERMISSIONS = "noPermissions";
   static readonly LOGIN = "login";
   static readonly SETTINGS = "settings";

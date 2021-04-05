@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="!state.loading">
     <v-col cols="12" class="pb-0">
       <h3>Overview</h3>
     </v-col>
@@ -77,18 +77,9 @@
     <v-col cols="12" class="pb-0">
       <h3>Data visualized</h3>
     </v-col>
-    <v-col cols="12">
-      <v-sheet class="pa-6 rounded-lg" height="425">
-        <line-chart
-          style="height: 370px"
-          v-if="state.graphTotalChanges"
-          :chart-data="state.graphTotalChanges"
-          :options="graphTotalChangesOptions"
-        />
-      </v-sheet>
-    </v-col>
     <v-col cols="12" md="6">
-      <v-sheet class="pa-6 rounded-lg" height="425">
+      <v-sheet class="pa-6 rounded-lg text-center" height="450">
+        <h4 class="mb-5 grey--text lighten-2">Daily changes</h4>
         <bar-chart
           style="height: 370px"
           v-if="state.graphDataDailyChanges"
@@ -98,28 +89,53 @@
       </v-sheet>
     </v-col>
     <v-col cols="12" md="6">
-      <v-sheet class="pa-6 rounded-lg d-flex justify-center" height="425">
-        <pie-chart
-          style="height: 330px"
-          v-if="state.tagPercentagesData"
-          :chart-data="state.tagPercentagesData"
-          :options="tagPercentagesOptions"
-        />
-        <v-list dense style="overflow-y: scroll" color="grey darken-4" rounded elevation="4">
-          <v-list-item
-            :key="i"
-            v-for="(tagPercentage, i) in state.tagPercentages"
+      <v-sheet
+        class="py-6 rounded-lg d-flex flex-column text-center"
+        height="450"
+      >
+        <h4 class="mb-8 grey--text lighten-2">Spending distribution</h4>
+        <div class="d-flex justify-center align-center">
+          <pie-chart
+            style="height: 280px"
+            v-if="state.tagPercentagesData"
+            :chart-data="state.tagPercentagesData"
+            :options="tagPercentagesOptions"
+          />
+          <v-list
+            class="text-left"
+            v-if="$vuetify.breakpoint.mdAndUp"
+            dense
+            style="overflow-y: scroll; height: 320px"
+            color="grey darken-4"
+            rounded
+            elevation="4"
           >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ tagPercentage.description }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ tagPercentage.percentage }}%
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+            <v-list-item
+              :key="i"
+              v-for="(tagPercentage, i) in state.tagPercentages"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ tagPercentage.description }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ tagPercentage.percentage }}%
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
+      </v-sheet>
+    </v-col>
+    <v-col cols="12">
+      <v-sheet class="pa-6 rounded-lg text-center" height="600">
+        <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
+        <line-chart
+          style="height: 515px"
+          v-if="state.graphTotalChanges"
+          :chart-data="state.graphTotalChanges"
+          :options="graphTotalChangesOptions"
+        />
       </v-sheet>
     </v-col>
     <v-col cols="12" class="pb-0">
@@ -174,6 +190,7 @@ import {
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
 import {
+  computed,
   defineComponent,
   getCurrentInstance,
   onMounted,
@@ -200,6 +217,7 @@ interface State {
   transactions: FinancialChangeItem[];
   tagPercentages: TagPercentageRecord[];
   tagPercentagesData: GraphData | null;
+  loading: boolean;
 }
 
 export default defineComponent({
@@ -220,6 +238,9 @@ export default defineComponent({
       totalDataset: null,
       transactions: [],
       tagPercentagesData: null,
+      loading: computed(() => {
+        return context.root.$store.getters["app/loading"] as boolean;
+      }),
       recentDepositsAndWithdrawals: {
         deposits: 0,
         withdrawals: 0
@@ -324,10 +345,6 @@ export default defineComponent({
     );
 
     const graphTotalChangesOptions: GraphOptions = {
-      title: {
-        display: true,
-        text: "Total account balance"
-      },
       legend: {
         display: false
       },
@@ -364,10 +381,6 @@ export default defineComponent({
     };
 
     const dailyChangesGraphOptions: GraphOptions = {
-      title: {
-        display: true,
-        text: vm?.$t("dailyChanges") as string
-      },
       tooltips: {
         mode: "index",
         intersect: false
@@ -402,10 +415,6 @@ export default defineComponent({
     };
 
     const tagPercentagesOptions: GraphOptions = {
-      title: {
-        display: true,
-        text: "Spending distribution"
-      },
       cutoutPercentage: 75,
       elements: {
         arc: {

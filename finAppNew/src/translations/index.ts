@@ -25,9 +25,10 @@ export default {
     afternoon: "Afternoon",
     evening: "Evening",
     routeNames: {
-      home: "Home",
+      dashboard: "Dashboard",
       history: "History",
-      accounts: "Accounts"
+      accounts: "Accounts",
+      settings: "Settings"
     },
     $vuetify: {
       badge: "Badge",

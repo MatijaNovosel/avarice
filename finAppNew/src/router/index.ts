@@ -14,11 +14,11 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "",
-        name: RouteNames.HOME,
-        component: () => import("../views/Home.vue"),
+        name: RouteNames.DASHBOARD,
+        component: () => import("../views/Dashboard.vue"),
         meta: {
           isAuth: true,
-          title: "routeNames.home"
+          title: "routeNames.dashboard"
         }
       },
       {
@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       next({
-        name: RouteNames.HOME
+        name: RouteNames.DASHBOARD
       });
     }
   } else {

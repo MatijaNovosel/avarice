@@ -60,25 +60,25 @@ export default defineComponent({
     const links: NavigationLink[] = [
       {
         icon: "mdi-home",
-        text: "Home",
-        route: { name: RouteNames.HOME },
+        text: vm?.$t("routeNames.dashboard") as string,
+        route: { name: RouteNames.DASHBOARD },
         sublinks: []
       },
       {
         icon: "mdi-credit-card-outline",
-        text: "Accounts",
+        text: vm?.$t("routeNames.accounts") as string,
         route: { name: RouteNames.ACCOUNTS },
         sublinks: []
       },
       {
         icon: "mdi-clock",
-        text: "History",
+        text: vm?.$t("routeNames.history") as string,
         route: { name: RouteNames.HISTORY },
         sublinks: []
       },
       {
         icon: "mdi-cogs",
-        text: "Settings",
+        text: vm?.$t("routeNames.settings") as string,
         route: { name: RouteNames.SETTINGS },
         sublinks: []
       }

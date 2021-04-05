@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 
     if (error.response.status === 401) {
       store.dispatch("user/logout");
-      router.push({ name: RouteNames.HOME });
+      router.push({ name: RouteNames.DASHBOARD });
       return Promise.reject(error);
     }
 
