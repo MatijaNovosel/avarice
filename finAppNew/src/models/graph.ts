@@ -59,12 +59,24 @@ interface GraphElementsOptions {
   arc?: GraphElementArcOptions;
 }
 
+interface GraphTitleFontOptions {
+  size?: number;
+}
+
+interface GraphTitleFontPaddingOptions {
+  top?: number;
+  bottom?: number;
+}
+
 interface GraphTitleOptions {
   display?: boolean;
   text?: string;
+  font?: GraphTitleFontOptions;
+  padding?: GraphTitleFontPaddingOptions;
 }
 
 export interface GraphOptions {
+  cutoutPercentage?: number;
   tooltips?: GraphTooltipsOptions;
   scales?: GraphScalesOptions;
   legend?: GraphLegendOptions;
