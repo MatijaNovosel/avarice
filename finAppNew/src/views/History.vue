@@ -49,7 +49,8 @@ import {
   defineComponent,
   onMounted,
   reactive,
-  SetupContext
+  SetupContext,
+  watch
 } from "@vue/composition-api";
 import { formatDistance, parse } from "date-fns";
 import { TagEnum } from "@/constants/tag-enum";
@@ -68,7 +69,7 @@ export default defineComponent({
       totalTransactions: 0
     });
 
-    onMounted(async () => {
+    async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
@@ -76,7 +77,18 @@ export default defineComponent({
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
       await context.root.$store.dispatch("app/setLoading", false);
+    }
+
+    onMounted(() => {
+      getData();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getData();
+      }
+    );
 
     const headers = [
       {

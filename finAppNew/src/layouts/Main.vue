@@ -59,7 +59,7 @@ export default defineComponent({
 
     const links: NavigationLink[] = [
       {
-        icon: "mdi-home",
+        icon: "mdi-view-dashboard",
         text: vm?.$t("routeNames.dashboard") as string,
         route: { name: RouteNames.DASHBOARD },
         sublinks: []

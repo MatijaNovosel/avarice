@@ -30,7 +30,8 @@ import {
   defineComponent,
   onMounted,
   reactive,
-  SetupContext
+  SetupContext,
+  watch
 } from "@vue/composition-api";
 import { formatCurrencyDisplay } from "@/helpers";
 
@@ -47,7 +48,7 @@ export default defineComponent({
       loading: false
     });
 
-    async function updateData() {
+    async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
 
       state.accounts = await getService<IPaymentSourceService>(
@@ -57,8 +58,15 @@ export default defineComponent({
       await context.root.$store.dispatch("app/setLoading", false);
     }
 
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getData();
+      }
+    );
+
     onMounted(async () => {
-      updateData();
+      getData();
     });
 
     return {
