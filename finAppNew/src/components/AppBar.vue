@@ -7,8 +7,7 @@
       <v-list-item-content>
         <v-list-item-title>
           {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }},
-          <b>{{ state.displayName }}</b
-          >!
+          <b> {{ state.displayName }} </b>!
         </v-list-item-title>
         <v-list-item-subtitle class="pt-1">
           <v-icon
@@ -30,23 +29,30 @@
       <v-list dense>
         <v-list-item @click="state.newTransactionDialog = true">
           <v-list-item-title>
-            New transaction
+            {{ $t("newTransaction") }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item @click="state.newTransferDialog = true">
           <v-list-item-title>
-            New transfer
+            {{ $t("newTransfer") }}
           </v-list-item-title>
         </v-list-item>
-        <v-list-item>
+        <v-list-item @click="state.newAccountDialog = true">
           <v-list-item-title>
-            New account
+            {{ $t("newAccount") }}
           </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
     <new-transaction-dialog v-model="state.newTransactionDialog" />
     <new-transfer-dialog v-model="state.newTransferDialog" />
+    <new-account-dialog v-model="state.newAccountDialog" />
+    <v-progress-linear
+      :active="state.loading"
+      :indeterminate="state.loading"
+      absolute
+      bottom
+    />
   </v-app-bar>
 </template>
 
@@ -56,12 +62,18 @@ import {
   defineComponent,
   getCurrentInstance,
   reactive,
-  SetupContext
+  SetupContext,
+  watch
 } from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
 import NewTransactionDialog from "@/components/NewTransactionDialog.vue";
+import NewAccountDialog from "@/components/NewAccountDialog.vue";
 import NewTransferDialog from "@/components/NewTransferDialog.vue";
 import { AppUser } from "@/models/user";
+
+interface Props {
+  loading: boolean;
+}
 
 interface State {
   routeNames: RouteNames;
@@ -69,21 +81,29 @@ interface State {
   displayName: string;
   newTransactionDialog: boolean;
   newTransferDialog: boolean;
+  newAccountDialog: boolean;
   isVerified: boolean;
+  loading: boolean;
 }
 
 export default defineComponent({
   name: "app-bar",
+  props: {
+    loading: null
+  },
   components: {
     NewTransactionDialog,
-    NewTransferDialog
+    NewTransferDialog,
+    NewAccountDialog
   },
-  setup(props, context: SetupContext) {
+  setup(props: Props, context: SetupContext) {
     const vm = getCurrentInstance();
 
     const state: State = reactive({
+      loading: props.loading,
       newTransactionDialog: false,
       newTransferDialog: false,
+      newAccountDialog: false,
       routeNames: RouteNames,
       displayName: computed(() => {
         const user = context.root.$store.getters["user/data"] as AppUser;
@@ -105,6 +125,11 @@ export default defineComponent({
         }
       })
     });
+
+    watch(
+      () => props.loading,
+      val => (state.loading = val)
+    );
 
     return {
       state

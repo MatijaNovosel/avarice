@@ -4,7 +4,7 @@
       <h3>Overview</h3>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card>
+      <v-card rounded="lg">
         <v-list-item two-line>
           <v-list-item-avatar>
             <v-icon>mdi-bank</v-icon>
@@ -29,7 +29,7 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card>
+      <v-card rounded="lg">
         <v-list-item two-line>
           <v-list-item-avatar>
             <v-icon>mdi-bank-transfer-in</v-icon>
@@ -52,7 +52,7 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card>
+      <v-card rounded="lg">
         <v-list-item two-line>
           <v-list-item-avatar>
             <v-icon>mdi-bank-transfer-out</v-icon>

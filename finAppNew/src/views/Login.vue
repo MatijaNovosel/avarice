@@ -1,14 +1,14 @@
 <template>
-  <main class="center-page d-flex flex-column justify-center align-center">
+  <div class="center-page d-flex flex-column justify-center align-center">
     <v-card class="rounded-lg elevation-2" :max-width="state.width">
       <div class="py-2">
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="font-weight-bold">
-              Log in
+              Sign into FinApp
             </v-list-item-title>
             <v-list-item-subtitle class="d-none d-sm-block">
-              Subtitle
+              Track your expenses
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -20,21 +20,21 @@
             <v-row>
               <v-col cols="12">
                 <validation-provider
-                  vid="username"
-                  :name="$t('username')"
-                  rules="required"
+                  vid="email"
+                  :name="$t('email')"
+                  rules="required|email"
                   v-slot="{ errors, valid, untouched, required, failed }"
                 >
                   <v-text-field
-                    prepend-icon="mdi-account"
-                    v-model="state.username"
+                    prepend-icon="mdi-email"
+                    v-model="state.email"
                     :error-messages="errors"
                     :hide-details="valid || (untouched && !failed)"
                     dense
                   >
                     <template #label>
                       <required-icon v-show="required" />
-                      <span>{{ $t("username") }}</span>
+                      <span>{{ $t("email") }}</span>
                     </template>
                   </v-text-field>
                 </validation-provider>
@@ -90,7 +90,7 @@
         </validation-observer>
       </v-card-text>
     </v-card>
-  </main>
+  </div>
 </template>
 
 <script lang="ts">
@@ -106,7 +106,7 @@ import {
 } from "@vue/composition-api";
 
 interface State {
-  username: string | null;
+  email: string | null;
   password: string | null;
   showPassword: boolean;
   loading: boolean;
@@ -119,7 +119,7 @@ export default defineComponent({
 
     const state: State = reactive({
       password: null,
-      username: null,
+      email: null,
       showPassword: false,
       loading: false,
       width: computed(() => {
@@ -145,7 +145,7 @@ export default defineComponent({
         state.loading = true;
         const data = await getService<IAuthService>(
           Types.AuthService
-        ).signInEmail(state.username as string, state.password as string);
+        ).signInEmail(state.email as string, state.password as string);
         await context.root.$store.dispatch("user/login", data);
         state.loading = false;
         context.root.$router.push({ name: RouteNames.HOME });

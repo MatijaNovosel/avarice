@@ -1,5 +1,9 @@
 export default {
   en: {
+    newAccountName: "New account name",
+    startingAmount: "Starting amount",
+    newAccount: "New account",
+    email: "Email",
     dailyChanges: "Daily changes",
     username: "Username",
     password: "Password",

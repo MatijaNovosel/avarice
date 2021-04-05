@@ -1,16 +1,14 @@
 <template>
   <v-main>
-    <v-overlay v-model="state.loading">
-      <v-progress-circular indeterminate size="60" width="10" color="primary" />
-    </v-overlay>
+    <v-overlay v-model="state.loading" />
     <template v-if="state.shouldShowUi">
-      <app-bar />
+      <app-bar :loading="state.loading" />
       <navigation-drawer :links="links" />
     </template>
     <v-container
-      class="px-10"
       :class="{
-        'py-0': !state.shouldShowUi
+        'px-6': state.shouldShowUi,
+        'py-0 mx-0': !state.shouldShowUi
       }"
     >
       <router-view @set-loading="setLoading" @show-snackbar="showSnackbar" />
@@ -66,7 +64,7 @@ export default defineComponent({
         sublinks: []
       },
       {
-        icon: "mdi-account",
+        icon: "mdi-credit-card-outline",
         text: "Accounts",
         route: { name: RouteNames.ACCOUNTS },
         sublinks: []

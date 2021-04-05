@@ -107,8 +107,6 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
-  Ref,
-  ref,
   SetupContext,
   watch
 } from "@vue/composition-api";
@@ -142,7 +140,6 @@ export default defineComponent({
     HeaderDialog
   },
   setup(props: Props, context: SetupContext) {
-    const newTransferFormRef: Ref<any> = ref(null);
     const vm = getCurrentInstance();
 
     const state: State = reactive({
@@ -197,7 +194,6 @@ export default defineComponent({
     return {
       state,
       resetNewTransferDialog,
-      newTransferFormRef,
       addNewTransfer
     };
   }
