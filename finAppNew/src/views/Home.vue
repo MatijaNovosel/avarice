@@ -194,7 +194,7 @@ export default defineComponent({
     });
 
     async function getData() {
-      context.emit("set-loading", true);
+      await context.root.$store.dispatch("app/setLoading", true);
 
       state.history = await getService<ITransactionService>(
         Types.ChangeService
@@ -248,8 +248,7 @@ export default defineComponent({
       ).getChanges(1, 0, 10);
 
       state.transactions = itemCollection.items;
-
-      context.emit("set-loading", false);
+      await context.root.$store.dispatch("app/setLoading", false);
     }
 
     onMounted(() => {

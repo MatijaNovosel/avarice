@@ -11,7 +11,7 @@
         'py-0 mx-0': !state.shouldShowUi
       }"
     >
-      <router-view @set-loading="setLoading" @show-snackbar="showSnackbar" />
+      <router-view @show-snackbar="showSnackbar" />
     </v-container>
     <v-snackbar
       app
@@ -32,7 +32,8 @@ import {
   computed,
   defineComponent,
   getCurrentInstance,
-  reactive
+  reactive,
+  SetupContext
 } from "@vue/composition-api";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -53,7 +54,7 @@ export default defineComponent({
     NavigationDrawer,
     AppBar
   },
-  setup() {
+  setup(props, context: SetupContext) {
     const vm = getCurrentInstance();
 
     const links: NavigationLink[] = [
@@ -74,11 +75,19 @@ export default defineComponent({
         text: "History",
         route: { name: RouteNames.HISTORY },
         sublinks: []
+      },
+      {
+        icon: "mdi-cogs",
+        text: "Settings",
+        route: { name: RouteNames.SETTINGS },
+        sublinks: []
       }
     ];
 
     const state: State = reactive({
-      loading: false,
+      loading: computed(() => {
+        return context.root.$store.getters["app/loading"] as boolean;
+      }),
       snackbar: false,
       snackbarMessage: "",
       snackbarColor: "primary",
@@ -86,10 +95,6 @@ export default defineComponent({
         return ![RouteNames.LOGIN].includes(vm?.$route.name as string);
       })
     });
-
-    function setLoading(val: boolean) {
-      state.loading = val;
-    }
 
     function showSnackbar(data: SnackbarEmitData) {
       state.snackbarMessage = data.message;
@@ -100,7 +105,6 @@ export default defineComponent({
     return {
       state,
       links,
-      setLoading,
       showSnackbar
     };
   }

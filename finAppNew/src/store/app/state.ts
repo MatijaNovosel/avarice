@@ -1,3 +1,4 @@
 export default {
-  refreshTrigger: false
+  refreshTrigger: false,
+  loading: false
 };

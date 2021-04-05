@@ -69,13 +69,13 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      context.emit("set-loading", true);
+      await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
       ).getChanges(1);
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
-      context.emit("set-loading", false);
+      await context.root.$store.dispatch("app/setLoading", false);
     });
 
     const headers = [
