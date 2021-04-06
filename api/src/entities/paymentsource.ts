@@ -53,6 +53,9 @@ export class Paymentsource {
 @ObjectType()
 export class GLatestAccountValue {
   @Field()
+  id?: number;
+
+  @Field()
   amount?: number;
 
   @Field()

@@ -26,6 +26,7 @@ export class PaymentSourceService {
     )
       .select("amount")
       .addSelect("description")
+      .addSelect("ps.id", "id")
       .addSelect("icon")
       .addSelect("currency")
       .innerJoin("paymentsource", "ps", "ps.id = paymentSourceId")

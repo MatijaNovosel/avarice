@@ -257,7 +257,8 @@ export default defineComponent({
       state.totalDataset = {
         label: "Total",
         data: state.history.map(x => x.total),
-        fill: false,
+        fill: true,
+        backgroundColor: "rgba(70, 135, 66, 0.4)",
         borderWidth: 4,
         borderColor: "#4a9650"
       };
