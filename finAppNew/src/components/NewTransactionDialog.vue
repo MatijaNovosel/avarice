@@ -83,8 +83,8 @@
           </v-col>
           <v-col cols="12">
             <validation-provider
-              vid="paymentSource"
-              :name="$t('paymentSource')"
+              vid="account"
+              :name="$t('account')"
               rules="required"
               v-slot="{ errors, valid, untouched, required, failed }"
             >
@@ -104,7 +104,7 @@
               >
                 <template #label>
                   <required-icon v-show="required" />
-                  <span>{{ $t("paymentSource") }}</span>
+                  <span>{{ $t("account") }}</span>
                 </template>
                 <template #item="{ item, on, attrs }">
                   <v-list-item two-line v-on="on" v-bind="attrs">

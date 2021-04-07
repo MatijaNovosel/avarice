@@ -1,5 +1,6 @@
 export default {
   en: {
+    account: "Account",
     newAccountName: "New account name",
     startingAmount: "Starting amount",
     newAccount: "New account",

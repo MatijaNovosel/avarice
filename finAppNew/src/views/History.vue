@@ -1,6 +1,48 @@
 <template>
   <v-row>
     <v-col cols="12">
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-text-field hide-details dense outlined label="Description" />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select hide-details dense outlined label="Tags" />
+        </v-col>
+        <v-col cols="12" md="6">
+          <date-time-picker
+            label="From"
+            :text-field-props="{
+              'hide-details': true,
+              dense: true,
+              outlined: true
+            }"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <date-time-picker
+            label="To"
+            :text-field-props="{
+              'hide-details': true,
+              dense: true,
+              outlined: true
+            }"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select hide-details dense outlined label="Transaction type" />
+        </v-col>
+        <v-col cols="12" md="6" class="d-flex">
+          <v-slider
+            dense
+            label="Amount"
+            step="10"
+            ticks="always"
+            tick-size="4"
+          />
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-col cols="12">
       <v-data-table
         :headers="headers"
         :items="state.transactions"
@@ -45,7 +87,6 @@ import { getService, Types } from "@/di-container";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { FinancialChangeItem } from "@/models/change-item";
 import {
-  computed,
   defineComponent,
   onMounted,
   reactive,

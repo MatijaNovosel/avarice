@@ -18,17 +18,16 @@
               indeterminate
               absolute
               height="2"
-            ></v-progress-linear>
+            />
           </slot>
         </template>
       </v-text-field>
     </template>
-
     <date-time-tab
       v-model="state.dateTime"
       :datePickerProps="state.datePickerProps"
       :timePickerProps="state.timePickerProps"
-    ></date-time-tab>
+    />
   </v-dialog>
   <v-menu
     v-else
@@ -57,18 +56,17 @@
               indeterminate
               absolute
               height="2"
-            ></v-progress-linear>
+            />
           </slot>
         </template>
       </v-text-field>
     </template>
-
     <date-time-tab
       v-model="state.dateTime"
       :datePickerProps="state.datePickerProps"
       :timePickerProps="state.timePickerProps"
       @change="dateTimePickerChanged"
-    ></date-time-tab>
+    />
   </v-menu>
 </template>
 
@@ -100,11 +98,9 @@ interface Props {
 
 export default defineComponent({
   name: "date-time-picker",
-
   components: {
     DateTimeTab
   },
-
   props: {
     value: null,
     disabled: null,
@@ -116,12 +112,6 @@ export default defineComponent({
     datePickerProps: Object,
     timePickerProps: Object
   },
-
-  model: {
-    prop: "value",
-    event: "input"
-  },
-
   setup(props: Props, context: SetupContext) {
     const state = reactive({
       disabled: props.disabled,
@@ -144,9 +134,7 @@ export default defineComponent({
 
     function dateTimePickerChanged(value) {
       state.display = false;
-
       state.dateTime = value;
-
       context.emit(
         "input",
         state.dateTime != null ? formatISO(parseISO(state.dateTime)) : null
@@ -155,7 +143,7 @@ export default defineComponent({
 
     watch(
       () => props.value,
-      (val) => {
+      val => {
         state.dateTime =
           val != null ? formatISO(parseISO(val as string)) : null;
       }
@@ -163,7 +151,7 @@ export default defineComponent({
 
     watch(
       () => props.textFieldProps,
-      (val) => (state.textFieldProps = val)
+      val => (state.textFieldProps = val)
     );
 
     return {
