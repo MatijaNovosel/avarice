@@ -247,14 +247,25 @@ export default defineComponent({
       state.loading = false;
     }
 
-    onMounted(async () => {
+    async function getData() {
       state.loading = true;
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getLatestValues(1);
       state.tags = await getService<ITagService>(Types.TagService).getTags(1);
       state.loading = false;
+    }
+
+    onMounted(() => {
+      getData();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getData();
+      }
+    );
 
     watch(
       () => props.value,

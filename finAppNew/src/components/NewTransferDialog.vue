@@ -229,11 +229,22 @@ export default defineComponent({
       state.loading = false;
     }
 
-    onMounted(async () => {
+    async function getAccounts() {
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
       ).getLatestValues(1);
+    }
+
+    onMounted(() => {
+      getAccounts();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getAccounts();
+      }
+    );
 
     watch(
       () => props.value,

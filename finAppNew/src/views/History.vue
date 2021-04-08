@@ -32,8 +32,9 @@
           <v-select hide-details dense outlined label="Transaction type" />
         </v-col>
         <v-col cols="12" md="6" class="d-flex">
-          <v-slider
-            dense
+          <v-range-slider
+            hint="[20, 1200] HRK"
+            persistent-hint
             label="Amount"
             step="10"
             ticks="always"
