@@ -3,10 +3,28 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field hide-details dense outlined label="Description" />
+          <v-text-field
+            v-model="state.search.description"
+            hide-details
+            dense
+            outlined
+            @input="search"
+            label="Description"
+          />
         </v-col>
         <v-col cols="12" md="6">
-          <v-select hide-details dense outlined label="Tags" />
+          <v-select
+            :items="state.tags"
+            hide-details
+            multiple
+            clearable
+            dense
+            outlined
+            :return-object="false"
+            item-text="description"
+            item-value="id"
+            label="Tags"
+          />
         </v-col>
         <v-col cols="12" md="6">
           <date-time-picker
@@ -29,7 +47,16 @@
           />
         </v-col>
         <v-col cols="12" md="6">
-          <v-select hide-details dense outlined label="Transaction type" />
+          <v-select
+            :items="transactionTypes"
+            v-model="state.search.transactionType"
+            hide-details
+            dense
+            multiple
+            outlined
+            :return-object="false"
+            label="Transaction type"
+          />
         </v-col>
         <v-col cols="12" md="6" class="d-flex">
           <v-range-slider
@@ -96,34 +123,60 @@ import {
 } from "@vue/composition-api";
 import { formatDistance, parse } from "date-fns";
 import { TagEnum } from "@/constants/tag-enum";
-import { formatCurrencyDisplay } from "@/helpers";
+import { createSelectFromEnum, formatCurrencyDisplay } from "@/helpers";
+import { debounce } from "debounce/index";
+import { Tag } from "@/models/tag";
+import { ITagService } from "@/interfaces/tagService";
+import { TransactionType } from "@/constants/transactionTypes";
+
+interface SearchInput {
+  description: string | null;
+  transactionType: TransactionType[] | null;
+}
 
 interface State {
   transactions: FinancialChangeItem[];
   totalTransactions: number;
+  search: SearchInput;
+  tags: Tag[];
 }
 
 export default defineComponent({
   name: "History",
   setup(props, context: SetupContext) {
+    const transactionTypes = createSelectFromEnum(
+      "transactionType",
+      TransactionType
+    );
+
     const state: State = reactive({
       transactions: [],
-      totalTransactions: 0
+      search: {
+        description: null,
+        transactionType: null
+      },
+      totalTransactions: 0,
+      tags: []
     });
 
     async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
-      ).getChanges(1);
+      ).getChanges(1, null, null, state.search.description || "", null, null);
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
       await context.root.$store.dispatch("app/setLoading", false);
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
       getData();
     });
+
+    const search = debounce(() => {
+      getData();
+    }, 750);
 
     watch(
       () => context.root.$store.getters["app/refreshTrigger"] as boolean,
@@ -162,7 +215,9 @@ export default defineComponent({
       parse,
       TagEnum,
       headers,
-      formatCurrencyDisplay
+      formatCurrencyDisplay,
+      search,
+      transactionTypes
     };
   }
 });

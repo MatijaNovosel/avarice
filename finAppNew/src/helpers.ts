@@ -1,4 +1,6 @@
+import SelectItem from "./models/selectItem";
 import { GqlRequestType } from "./types";
+import i18n from "@/plugins/i18n";
 
 export function getContentDispositionName(response: {
   data?: BlobPart;
@@ -371,4 +373,21 @@ export function adjustHexColor(color: string, amount: number): string {
         Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)
       ).substr(-2)
     );
+}
+
+export function createSelectFromEnum<T>(translationPrefix: string, enumType: T) {
+  const objectTypes: SelectItem[] = [];
+
+  const names = Object.keys(enumType).filter((item) => {       
+    return isNaN(Number(item));
+  });
+
+  names.forEach(item => {
+    objectTypes.push({
+      text: String(i18n.t(translationPrefix + "." + item)),
+      value: enumType[item]
+    });
+  });
+
+  return objectTypes;
 }
