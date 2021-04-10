@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { AuthGoogleLoginInputType } from "../input-types/auth.input-type";
 import { AccessToken } from "../entities/auth";
 
