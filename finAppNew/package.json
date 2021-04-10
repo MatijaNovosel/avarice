@@ -47,9 +47,10 @@
     "vuex": "^3.6.0"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^1.0.0",
     "@intlify/vue-i18n-extensions": "^1.0.2",
+    "@intlify/vue-i18n-loader": "^1.0.0",
     "@types/chai": "^4.2.12",
+    "@types/debounce": "^1.2.0",
     "@types/mocha": "^8.0.3",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",

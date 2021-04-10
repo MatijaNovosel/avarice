@@ -89,49 +89,10 @@
       </v-sheet>
     </v-col>
     <v-col cols="12" md="6">
-      <v-sheet
-        class="py-6 rounded-lg d-flex flex-column text-center"
-        height="450"
-      >
-        <h4 class="mb-8 grey--text lighten-2">Spending distribution</h4>
-        <div class="d-flex justify-center align-center">
-          <pie-chart
-            style="height: 280px"
-            v-if="state.tagPercentagesData"
-            :chart-data="state.tagPercentagesData"
-            :options="tagPercentagesOptions"
-          />
-          <v-list
-            class="text-left"
-            v-if="$vuetify.breakpoint.mdAndUp"
-            dense
-            style="overflow-y: scroll; height: 320px"
-            color="grey darken-4"
-            rounded
-            elevation="4"
-          >
-            <v-list-item
-              :key="i"
-              v-for="(tagPercentage, i) in state.tagPercentages"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ tagPercentage.description }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ tagPercentage.percentage }}%
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </div>
-      </v-sheet>
-    </v-col>
-    <v-col cols="12">
-      <v-sheet class="pa-6 rounded-lg text-center" height="600">
+      <v-sheet class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
         <line-chart
-          style="height: 515px"
+          style="height: 370px"
           v-if="state.graphTotalChanges"
           :chart-data="state.graphTotalChanges"
           :options="graphTotalChangesOptions"
@@ -199,14 +160,11 @@ import {
   watch
 } from "@vue/composition-api";
 import { format, sub, formatDistance, parse } from "date-fns";
-import { adjustHexColor, formatCurrencyDisplay } from "@/helpers";
+import { formatCurrencyDisplay } from "@/helpers";
 import { GraphData, GraphOptions } from "@/models/graph";
 import BarChart from "@/components/charts/BarChart";
-import PieChart from "@/components/charts/PieChart";
 import LineChart from "@/components/charts/LineChart";
 import { DatasetItem } from "@/models/dataset";
-import { TagPercentageRecord } from "@/models/payment-source";
-import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 
 interface State {
   history: FinancialHistory[];
@@ -215,8 +173,6 @@ interface State {
   graphTotalChanges: GraphData | null;
   totalDataset: DatasetItem | null;
   transactions: FinancialChangeItem[];
-  tagPercentages: TagPercentageRecord[];
-  tagPercentagesData: GraphData | null;
   loading: boolean;
 }
 
@@ -224,20 +180,17 @@ export default defineComponent({
   name: "Home",
   components: {
     BarChart,
-    LineChart,
-    PieChart
+    LineChart
   },
   setup(props, context: SetupContext) {
     const vm = getCurrentInstance();
 
     const state: State = reactive({
       history: [],
-      tagPercentages: [],
       graphDataDailyChanges: null,
       graphTotalChanges: null,
       totalDataset: null,
       transactions: [],
-      tagPercentagesData: null,
       loading: computed(() => {
         return context.root.$store.getters["app/loading"] as boolean;
       }),
@@ -257,7 +210,8 @@ export default defineComponent({
       state.totalDataset = {
         label: "Total",
         data: state.history.map(x => x.total),
-        fill: false,
+        fill: true,
+        backgroundColor: "rgba(70, 135, 66, 0.4)",
         borderWidth: 4,
         borderColor: "#4a9650"
       };
@@ -302,33 +256,6 @@ export default defineComponent({
       ).getChanges(1, 0, 10);
 
       state.transactions = itemCollection.items;
-
-      let tagPercentages = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
-      ).getTagPercentages(1);
-
-      tagPercentages = tagPercentages.sort(
-        (a, b) => b.percentage - a.percentage
-      );
-
-      tagPercentages = tagPercentages.map(x => {
-        x.percentage = parseFloat((x.percentage * 100).toFixed(3));
-        return x;
-      });
-
-      state.tagPercentages = tagPercentages;
-      state.tagPercentagesData = {
-        labels: tagPercentages.map(x => x.description),
-        datasets: [
-          {
-            borderWidth: 0,
-            backgroundColor: tagPercentages.map(
-              (_, i) => "#" + adjustHexColor("#4a9650", i * 7)
-            ),
-            data: tagPercentages.map(x => x.percentage)
-          }
-        ]
-      };
 
       await context.root.$store.dispatch("app/setLoading", false);
     }
@@ -414,20 +341,6 @@ export default defineComponent({
       responsive: true
     };
 
-    const tagPercentagesOptions: GraphOptions = {
-      cutoutPercentage: 75,
-      elements: {
-        arc: {
-          borderWidth: 0
-        }
-      },
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-      responsive: true
-    };
-
     const headers = [
       {
         text: "Description",
@@ -459,8 +372,7 @@ export default defineComponent({
       graphTotalChangesOptions,
       headers,
       formatDistance,
-      parse,
-      tagPercentagesOptions
+      parse
     };
   }
 });

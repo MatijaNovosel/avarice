@@ -7,6 +7,7 @@ export interface GraphData {
 
 interface GraphLegendOptions {
   display?: boolean;
+  position?: string;
 }
 
 interface GraphAxesScaleLabelOptions {

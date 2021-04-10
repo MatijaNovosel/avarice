@@ -1,5 +1,11 @@
 export default {
   en: {
+    transactionType: {
+      WITHDRAWAL: "Withdrawal",
+      DEPOSIT: "Deposit",
+      TRANSFER: "Transfer"
+    },
+    account: "Account",
     newAccountName: "New account name",
     startingAmount: "Starting amount",
     newAccount: "New account",

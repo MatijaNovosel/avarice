@@ -46,7 +46,7 @@
                 item-text="description"
                 item-value="id"
                 :return-object="false"
-                :items="state.paymentSources"
+                :items="state.accounts"
                 v-model="state.accountFrom"
                 clearable
                 outlined
@@ -54,6 +54,30 @@
                 <template #label>
                   <required-icon v-show="required" />
                   <span>{{ $t("accountFrom") }}</span>
+                </template>
+                <template #item="{ item, on, attrs }">
+                  <v-list-item two-line v-on="on" v-bind="attrs">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <template #selection="{ item }">
+                  <v-list-item two-line>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
               </v-select>
             </validation-provider>
@@ -72,7 +96,7 @@
                 item-text="description"
                 item-value="id"
                 :return-object="false"
-                :items="state.paymentSources"
+                :items="state.accounts"
                 v-model="state.accountTo"
                 clearable
                 outlined
@@ -80,6 +104,30 @@
                 <template #label>
                   <required-icon v-show="required" />
                   <span>{{ $t("accountTo") }}</span>
+                </template>
+                <template #item="{ item, on, attrs }">
+                  <v-list-item two-line v-on="on" v-bind="attrs">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <template #selection="{ item }">
+                  <v-list-item two-line>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
               </v-select>
             </validation-provider>
@@ -113,10 +161,11 @@ import {
 import HeaderDialog from "@/components/HeaderDialog.vue";
 import { getService, Types } from "@/di-container";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
-import { PaymentSource } from "@/models/payment-source";
+import { AccountLatestValue, PaymentSource } from "@/models/payment-source";
 import { CreateTransferDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
+import { formatCurrencyDisplay } from "@/helpers";
 
 interface State {
   amount: string | null;
@@ -124,7 +173,7 @@ interface State {
   open?: boolean;
   accountTo: number | null;
   accountFrom: number | null;
-  paymentSources: PaymentSource[];
+  accounts: AccountLatestValue[];
 }
 
 interface Props {
@@ -143,7 +192,7 @@ export default defineComponent({
     const vm = getCurrentInstance();
 
     const state: State = reactive({
-      paymentSources: [],
+      accounts: [],
       accountFrom: null,
       accountTo: null,
       amount: null,
@@ -180,11 +229,22 @@ export default defineComponent({
       state.loading = false;
     }
 
-    onMounted(async () => {
-      state.paymentSources = await getService<IPaymentSourceService>(
+    async function getAccounts() {
+      state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getAllByUserId(1);
+      ).getLatestValues(1);
+    }
+
+    onMounted(() => {
+      getAccounts();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getAccounts();
+      }
+    );
 
     watch(
       () => props.value,
@@ -194,7 +254,8 @@ export default defineComponent({
     return {
       state,
       resetNewTransferDialog,
-      addNewTransfer
+      addNewTransfer,
+      formatCurrencyDisplay
     };
   }
 });

@@ -83,26 +83,52 @@
           </v-col>
           <v-col cols="12">
             <validation-provider
-              vid="paymentSource"
-              :name="$t('paymentSource')"
+              vid="account"
+              :name="$t('account')"
               rules="required"
               v-slot="{ errors, valid, untouched, required, failed }"
             >
               <v-select
+                :loading="state.loading"
+                :disabled="state.loading"
                 :error-messages="errors"
                 :hide-details="valid || (untouched && !failed)"
                 dense
                 item-text="description"
                 item-value="id"
                 :return-object="false"
-                :items="state.paymentSources"
-                v-model="state.paymentSource"
+                :items="state.accounts"
+                v-model="state.account"
                 clearable
                 outlined
               >
                 <template #label>
                   <required-icon v-show="required" />
-                  <span>{{ $t("paymentSource") }}</span>
+                  <span>{{ $t("account") }}</span>
+                </template>
+                <template #item="{ item, on, attrs }">
+                  <v-list-item two-line v-on="on" v-bind="attrs">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <template #selection="{ item }">
+                  <v-list-item two-line>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ item.description }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="pt-1">
+                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
               </v-select>
             </validation-provider>
@@ -133,8 +159,6 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
-  Ref,
-  ref,
   SetupContext,
   watch
 } from "@vue/composition-api";
@@ -143,11 +167,12 @@ import { Tag } from "@/models/tag";
 import { getService, Types } from "@/di-container";
 import { ITagService } from "@/interfaces/tagService";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
-import { PaymentSource } from "@/models/payment-source";
+import { AccountLatestValue } from "@/models/payment-source";
 import { format } from "date-fns";
 import { CreateFinancialChangeItemDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
+import { formatCurrencyDisplay } from "@/helpers";
 
 interface State {
   amount: string | null;
@@ -156,9 +181,9 @@ interface State {
   open?: boolean;
   tags: Tag[];
   tagIds: number[] | null;
-  paymentSource: number | null;
-  paymentSources: PaymentSource[];
+  account: number | null;
   expense: boolean;
+  accounts: AccountLatestValue[];
 }
 
 interface Props {
@@ -178,8 +203,8 @@ export default defineComponent({
 
     const state: State = reactive({
       tagIds: [],
-      paymentSources: [],
-      paymentSource: null,
+      account: null,
+      accounts: [],
       amount: null,
       description: null,
       loading: false,
@@ -192,7 +217,7 @@ export default defineComponent({
       state.amount = null;
       state.description = null;
       state.tagIds = null;
-      state.paymentSource = null;
+      state.account = null;
       state.expense = true;
       ((vm?.$refs.newTransactionFormRef as any) as ValidationObserver).reset();
       state.open = false;
@@ -208,7 +233,7 @@ export default defineComponent({
         appUserId: 1,
         description: state.description,
         expense: state.expense,
-        paymentSourceId: state.paymentSource as number,
+        paymentSourceId: state.account as number,
         tagIds: state.tagIds as number[],
         createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
       };
@@ -222,12 +247,25 @@ export default defineComponent({
       state.loading = false;
     }
 
-    onMounted(async () => {
-      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
-      state.paymentSources = await getService<IPaymentSourceService>(
+    async function getData() {
+      state.loading = true;
+      state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getAllByUserId(1);
+      ).getLatestValues(1);
+      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
+      state.loading = false;
+    }
+
+    onMounted(() => {
+      getData();
     });
+
+    watch(
+      () => context.root.$store.getters["app/refreshTrigger"] as boolean,
+      () => {
+        getData();
+      }
+    );
 
     watch(
       () => props.value,
@@ -237,7 +275,8 @@ export default defineComponent({
     return {
       state,
       resetNewTransactionDialog,
-      addNewTransaction
+      addNewTransaction,
+      formatCurrencyDisplay
     };
   }
 });

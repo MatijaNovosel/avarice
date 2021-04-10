@@ -38,7 +38,7 @@ export class PaymentSourceService implements IPaymentSourceService {
           value: appUserId
         }
       ],
-      responseParams: ["amount", "description", "currency", "icon"]
+      responseParams: ["id", "amount", "description", "currency", "icon"]
     });
 
     const {
