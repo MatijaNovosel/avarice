@@ -31,6 +31,7 @@ const { host, port, username, password, database } = { ...serverConfig };
     }),
     TypeOrmModule.forRoot({
       type: "mysql",
+      keepConnectionAlive: true,
       host,
       port,
       username,

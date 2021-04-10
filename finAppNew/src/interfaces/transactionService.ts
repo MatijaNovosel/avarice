@@ -25,7 +25,8 @@ export interface ITransactionService {
     take?: number | null,
     description?: string,
     min?: number | null,
-    max?: number | null
+    max?: number | null,
+    tags?: number[] | null
   ): Promise<ItemCollection<FinancialChangeItem>>;
   getHistory(
     appUserId: number,

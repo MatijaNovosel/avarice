@@ -24,6 +24,8 @@
             item-text="description"
             item-value="id"
             label="Tags"
+            @change="search"
+            v-model="state.search.tags"
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -132,6 +134,7 @@ import { TransactionType } from "@/constants/transactionTypes";
 interface SearchInput {
   description: string | null;
   transactionType: TransactionType[] | null;
+  tags: number[] | null;
 }
 
 interface State {
@@ -153,7 +156,8 @@ export default defineComponent({
       transactions: [],
       search: {
         description: null,
-        transactionType: null
+        transactionType: null,
+        tags: null
       },
       totalTransactions: 0,
       tags: []
@@ -163,7 +167,15 @@ export default defineComponent({
       await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
-      ).getChanges(1, null, null, state.search.description || "", null, null);
+      ).getChanges(
+        1,
+        null,
+        null,
+        state.search.description || "",
+        null,
+        null,
+        state.search.tags
+      );
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
       await context.root.$store.dispatch("app/setLoading", false);

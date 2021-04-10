@@ -87,7 +87,8 @@ export class FinancialChangeService {
     take?: number,
     description?: string,
     min?: number,
-    max?: number
+    max?: number,
+    tags?: number[]
   ): Promise<PaginatedFinancialChange> {
     const range = await this.getTransactionAmountRange(id);
 
@@ -105,32 +106,33 @@ export class FinancialChangeService {
       join: {
         alias: "transactions",
         leftJoinAndSelect: {
-          "financialchangetags": "transactions.financialchangetags",
-          "tag": "financialchangetags.tag"
+          financialchangetags: "transactions.financialchangetags",
+          tag: "financialchangetags.tag"
         }
       }
     });
 
-    const count = await this.financialChangeRepository.count({
-      where: filter
-    });
+    let items = data.map((fc) => ({
+      id: fc.id,
+      transfer: fc.transfer,
+      amount: fc.amount,
+      description: fc.description,
+      createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm:ss"),
+      expense: fc.expense,
+      paymentSourceId: fc.paymentSourceId,
+      tags: fc.financialchangetags.map((fct) => ({
+        id: fct.tagId,
+        description: fct.tag.description
+      }))
+    }));
 
-    return new PaginatedFinancialChange(
-      data.map((fc) => ({
-        id: fc.id,
-        transfer: fc.transfer,
-        amount: fc.amount,
-        description: fc.description,
-        createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm:ss"),
-        expense: fc.expense,
-        paymentSourceId: fc.paymentSourceId,
-        tags: fc.financialchangetags.map((fct) => ({
-          id: fct.tagId,
-          description: fct.tag.description
-        }))
-      })),
-      count
-    );
+    if (tags && tags.length != 0) {
+      items = items.filter((x) => x.tags.some((tag) => tags.includes(tag.id)));
+    }
+
+    const count = items.length;
+
+    return new PaginatedFinancialChange(items, count);
   }
 
   async getFinancialChangeTags(id: number): Promise<Tag[]> {

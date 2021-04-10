@@ -296,6 +296,7 @@ interface GqlRequestParam {
   quoted?: boolean;
   value?: any;
   subFields?: GqlRequestParam[];
+  array?: boolean;
 }
 
 interface GqlResponseParam {
@@ -315,6 +316,8 @@ export function formatRequestParam(param: GqlRequestParam): string {
     return `${param.name}: ${
       param.quoted !== undefined && param.quoted == true
         ? `"${param.value}"`
+        : param.array !== undefined && param.array == true && param.value
+        ? `[${param.value}]`
         : param.value
     }`;
   } else {
@@ -375,10 +378,13 @@ export function adjustHexColor(color: string, amount: number): string {
     );
 }
 
-export function createSelectFromEnum<T>(translationPrefix: string, enumType: T) {
+export function createSelectFromEnum<T>(
+  translationPrefix: string,
+  enumType: T
+) {
   const objectTypes: SelectItem[] = [];
 
-  const names = Object.keys(enumType).filter((item) => {       
+  const names = Object.keys(enumType).filter(item => {
     return isNaN(Number(item));
   });
 

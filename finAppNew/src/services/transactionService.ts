@@ -141,7 +141,8 @@ export class ChangeService implements ITransactionService {
     take: number | null = null,
     description = "",
     min: number | null = null,
-    max: number | null = null
+    max: number | null = null,
+    tags: number[] | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
     const query = formatGqlRequest({
       type: "query",
@@ -171,6 +172,11 @@ export class ChangeService implements ITransactionService {
         {
           name: "max",
           value: max
+        },
+        {
+          name: "tags",
+          value: tags,
+          array: true
         }
       ],
       responseParams: [
