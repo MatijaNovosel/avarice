@@ -1,21 +1,29 @@
 ﻿<template>
   <v-app-bar dense app class="elevation-1" height="65">
-    <v-list-item>
+    <v-list-item v-if="state.user">
       <v-list-item-avatar>
-        <v-img alt="" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
+        <img alt="" :src="state.user.photoUrl || '/defaultUser.jpg'" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>
           {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }},
-          <b> {{ state.displayName }} </b>!
+          <b> {{ state.user.displayName }} </b>!
         </v-list-item-title>
         <v-list-item-subtitle class="pt-1">
           <v-icon
             small
-            v-text="state.isVerified ? 'mdi-check-circle' : 'mdi-close-circle'"
-            :color="state.isVerified ? 'success' : 'error'"
+            v-text="
+              state.user.emailConfirmed
+                ? 'mdi-check-circle'
+                : 'mdi-close-circle'
+            "
+            :color="state.user.emailConfirmed ? 'success' : 'error'"
           />
-          {{ state.isVerified ? "Verified account" : "Unverified account" }}
+          {{
+            state.user.emailConfirmed
+              ? "Verified account"
+              : "Unverified account"
+          }}
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -78,11 +86,10 @@ interface Props {
 interface State {
   routeNames: RouteNames;
   timeOfDay: string;
-  displayName: string;
+  user: AppUser;
   newTransactionDialog: boolean;
   newTransferDialog: boolean;
   newAccountDialog: boolean;
-  isVerified: boolean;
   loading: boolean;
 }
 
@@ -105,13 +112,8 @@ export default defineComponent({
       newTransferDialog: false,
       newAccountDialog: false,
       routeNames: RouteNames,
-      displayName: computed(() => {
-        const user = context.root.$store.getters["user/data"] as AppUser;
-        return user.displayName as string;
-      }),
-      isVerified: computed(() => {
-        const user = context.root.$store.getters["user/data"] as AppUser;
-        return user.emailConfirmed as boolean;
+      user: computed(() => {
+        return context.root.$store.getters["user/data"] as AppUser;
       }),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();

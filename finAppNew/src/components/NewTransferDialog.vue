@@ -161,11 +161,13 @@ import {
 import HeaderDialog from "@/components/HeaderDialog.vue";
 import { getService, Types } from "@/di-container";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
-import { AccountLatestValue, PaymentSource } from "@/models/payment-source";
+import { AccountLatestValue } from "@/models/payment-source";
 import { CreateTransferDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
+import { AppUser } from "@/models/user";
+import { Snackbar } from "@/models/appNotifications";
 
 interface State {
   amount: string | null;
@@ -224,6 +226,12 @@ export default defineComponent({
         payload
       );
 
+      await context.root.$store.dispatch("app/showSnackbar", {
+        color: "success",
+        message: "Amount transferred successfully",
+        timeout: 3000
+      } as Snackbar);
+
       resetNewTransferDialog();
       await context.root.$store.dispatch("app/refresh");
       state.loading = false;
@@ -232,7 +240,9 @@ export default defineComponent({
     async function getAccounts() {
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getLatestValues(1);
+      ).getLatestValues(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
     }
 
     onMounted(() => {

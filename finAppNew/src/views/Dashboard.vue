@@ -165,6 +165,7 @@ import { GraphData, GraphOptions } from "@/models/graph";
 import BarChart from "@/components/charts/BarChart";
 import LineChart from "@/components/charts/LineChart";
 import { DatasetItem } from "@/models/dataset";
+import { AppUser } from "@/models/user";
 
 interface State {
   history: FinancialHistory[];
@@ -205,7 +206,11 @@ export default defineComponent({
 
       state.history = await getService<ITransactionService>(
         Types.ChangeService
-      ).getTotal(1, sub(new Date(), { days: 30 }), new Date());
+      ).getTotal(
+        (context.root.$store.getters["user/data"] as AppUser).id as number,
+        sub(new Date(), { days: 30 }),
+        new Date()
+      );
 
       state.totalDataset = {
         label: "Total",
@@ -223,11 +228,15 @@ export default defineComponent({
 
       state.recentDepositsAndWithdrawals = await getService<
         ITransactionService
-      >(Types.ChangeService).getRecentDepositsAndWithdrawals(1);
+      >(Types.ChangeService).getRecentDepositsAndWithdrawals(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
 
       const dailyChanges = await getService<ITransactionService>(
         Types.ChangeService
-      ).getDailyChanges(1);
+      ).getDailyChanges(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
 
       state.graphDataDailyChanges = {
         labels: dailyChanges
@@ -253,7 +262,11 @@ export default defineComponent({
 
       const itemCollection = await getService<ITransactionService>(
         Types.ChangeService
-      ).getChanges(1, 0, 10);
+      ).getChanges(
+        (context.root.$store.getters["user/data"] as AppUser).id as number,
+        0,
+        10
+      );
 
       state.transactions = itemCollection.items;
 

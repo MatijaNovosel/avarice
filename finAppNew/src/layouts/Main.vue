@@ -11,18 +11,18 @@
         'py-0 mx-0': !state.shouldShowUi
       }"
     >
-      <router-view @show-snackbar="showSnackbar" />
+      <router-view />
     </v-container>
     <v-snackbar
       app
-      timeout="2000"
-      v-model="state.snackbar"
       bottom
-      :color="state.snackbarColor"
+      v-model="state.snackbarActive"
       content-class="text-center"
       rounded="lg"
+      :timeout="state.snackbar.timeout"
+      :color="state.snackbar.color"
     >
-      {{ state.snackbarMessage }}
+      {{ state.snackbar.message }}
     </v-snackbar>
   </v-main>
 </template>
@@ -33,20 +33,20 @@ import {
   defineComponent,
   getCurrentInstance,
   reactive,
-  SetupContext
+  SetupContext,
+  watch
 } from "@vue/composition-api";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import AppBar from "@/components/AppBar.vue";
 import NavigationLink from "@/models/navigationLink";
 import RouteNames from "@/constants/routeNames";
-import { SnackbarEmitData } from "@/models/snackbar";
+import { Snackbar } from "@/models/appNotifications";
 
 interface State {
   loading: boolean;
   shouldShowUi: boolean;
-  snackbar: boolean;
-  snackbarColor: string;
-  snackbarMessage: string;
+  snackbar: Snackbar;
+  snackbarActive: boolean;
 }
 
 export default defineComponent({
@@ -84,28 +84,29 @@ export default defineComponent({
       }
     ];
 
+    watch(
+      () => context.root.$store.getters["app/snackbar"].active,
+      () => {
+        state.snackbarActive = true;
+      }
+    );
+
     const state: State = reactive({
+      snackbarActive: false,
       loading: computed(() => {
         return context.root.$store.getters["app/loading"] as boolean;
       }),
-      snackbar: false,
-      snackbarMessage: "",
-      snackbarColor: "primary",
+      snackbar: computed(() => {
+        return context.root.$store.getters["app/snackbar"] as Snackbar;
+      }),
       shouldShowUi: computed(() => {
         return ![RouteNames.LOGIN].includes(vm?.$route.name as string);
       })
     });
 
-    function showSnackbar(data: SnackbarEmitData) {
-      state.snackbarMessage = data.message;
-      state.snackbarColor = data.color;
-      state.snackbar = true;
-    }
-
     return {
       state,
-      links,
-      showSnackbar
+      links
     };
   }
 });

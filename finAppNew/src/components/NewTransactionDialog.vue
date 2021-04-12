@@ -134,7 +134,11 @@
             </validation-provider>
           </v-col>
           <v-col cols="12" class="py-0">
-            <v-switch dense v-model="state.withdrawal" :label="$t('withdrawal')" />
+            <v-switch
+              dense
+              v-model="state.withdrawal"
+              :label="$t('withdrawal')"
+            />
           </v-col>
           <v-col cols="12" class="text-center text-md-right mt-2">
             <v-btn
@@ -173,6 +177,8 @@ import { CreateFinancialChangeItemDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
+import { AppUser } from "@/models/user";
+import { Snackbar } from "@/models/appNotifications";
 
 interface State {
   amount: string | null;
@@ -242,6 +248,12 @@ export default defineComponent({
         payload
       );
 
+      await context.root.$store.dispatch("app/showSnackbar", {
+        color: "success",
+        message: "Added new transaction",
+        timeout: 3000
+      } as Snackbar);
+
       resetNewTransactionDialog();
       await context.root.$store.dispatch("app/refresh");
       state.loading = false;
@@ -251,8 +263,12 @@ export default defineComponent({
       state.loading = true;
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getLatestValues(1);
-      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
+      ).getLatestValues(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
+      state.tags = await getService<ITagService>(Types.TagService).getTags(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
       state.loading = false;
     }
 

@@ -5,7 +5,7 @@ export interface AppUser {
   id: number | null;
   uid?: string | null;
   email?: string | null;
-  photoURL?: string;
+  photoUrl?: string;
   displayName?: string;
   accessToken?: string;
   preferredCurrency?: Currency;
@@ -18,7 +18,7 @@ export interface UserDto {
   id: number | null;
   uid?: string;
   email?: string;
-  photoURL?: string;
+  photoUrl?: string;
   displayName?: string;
   language?: number;
   dateFormat?: string;

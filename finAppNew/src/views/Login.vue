@@ -97,6 +97,7 @@
 import RouteNames from "@/constants/routeNames";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/interfaces/authService";
+import { Snackbar } from "@/models/appNotifications";
 import {
   computed,
   defineComponent,
@@ -147,13 +148,19 @@ export default defineComponent({
           Types.AuthService
         ).signInEmail(state.email as string, state.password as string);
         await context.root.$store.dispatch("user/login", data);
+        await context.root.$store.dispatch("app/showSnackbar", {
+          color: "success",
+          message: "Logged in successfully",
+          timeout: 3000
+        } as Snackbar);
         state.loading = false;
         context.root.$router.push({ name: RouteNames.DASHBOARD });
       } catch (e) {
-        context.emit("show-snackbar", {
+        await context.root.$store.dispatch("app/showSnackbar", {
+          color: "error",
           message: "Failed to log in",
-          color: "error"
-        });
+          timeout: 3000
+        } as Snackbar);
       } finally {
         state.loading = false;
       }

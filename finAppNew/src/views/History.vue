@@ -159,6 +159,7 @@ import { Tag } from "@/models/tag";
 import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
 import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
+import { AppUser } from "@/models/user";
 
 interface SearchInput {
   description: string | null;
@@ -219,8 +220,12 @@ export default defineComponent({
     onMounted(async () => {
       state.accounts = await getService<IPaymentSourceService>(
         Types.PaymentSourceService
-      ).getAllByUserId(1);
-      state.tags = await getService<ITagService>(Types.TagService).getTags(1);
+      ).getAllByUserId(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
+      state.tags = await getService<ITagService>(Types.TagService).getTags(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
       getData();
     });
 
