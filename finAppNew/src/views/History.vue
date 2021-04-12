@@ -14,8 +14,24 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-select
+            :items="state.accounts"
+            hide-details
+            v-model="state.search.account"
+            clearable
+            dense
+            outlined
+            :return-object="false"
+            item-text="description"
+            item-value="id"
+            label="Account"
+            @change="search"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select
             :items="state.tags"
             hide-details
+            v-model="state.search.tags"
             multiple
             clearable
             dense
@@ -25,27 +41,6 @@
             item-value="id"
             label="Tags"
             @change="search"
-            v-model="state.search.tags"
-          />
-        </v-col>
-        <v-col cols="12" md="6">
-          <date-time-picker
-            label="From"
-            :text-field-props="{
-              'hide-details': true,
-              dense: true,
-              outlined: true
-            }"
-          />
-        </v-col>
-        <v-col cols="12" md="6">
-          <date-time-picker
-            label="To"
-            :text-field-props="{
-              'hide-details': true,
-              dense: true,
-              outlined: true
-            }"
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -54,13 +49,43 @@
             v-model="state.search.transactionType"
             hide-details
             dense
-            multiple
             outlined
+            clearable
             :return-object="false"
             label="Transaction type"
-          />
+            item-text="text"
+            item-value="value"
+            @change="search"
+          >
+            <template #item="{ item, on, attrs }">
+              <span
+                v-on="on"
+                v-bind="attrs"
+                :class="{
+                  'error--text': item.value == TransactionType.WITHDRAWAL,
+                  'success--text': item.value == TransactionType.DEPOSIT
+                }"
+                class="text-body-1"
+              >
+                {{ item.text }}
+              </span>
+            </template>
+            <template #selection="{ item }">
+              <span
+                :class="{
+                  'error--text':
+                    state.search.transactionType == TransactionType.WITHDRAWAL,
+                  'success--text':
+                    state.search.transactionType == TransactionType.DEPOSIT
+                }"
+                class="text-body-1"
+              >
+                {{ item.text }}
+              </span>
+            </template>
+          </v-select>
         </v-col>
-        <v-col cols="12" md="6" class="d-flex">
+        <v-col cols="12">
           <v-range-slider
             hint="[20, 1200] HRK"
             persistent-hint
@@ -96,6 +121,9 @@
         <template #item.amount="{ item }">
           {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
         </template>
+        <template #item.account="{ item }">
+          {{ item.account }}
+        </template>
         <template #item.tagIds="{ item }">
           <v-chip
             small
@@ -130,11 +158,13 @@ import { debounce } from "debounce/index";
 import { Tag } from "@/models/tag";
 import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
+import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
 
 interface SearchInput {
   description: string | null;
-  transactionType: TransactionType[] | null;
-  tags: number[] | null;
+  transactionType: TransactionType | null;
+  tags: number[];
+  account: number | null;
 }
 
 interface State {
@@ -142,6 +172,7 @@ interface State {
   totalTransactions: number;
   search: SearchInput;
   tags: Tag[];
+  accounts: any;
 }
 
 export default defineComponent({
@@ -157,10 +188,12 @@ export default defineComponent({
       search: {
         description: null,
         transactionType: null,
-        tags: null
+        tags: [],
+        account: null
       },
       totalTransactions: 0,
-      tags: []
+      tags: [],
+      accounts: []
     });
 
     async function getData() {
@@ -174,7 +207,9 @@ export default defineComponent({
         state.search.description || "",
         null,
         null,
-        state.search.tags
+        state.search.tags,
+        state.search.transactionType,
+        state.search.account
       );
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;
@@ -182,6 +217,9 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      state.accounts = await getService<IPaymentSourceService>(
+        Types.PaymentSourceService
+      ).getAllByUserId(1);
       state.tags = await getService<ITagService>(Types.TagService).getTags(1);
       getData();
     });
@@ -209,6 +247,11 @@ export default defineComponent({
         sortable: false
       },
       {
+        text: "Account",
+        value: "account",
+        sortable: false
+      },
+      {
         text: "Created at",
         value: "createdAt",
         sortable: false
@@ -229,7 +272,8 @@ export default defineComponent({
       headers,
       formatCurrencyDisplay,
       search,
-      transactionTypes
+      transactionTypes,
+      TransactionType
     };
   }
 });

@@ -1,28 +1,31 @@
+import { TransactionType } from "../constants";
 import { TransferInputType } from "./../input-types/financial-change.input-type";
 import { PaginatedFinancialChange } from "./../models/item-collection";
 import { Financialhistory } from "./../entities/financialhistory";
 import {
   GDailyChange,
-  Paymentsource,
   RecentDepositsAndWithdrawals,
   TransactionAmountRange
 } from "./../entities/paymentsource";
 import { Financialchangetag } from "./../entities/financialchangetag";
-import { Tag } from "./../entities/tag";
-import { Financialchange } from "./../entities/financialchange";
+import {
+  Financialchange,
+  GFinancialChange
+} from "./../entities/financialchange";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
   Between,
   createQueryBuilder,
+  Equal,
   getConnection,
-  getRepository,
   Like,
   Repository
 } from "typeorm";
 import { FinancialChangeInputType } from "../input-types/financial-change.input-type";
 import { format, parse } from "date-fns";
 import { Appuser } from "../entities/appuser";
+import { GTag } from "src/entities/tag";
 
 @Injectable()
 export class FinancialChangeService {
@@ -88,14 +91,20 @@ export class FinancialChangeService {
     description?: string,
     min?: number,
     max?: number,
-    tags?: number[]
+    tags?: number[],
+    transactionType?: TransactionType,
+    account?: number
   ): Promise<PaginatedFinancialChange> {
     const range = await this.getTransactionAmountRange(id);
 
     const filter = {
       appUserId: id,
       amount: Between(min || range.min, max || range.max),
-      ...(description && { description: Like(`%${description}%`) })
+      ...(description && { description: Like(`%${description}%`) }),
+      ...(transactionType && {
+        expense: transactionType == TransactionType.DEPOSIT ? 0 : 1
+      }),
+      ...(account && { paymentSourceId: Equal(account) })
     };
 
     const data = await this.financialChangeRepository.find({
@@ -104,52 +113,37 @@ export class FinancialChangeService {
       skip,
       take,
       join: {
-        alias: "transactions",
+        alias: "fc",
         leftJoinAndSelect: {
-          financialchangetags: "transactions.financialchangetags",
+          paymentSource: "fc.paymentSource",
+          financialchangetags: "fc.financialchangetags",
           tag: "financialchangetags.tag"
         }
       }
     });
 
-    let items = data.map((fc) => ({
-      id: fc.id,
-      transfer: fc.transfer,
-      amount: fc.amount,
-      description: fc.description,
-      createdAt: format(fc.createdAt, "dd.MM.yyyy. HH:mm:ss"),
-      expense: fc.expense,
-      paymentSourceId: fc.paymentSourceId,
-      tags: fc.financialchangetags.map((fct) => ({
+    let items = data.map<GFinancialChange>((transaction) => ({
+      id: transaction.id,
+      transfer: transaction.transfer,
+      amount: transaction.amount,
+      description: transaction.description,
+      createdAt: format(transaction.createdAt, "dd.MM.yyyy. HH:mm:ss"),
+      expense: transaction.expense,
+      account: transaction.paymentSource.description,
+      tags: transaction.financialchangetags.map<GTag>((fct) => ({
         id: fct.tagId,
         description: fct.tag.description
       }))
     }));
 
     if (tags && tags.length != 0) {
-      items = items.filter((x) => x.tags.some((tag) => tags.includes(tag.id)));
+      items = items.filter(
+        (x) => JSON.stringify(x.tags.map((y) => y.id)) == JSON.stringify(tags)
+      );
     }
 
     const count = items.length;
-
     return new PaginatedFinancialChange(items, count);
-  }
-
-  async getFinancialChangeTags(id: number): Promise<Tag[]> {
-    return await getRepository(Tag)
-      .createQueryBuilder("t")
-      .innerJoin(Financialchangetag, "fct", "fct.tagId = t.id")
-      .where("fct.financialChangeId = :id", { id })
-      .getMany();
-  }
-
-  async getPaymentSource(id: number): Promise<Paymentsource> {
-    return (
-      await this.financialChangeRepository.findOne({
-        relations: ["paymentSource"],
-        where: { id }
-      })
-    ).paymentSource;
   }
 
   async transfer(payload: TransferInputType): Promise<void> {

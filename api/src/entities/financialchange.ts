@@ -83,8 +83,8 @@ export class GFinancialChange {
   @Field()
   transfer?: boolean;
 
-  @Field(() => Int)
-  paymentSourceId?: number;
+  @Field()
+  account?: string;
 
   @Field(() => [GTag])
   tags?: GTag[];

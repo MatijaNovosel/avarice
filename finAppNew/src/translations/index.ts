@@ -2,8 +2,7 @@ export default {
   en: {
     transactionType: {
       WITHDRAWAL: "Withdrawal",
-      DEPOSIT: "Deposit",
-      TRANSFER: "Transfer"
+      DEPOSIT: "Deposit"
     },
     account: "Account",
     newAccountName: "New account name",
@@ -18,6 +17,7 @@ export default {
     accountTo: "Account to",
     newTransfer: "New transfer",
     expense: "Expense",
+    withdrawal: "Withdrawal",
     paymentSource: "Payment source",
     tags: "Tags",
     newTransaction: "New transaction",

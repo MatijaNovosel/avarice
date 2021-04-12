@@ -17,3 +17,7 @@
 html {
   scroll-behavior: smooth;
 }
+
+.theme--dark.v-data-table tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.2);
+}

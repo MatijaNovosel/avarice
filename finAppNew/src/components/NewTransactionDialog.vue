@@ -134,7 +134,7 @@
             </validation-provider>
           </v-col>
           <v-col cols="12" class="py-0">
-            <v-switch dense v-model="state.expense" :label="$t('expense')" />
+            <v-switch dense v-model="state.withdrawal" :label="$t('withdrawal')" />
           </v-col>
           <v-col cols="12" class="text-center text-md-right mt-2">
             <v-btn
@@ -182,7 +182,7 @@ interface State {
   tags: Tag[];
   tagIds: number[] | null;
   account: number | null;
-  expense: boolean;
+  withdrawal: boolean;
   accounts: AccountLatestValue[];
 }
 
@@ -210,7 +210,7 @@ export default defineComponent({
       loading: false,
       open: false,
       tags: [],
-      expense: true
+      withdrawal: true
     });
 
     function resetNewTransactionDialog() {
@@ -218,7 +218,7 @@ export default defineComponent({
       state.description = null;
       state.tagIds = null;
       state.account = null;
-      state.expense = true;
+      state.withdrawal = true;
       ((vm?.$refs.newTransactionFormRef as any) as ValidationObserver).reset();
       state.open = false;
       context.emit("input", state.open);
@@ -232,7 +232,7 @@ export default defineComponent({
         amount: parseFloat(state.amount as string),
         appUserId: 1,
         description: state.description,
-        expense: state.expense,
+        expense: state.withdrawal,
         paymentSourceId: state.account as number,
         tagIds: state.tagIds as number[],
         createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")

@@ -142,7 +142,9 @@ export class ChangeService implements ITransactionService {
     description = "",
     min: number | null = null,
     max: number | null = null,
-    tags: number[] | null = null
+    tags: number[] | null = null,
+    transactionType: number | null = null,
+    account: number | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
     const query = formatGqlRequest({
       type: "query",
@@ -177,6 +179,14 @@ export class ChangeService implements ITransactionService {
           name: "tags",
           value: tags,
           array: true
+        },
+        {
+          name: "transactionType",
+          value: transactionType
+        },
+        {
+          name: "account",
+          value: account
         }
       ],
       responseParams: [
@@ -190,7 +200,7 @@ export class ChangeService implements ITransactionService {
             "createdAt",
             "description",
             "expense",
-            "paymentSourceId",
+            "account",
             {
               name: "tags",
               subFields: ["id", "description"]
