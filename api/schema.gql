@@ -56,6 +56,10 @@ type GFinancialHistoryCurrentAmount {
   total: Float!
 }
 
+type GLatestDate {
+  latestDate: String!
+}
+
 type GAppUser {
   id: Int!
   uid: String!
@@ -129,6 +133,7 @@ type Query {
   tagPercentages(appUserId: Float!): [GTagPercentage!]!
   financialHistory(to: String, from: String, id: Float!): [GFinancialHistory!]!
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
+  latestDate(appUserId: Float!): GLatestDate!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(account: [Int!], transactionType: [Int!], tags: [Int!], max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!

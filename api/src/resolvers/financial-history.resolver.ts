@@ -1,3 +1,4 @@
+import { GLatestDate } from "./../entities/financialhistory";
 import { FinancialHistoryService } from "./../services/financial-history.service";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import {
@@ -23,5 +24,12 @@ export class FinancialHistoryResolver {
   })
   async getCurrentAmountByUserId(@Args("id") id: number) {
     return this.financialHistoryService.getCurrentAmountByUserId(id);
+  }
+
+  @Query(() => GLatestDate, {
+    name: "latestDate"
+  })
+  async getLatestDate(@Args("appUserId") appUserId: number) {
+    return this.financialHistoryService.getLatestDate(appUserId);
   }
 }

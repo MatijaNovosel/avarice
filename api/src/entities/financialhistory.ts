@@ -92,3 +92,9 @@ export class GFinancialHistoryCurrentAmount {
   @Field(() => Float)
   total: number;
 }
+
+@ObjectType()
+export class GLatestDate {
+  @Field()
+  latestDate: string;
+}

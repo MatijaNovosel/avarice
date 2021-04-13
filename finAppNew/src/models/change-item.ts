@@ -47,3 +47,7 @@ export interface DailyChangeDto {
   deposits: number;
   createdAt: string;
 }
+
+export interface LatestDate {
+  latestDate: string;
+}

@@ -1,4 +1,4 @@
-import { DailyChange } from "@/models/change-item";
+import { DailyChange, LatestDate } from "@/models/change-item";
 import {
   CreateFinancialChangeItemDto,
   CreateTransferDto,
@@ -41,4 +41,5 @@ export interface ITransactionService {
     to?: Date | null
   ): Promise<FinancialHistory[]>;
   getDailyChanges(appUserId: number): Promise<DailyChange[]>;
+  getLatestDate(appUserId: number): Promise<LatestDate>;
 }

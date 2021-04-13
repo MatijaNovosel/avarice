@@ -200,7 +200,7 @@ export default defineComponent({
     async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
-        Types.ChangeService
+        Types.TransactionService
       ).getChanges(
         1,
         null,

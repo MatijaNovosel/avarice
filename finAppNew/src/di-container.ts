@@ -5,7 +5,7 @@ import SessionStorage from "@/services/sessionStorageService";
 import { AuthService } from "./services/authService";
 import { IAuthService } from "./interfaces/authService";
 import { ITransactionService } from "./interfaces/transactionService";
-import { ChangeService } from "./services/transactionService";
+import { TransactionService } from "./services/transactionService";
 import { SettingsService } from "./services/settingsService";
 import { IPaymentSourceService } from "./interfaces/paymentSourceService";
 import { ISettingsService } from "./interfaces/settingsService";
@@ -20,7 +20,7 @@ export function getService<T>(symbol): T {
 export class Types {
   static readonly WebStorageService = Symbol("IWebStorageService");
   static readonly AuthService = Symbol("IAuthService");
-  static readonly ChangeService = Symbol("ITransactionService");
+  static readonly TransactionService = Symbol("ITransactionService");
   static readonly SettingsService = Symbol("ISettingsService");
   static readonly PaymentSourceService = Symbol("IPaymentSourceService");
   static readonly TagService = Symbol("ITagService");
@@ -36,8 +36,8 @@ DIContainer.bind<IAuthService>(Types.AuthService).toConstantValue(
   new AuthService()
 );
 
-DIContainer.bind<ITransactionService>(Types.ChangeService).toConstantValue(
-  new ChangeService()
+DIContainer.bind<ITransactionService>(Types.TransactionService).toConstantValue(
+  new TransactionService()
 );
 
 DIContainer.bind<ISettingsService>(Types.SettingsService).toConstantValue(

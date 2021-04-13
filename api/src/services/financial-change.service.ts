@@ -67,15 +67,12 @@ export class FinancialChangeService {
     appUserId: number,
     expense?: boolean
   ): Promise<TransactionAmountRange> {
-    let where = "";
-
-    if (expense !== undefined) {
-      where = `expense = ${expense ? 1 : 0}`;
-    }
-
     const { min, max } = await createQueryBuilder("financialchange")
       .select("MAX(amount) max, MIN(amount) min")
-      .where(where)
+      .where({
+        appUserId,
+        ...(expense && { expense: expense ? 1 : 0 })
+      })
       .getRawOne();
 
     return {
@@ -180,14 +177,14 @@ export class FinancialChangeService {
       tagId: 8
     });
 
-    const userPaymentSourceIds: number[] = (
+    const accountIds: number[] = (
       await this.appUserRepository.findOne({
         where: { id: payload.appUserId },
         relations: ["paymentsources"]
       })
     ).paymentsources.map((ps) => ps.id);
 
-    for (const id of userPaymentSourceIds) {
+    for (const id of accountIds) {
       const current = await this.financialChangeHistoryRepository.findOne({
         where: { appUserId: payload.appUserId, paymentSourceId: id },
         order: { createdAt: "DESC" }
@@ -228,14 +225,14 @@ export class FinancialChangeService {
       });
     });
 
-    const userPaymentSourceIds: number[] = (
+    const accountIds: number[] = (
       await this.appUserRepository.findOne({
         where: { id: payload.appUserId },
         relations: ["paymentsources"]
       })
     ).paymentsources.map((ps) => ps.id);
 
-    for (const id of userPaymentSourceIds) {
+    for (const id of accountIds) {
       const current = await this.financialChangeHistoryRepository.findOne({
         where: { appUserId: payload.appUserId, paymentSourceId: id },
         order: { createdAt: "DESC" }
@@ -258,7 +255,6 @@ export class FinancialChangeService {
     const data = await getConnection().query("CALL getDailyChanges(?)", [
       appUserId
     ]);
-    const res: GDailyChange[] = data[0];
-    return res;
+    return data[0];
   }
 }

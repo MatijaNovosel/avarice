@@ -11,15 +11,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title class="font-weight-bold">
-              {{
-                formatCurrencyDisplay(
-                  true,
-                  state.history && state.history.length != 0
-                    ? state.history[state.history.length - 1].total
-                    : 0,
-                  "HRK"
-                )
-              }}
+              {{ formatCurrencyDisplay(true, state.total, "HRK") }}
             </v-list-item-title>
             <v-list-item-subtitle class="mt-1">
               Total amount
@@ -107,6 +99,7 @@
         :headers="headers"
         :items="state.transactions"
         hide-default-footer
+        :items-per-page="10"
         class="rounded-lg"
       >
         <template #item.createdAt="{ item }">
@@ -145,7 +138,9 @@
 <script lang="ts">
 import { getService, Types } from "@/di-container";
 import { ITransactionService } from "@/interfaces/transactionService";
+import IWebStorage from "@/interfaces/webStorageService";
 import {
+  DailyChange,
   FinancialChangeItem,
   RecentDepositsAndWithdrawals
 } from "@/models/change-item";
@@ -175,6 +170,7 @@ interface State {
   totalDataset: DatasetItem | null;
   transactions: FinancialChangeItem[];
   loading: boolean;
+  total: number;
 }
 
 export default defineComponent({
@@ -198,19 +194,59 @@ export default defineComponent({
       recentDepositsAndWithdrawals: {
         deposits: 0,
         withdrawals: 0
-      }
+      },
+      total: computed(() => {
+        return state.history && state.history.length != 0
+          ? state.history[state.history.length - 1].total
+          : 0;
+      })
     });
 
-    async function getData() {
-      await context.root.$store.dispatch("app/setLoading", true);
+    async function cacheData() {
+      const storage = getService<IWebStorage>(Types.WebStorageService);
 
-      state.history = await getService<ITransactionService>(
-        Types.ChangeService
+      const history = await getService<ITransactionService>(
+        Types.TransactionService
       ).getTotal(
         (context.root.$store.getters["user/data"] as AppUser).id as number,
         sub(new Date(), { days: 30 }),
         new Date()
       );
+      storage.saveState("history", JSON.stringify(history));
+      state.history = history;
+
+      const dailyChanges = await getService<ITransactionService>(
+        Types.TransactionService
+      ).getDailyChanges(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
+
+      storage.saveState("dailyChanges", JSON.stringify(dailyChanges));
+    }
+
+    async function getData() {
+      await context.root.$store.dispatch("app/setLoading", true);
+
+      const { latestDate } = await getService<ITransactionService>(
+        Types.TransactionService
+      ).getLatestDate(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
+
+      const storage = getService<IWebStorage>(Types.WebStorageService);
+      const cachedHistory = storage.getSavedState("history");
+
+      if (cachedHistory) {
+        const data = JSON.parse(cachedHistory) as FinancialHistory[];
+        const cachedLatestDate = data[data.length - 1].createdAt as string;
+        if (latestDate == cachedLatestDate) {
+          state.history = data;
+        } else {
+          await cacheData();
+        }
+      } else {
+        await cacheData();
+      }
 
       state.totalDataset = {
         label: "Total",
@@ -228,20 +264,18 @@ export default defineComponent({
 
       state.recentDepositsAndWithdrawals = await getService<
         ITransactionService
-      >(Types.ChangeService).getRecentDepositsAndWithdrawals(
+      >(Types.TransactionService).getRecentDepositsAndWithdrawals(
         (context.root.$store.getters["user/data"] as AppUser).id as number
       );
 
-      const dailyChanges = await getService<ITransactionService>(
-        Types.ChangeService
-      ).getDailyChanges(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
-      );
+      const dailyChanges = JSON.parse(
+        storage.getSavedState("dailyChanges")
+      ) as DailyChange[];
 
       state.graphDataDailyChanges = {
         labels: dailyChanges
           .reverse()
-          .map(x => format(x.createdAt, "dd.MM.yyyy.")),
+          .map(x => format(new Date(x.createdAt), "dd.MM.yyyy.")),
         datasets: [
           {
             type: "bar",
@@ -261,7 +295,7 @@ export default defineComponent({
       };
 
       const itemCollection = await getService<ITransactionService>(
-        Types.ChangeService
+        Types.TransactionService
       ).getChanges(
         (context.root.$store.getters["user/data"] as AppUser).id as number,
         0,
@@ -269,7 +303,6 @@ export default defineComponent({
       );
 
       state.transactions = itemCollection.items;
-
       await context.root.$store.dispatch("app/setLoading", false);
     }
 

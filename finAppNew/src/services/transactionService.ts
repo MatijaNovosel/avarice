@@ -6,7 +6,8 @@ import {
   DailyChange,
   RecentDepositsAndWithdrawals,
   TransactionAmountRange,
-  DailyChangeDto
+  DailyChangeDto,
+  LatestDate
 } from "@/models/change-item";
 import { FinancialHistory } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
@@ -14,7 +15,7 @@ import { format } from "date-fns";
 import { formatGqlRequest } from "@/helpers";
 import axios from "axios";
 
-export class ChangeService implements ITransactionService {
+export class TransactionService implements ITransactionService {
   async getRecentDepositsAndWithdrawals(
     appUserId: number
   ): Promise<RecentDepositsAndWithdrawals> {
@@ -361,5 +362,29 @@ export class ChangeService implements ITransactionService {
       deposits: x.deposits,
       createdAt: new Date(parseInt(x.createdAt))
     }));
+  }
+
+  async getLatestDate(appUserId: number): Promise<LatestDate> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "latestDate",
+      requestParams: [
+        {
+          name: "appUserId",
+          value: appUserId
+        }
+      ],
+      responseParams: ["latestDate"]
+    });
+    
+    const {
+      data: {
+        data: { latestDate }
+      }
+    } = await axios.post("", {
+      query
+    });
+
+    return latestDate;
   }
 }

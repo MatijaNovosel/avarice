@@ -222,7 +222,7 @@ export default defineComponent({
         accountToId: state.accountTo as number
       };
 
-      await getService<ITransactionService>(Types.ChangeService).transfer(
+      await getService<ITransactionService>(Types.TransactionService).transfer(
         payload
       );
 

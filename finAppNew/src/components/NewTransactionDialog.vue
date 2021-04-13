@@ -244,7 +244,7 @@ export default defineComponent({
         createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
       };
 
-      await getService<ITransactionService>(Types.ChangeService).addChange(
+      await getService<ITransactionService>(Types.TransactionService).addChange(
         payload
       );
 

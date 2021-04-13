@@ -2,6 +2,7 @@ import {
   Financialhistory,
   GFinancialHistory,
   GFinancialHistoryCurrentAmount,
+  GLatestDate,
   GUserPaymentSource,
   GUserPaymentSourceDetailed
 } from "./../entities/financialhistory";
@@ -16,6 +17,14 @@ export class FinancialHistoryService {
     @InjectRepository(Financialhistory)
     private financialHistoryRepository: Repository<Financialhistory>
   ) {}
+  async getLatestDate(appUserId: number): Promise<GLatestDate> {
+    const { maxDate } = await createQueryBuilder("financialhistory")
+      .select("MAX(createdAt)", "maxDate")
+      .where({ appUserId })
+      .getRawOne();
+    return { latestDate: format(maxDate, "dd.MM.yyyy. HH:mm:ss") };
+  }
+
   async findByUserId(
     appUserId: number,
     from?: string,
