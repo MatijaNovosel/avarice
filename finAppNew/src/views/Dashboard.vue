@@ -220,8 +220,18 @@ export default defineComponent({
       ).getDailyChanges(
         (context.root.$store.getters["user/data"] as AppUser).id as number
       );
-
       storage.saveState("dailyChanges", JSON.stringify(dailyChanges));
+
+      const recentDepositsAndWithdrawals = await getService<
+        ITransactionService
+      >(Types.TransactionService).getRecentDepositsAndWithdrawals(
+        (context.root.$store.getters["user/data"] as AppUser).id as number
+      );
+
+      storage.saveState(
+        "recentDepositsAndWithdrawals",
+        JSON.stringify(recentDepositsAndWithdrawals)
+      );
     }
 
     async function getData() {
@@ -262,12 +272,6 @@ export default defineComponent({
         datasets: [state.totalDataset]
       };
 
-      state.recentDepositsAndWithdrawals = await getService<
-        ITransactionService
-      >(Types.TransactionService).getRecentDepositsAndWithdrawals(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
-      );
-
       const dailyChanges = JSON.parse(
         storage.getSavedState("dailyChanges")
       ) as DailyChange[];
@@ -293,6 +297,10 @@ export default defineComponent({
           }
         ]
       };
+
+      state.recentDepositsAndWithdrawals = JSON.parse(
+        storage.getSavedState("recentDepositsAndWithdrawals")
+      ) as RecentDepositsAndWithdrawals;
 
       const itemCollection = await getService<ITransactionService>(
         Types.TransactionService
