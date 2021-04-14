@@ -1,6 +1,6 @@
 ﻿<template>
-  <v-app-bar dense app class="elevation-1" height="65">
-    <v-list-item v-if="state.user">
+  <v-app-bar clipped-right app class="elevation-3" height="65">
+    <v-list-item v-if="state.user" class="pl-15">
       <v-list-item-avatar>
         <img alt="" :src="state.user.photoUrl || '/defaultUser.jpg'" />
       </v-list-item-avatar>
@@ -28,25 +28,34 @@
       </v-list-item-content>
     </v-list-item>
     <v-spacer />
-    <v-menu bottom left offset-y>
+    <v-menu small bottom left offset-y>
       <template #activator="{ on, attrs }">
-        <v-btn icon v-bind="attrs" v-on="on" class="mr-3">
-          <v-icon>mdi-dots-vertical</v-icon>
+        <v-btn small icon v-bind="attrs" v-on="on" class="mr-4">
+          <v-icon>mdi-dots-horizontal</v-icon>
         </v-btn>
       </template>
       <v-list dense>
         <v-list-item @click="state.newTransactionDialog = true">
           <v-list-item-title>
+            <v-icon color="grey" class="pr-2">
+              mdi-wallet-plus
+            </v-icon>
             {{ $t("newTransaction") }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item @click="state.newTransferDialog = true">
           <v-list-item-title>
+            <v-icon color="grey" class="pr-2">
+              mdi-transfer
+            </v-icon>
             {{ $t("newTransfer") }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item @click="state.newAccountDialog = true">
           <v-list-item-title>
+            <v-icon color="grey" class="pr-2">
+              mdi-credit-card-plus-outline
+            </v-icon>
             {{ $t("newAccount") }}
           </v-list-item-title>
         </v-list-item>

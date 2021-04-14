@@ -21,3 +21,7 @@ html {
 .theme--dark.v-data-table tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.2);
 }
+
+.v-toolbar__content, .v-toolbar__extension {
+  padding: 0px;
+}

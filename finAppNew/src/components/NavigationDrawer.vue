@@ -1,29 +1,36 @@
 <template>
-  <v-navigation-drawer app disable-resize-watcher>
-    <template #prepend>
-      <v-list-item class="py-3 grey darken-4">
-        <v-list-item-avatar>
-          <v-icon large color="amber darken-2">mdi-poll-box</v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title class="font-weight-bold">
-            FinApp
-          </v-list-item-title>
-          <v-list-item-subtitle class="mt-1">
-            v{{ state.appVersion }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
+  <v-navigation-drawer
+    color="grey darken-4"
+    right
+    clipped
+    app
+    mini-variant
+    floating
+    permanent
+  >
+    <v-list dense nav class="mt-1">
+      <v-list-item
+        color="red"
+        exact
+        v-for="(item, i) in state.links"
+        :key="i"
+        :to="item.route"
+      >
+        <v-icon v-text="item.icon" />
       </v-list-item>
-    </template>
-    <v-divider />
-    <drawer-list v-if="links" :items="links" />
+      <v-list-item @click="logOut">
+        <v-list-item-icon>
+          <v-icon color="grey">mdi-logout</v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+    </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "@vue/composition-api";
+import { defineComponent, reactive, SetupContext } from "@vue/composition-api";
 import NavigationLink from "../models/navigationLink";
-import DrawerList from "@/components/DrawerList.vue";
+import RouteNames from "@/constants/routeNames";
 
 interface Props {
   links: NavigationLink[];
@@ -40,17 +47,20 @@ export default defineComponent({
     links: Array,
     drawer: null
   },
-  components: {
-    DrawerList
-  },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const state: State = reactive({
       links: props.links,
       appVersion: process.env.PACKAGE_VERSION
     });
 
+    async function logOut() {
+      await context.root.$store.dispatch("user/logout");
+      context.root.$router.push({ name: RouteNames.LOGIN });
+    }
+
     return {
-      state
+      state,
+      logOut
     };
   }
 });

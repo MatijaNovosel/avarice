@@ -116,6 +116,17 @@
             }})
           </span>
         </template>
+        <template #item.description="{ item }">
+          <span
+            class="font-weight-bold"
+            :class="{
+              'error--text': item.expense,
+              'success--text': !item.expense
+            }"
+          >
+            {{ item.description }}
+          </span>
+        </template>
         <template #item.amount="{ item }">
           {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
         </template>
