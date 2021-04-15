@@ -4,29 +4,26 @@
       <h3>Overview</h3>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg">
-        <v-list-item two-line>
-          <v-list-item-avatar>
-            <v-icon>mdi-bank</v-icon>
-          </v-list-item-avatar>
+      <v-card rounded="lg" class="pa-1">
+        <v-list-item dense two-line>
           <v-list-item-content>
+            <v-list-item-subtitle class="pb-1">
+              Total amount
+            </v-list-item-subtitle>
             <v-list-item-title class="font-weight-bold">
               {{ formatCurrencyDisplay(true, state.total, "HRK") }}
             </v-list-item-title>
-            <v-list-item-subtitle class="mt-1">
-              Total amount
-            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg">
-        <v-list-item two-line>
-          <v-list-item-avatar>
-            <v-icon>mdi-bank-transfer-in</v-icon>
-          </v-list-item-avatar>
+      <v-card rounded="lg" class="pa-1">
+        <v-list-item dense two-line>
           <v-list-item-content>
+            <v-list-item-subtitle class="pb-1">
+              Deposits (Last 30 days)
+            </v-list-item-subtitle>
             <v-list-item-title class="green--text font-weight-bold">
               {{
                 formatCurrencyDisplay(
@@ -36,20 +33,17 @@
                 )
               }}
             </v-list-item-title>
-            <v-list-item-subtitle class="mt-1">
-              Deposits (Last 30 days)
-            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg">
-        <v-list-item two-line>
-          <v-list-item-avatar>
-            <v-icon>mdi-bank-transfer-out</v-icon>
-          </v-list-item-avatar>
+      <v-card rounded="lg" class="pa-1">
+        <v-list-item dense two-line>
           <v-list-item-content>
+            <v-list-item-subtitle class="pb-1">
+              Withdrawals (Last 30 days)
+            </v-list-item-subtitle>
             <v-list-item-title class="red--text font-weight-bold">
               {{
                 formatCurrencyDisplay(
@@ -59,9 +53,6 @@
                 )
               }}
             </v-list-item-title>
-            <v-list-item-subtitle class="mt-1">
-              Withdrawals (Last 30 days)
-            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-card>
@@ -101,6 +92,7 @@
         hide-default-footer
         :items-per-page="10"
         class="rounded-lg"
+        dense
       >
         <template #item.createdAt="{ item }">
           {{ item.createdAt }}
@@ -132,7 +124,7 @@
         </template>
         <template #item.tagIds="{ item }">
           <v-chip
-            small
+            x-small
             v-for="(tag, i) in item.tags"
             :key="i"
             class="mr-2"
