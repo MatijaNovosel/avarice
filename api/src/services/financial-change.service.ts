@@ -90,7 +90,8 @@ export class FinancialChangeService {
     max?: number,
     tags?: number[],
     transactionType?: TransactionType,
-    account?: number
+    account?: number,
+    showTransfers?: boolean
   ): Promise<PaginatedFinancialChange> {
     const range = await this.getTransactionAmountRange(id);
 
@@ -101,7 +102,9 @@ export class FinancialChangeService {
       ...(transactionType && {
         expense: transactionType == TransactionType.DEPOSIT ? 0 : 1
       }),
-      ...(account && { paymentSourceId: Equal(account) })
+      ...(account && { paymentSourceId: Equal(account) }),
+      ...(showTransfers != undefined &&
+        showTransfers == false && { transfer: Equal(0) })
     };
 
     const data = await this.financialChangeRepository.find({

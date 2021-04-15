@@ -28,7 +28,8 @@ export interface ITransactionService {
     max?: number | null,
     tags?: number[] | null,
     transactionType?: number | null,
-    account?: number | null
+    account?: number | null,
+    showTransfers?: boolean | null
   ): Promise<ItemCollection<FinancialChangeItem>>;
   getHistory(
     appUserId: number,

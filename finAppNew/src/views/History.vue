@@ -85,7 +85,7 @@
             </template>
           </v-select>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="6">
           <v-range-slider
             hint="[20, 1200] HRK"
             persistent-hint
@@ -93,6 +93,15 @@
             step="10"
             ticks="always"
             tick-size="4"
+          />
+        </v-col>
+        <v-col cols="12" md="6" class="d-flex justify-center">
+          <v-switch
+            dense
+            hide-details
+            label="Show transfers"
+            v-model="state.search.showTransfers"
+            @change="search"
           />
         </v-col>
       </v-row>
@@ -177,6 +186,7 @@ interface SearchInput {
   transactionType: TransactionType | null;
   tags: number[];
   account: number | null;
+  showTransfers: boolean;
 }
 
 interface State {
@@ -201,7 +211,8 @@ export default defineComponent({
         description: null,
         transactionType: null,
         tags: [],
-        account: null
+        account: null,
+        showTransfers: false
       },
       totalTransactions: 0,
       tags: [],
@@ -221,7 +232,8 @@ export default defineComponent({
         null,
         state.search.tags,
         state.search.transactionType,
-        state.search.account
+        state.search.account,
+        state.search.showTransfers
       );
       state.transactions = itemCollection.items;
       state.totalTransactions = itemCollection.count;

@@ -26,10 +26,12 @@ export class FinancialChangeResolver {
     @Args("min", { type: () => Float, nullable: true }) min: number,
     @Args("max", { type: () => Float, nullable: true }) max: number,
     @Args("tags", { type: () => [Int], nullable: true }) tags: number[],
-    @Args("transactionType", { type: () => [Int], nullable: true })
+    @Args("transactionType", { type: () => Int, nullable: true })
     transactionType: number,
-    @Args("account", { type: () => [Int], nullable: true })
-    account: number
+    @Args("account", { type: () => Int, nullable: true })
+    account: number,
+    @Args("showTransfers", { nullable: true })
+    showTransfers: boolean
   ) {
     return this.financialChangeService.findAllByUserId(
       id,
@@ -40,7 +42,8 @@ export class FinancialChangeResolver {
       max,
       tags,
       transactionType,
-      account
+      account,
+      showTransfers
     );
   }
 

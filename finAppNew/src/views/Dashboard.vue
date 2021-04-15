@@ -310,7 +310,14 @@ export default defineComponent({
       ).getChanges(
         (context.root.$store.getters["user/data"] as AppUser).id as number,
         0,
-        10
+        10,
+        "",
+        null,
+        null,
+        null,
+        null,
+        null,
+        false
       );
 
       state.transactions = itemCollection.items;
@@ -407,6 +414,11 @@ export default defineComponent({
       {
         text: "Amount",
         value: "amount",
+        sortable: false
+      },
+      {
+        text: "Account",
+        value: "account",
         sortable: false
       },
       {

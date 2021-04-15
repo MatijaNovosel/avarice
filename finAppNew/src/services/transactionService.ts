@@ -145,7 +145,8 @@ export class TransactionService implements ITransactionService {
     max: number | null = null,
     tags: number[] | null = null,
     transactionType: number | null = null,
-    account: number | null = null
+    account: number | null = null,
+    showTransfers: boolean | null = null
   ): Promise<ItemCollection<FinancialChangeItem>> {
     const query = formatGqlRequest({
       type: "query",
@@ -188,6 +189,10 @@ export class TransactionService implements ITransactionService {
         {
           name: "account",
           value: account
+        },
+        {
+          name: "showTransfers",
+          value: showTransfers
         }
       ],
       responseParams: [
@@ -376,7 +381,7 @@ export class TransactionService implements ITransactionService {
       ],
       responseParams: ["latestDate"]
     });
-    
+
     const {
       data: {
         data: { latestDate }

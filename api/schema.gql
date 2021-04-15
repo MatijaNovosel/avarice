@@ -136,7 +136,7 @@ type Query {
   latestDate(appUserId: Float!): GLatestDate!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
-  financialChanges(account: [Int!], transactionType: [Int!], tags: [Int!], max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
+  financialChanges(showTransfers: Boolean, account: Int, transactionType: Int, tags: [Int!], max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!
   recentDepositsAndWithdrawals(appUserId: Int!): RecentDepositsAndWithdrawals!
   transactionAmountRange(expense: Boolean, appUserId: Int!): TransactionAmountRange!
   dailyChanges(appUserId: Float!): [GDailyChange!]!
