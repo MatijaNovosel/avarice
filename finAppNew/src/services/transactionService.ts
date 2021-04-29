@@ -9,13 +9,56 @@ import {
   DailyChangeDto,
   LatestDate
 } from "@/models/change-item";
-import { FinancialHistory } from "@/models/history-item";
+import { AccountHistoryRecord, FinancialHistory } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { format } from "date-fns";
 import { formatGqlRequest } from "@/helpers";
 import axios from "axios";
 
 export class TransactionService implements ITransactionService {
+  async getHistoryForAccount(
+    appUserId: number,
+    from: Date,
+    to: Date,
+    accountId: number
+  ): Promise<AccountHistoryRecord[]> {
+    const query = formatGqlRequest({
+      type: "query",
+      name: "accountHistory",
+      requestParams: [
+        {
+          name: "appUserId",
+          value: appUserId
+        },
+        {
+          name: "from",
+          value: format(from, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        },
+        {
+          name: "to",
+          value: format(to, "yyyy-MM-dd HH:mm:ss"),
+          quoted: true
+        },
+        {
+          name: "accountId",
+          value: accountId
+        }
+      ],
+      responseParams: ["createdAt", "amount"]
+    });
+
+    const {
+      data: {
+        data: { accountHistory }
+      }
+    } = await axios.post("", {
+      query
+    });
+
+    return accountHistory;
+  }
+
   async getRecentDepositsAndWithdrawals(
     appUserId: number
   ): Promise<RecentDepositsAndWithdrawals> {

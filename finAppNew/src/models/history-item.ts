@@ -8,3 +8,8 @@ export interface FinancialHistory {
   paymentSources?: PaymentSourceRecord[];
   total: number;
 }
+
+export interface AccountHistoryRecord {
+  createdAt: string;
+  amount: number;
+}

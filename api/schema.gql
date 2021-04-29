@@ -60,6 +60,11 @@ type GLatestDate {
   latestDate: String!
 }
 
+type GAccountHistory {
+  createdAt: String!
+  amount: Float!
+}
+
 type GAppUser {
   id: Int!
   uid: String!
@@ -134,6 +139,7 @@ type Query {
   financialHistory(to: String, from: String, id: Float!): [GFinancialHistory!]!
   financialHistoryCurrentAmount(id: Float!): GFinancialHistoryCurrentAmount!
   latestDate(appUserId: Float!): GLatestDate!
+  accountHistory(accountId: Float!, to: String, from: String, appUserId: Float!): [GAccountHistory!]!
   appUser(id: Int!): GAppUser!
   appSettings(userId: Int!): GAppsetting!
   financialChanges(showTransfers: Boolean, account: Int, transactionType: Int, tags: [Int!], max: Float, min: Float, description: String, take: Int, skip: Int, id: Int!): PaginatedFinancialChange!

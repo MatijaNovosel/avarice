@@ -6,7 +6,7 @@ import {
   RecentDepositsAndWithdrawals,
   TransactionAmountRange
 } from "@/models/change-item";
-import { FinancialHistory } from "@/models/history-item";
+import { AccountHistoryRecord, FinancialHistory } from "@/models/history-item";
 import { ItemCollection } from "@/models/item-collection";
 
 export interface ITransactionService {
@@ -36,6 +36,12 @@ export interface ITransactionService {
     from: Date,
     to: Date
   ): Promise<FinancialHistory[]>;
+  getHistoryForAccount(
+    appUserId: number,
+    from: Date,
+    to: Date,
+    accountId: number
+  ): Promise<AccountHistoryRecord[]>;
   getTotal(
     appUserId: number,
     from?: Date | null,

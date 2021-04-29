@@ -98,3 +98,12 @@ export class GLatestDate {
   @Field()
   latestDate: string;
 }
+
+@ObjectType()
+export class GAccountHistory {
+  @Field()
+  createdAt: string;
+
+  @Field(() => Float)
+  amount: number;
+}

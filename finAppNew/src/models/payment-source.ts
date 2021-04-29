@@ -8,6 +8,7 @@ export interface PaymentSource {
 }
 
 export interface AccountLatestValue {
+  id: number;
   description: string;
   currency: string;
   icon: string;

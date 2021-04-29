@@ -1,5 +1,6 @@
 import {
   Financialhistory,
+  GAccountHistory,
   GFinancialHistory,
   GFinancialHistoryCurrentAmount,
   GLatestDate,
@@ -23,6 +24,34 @@ export class FinancialHistoryService {
       .where({ appUserId })
       .getRawOne();
     return { latestDate: format(maxDate, "dd.MM.yyyy. HH:mm:ss") };
+  }
+
+  async getAccountHistory(
+    appUserId: number,
+    from: string,
+    to: string,
+    accountId: number
+  ): Promise<GAccountHistory[]> {
+    const historyItems: GAccountHistory[] = [];
+
+    const res = await createQueryBuilder("financialhistory")
+      .select("financialhistory.createdAt, financialhistory.amount")
+      .where(
+        `financialhistory.createdAt >= '${from}' AND financialhistory.createdAt <= '${to}' AND appUserId = ${appUserId} AND paymentSourceId = ${accountId}`
+      )
+      .groupBy("financialhistory.createdAt")
+      .orderBy("financialHistory.createdAt", "ASC")
+      .getRawMany();
+
+    for (const entry of res) {
+      const createdAt = entry.createdAt;
+      historyItems.push({
+        createdAt: format(createdAt, "dd.MM.yyyy. HH:mm:ss"),
+        amount: parseFloat(entry.amount.toFixed(2))
+      });
+    }
+
+    return historyItems;
   }
 
   async findByUserId(

@@ -1,4 +1,4 @@
-import { GLatestDate } from "./../entities/financialhistory";
+import { GAccountHistory, GLatestDate } from "./../entities/financialhistory";
 import { FinancialHistoryService } from "./../services/financial-history.service";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import {
@@ -31,5 +31,17 @@ export class FinancialHistoryResolver {
   })
   async getLatestDate(@Args("appUserId") appUserId: number) {
     return this.financialHistoryService.getLatestDate(appUserId);
+  }
+
+  @Query(() => [GAccountHistory], {
+    name: "accountHistory"
+  })
+  async getAccountHistory(
+    @Args("appUserId") appUserId: number,
+    @Args("from", { nullable: true }) from: string,
+    @Args("to", { nullable: true }) to: string,
+    @Args("accountId") accountId: number,
+  ) {
+    return this.financialHistoryService.getAccountHistory(appUserId, from, to, accountId);
   }
 }
