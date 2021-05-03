@@ -137,6 +137,8 @@
             <v-switch
               dense
               v-model="state.withdrawal"
+              color="error"
+              inset
               :label="$t('withdrawal')"
             />
           </v-col>

@@ -2,7 +2,18 @@
   <v-row>
     <v-col cols="12">
       <v-sheet class="pa-6 rounded-lg text-center" height="450">
-        <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
+        <h4 class="mb-5 grey--text lighten-2">
+          {{
+            `Total changes ${
+              state.account
+                ? `(${
+                    state.accounts.filter(x => x.id == state.account)[0]
+                      .description
+                  })`
+                : ""
+            }`
+          }}
+        </h4>
         <line-chart
           style="height: 370px"
           v-if="state.graphData"
@@ -26,6 +37,13 @@
         outlined
         label="Account"
       >
+        <template #append-outer>
+          <v-btn icon @click="deleteAccount">
+            <v-icon color="red">
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </template>
         <template #item="{ item, on, attrs }">
           <v-list-item two-line v-on="on" v-bind="attrs">
             <v-list-item-avatar>
@@ -57,14 +75,6 @@
           </v-list-item>
         </template>
       </v-select>
-    </v-col>
-    <v-col cols="12" class="text-right">
-      <v-btn color="error" small class="mr-3">
-        Delete account
-      </v-btn>
-      <v-btn color="success" small>
-        New account
-      </v-btn>
     </v-col>
   </v-row>
 </template>
@@ -119,8 +129,6 @@ export default defineComponent({
       if (onLoad == true) {
         state.account = state.accounts[0].id;
       }
-
-      console.log(state.account);
 
       const history = await getService<ITransactionService>(
         Types.TransactionService
@@ -184,6 +192,10 @@ export default defineComponent({
       responsive: true
     };
 
+    async function deleteAccount() {
+      //
+    }
+
     watch(
       () => context.root.$store.getters["app/refreshTrigger"] as boolean,
       () => {
@@ -199,7 +211,8 @@ export default defineComponent({
       state,
       formatCurrencyDisplay,
       graphOptions,
-      getData
+      getData,
+      deleteAccount
     };
   }
 });
