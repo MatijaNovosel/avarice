@@ -16,18 +16,39 @@
         :key="i"
         :to="item.route"
       >
-        <v-icon v-text="item.icon" />
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-icon v-bind="attrs" v-on="on" v-text="item.icon" />
+          </template>
+          <span>
+            {{ item.text }}
+          </span>
+        </v-tooltip>
       </v-list-item>
       <v-divider class="my-3" />
       <v-list-item @click="state.newTransactionDialog = true">
-        <v-icon>
-          mdi-wallet-plus
-        </v-icon>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-icon v-bind="attrs" v-on="on">
+              mdi-wallet-plus
+            </v-icon>
+          </template>
+          <span>
+            New transaction
+          </span>
+        </v-tooltip>
       </v-list-item>
       <v-list-item @click="state.newTransferDialog = true">
-        <v-icon>
-          mdi-transfer
-        </v-icon>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-icon v-bind="attrs" v-on="on">
+              mdi-transfer
+            </v-icon>
+          </template>
+          <span>
+            New transfer
+          </span>
+        </v-tooltip>
       </v-list-item>
       <v-list-item @click="state.newAccountDialog = true">
         <v-icon>
@@ -36,9 +57,16 @@
       </v-list-item>
       <v-divider class="my-3" />
       <v-list-item @click="logOut">
-        <v-icon color="grey">
-          mdi-logout
-        </v-icon>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-icon color="grey" v-bind="attrs" v-on="on">
+              mdi-logout
+            </v-icon>
+          </template>
+          <span>
+            Logout
+          </span>
+        </v-tooltip>
       </v-list-item>
     </v-list>
     <new-transaction-dialog v-model="state.newTransactionDialog" />
