@@ -1,16 +1,16 @@
 <template>
   <v-row v-if="!state.loading">
-    <v-col cols="12" class="pb-0">
+    <v-col cols="12" class="pb-0 text-overline">
       <h3>Overview</h3>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-1">
+      <v-card rounded="lg" class="pa-2 text-right">
         <v-list-item dense two-line>
           <v-list-item-content>
-            <v-list-item-subtitle class="pb-1">
+            <v-list-item-subtitle class="pb-2 text-overline">
               Total amount
             </v-list-item-subtitle>
-            <v-list-item-title class="font-weight-bold">
+            <v-list-item-title class="font-weight-bold text-subtitle-1">
               {{ formatCurrencyDisplay(true, state.total, "HRK") }}
             </v-list-item-title>
           </v-list-item-content>
@@ -18,13 +18,13 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-1">
+      <v-card rounded="lg" class="pa-2 text-right">
         <v-list-item dense two-line>
           <v-list-item-content>
-            <v-list-item-subtitle class="pb-1">
+            <v-list-item-subtitle class="pb-2 text-overline">
               Deposits (Last 30 days)
             </v-list-item-subtitle>
-            <v-list-item-title class="green--text font-weight-bold">
+            <v-list-item-title class="green--text font-weight-bold text-subtitle-1">
               {{
                 formatCurrencyDisplay(
                   true,
@@ -38,13 +38,13 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-1">
+      <v-card rounded="lg" class="pa-2 text-right">
         <v-list-item dense two-line>
           <v-list-item-content>
-            <v-list-item-subtitle class="pb-1">
+            <v-list-item-subtitle class="pb-2 text-overline">
               Withdrawals (Last 30 days)
             </v-list-item-subtitle>
-            <v-list-item-title class="red--text font-weight-bold">
+            <v-list-item-title class="red--text font-weight-bold text-subtitle-1">
               {{
                 formatCurrencyDisplay(
                   true,
@@ -57,11 +57,11 @@
         </v-list-item>
       </v-card>
     </v-col>
-    <v-col cols="12" class="pb-0">
+    <v-col cols="12" class="pb-0 text-overline">
       <h3>Data visualized</h3>
     </v-col>
     <v-col cols="12" md="6">
-      <v-sheet class="pa-6 rounded-lg text-center" height="450">
+      <div class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Daily changes</h4>
         <bar-chart
           style="height: 370px"
@@ -69,10 +69,10 @@
           :chart-data="state.graphDataDailyChanges"
           :options="dailyChangesGraphOptions"
         />
-      </v-sheet>
+      </div>
     </v-col>
     <v-col cols="12" md="6">
-      <v-sheet class="pa-6 rounded-lg text-center" height="450">
+      <div class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
         <line-chart
           style="height: 370px"
@@ -80,9 +80,9 @@
           :chart-data="state.graphTotalChanges"
           :options="graphTotalChangesOptions"
         />
-      </v-sheet>
+      </div>
     </v-col>
-    <v-col cols="12" class="pb-0">
+    <v-col cols="12" class="pb-0 text-overline">
       <h3>Recent transactions</h3>
     </v-col>
     <v-col cols="12">
@@ -264,10 +264,9 @@ export default defineComponent({
       state.totalDataset = {
         label: "Total",
         data: state.history.map(x => x.total),
-        fill: true,
-        backgroundColor: "rgba(70, 135, 66, 0.4)",
-        borderWidth: 4,
-        borderColor: "#4a9650"
+        fill: false,
+        borderWidth: 5,
+        borderColor: "#43A047"
       };
 
       state.graphTotalChanges = {
@@ -287,15 +286,21 @@ export default defineComponent({
           {
             type: "bar",
             label: "Withdrawals",
-            borderColor: "#ff4f4f",
-            backgroundColor: "#ff4f4f",
+            borderColor: "#E53935",
+            borderRadius: 15,
+            borderWidth: 3,
+            borderSkipped: false,
+            backgroundColor: "#E53935",
             data: dailyChanges.map(x => -x.withdrawals)
           },
           {
             type: "bar",
             label: "Deposits",
-            borderColor: "#66BB6A",
-            backgroundColor: "#66BB6A",
+            borderColor: "#43A047",
+            borderRadius: 5,
+            borderWidth: 3,
+            borderSkipped: false,
+            backgroundColor: "#43A047",
             data: dailyChanges.map(x => x.deposits)
           }
         ]
@@ -344,14 +349,14 @@ export default defineComponent({
         xAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             }
           }
         ],
         yAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             },
             scaleLabel: {
               display: true,
@@ -362,7 +367,7 @@ export default defineComponent({
       },
       elements: {
         point: {
-          radius: 1
+          radius: 0
         },
         line: {
           tension: 0.2
@@ -384,7 +389,7 @@ export default defineComponent({
         xAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             },
             stacked: true
           }

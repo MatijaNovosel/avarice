@@ -8,6 +8,7 @@
     <v-card :style="{ 'max-height': state['max-height'] }">
       <v-card-title>
         <span
+          class="text-overline"
           :style="{
             'font-size':
               $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? '15px' : '20px'

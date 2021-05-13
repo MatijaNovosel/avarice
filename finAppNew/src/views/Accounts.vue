@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-sheet class="pa-6 rounded-lg text-center" height="450">
-        <h4 class="mb-5 grey--text lighten-2">
+      <div class="pa-6 rounded-lg text-center" height="450">
+        <h4 class="mb-5 grey--text lighten-2 text-overline">
           {{
             `Total changes ${
               state.account
@@ -20,7 +20,7 @@
           :chart-data="state.graphData"
           :options="graphOptions"
         />
-      </v-sheet>
+      </div>
     </v-col>
     <v-col cols="12">
       <v-select
@@ -134,7 +134,7 @@ export default defineComponent({
         Types.TransactionService
       ).getHistoryForAccount(
         (context.root.$store.getters["user/data"] as AppUser).id as number,
-        sub(new Date(), { days: 30 }),
+        new Date(2020, 11, 0),
         new Date(),
         state.account || 1
       );
@@ -142,10 +142,9 @@ export default defineComponent({
       const dataset = {
         label: "Total",
         data: history.map(x => x.amount),
-        fill: true,
-        backgroundColor: "rgba(70, 135, 66, 0.4)",
-        borderWidth: 4,
-        borderColor: "#4a9650"
+        fill: false,
+        borderWidth: 5,
+        borderColor: "#43A047"
       };
 
       state.graphData = {
@@ -165,14 +164,14 @@ export default defineComponent({
         xAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             }
           }
         ],
         yAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             },
             scaleLabel: {
               display: true,
@@ -183,7 +182,7 @@ export default defineComponent({
       },
       elements: {
         point: {
-          radius: 1
+          radius: 0
         },
         line: {
           tension: 0.2

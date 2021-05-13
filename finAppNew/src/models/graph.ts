@@ -52,6 +52,7 @@ interface GraphElementPointOptions {
 
 interface GraphElementArcOptions {
   borderWidth?: number;
+  borderRadius?: number;
 }
 
 interface GraphElementsOptions {

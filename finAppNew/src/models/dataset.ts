@@ -6,4 +6,6 @@ export interface DatasetItem {
   backgroundColor?: string | string[];
   type?: string;
   borderWidth?: number;
+  borderRadius?: number;
+  borderSkipped?: boolean;
 }
