@@ -1,8 +1,8 @@
 # fin-app
 App for managing finances.
 
-![localhost_8080_](https://user-images.githubusercontent.com/36193643/114854927-9fdc0400-9de5-11eb-871d-f1c3095bd36d.png)
+![image](https://user-images.githubusercontent.com/36193643/118352747-59ec9a00-b563-11eb-8da2-7999913b3ff6.png)
 
-![localhost_8080_ (1)](https://user-images.githubusercontent.com/36193643/114854925-9f436d80-9de5-11eb-818c-e6624d5c2012.png)
+![image](https://user-images.githubusercontent.com/36193643/118352818-c49dd580-b563-11eb-9764-68bd77609d50.png)
 
-![localhost_8080_ (2)](https://user-images.githubusercontent.com/36193643/114854918-9eaad700-9de5-11eb-8b35-74e9c6821256.png)
+![image](https://user-images.githubusercontent.com/36193643/118352839-f1ea8380-b563-11eb-821b-1802476ef637.png)
