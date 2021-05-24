@@ -108,3 +108,5 @@ ormconfig.json
 .tomg-config
 server-config.json
 jwt-config.json
+server-config.ts
+jwt-config.ts

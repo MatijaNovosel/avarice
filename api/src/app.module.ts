@@ -12,14 +12,18 @@ import { Appuser } from "./entities/appuser";
 import { Appsetting } from "./entities/appsetting";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import serverConfig from "./config/server-config.json";
+import {
+  host,
+  port,
+  username,
+  password,
+  database
+} from "./config/server-config";
 import { GraphQLModule } from "@nestjs/graphql";
 import { VoidScalar } from "./scalars/void";
 import { FinancialChangeHttpModule } from "./modules/http/financial-change-http.module";
 import { TagHttpModule } from "./modules/http/tag-http.module";
 import { Locale } from "./entities/locale";
-
-const { host, port, username, password, database } = { ...serverConfig };
 
 @Module({
   imports: [
@@ -59,5 +63,4 @@ const { host, port, username, password, database } = { ...serverConfig };
   ],
   providers: [VoidScalar]
 })
-
 export class AppModule {}
