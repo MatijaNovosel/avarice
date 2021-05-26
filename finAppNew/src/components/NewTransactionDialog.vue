@@ -172,14 +172,14 @@ import HeaderDialog from "@/components/HeaderDialog.vue";
 import { Tag } from "@/models/tag";
 import { getService, Types } from "@/di-container";
 import { ITagService } from "@/interfaces/tagService";
-import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
+import { IAccountService } from "@/interfaces/accountService";
 import { AccountLatestValue } from "@/models/payment-source";
 import { format } from "date-fns";
 import { CreateFinancialChangeItemDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
-import { AppUser } from "@/models/user";
+import { User } from "@/models/user";
 import { Snackbar } from "@/models/appNotifications";
 
 interface State {
@@ -238,7 +238,7 @@ export default defineComponent({
 
       const payload: CreateFinancialChangeItemDto = {
         amount: parseFloat(state.amount as string),
-        appUserId: 1,
+        userId: 1,
         description: state.description,
         expense: state.withdrawal,
         paymentSourceId: state.account as number,
@@ -246,9 +246,9 @@ export default defineComponent({
         createdAt: format(new Date(), "dd.MM.yyyy. HH:mm:ss")
       };
 
-      await getService<ITransactionService>(Types.TransactionService).addChange(
-        payload
-      );
+      await getService<ITransactionService>(
+        Types.TransactionService
+      ).addTransaction(payload);
 
       await context.root.$store.dispatch("app/showSnackbar", {
         color: "success",
@@ -263,13 +263,11 @@ export default defineComponent({
 
     async function getData() {
       state.loading = true;
-      state.accounts = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
-      ).getLatestValues(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
-      );
+      state.accounts = await getService<IAccountService>(
+        Types.AccountService
+      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
       state.tags = await getService<ITagService>(Types.TagService).getTags(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
+        (context.root.$store.getters["user/data"] as User).id
       );
       state.loading = false;
     }

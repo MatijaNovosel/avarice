@@ -10,7 +10,7 @@ export interface FinancialChangeItem {
 }
 
 export interface CreateFinancialChangeItemDto {
-  appUserId: number;
+  userId: string;
   amount: number;
   description: string | null;
   expense: boolean;
@@ -20,7 +20,7 @@ export interface CreateFinancialChangeItemDto {
 }
 
 export interface CreateTransferDto {
-  appUserId: number;
+  userId: string;
   amount: number;
   accountFromId: number;
   accountToId: number;

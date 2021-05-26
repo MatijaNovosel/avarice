@@ -2,11 +2,11 @@ import { UserSettings, UpdateUserSettingsDto } from "@/models/user-settings";
 import { ISettingsService } from "../interfaces/settingsService";
 
 export class SettingsService implements ISettingsService {
-  async getSettings(appUserId: number): Promise<UserSettings> {
-    return {};
+  getSettings(userId: string): Promise<UserSettings> {
+    throw new Error("Method not implemented.");
   }
 
-  async saveSettings(payload: UpdateUserSettingsDto): Promise<void> {
-    //
+  saveSettings(payload: UpdateUserSettingsDto): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 }

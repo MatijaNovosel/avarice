@@ -178,8 +178,8 @@ import { debounce } from "debounce/index";
 import { Tag } from "@/models/tag";
 import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
-import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
-import { AppUser } from "@/models/user";
+import { IAccountService } from "@/interfaces/accountService";
+import { User } from "@/models/user";
 
 interface SearchInput {
   description: string | null;
@@ -223,8 +223,8 @@ export default defineComponent({
       await context.root.$store.dispatch("app/setLoading", true);
       const itemCollection = await getService<ITransactionService>(
         Types.TransactionService
-      ).getChanges(
-        1,
+      ).getTransactions(
+        (context.root.$store.getters["user/data"] as User).id,
         null,
         null,
         state.search.description || "",
@@ -241,13 +241,11 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      state.accounts = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
-      ).getAllByUserId(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
-      );
+      state.accounts = await getService<IAccountService>(
+        Types.AccountService
+      ).getAllByUserId((context.root.$store.getters["user/data"] as User).id);
       state.tags = await getService<ITagService>(Types.TagService).getTags(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
+        (context.root.$store.getters["user/data"] as User).id
       );
       getData();
     });

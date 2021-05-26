@@ -28,6 +28,7 @@
     "debounce": "^1.2.0",
     "font-awesome-5-css": "^5.4.1",
     "inversify": "^5.0.1",
+    "jwt-decode": "^3.1.2",
     "keycloak-js": "^11.0.2",
     "qs": "^6.9.4",
     "reflect-metadata": "^0.1.13",

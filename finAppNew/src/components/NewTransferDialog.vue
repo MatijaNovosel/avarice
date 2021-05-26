@@ -160,13 +160,13 @@ import {
 } from "@vue/composition-api";
 import HeaderDialog from "@/components/HeaderDialog.vue";
 import { getService, Types } from "@/di-container";
-import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
+import { IAccountService } from "@/interfaces/accountService";
 import { AccountLatestValue } from "@/models/payment-source";
 import { CreateTransferDto } from "@/models/change-item";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
-import { AppUser } from "@/models/user";
+import { User } from "@/models/user";
 import { Snackbar } from "@/models/appNotifications";
 
 interface State {
@@ -217,7 +217,7 @@ export default defineComponent({
 
       const payload: CreateTransferDto = {
         amount: parseFloat(state.amount as string),
-        appUserId: 1,
+        userId: 1,
         accountFromId: state.accountFrom as number,
         accountToId: state.accountTo as number
       };
@@ -238,10 +238,10 @@ export default defineComponent({
     }
 
     async function getAccounts() {
-      state.accounts = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
+      state.accounts = await getService<IAccountService>(
+        Types.AccountService
       ).getLatestValues(
-        (context.root.$store.getters["user/data"] as AppUser).id as number
+        (context.root.$store.getters["user/data"] as User).id
       );
     }
 

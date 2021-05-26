@@ -7,11 +7,13 @@ import { IAuthService } from "./interfaces/authService";
 import { ITransactionService } from "./interfaces/transactionService";
 import { TransactionService } from "./services/transactionService";
 import { SettingsService } from "./services/settingsService";
-import { IPaymentSourceService } from "./interfaces/paymentSourceService";
+import { IAccountService } from "./interfaces/accountService";
 import { ISettingsService } from "./interfaces/settingsService";
-import { PaymentSourceService } from "./services/paymentSourceService";
+import { AccountService } from "./services/accountService";
 import { TagService } from "./services/tagService";
 import { ITagService } from "./interfaces/tagService";
+import { IHistoryService } from "./interfaces/historyService";
+import { HistoryService } from "./services/historyService";
 
 export function getService<T>(symbol): T {
   return DIContainer.get<T>(symbol);
@@ -21,8 +23,9 @@ export class Types {
   static readonly WebStorageService = Symbol("IWebStorageService");
   static readonly AuthService = Symbol("IAuthService");
   static readonly TransactionService = Symbol("ITransactionService");
+  static readonly HistoryService = Symbol("IHistoryService");
   static readonly SettingsService = Symbol("ISettingsService");
-  static readonly PaymentSourceService = Symbol("IPaymentSourceService");
+  static readonly AccountService = Symbol("IAccountService");
   static readonly TagService = Symbol("ITagService");
 }
 
@@ -48,8 +51,12 @@ DIContainer.bind<ITagService>(Types.TagService).toConstantValue(
   new TagService()
 );
 
-DIContainer.bind<IPaymentSourceService>(
-  Types.PaymentSourceService
-).toConstantValue(new PaymentSourceService());
+DIContainer.bind<IHistoryService>(Types.HistoryService).toConstantValue(
+  new HistoryService()
+);
+
+DIContainer.bind<IAccountService>(Types.AccountService).toConstantValue(
+  new AccountService()
+);
 
 export default DIContainer;

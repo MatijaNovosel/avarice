@@ -18,5 +18,5 @@ export interface UpdateUserSettingsDto {
   checkingGraphVisible?: boolean;
   pocketGraphVisible?: boolean;
   totalGraphVisible?: boolean;
-  appUserId?: number;
+  userId?: number;
 }

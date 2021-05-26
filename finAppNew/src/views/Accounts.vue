@@ -81,7 +81,7 @@
 
 <script lang="ts">
 import { getService, Types } from "@/di-container";
-import { IPaymentSourceService } from "@/interfaces/paymentSourceService";
+import { IAccountService } from "@/interfaces/accountService";
 import { AccountLatestValue } from "@/models/payment-source";
 import {
   defineComponent,
@@ -94,7 +94,7 @@ import {
 import { formatCurrencyDisplay } from "@/helpers";
 import { GraphData, GraphOptions } from "@/models/graph";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { AppUser } from "@/models/user";
+import { User } from "@/models/user";
 import { sub } from "date-fns";
 import LineChart from "@/components/charts/LineChart";
 
@@ -122,9 +122,9 @@ export default defineComponent({
     async function getData(onLoad?: boolean) {
       await context.root.$store.dispatch("app/setLoading", true);
 
-      state.accounts = await getService<IPaymentSourceService>(
-        Types.PaymentSourceService
-      ).getLatestValues(1);
+      state.accounts = await getService<IAccountService>(
+        Types.AccountService
+      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
 
       if (onLoad == true) {
         state.account = state.accounts[0].id;
@@ -133,7 +133,7 @@ export default defineComponent({
       const history = await getService<ITransactionService>(
         Types.TransactionService
       ).getHistoryForAccount(
-        (context.root.$store.getters["user/data"] as AppUser).id as number,
+        (context.root.$store.getters["user/data"] as User).id,
         new Date(2020, 11, 0),
         new Date(),
         state.account || 1

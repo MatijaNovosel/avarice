@@ -5,7 +5,7 @@
       justify="center"
       align="center"
     >
-      <v-col cols="12" sm="6"> Nemate prava na zatraženi dio aplikacije </v-col>
+      <v-col cols="12" sm="6"> No permissions </v-col>
     </v-row>
   </v-container>
 </template>

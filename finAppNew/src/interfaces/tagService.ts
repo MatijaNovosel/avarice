@@ -1,5 +1,5 @@
-import { Tag } from "@/models/tag";
+import { TagModel } from "@/apiClient/client";
 
 export interface ITagService {
-  getTags(appUserId: number): Promise<Tag[]>;
+  getTags(userId: string): Promise<TagModel[]>;
 }

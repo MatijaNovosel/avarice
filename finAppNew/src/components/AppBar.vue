@@ -46,7 +46,7 @@ import {
   watch
 } from "@vue/composition-api";
 import RouteNames from "../constants/routeNames";
-import { AppUser } from "@/models/user";
+import { User } from "@/models/user";
 
 interface Props {
   loading: boolean;
@@ -55,7 +55,7 @@ interface Props {
 interface State {
   routeNames: RouteNames;
   timeOfDay: string;
-  user: AppUser;
+  user: User;
   loading: boolean;
 }
 
@@ -71,7 +71,7 @@ export default defineComponent({
       loading: props.loading,
       routeNames: RouteNames,
       user: computed(() => {
-        return context.root.$store.getters["user/data"] as AppUser;
+        return context.root.$store.getters["user/data"] as User;
       }),
       timeOfDay: computed(() => {
         const hours = new Date().getHours();

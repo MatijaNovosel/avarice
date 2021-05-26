@@ -1,85 +1,32 @@
-import axios from "axios";
+import { AuthResultModel, Client, LoginModel, RegistrationModel } from "@/apiClient/client";
 import { IAuthService } from "../interfaces/authService";
-import { formatGqlRequest } from "@/helpers";
-import { UserDto } from "@/models/user";
 
 export class AuthService implements IAuthService {
-  async register(email: string, password: string): Promise<number> {
-    const query = formatGqlRequest({
-      type: "mutation",
-      name: "register",
-      requestParams: [
-        {
-          name: "input",
-          subFields: [
-            {
-              name: "email",
-              quoted: true,
-              value: email
-            },
-            {
-              name: "password",
-              quoted: true,
-              value: password
-            }
-          ]
-        }
-      ]
-    });
+  async register(username: string, email: string, password: string): Promise<AuthResultModel> {
+    const client = new Client();
 
-    const {
-      data: {
-        data: { register }
-      }
-    } = await axios.post("", {
-      query
-    });
+    const data = await client.auth_Register(
+      new RegistrationModel({
+        username,
+        email,
+        password
+      })
+    );
 
-    return register;
+    return data;
   }
 
-  async signInEmail(email: string, password: string): Promise<UserDto> {
-    const query = formatGqlRequest({
-      type: "mutation",
-      name: "login",
-      requestParams: [
-        {
-          name: "input",
-          subFields: [
-            {
-              name: "email",
-              quoted: true,
-              value: email
-            },
-            {
-              name: "password",
-              quoted: true,
-              value: password
-            }
-          ]
-        }
-      ],
-      responseParams: [
-        "accessToken",
-        "id",
-        "uid",
-        "email",
-        "emailConfirmed",
-        "photoUrl",
-        "accessToken",
-        "displayName"
-      ]
-    });
-    
-    const {
-      data: {
-        data: { login }
-      }
-    } = await axios.post("", {
-      query
-    });
+  async login(email: string, password: string): Promise<AuthResultModel> {
+    const client = new Client();
 
-    return login;
+    const data = await client.auth_Login(
+      new LoginModel({
+        email,
+        password
+      })
+    );
+
+    return data;
   }
 
   async signOut(): Promise<void> {

@@ -18,6 +18,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'brace-style': 'off',
     quotes: 'off',
+    camelcase: 'off',
     semi: 'off',
     'eol-last': 'off',
     eqeqeq: 'off',

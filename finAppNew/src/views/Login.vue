@@ -98,6 +98,7 @@ import RouteNames from "@/constants/routeNames";
 import { getService, Types } from "@/di-container";
 import { IAuthService } from "@/interfaces/authService";
 import { Snackbar } from "@/models/appNotifications";
+import { DecodedToken } from "@/models/auth";
 import {
   computed,
   defineComponent,
@@ -105,6 +106,7 @@ import {
   reactive,
   SetupContext
 } from "@vue/composition-api";
+import jwt_decode from "jwt-decode";
 
 interface State {
   email: string | null;
@@ -142,28 +144,41 @@ export default defineComponent({
     });
 
     async function login() {
-      try {
-        state.loading = true;
-        const data = await getService<IAuthService>(
-          Types.AuthService
-        ).signInEmail(state.email as string, state.password as string);
-        await context.root.$store.dispatch("user/login", data);
-        await context.root.$store.dispatch("app/showSnackbar", {
-          color: "success",
-          message: "Logged in successfully",
-          timeout: 3000
-        } as Snackbar);
-        state.loading = false;
-        context.root.$router.push({ name: RouteNames.DASHBOARD });
-      } catch (e) {
+      state.loading = true;
+
+      const data = await getService<IAuthService>(Types.AuthService).login(
+        state.email as string,
+        state.password as string
+      );
+
+      if (!data.result) {
         await context.root.$store.dispatch("app/showSnackbar", {
           color: "error",
-          message: "Failed to log in",
+          message: data.errors?.join(", "),
           timeout: 3000
         } as Snackbar);
-      } finally {
         state.loading = false;
+        return;
       }
+
+      const decodedToken: DecodedToken = jwt_decode(data.token as string);
+
+      await context.root.$store.dispatch("user/login", {
+        id: decodedToken.Id,
+        email: state.email,
+        userName: decodedToken.unique_name,
+        emailConfirmed: false,
+        token: data.token
+      });
+
+      await context.root.$store.dispatch("app/showSnackbar", {
+        color: "success",
+        message: "Logged in successfully",
+        timeout: 3000
+      } as Snackbar);
+
+      state.loading = false;
+      context.root.$router.push({ name: RouteNames.DASHBOARD });
     }
 
     return {
