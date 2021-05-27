@@ -7,11 +7,7 @@ import {
 } from "@/models/transaction";
 import { AccountHistoryRecord } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
-import {
-  Client,
-  AddTransactionDto,
-  HistoryTotalModel
-} from "@/apiClient/client";
+import { Client, AddTransactionDto, AddTransferDto } from "@/apiClient/client";
 
 export class TransactionService implements ITransactionService {
   async addTransaction(payload: NewTransaction): Promise<void> {
@@ -36,8 +32,16 @@ export class TransactionService implements ITransactionService {
     throw new Error("Method not implemented.");
   }
 
-  transfer(payload: CreateTransferDto): Promise<void> {
-    throw new Error("Method not implemented.");
+  async transfer(payload: CreateTransferDto): Promise<void> {
+    const client = new Client();
+    await client.transaction_Transfer(
+      new AddTransferDto({
+        accountFromId: payload.accountFromId,
+        accountToId: payload.accountToId,
+        amount: payload.amount,
+        userId: payload.userId
+      })
+    );
   }
 
   getTransactions(
