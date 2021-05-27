@@ -148,9 +148,9 @@ import { ITransactionService } from "@/interfaces/transactionService";
 import IWebStorage from "@/interfaces/webStorageService";
 import {
   DailyChange,
-  FinancialChangeItem,
+  Transaction,
   RecentDepositsAndWithdrawals
-} from "@/models/change-item";
+} from "@/models/transaction";
 import { FinancialHistory } from "@/models/history-item";
 import {
   computed,
@@ -177,7 +177,7 @@ interface State {
   graphDataDailyChanges: GraphData | null;
   graphTotalChanges: GraphData | null;
   totalDataset: DatasetItem | null;
-  transactions: FinancialChangeItem[];
+  transactions: Transaction[];
   loading: boolean;
   total: number;
 }
@@ -206,7 +206,7 @@ export default defineComponent({
       },
       total: computed(() => {
         return state.history && state.history.length != 0
-          ? state.history[state.history.length - 1].total
+          ? state.history[state.history.length - 1].amount
           : 0;
       })
     });
@@ -215,7 +215,7 @@ export default defineComponent({
       const storage = getService<IWebStorage>(Types.WebStorageService);
 
       const history = await getService<IHistoryService>(
-        Types.TransactionService
+        Types.HistoryService
       ).getTotal(
         (context.root.$store.getters["user/data"] as User).id,
         sub(new Date(), { days: 30 }),
@@ -246,7 +246,7 @@ export default defineComponent({
     async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
 
-      const { latestDate } = await getService<IHistoryService>(
+      const latestDate = await getService<IHistoryService>(
         Types.HistoryService
       ).getLatestDate((context.root.$store.getters["user/data"] as User).id);
 
@@ -255,9 +255,9 @@ export default defineComponent({
 
       if (cachedHistory) {
         const data = JSON.parse(cachedHistory) as HistoryTotalModel[];
-        const cachedLatestDate = data[data.length - 1].createdAt;
+        const cachedLatestDate = new Date(data[data.length - 1].createdAt);
 
-        if (latestDate == cachedLatestDate) {
+        if (latestDate.getTime() == cachedLatestDate.getTime()) {
           state.history = data;
         } else {
           await cacheData();
@@ -268,14 +268,16 @@ export default defineComponent({
 
       state.totalDataset = {
         label: "Total",
-        data: state.history.map(x => x.total),
+        data: state.history.map(x => x.amount),
         fill: false,
         borderWidth: 5,
         borderColor: "#43A047"
       };
 
       state.graphTotalChanges = {
-        labels: state.history.map(x => x.createdAt),
+        labels: state.history.map(x =>
+          format(new Date(x.createdAt), "dd.MM.yyyy. HH:mm")
+        ),
         datasets: [state.totalDataset]
       };
 
@@ -315,6 +317,8 @@ export default defineComponent({
         storage.getSavedState("recentDepositsAndWithdrawals")
       ) as RecentDepositsAndWithdrawals;
 
+      /*
+
       const itemCollection = await getService<ITransactionService>(
         Types.TransactionService
       ).getTransactions(
@@ -331,6 +335,9 @@ export default defineComponent({
       );
 
       state.transactions = itemCollection.items;
+
+      */
+
       await context.root.$store.dispatch("app/setLoading", false);
     }
 

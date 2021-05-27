@@ -1,74 +1,93 @@
 <template>
-  <header-dialog
-    max-width="50%"
+  <v-dialog
+    persistent
     v-model="state.open"
-    :disabled="state.loading"
-    :title="$t('newAccount')"
-    @close="resetNewAccountDialog"
+    max-width="50%"
+    :fullscreen="$vuetify.breakpoint.xs"
   >
-    <validation-observer ref="newAccountFormRef" v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(addNewTransfer)">
-        <v-row class="mt-1">
-          <v-col cols="12">
-            <validation-provider
-              vid="startingAmount"
-              :name="$t('startingAmount')"
-              rules="required|numberWithComma"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-text-field
-                outlined
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                v-model="state.startingAmount"
-                clearable
-                suffix="HRK"
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("startingAmount") }}</span>
-                </template>
-              </v-text-field>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12">
-            <validation-provider
-              vid="newAccountName"
-              :name="$t('newAccountName')"
-              rules="required|min:4"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-text-field
-                outlined
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                v-model="state.newAccountName"
-                clearable
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("newAccountName") }}</span>
-                </template>
-              </v-text-field>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12" class="text-center text-md-right mt-2">
-            <v-btn
-              :loading="state.loading"
-              :disabled="state.loading"
-              small
-              type="submit"
-              color="success"
-            >
-              {{ $t("save") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </form>
-    </validation-observer>
-  </header-dialog>
+    <v-card>
+      <v-card-title>
+        <span
+          class="text-overline"
+          :style="{
+            'font-size':
+              $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? '15px' : '20px'
+          }"
+        >
+          New account
+        </span>
+        <v-spacer />
+        <v-btn @click="resetNewAccountDialog" small icon class="mr-3">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider />
+      <v-card-text class="pb-0">
+        <validation-observer ref="newAccountFormRef" v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(addNewTransfer)">
+            <v-row class="mt-1">
+              <v-col cols="12">
+                <validation-provider
+                  vid="startingAmount"
+                  :name="$t('startingAmount')"
+                  rules="required|numberWithComma"
+                  v-slot="{ errors, valid, untouched, required, failed }"
+                >
+                  <v-text-field
+                    outlined
+                    :error-messages="errors"
+                    :hide-details="valid || (untouched && !failed)"
+                    dense
+                    v-model="state.startingAmount"
+                    clearable
+                    suffix="HRK"
+                  >
+                    <template #label>
+                      <required-icon v-show="required" />
+                      <span>{{ $t("startingAmount") }}</span>
+                    </template>
+                  </v-text-field>
+                </validation-provider>
+              </v-col>
+              <v-col cols="12">
+                <validation-provider
+                  vid="newAccountName"
+                  :name="$t('newAccountName')"
+                  rules="required|min:4"
+                  v-slot="{ errors, valid, untouched, required, failed }"
+                >
+                  <v-text-field
+                    outlined
+                    :error-messages="errors"
+                    :hide-details="valid || (untouched && !failed)"
+                    dense
+                    v-model="state.newAccountName"
+                    clearable
+                  >
+                    <template #label>
+                      <required-icon v-show="required" />
+                      <span>{{ $t("newAccountName") }}</span>
+                    </template>
+                  </v-text-field>
+                </validation-provider>
+              </v-col>
+              <v-col cols="12" class="text-center text-md-right mt-2">
+                <v-btn
+                  :loading="state.loading"
+                  :disabled="state.loading"
+                  small
+                  type="submit"
+                  color="success"
+                >
+                  {{ $t("save") }}
+                </v-btn>
+              </v-col>
+            </v-row>
+          </form>
+        </validation-observer>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -79,7 +98,6 @@ import {
   SetupContext,
   watch
 } from "@vue/composition-api";
-import HeaderDialog from "@/components/HeaderDialog.vue";
 import { ValidationObserver } from "@/models/validationObserver";
 
 interface State {
@@ -97,9 +115,6 @@ export default defineComponent({
   name: "new-account-dialog",
   props: {
     value: null
-  },
-  components: {
-    HeaderDialog
   },
   setup(props: Props, context: SetupContext) {
     const vm = getCurrentInstance();

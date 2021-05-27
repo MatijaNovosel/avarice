@@ -1,17 +1,28 @@
 import { ItemCollection } from "@/models/item-collection";
 import {
-  CreateFinancialChangeItemDto,
-  FinancialChangeItem,
+  Transaction,
   CreateTransferDto,
   TransactionAmountRange,
-  LatestDate
-} from "@/models/change-item";
+  AddTransactionDto as NewTransaction
+} from "@/models/transaction";
 import { AccountHistoryRecord } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
+import { Client, AddTransactionDto } from "@/apiClient/client";
 
 export class TransactionService implements ITransactionService {
-  addTransaction(payload: CreateFinancialChangeItemDto): Promise<void> {
-    throw new Error("Method not implemented.");
+  async addTransaction(payload: NewTransaction): Promise<void> {
+    const client = new Client();
+    await client.transaction_Add(
+      new AddTransactionDto({
+        accountId: payload.accountId,
+        amount: payload.amount,
+        createdAt: new Date(),
+        expense: payload.expense,
+        description: payload.description as string,
+        tagIds: payload.tagIds,
+        userId: payload.userId
+      })
+    );
   }
 
   getTransactionAmountRange(
@@ -36,7 +47,7 @@ export class TransactionService implements ITransactionService {
     transactionType?: number | null,
     account?: number | null,
     showTransfers?: boolean | null
-  ): Promise<ItemCollection<FinancialChangeItem>> {
+  ): Promise<ItemCollection<Transaction>> {
     throw new Error("Method not implemented.");
   }
 

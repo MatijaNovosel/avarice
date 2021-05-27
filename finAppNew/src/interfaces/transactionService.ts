@@ -1,15 +1,14 @@
-import { LatestDate } from "@/models/change-item";
 import {
-  CreateFinancialChangeItemDto,
+  AddTransactionDto,
   CreateTransferDto,
-  FinancialChangeItem,
+  Transaction,
   TransactionAmountRange
-} from "@/models/change-item";
+} from "@/models/transaction";
 import { AccountHistoryRecord } from "@/models/history-item";
 import { ItemCollection } from "@/models/item-collection";
 
 export interface ITransactionService {
-  addTransaction(payload: CreateFinancialChangeItemDto): Promise<void>;
+  addTransaction(payload: AddTransactionDto): Promise<void>;
   getTransactionAmountRange(
     userId: string,
     expense?: boolean | null
@@ -26,7 +25,7 @@ export interface ITransactionService {
     transactionType?: number | null,
     account?: number | null,
     showTransfers?: boolean | null
-  ): Promise<ItemCollection<FinancialChangeItem>>;
+  ): Promise<ItemCollection<Transaction>>;
   getHistoryForAccount(
     userId: string,
     from: Date,

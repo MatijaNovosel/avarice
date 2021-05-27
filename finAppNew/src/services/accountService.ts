@@ -1,3 +1,4 @@
+import { AccountLatestValueModel, Client } from "@/apiClient/client";
 import { IAccountService } from "@/interfaces/accountService";
 import {
   AccountLatestValue,
@@ -10,8 +11,10 @@ export class AccountService implements IAccountService {
     throw new Error("Method not implemented.");
   }
 
-  getLatestValues(userId: string): Promise<AccountLatestValue[]> {
-    throw new Error("Method not implemented.");
+  async getLatestValues(userId: string): Promise<AccountLatestValueModel[]> {
+    const client = new Client();
+    const data = await client.account_LatestValues(userId);
+    return data; 
   }
 
   getTagPercentages(userId: string): Promise<TagPercentageRecord[]> {

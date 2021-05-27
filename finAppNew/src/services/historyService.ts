@@ -1,30 +1,39 @@
 import {
   RecentDepositsAndWithdrawalsModel,
   HistoryTotalModel,
-  DailyChangeModel
+  DailyChangeModel,
+  Client
 } from "@/apiClient/client";
 import { IHistoryService } from "@/interfaces/historyService";
 
 export class HistoryService implements IHistoryService {
-  getLatestDate(userId: string): Promise<Date> {
-    throw new Error("Method not implemented.");
+  async getLatestDate(userId: string): Promise<Date> {
+    const client = new Client();
+    const data = await client.history_LatestDate(userId);
+    return data;
   }
 
-  getRecentDepositsAndWithdrawals(
+  async getRecentDepositsAndWithdrawals(
     userId: string
   ): Promise<RecentDepositsAndWithdrawalsModel> {
-    throw new Error("Method not implemented.");
+    const client = new Client();
+    const data = await client.history_RecentDepositsAndWithdrawals(userId);
+    return data;
   }
 
-  getTotal(
+  async getTotal(
     userId: string,
-    from?: Date | null,
-    to?: Date | null
+    from?: Date,
+    to?: Date
   ): Promise<HistoryTotalModel[]> {
-    throw new Error("Method not implemented.");
+    const client = new Client();
+    const data = await client.history_Total(userId, from, to);
+    return data;
   }
 
-  getDailyChanges(userId: string): Promise<DailyChangeModel[]> {
-    throw new Error("Method not implemented.");
+  async getDailyChanges(userId: string): Promise<DailyChangeModel[]> {
+    const client = new Client();
+    const data = await client.history_DailyChanges(userId);
+    return data;
   }
 }

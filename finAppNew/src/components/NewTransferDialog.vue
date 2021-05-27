@@ -1,152 +1,179 @@
 <template>
-  <header-dialog
-    max-width="50%"
+  <v-dialog
+    persistent
     v-model="state.open"
-    :disabled="state.loading"
-    :title="$t('newTransfer')"
-    @close="resetNewTransferDialog"
+    max-width="50%"
+    :fullscreen="$vuetify.breakpoint.xs"
   >
-    <validation-observer ref="newTransferFormRef" v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(addNewTransfer)">
-        <v-row class="mt-1">
-          <v-col cols="12">
-            <validation-provider
-              vid="amount"
-              :name="$t('amount')"
-              rules="required|numberWithComma"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-text-field
-                outlined
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                v-model="state.amount"
-                clearable
-                suffix="HRK"
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("amount") }}</span>
-                </template>
-              </v-text-field>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12">
-            <validation-provider
-              vid="accountFrom"
-              :name="$t('accountFrom')"
-              rules="required|differentFrom:@accountTo"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-select
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                item-text="description"
-                item-value="id"
-                :return-object="false"
-                :items="state.accounts"
-                v-model="state.accountFrom"
-                clearable
-                outlined
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("accountFrom") }}</span>
-                </template>
-                <template #item="{ item, on, attrs }">
-                  <v-list-item two-line v-on="on" v-bind="attrs">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.description }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="pt-1">
-                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-                <template #selection="{ item }">
-                  <v-list-item two-line>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.description }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="pt-1">
-                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-              </v-select>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12">
-            <validation-provider
-              vid="accountTo"
-              :name="$t('accountTo')"
-              rules="required|differentFrom:@accountFrom"
-              v-slot="{ errors, valid, untouched, required, failed }"
-            >
-              <v-select
-                :error-messages="errors"
-                :hide-details="valid || (untouched && !failed)"
-                dense
-                item-text="description"
-                item-value="id"
-                :return-object="false"
-                :items="state.accounts"
-                v-model="state.accountTo"
-                clearable
-                outlined
-              >
-                <template #label>
-                  <required-icon v-show="required" />
-                  <span>{{ $t("accountTo") }}</span>
-                </template>
-                <template #item="{ item, on, attrs }">
-                  <v-list-item two-line v-on="on" v-bind="attrs">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.description }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="pt-1">
-                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-                <template #selection="{ item }">
-                  <v-list-item two-line>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.description }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="pt-1">
-                        {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-              </v-select>
-            </validation-provider>
-          </v-col>
-          <v-col cols="12" class="text-center text-md-right mt-2">
-            <v-btn
-              :loading="state.loading"
-              :disabled="state.loading"
-              small
-              type="submit"
-              color="success"
-            >
-              {{ $t("save") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </form>
-    </validation-observer>
-  </header-dialog>
+    <v-card>
+      <v-card-title>
+        <span
+          class="text-overline"
+          :style="{
+            'font-size':
+              $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? '15px' : '20px'
+          }"
+        >
+          New transfer
+        </span>
+        <v-spacer />
+        <v-btn @click="resetNewTransferDialog" small icon class="mr-3">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider />
+      <v-card-text class="pb-0">
+        <validation-observer ref="newTransferFormRef" v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(addNewTransfer)">
+            <v-row class="mt-1">
+              <v-col cols="12">
+                <validation-provider
+                  vid="amount"
+                  :name="$t('amount')"
+                  rules="required|numberWithComma"
+                  v-slot="{ errors, valid, untouched, required, failed }"
+                >
+                  <v-text-field
+                    outlined
+                    :error-messages="errors"
+                    :hide-details="valid || (untouched && !failed)"
+                    dense
+                    v-model="state.amount"
+                    clearable
+                    suffix="HRK"
+                  >
+                    <template #label>
+                      <required-icon v-show="required" />
+                      <span>{{ $t("amount") }}</span>
+                    </template>
+                  </v-text-field>
+                </validation-provider>
+              </v-col>
+              <v-col cols="12">
+                <validation-provider
+                  vid="accountFrom"
+                  :name="$t('accountFrom')"
+                  rules="required|differentFrom:@accountTo"
+                  v-slot="{ errors, valid, untouched, required, failed }"
+                >
+                  <v-select
+                    :error-messages="errors"
+                    :hide-details="valid || (untouched && !failed)"
+                    dense
+                    item-text="description"
+                    item-value="id"
+                    :return-object="false"
+                    :items="state.accounts"
+                    v-model="state.accountFrom"
+                    clearable
+                    outlined
+                  >
+                    <template #label>
+                      <required-icon v-show="required" />
+                      <span>{{ $t("accountFrom") }}</span>
+                    </template>
+                    <template #item="{ item, on, attrs }">
+                      <v-list-item two-line v-on="on" v-bind="attrs">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ item.description }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle class="pt-1">
+                            {{
+                              formatCurrencyDisplay(true, item.amount, "HRK")
+                            }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                    <template #selection="{ item }">
+                      <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ item.description }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle class="pt-1">
+                            {{
+                              formatCurrencyDisplay(true, item.amount, "HRK")
+                            }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                  </v-select>
+                </validation-provider>
+              </v-col>
+              <v-col cols="12">
+                <validation-provider
+                  vid="accountTo"
+                  :name="$t('accountTo')"
+                  rules="required|differentFrom:@accountFrom"
+                  v-slot="{ errors, valid, untouched, required, failed }"
+                >
+                  <v-select
+                    :error-messages="errors"
+                    :hide-details="valid || (untouched && !failed)"
+                    dense
+                    item-text="description"
+                    item-value="id"
+                    :return-object="false"
+                    :items="state.accounts"
+                    v-model="state.accountTo"
+                    clearable
+                    outlined
+                  >
+                    <template #label>
+                      <required-icon v-show="required" />
+                      <span>{{ $t("accountTo") }}</span>
+                    </template>
+                    <template #item="{ item, on, attrs }">
+                      <v-list-item two-line v-on="on" v-bind="attrs">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ item.description }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle class="pt-1">
+                            {{
+                              formatCurrencyDisplay(true, item.amount, "HRK")
+                            }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                    <template #selection="{ item }">
+                      <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ item.description }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle class="pt-1">
+                            {{
+                              formatCurrencyDisplay(true, item.amount, "HRK")
+                            }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                  </v-select>
+                </validation-provider>
+              </v-col>
+              <v-col cols="12" class="text-center text-md-right mt-2">
+                <v-btn
+                  :loading="state.loading"
+                  :disabled="state.loading"
+                  small
+                  type="submit"
+                  color="success"
+                >
+                  {{ $t("save") }}
+                </v-btn>
+              </v-col>
+            </v-row>
+          </form>
+        </validation-observer>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -158,16 +185,15 @@ import {
   SetupContext,
   watch
 } from "@vue/composition-api";
-import HeaderDialog from "@/components/HeaderDialog.vue";
 import { getService, Types } from "@/di-container";
 import { IAccountService } from "@/interfaces/accountService";
-import { AccountLatestValue } from "@/models/payment-source";
-import { CreateTransferDto } from "@/models/change-item";
+import { CreateTransferDto } from "@/models/transaction";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { ValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
 import { User } from "@/models/user";
 import { Snackbar } from "@/models/appNotifications";
+import { AccountLatestValueModel } from "@/apiClient/client";
 
 interface State {
   amount: string | null;
@@ -175,7 +201,7 @@ interface State {
   open?: boolean;
   accountTo: number | null;
   accountFrom: number | null;
-  accounts: AccountLatestValue[];
+  accounts: AccountLatestValueModel[];
 }
 
 interface Props {
@@ -186,9 +212,6 @@ export default defineComponent({
   name: "new-transfer-dialog",
   props: {
     value: null
-  },
-  components: {
-    HeaderDialog
   },
   setup(props: Props, context: SetupContext) {
     const vm = getCurrentInstance();
@@ -217,7 +240,7 @@ export default defineComponent({
 
       const payload: CreateTransferDto = {
         amount: parseFloat(state.amount as string),
-        userId: 1,
+        userId: (context.root.$store.getters["user/data"] as User).id,
         accountFromId: state.accountFrom as number,
         accountToId: state.accountTo as number
       };
@@ -240,9 +263,7 @@ export default defineComponent({
     async function getAccounts() {
       state.accounts = await getService<IAccountService>(
         Types.AccountService
-      ).getLatestValues(
-        (context.root.$store.getters["user/data"] as User).id
-      );
+      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
     }
 
     onMounted(() => {

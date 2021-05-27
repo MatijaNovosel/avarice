@@ -163,7 +163,7 @@
 <script lang="ts">
 import { getService, Types } from "@/di-container";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { FinancialChangeItem } from "@/models/change-item";
+import { Transaction } from "@/models/transaction";
 import {
   defineComponent,
   onMounted,
@@ -175,11 +175,11 @@ import { formatDistance, parse } from "date-fns";
 import { TagEnum } from "@/constants/tag-enum";
 import { createSelectFromEnum, formatCurrencyDisplay } from "@/helpers";
 import { debounce } from "debounce/index";
-import { Tag } from "@/models/tag";
 import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
 import { IAccountService } from "@/interfaces/accountService";
 import { User } from "@/models/user";
+import { TagModel } from "@/apiClient/client";
 
 interface SearchInput {
   description: string | null;
@@ -190,10 +190,10 @@ interface SearchInput {
 }
 
 interface State {
-  transactions: FinancialChangeItem[];
+  transactions: Transaction[];
   totalTransactions: number;
   search: SearchInput;
-  tags: Tag[];
+  tags: TagModel[];
   accounts: any;
 }
 

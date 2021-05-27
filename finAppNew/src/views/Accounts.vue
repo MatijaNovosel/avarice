@@ -82,7 +82,6 @@
 <script lang="ts">
 import { getService, Types } from "@/di-container";
 import { IAccountService } from "@/interfaces/accountService";
-import { AccountLatestValue } from "@/models/payment-source";
 import {
   defineComponent,
   getCurrentInstance,
@@ -95,11 +94,11 @@ import { formatCurrencyDisplay } from "@/helpers";
 import { GraphData, GraphOptions } from "@/models/graph";
 import { ITransactionService } from "@/interfaces/transactionService";
 import { User } from "@/models/user";
-import { sub } from "date-fns";
 import LineChart from "@/components/charts/LineChart";
+import { AccountLatestValueModel } from "@/apiClient/client";
 
 interface State {
-  accounts: AccountLatestValue[];
+  accounts: AccountLatestValueModel[];
   account: number | null;
   loading: boolean;
   graphData: GraphData | null;

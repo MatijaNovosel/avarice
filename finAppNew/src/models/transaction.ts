@@ -1,20 +1,20 @@
-export interface FinancialChangeItem {
+export interface Transaction {
   id: number;
   amount: number;
   createdAt: string;
   description: string;
   expense: boolean;
   transfer: boolean;
-  paymentSourceId: number;
+  accountId: number;
   tagIds: number[];
 }
 
-export interface CreateFinancialChangeItemDto {
+export interface AddTransactionDto {
   userId: string;
   amount: number;
   description: string | null;
   expense: boolean;
-  paymentSourceId: number;
+  accountId: number;
   tagIds: number[];
   createdAt: string;
 }

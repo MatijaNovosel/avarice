@@ -2,12 +2,12 @@
   <v-app-bar clipped-right app class="elevation-3" height="65">
     <v-list-item v-if="state.user" class="pl-15">
       <v-list-item-avatar>
-        <img alt="" :src="state.user.photoUrl || '/defaultUser.jpg'" />
+        <img alt="" src="/defaultUser.jpg" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>
           {{ $t("good") }} {{ state.timeOfDay.toLowerCase() }},
-          <b> {{ state.user.displayName }} </b>!
+          <b> {{ state.user.userName }} </b>!
         </v-list-item-title>
         <v-list-item-subtitle class="pt-1">
           <v-icon
