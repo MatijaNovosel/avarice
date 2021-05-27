@@ -4,7 +4,6 @@ import {
   Transaction,
   TransactionAmountRange
 } from "@/models/transaction";
-import { AccountHistoryRecord } from "@/models/history-item";
 import { ItemCollection } from "@/models/item-collection";
 
 export interface ITransactionService {
@@ -26,10 +25,4 @@ export interface ITransactionService {
     account?: number | null,
     showTransfers?: boolean | null
   ): Promise<ItemCollection<Transaction>>;
-  getHistoryForAccount(
-    userId: string,
-    from: Date,
-    to: Date,
-    accountId: number
-  ): Promise<AccountHistoryRecord[]>;
 }

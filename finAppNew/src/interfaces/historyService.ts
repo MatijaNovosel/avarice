@@ -15,4 +15,14 @@ export interface IHistoryService {
   ): Promise<HistoryTotalModel[]>;
   getDailyChanges(userId: string): Promise<DailyChangeModel[]>;
   getLatestDate(userId: string): Promise<Date>;
+  getHistoryForAccount(
+    userId: string,
+    from: Date,
+    to: Date,
+    accountId: number
+  ): Promise<HistoryTotalModel[]>;
+  getHistoryForAccountTotal(
+    userId: string,
+    accountId: number
+  ): Promise<HistoryTotalModel[]>;
 }

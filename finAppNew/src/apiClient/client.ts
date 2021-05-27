@@ -499,6 +499,159 @@ export class Client {
     return Promise.resolve<Date>(<any>null);
   }
 
+  history_AccountHistoryTotal(
+    accountId: number,
+    userId: string | null | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<HistoryTotalModel[]> {
+    let url_ = this.baseUrl + "/api/history/account-total/{accountId}?";
+    if (accountId === undefined || accountId === null)
+      throw new Error("The parameter 'accountId' must be defined.");
+    url_ = url_.replace("{accountId}", encodeURIComponent("" + accountId));
+    if (userId !== undefined && userId !== null)
+      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processHistory_AccountHistoryTotal(_response);
+      });
+  }
+
+  protected processHistory_AccountHistoryTotal(
+    response: AxiosResponse
+  ): Promise<HistoryTotalModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(HistoryTotalModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<HistoryTotalModel[]>(<any>null);
+  }
+
+  history_AccountHistory(
+    accountId: number,
+    userId: string | null | undefined,
+    from: Date | undefined,
+    to: Date | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<HistoryTotalModel[]> {
+    let url_ = this.baseUrl + "/api/history/account/{accountId}?";
+    if (accountId === undefined || accountId === null)
+      throw new Error("The parameter 'accountId' must be defined.");
+    url_ = url_.replace("{accountId}", encodeURIComponent("" + accountId));
+    if (userId !== undefined && userId !== null)
+      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    if (from === null) throw new Error("The parameter 'from' cannot be null.");
+    else if (from !== undefined)
+      url_ +=
+        "from=" + encodeURIComponent(from ? "" + from.toJSON() : "") + "&";
+    if (to === null) throw new Error("The parameter 'to' cannot be null.");
+    else if (to !== undefined)
+      url_ += "to=" + encodeURIComponent(to ? "" + to.toJSON() : "") + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processHistory_AccountHistory(_response);
+      });
+  }
+
+  protected processHistory_AccountHistory(
+    response: AxiosResponse
+  ): Promise<HistoryTotalModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(HistoryTotalModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<HistoryTotalModel[]>(<any>null);
+  }
+
   tag_Get(
     userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
@@ -1076,8 +1229,8 @@ export class AddTransactionDto implements IAddTransactionDto {
   amount!: number;
   description?: string | undefined;
   createdAt!: Date;
-  expense!: boolean;
-  accountId!: number;
+  expense?: boolean | undefined;
+  accountId?: number | undefined;
   tagIds?: number[] | undefined;
 
   constructor(data?: IAddTransactionDto) {
@@ -1136,8 +1289,8 @@ export interface IAddTransactionDto {
   amount: number;
   description?: string | undefined;
   createdAt: Date;
-  expense: boolean;
-  accountId: number;
+  expense?: boolean | undefined;
+  accountId?: number | undefined;
   tagIds?: number[] | undefined;
 }
 

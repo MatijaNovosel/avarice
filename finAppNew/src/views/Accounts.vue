@@ -96,6 +96,8 @@ import { ITransactionService } from "@/interfaces/transactionService";
 import { User } from "@/models/user";
 import LineChart from "@/components/charts/LineChart";
 import { AccountLatestValueModel } from "@/apiClient/client";
+import { format } from "date-fns";
+import { IHistoryService } from "@/interfaces/historyService";
 
 interface State {
   accounts: AccountLatestValueModel[];
@@ -129,13 +131,13 @@ export default defineComponent({
         state.account = state.accounts[0].id;
       }
 
-      const history = await getService<ITransactionService>(
-        Types.TransactionService
+      const history = await getService<IHistoryService>(
+        Types.HistoryService
       ).getHistoryForAccount(
         (context.root.$store.getters["user/data"] as User).id,
-        new Date(2020, 11, 0),
+        new Date(1970, 11, 0),
         new Date(),
-        state.account || 1
+        state.account as number
       );
 
       const dataset = {
@@ -147,7 +149,7 @@ export default defineComponent({
       };
 
       state.graphData = {
-        labels: history.map(x => x.createdAt),
+        labels: history.map(x => format(x.createdAt, "dd.MM.yyyy. HH:mm")),
         datasets: [dataset]
       };
 

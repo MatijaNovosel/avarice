@@ -1,3 +1,3 @@
-export interface ValidationObserver {
-  reset: Function;
+export interface IValidationObserver {
+  reset(): void;
 }

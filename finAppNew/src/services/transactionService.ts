@@ -7,7 +7,11 @@ import {
 } from "@/models/transaction";
 import { AccountHistoryRecord } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { Client, AddTransactionDto } from "@/apiClient/client";
+import {
+  Client,
+  AddTransactionDto,
+  HistoryTotalModel
+} from "@/apiClient/client";
 
 export class TransactionService implements ITransactionService {
   async addTransaction(payload: NewTransaction): Promise<void> {
@@ -48,15 +52,6 @@ export class TransactionService implements ITransactionService {
     account?: number | null,
     showTransfers?: boolean | null
   ): Promise<ItemCollection<Transaction>> {
-    throw new Error("Method not implemented.");
-  }
-
-  getHistoryForAccount(
-    userId: string,
-    from: Date,
-    to: Date,
-    accountId: number
-  ): Promise<AccountHistoryRecord[]> {
     throw new Error("Method not implemented.");
   }
 }

@@ -23,7 +23,7 @@
       </v-card-title>
       <v-divider />
       <v-card-text class="pb-0">
-        <validation-observer ref="newTransferFormRef" v-slot="{ handleSubmit }">
+        <validation-observer ref="newTransferForm" v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(addNewTransfer)">
             <v-row class="mt-1">
               <v-col cols="12">
@@ -182,6 +182,7 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
+  ref,
   SetupContext,
   watch
 } from "@vue/composition-api";
@@ -189,7 +190,7 @@ import { getService, Types } from "@/di-container";
 import { IAccountService } from "@/interfaces/accountService";
 import { CreateTransferDto } from "@/models/transaction";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { ValidationObserver } from "@/models/validationObserver";
+import { IValidationObserver } from "@/models/validationObserver";
 import { formatCurrencyDisplay } from "@/helpers";
 import { User } from "@/models/user";
 import { Snackbar } from "@/models/appNotifications";
@@ -215,6 +216,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const vm = getCurrentInstance();
+    const newTransferForm = ref<IValidationObserver>();
 
     const state: State = reactive({
       accounts: [],
@@ -229,7 +231,7 @@ export default defineComponent({
       state.amount = null;
       state.accountFrom = null;
       state.accountTo = null;
-      ((vm?.$refs.newTransferFormRef as any) as ValidationObserver).reset();
+      newTransferForm.value?.reset();
       state.open = false;
       context.emit("input", state.open);
       context.emit("close");
@@ -286,7 +288,8 @@ export default defineComponent({
       state,
       resetNewTransferDialog,
       addNewTransfer,
-      formatCurrencyDisplay
+      formatCurrencyDisplay,
+      newTransferForm
     };
   }
 });

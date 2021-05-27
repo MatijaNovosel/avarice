@@ -23,7 +23,7 @@
       </v-card-title>
       <v-divider />
       <v-card-text class="pb-0">
-        <validation-observer ref="newAccountFormRef" v-slot="{ handleSubmit }">
+        <validation-observer ref="newAccountForm" v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(addNewTransfer)">
             <v-row class="mt-1">
               <v-col cols="12">
@@ -95,10 +95,11 @@ import {
   defineComponent,
   getCurrentInstance,
   reactive,
+  ref,
   SetupContext,
   watch
 } from "@vue/composition-api";
-import { ValidationObserver } from "@/models/validationObserver";
+import { IValidationObserver } from "@/models/validationObserver";
 
 interface State {
   startingAmount: string | null;
@@ -118,6 +119,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const vm = getCurrentInstance();
+    const newAccountForm = ref<IValidationObserver>();
 
     const state: State = reactive({
       paymentSources: [],
@@ -130,7 +132,7 @@ export default defineComponent({
     function resetNewAccountDialog() {
       state.startingAmount = null;
       state.newAccountName = null;
-      ((vm?.$refs.newAccountFormRef as any) as ValidationObserver).reset();
+      newAccountForm.value?.reset();
       state.open = false;
       context.emit("input", state.open);
       context.emit("close");
@@ -154,7 +156,8 @@ export default defineComponent({
     return {
       state,
       resetNewAccountDialog,
-      addNewTransfer
+      addNewTransfer,
+      newAccountForm
     };
   }
 });

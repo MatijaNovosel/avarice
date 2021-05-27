@@ -36,4 +36,24 @@ export class HistoryService implements IHistoryService {
     const data = await client.history_DailyChanges(userId);
     return data;
   }
+
+  async getHistoryForAccount(
+    userId: string,
+    from: Date,
+    to: Date,
+    accountId: number
+  ): Promise<HistoryTotalModel[]> {
+    const client = new Client();
+    const data = client.history_AccountHistory(accountId, userId, from, to);
+    return data;
+  }
+
+  async getHistoryForAccountTotal(
+    userId: string,
+    accountId: number
+  ): Promise<HistoryTotalModel[]> {
+    const client = new Client();
+    const data = client.history_AccountHistoryTotal(accountId, userId);
+    return data;
+  }
 }
