@@ -51,9 +51,16 @@
         </v-tooltip>
       </v-list-item>
       <v-list-item @click="state.newAccountDialog = true">
-        <v-icon>
-          mdi-credit-card-plus-outline
-        </v-icon>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-icon v-bind="attrs" v-on="on">
+              mdi-credit-card-plus-outline
+            </v-icon>
+          </template>
+          <span>
+            New Account
+          </span>
+        </v-tooltip>
       </v-list-item>
       <v-divider class="my-3" />
       <v-list-item @click="logOut">
