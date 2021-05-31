@@ -31,12 +31,12 @@
                   vid="amount"
                   :name="$t('amount')"
                   rules="required|numberWithComma"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     outlined
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     v-model="state.amount"
                     clearable
@@ -54,12 +54,12 @@
                   vid="description"
                   :name="$t('description')"
                   rules="required|min:4"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-textarea
                     outlined
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     v-model="state.description"
                     clearable
@@ -76,11 +76,11 @@
                   vid="tags"
                   :name="$t('tags')"
                   rules="required"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-select
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     item-text="description"
                     item-value="id"
@@ -103,13 +103,13 @@
                   vid="account"
                   :name="$t('account')"
                   rules="required"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-select
                     :loading="state.loading"
                     :disabled="state.loading"
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     item-text="description"
                     item-value="id"

@@ -23,13 +23,13 @@
                   vid="email"
                   :name="$t('email')"
                   rules="required|email"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     prepend-icon="mdi-email"
                     v-model="state.email"
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                   >
                     <template #label>
@@ -44,14 +44,14 @@
                   vid="password"
                   :name="$t('password')"
                   rules="required"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     :type="state.showPassword ? 'text' : 'password'"
                     v-model="state.password"
                     prepend-icon="mdi-lock"
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                   >
                     <template #label>

@@ -31,12 +31,12 @@
                   vid="amount"
                   :name="$t('amount')"
                   rules="required|numberWithComma"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     outlined
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     v-model="state.amount"
                     clearable
@@ -54,11 +54,11 @@
                   vid="accountFrom"
                   :name="$t('accountFrom')"
                   rules="required|differentFrom:@accountTo"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-select
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     item-text="description"
                     item-value="id"
@@ -108,11 +108,11 @@
                   vid="accountTo"
                   :name="$t('accountTo')"
                   rules="required|differentFrom:@accountFrom"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-select
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     item-text="description"
                     item-value="id"

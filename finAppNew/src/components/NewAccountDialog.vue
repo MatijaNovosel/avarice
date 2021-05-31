@@ -31,12 +31,12 @@
                   vid="startingAmount"
                   :name="$t('startingAmount')"
                   rules="required|numberWithComma"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     outlined
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     v-model="state.startingAmount"
                     clearable
@@ -54,12 +54,12 @@
                   vid="newAccountName"
                   :name="$t('newAccountName')"
                   rules="required|min:4"
-                  v-slot="{ errors, valid, untouched, required, failed }"
+                  v-slot="{ errors, required }"
                 >
                   <v-text-field
                     outlined
                     :error-messages="errors"
-                    :hide-details="valid || (untouched && !failed)"
+                    hide-details="auto"
                     dense
                     v-model="state.newAccountName"
                     clearable
