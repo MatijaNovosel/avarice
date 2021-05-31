@@ -163,7 +163,6 @@
 <script lang="ts">
 import { getService, Types } from "@/di-container";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { Transaction } from "@/models/transaction";
 import {
   defineComponent,
   onMounted,
@@ -179,7 +178,7 @@ import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
 import { IAccountService } from "@/interfaces/accountService";
 import { User } from "@/models/user";
-import { TagModel } from "@/apiClient/client";
+import { TagModel, TransactionModel } from "@/apiClient/client";
 
 interface SearchInput {
   description: string | null;
@@ -190,7 +189,7 @@ interface SearchInput {
 }
 
 interface State {
-  transactions: Transaction[];
+  transactions: TransactionModel[];
   totalTransactions: number;
   search: SearchInput;
   tags: TagModel[];
@@ -221,7 +220,7 @@ export default defineComponent({
 
     async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
-      const itemCollection = await getService<ITransactionService>(
+      const transactions = await getService<ITransactionService>(
         Types.TransactionService
       ).getTransactions(
         (context.root.$store.getters["user/data"] as User).id,
@@ -235,8 +234,7 @@ export default defineComponent({
         state.search.account,
         state.search.showTransfers
       );
-      state.transactions = itemCollection.items;
-      state.totalTransactions = itemCollection.count;
+      state.transactions = transactions;
       await context.root.$store.dispatch("app/setLoading", false);
     }
 

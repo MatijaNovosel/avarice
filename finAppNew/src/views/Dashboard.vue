@@ -69,8 +69,8 @@
         <h4 class="mb-5 grey--text lighten-2">Daily changes</h4>
         <bar-chart
           style="height: 370px"
-          v-if="state.graphDataDailyChanges"
-          :chart-data="state.graphDataDailyChanges"
+          v-if="state.graphDataTransactions"
+          :chart-data="state.graphDataTransactions"
           :options="dailyChangesGraphOptions"
         />
       </div>
@@ -99,16 +99,12 @@
         dense
       >
         <template #item.createdAt="{ item }">
-          {{ item.createdAt }}
+          {{ format(new Date(item.createdAt), "dd.MM.yyyy. HH:mm") }}
           <span class="grey--text">
             ({{
-              formatDistance(
-                parse(item.createdAt, "dd.MM.yyyy. HH:mm:ss", new Date()),
-                new Date(),
-                {
-                  addSuffix: true
-                }
-              )
+              formatDistance(new Date(item.createdAt), new Date(), {
+                addSuffix: true
+              })
             }})
           </span>
         </template>
@@ -126,7 +122,10 @@
         <template #item.amount="{ item }">
           {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
         </template>
-        <template #item.tagIds="{ item }">
+        <template #item.account="{ item }">
+          {{ item.account.description }}
+        </template>
+        <template #item.tags="{ item }">
           <v-chip
             x-small
             v-for="(tag, i) in item.tags"
@@ -148,10 +147,8 @@ import { ITransactionService } from "@/interfaces/transactionService";
 import IWebStorage from "@/interfaces/webStorageService";
 import {
   DailyChange,
-  Transaction,
   RecentDepositsAndWithdrawals
 } from "@/models/transaction";
-import { FinancialHistory } from "@/models/history-item";
 import {
   computed,
   defineComponent,
@@ -161,7 +158,7 @@ import {
   SetupContext,
   watch
 } from "@vue/composition-api";
-import { format, sub, formatDistance, parse } from "date-fns";
+import { format, sub, formatDistance } from "date-fns";
 import { formatCurrencyDisplay } from "@/helpers";
 import { GraphData, GraphOptions } from "@/models/graph";
 import BarChart from "@/components/charts/BarChart";
@@ -169,15 +166,15 @@ import LineChart from "@/components/charts/LineChart";
 import { DatasetItem } from "@/models/dataset";
 import { User } from "@/models/user";
 import { IHistoryService } from "@/interfaces/historyService";
-import { HistoryTotalModel } from "@/apiClient/client";
+import { HistoryTotalModel, TransactionModel } from "@/apiClient/client";
 
 interface State {
   history: HistoryTotalModel[];
   recentDepositsAndWithdrawals: RecentDepositsAndWithdrawals;
-  graphDataDailyChanges: GraphData | null;
+  graphDataTransactions: GraphData | null;
   graphTotalChanges: GraphData | null;
   totalDataset: DatasetItem | null;
-  transactions: Transaction[];
+  transactions: TransactionModel[];
   loading: boolean;
   total: number;
 }
@@ -193,7 +190,7 @@ export default defineComponent({
 
     const state: State = reactive({
       history: [],
-      graphDataDailyChanges: null,
+      graphDataTransactions: null,
       graphTotalChanges: null,
       totalDataset: null,
       transactions: [],
@@ -285,7 +282,7 @@ export default defineComponent({
         storage.getSavedState("dailyChanges")
       ) as DailyChange[];
 
-      state.graphDataDailyChanges = {
+      state.graphDataTransactions = {
         labels: dailyChanges
           .reverse()
           .map(x => format(new Date(x.createdAt), "dd.MM.yyyy.")),
@@ -317,9 +314,7 @@ export default defineComponent({
         storage.getSavedState("recentDepositsAndWithdrawals")
       ) as RecentDepositsAndWithdrawals;
 
-      /*
-
-      const itemCollection = await getService<ITransactionService>(
+      const transactions = await getService<ITransactionService>(
         Types.TransactionService
       ).getTransactions(
         (context.root.$store.getters["user/data"] as User).id,
@@ -334,9 +329,7 @@ export default defineComponent({
         false
       );
 
-      state.transactions = itemCollection.items;
-
-      */
+      state.transactions = transactions;
 
       await context.root.$store.dispatch("app/setLoading", false);
     }
@@ -445,7 +438,7 @@ export default defineComponent({
       },
       {
         text: "Tags",
-        value: "tagIds",
+        value: "tags",
         sortable: false,
         align: "center"
       }
@@ -458,7 +451,7 @@ export default defineComponent({
       graphTotalChangesOptions,
       headers,
       formatDistance,
-      parse
+      format
     };
   }
 });

@@ -1,13 +1,15 @@
-import { ItemCollection } from "@/models/item-collection";
 import {
-  Transaction,
   CreateTransferDto,
   TransactionAmountRange,
   AddTransactionDto as NewTransaction
 } from "@/models/transaction";
-import { AccountHistoryRecord } from "@/models/history-item";
 import { ITransactionService } from "@/interfaces/transactionService";
-import { Client, AddTransactionDto, AddTransferDto } from "@/apiClient/client";
+import {
+  Client,
+  AddTransactionDto,
+  AddTransferDto,
+  TransactionModel
+} from "@/apiClient/client";
 
 export class TransactionService implements ITransactionService {
   async addTransaction(payload: NewTransaction): Promise<void> {
@@ -39,7 +41,8 @@ export class TransactionService implements ITransactionService {
         accountFromId: payload.accountFromId,
         accountToId: payload.accountToId,
         amount: payload.amount,
-        userId: payload.userId
+        userId: payload.userId,
+        createdAt: new Date()
       })
     );
   }
@@ -55,7 +58,9 @@ export class TransactionService implements ITransactionService {
     transactionType?: number | null,
     account?: number | null,
     showTransfers?: boolean | null
-  ): Promise<ItemCollection<Transaction>> {
-    throw new Error("Method not implemented.");
+  ): Promise<TransactionModel[]> {
+    const client = new Client();
+    const data = client.transaction_Get(userId);
+    return data;
   }
 }

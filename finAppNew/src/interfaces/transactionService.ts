@@ -1,10 +1,9 @@
 import {
   AddTransactionDto,
   CreateTransferDto,
-  Transaction,
   TransactionAmountRange
 } from "@/models/transaction";
-import { ItemCollection } from "@/models/item-collection";
+import { TransactionModel } from "@/apiClient/client";
 
 export interface ITransactionService {
   addTransaction(payload: AddTransactionDto): Promise<void>;
@@ -24,5 +23,5 @@ export interface ITransactionService {
     transactionType?: number | null,
     account?: number | null,
     showTransfers?: boolean | null
-  ): Promise<ItemCollection<Transaction>>;
+  ): Promise<TransactionModel[]>;
 }

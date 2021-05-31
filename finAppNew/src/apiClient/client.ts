@@ -775,6 +775,74 @@ export class Client {
     return Promise.resolve<void>(<any>null);
   }
 
+  transaction_Get(
+    userId: string | null | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<TransactionModel[]> {
+    let url_ = this.baseUrl + "/api/transaction?";
+    if (userId !== undefined && userId !== null)
+      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processTransaction_Get(_response);
+      });
+  }
+
+  protected processTransaction_Get(
+    response: AxiosResponse
+  ): Promise<TransactionModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(TransactionModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<TransactionModel[]>(<any>null);
+  }
+
   transaction_Transfer(
     payload: AddTransferDto,
     cancelToken?: CancelToken | undefined
@@ -836,14 +904,10 @@ export class Client {
   }
 }
 
-export class AccountLatestValueModel implements IAccountLatestValueModel {
+export class BaseModel implements IBaseModel {
   id!: number;
-  amount!: number;
-  description?: string | undefined;
-  currency?: string | undefined;
-  icon?: string | undefined;
 
-  constructor(data?: IAccountLatestValueModel) {
+  constructor(data?: IBaseModel) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -855,6 +919,41 @@ export class AccountLatestValueModel implements IAccountLatestValueModel {
   init(_data?: any) {
     if (_data) {
       this.id = _data["id"];
+    }
+  }
+
+  static fromJS(data: any): BaseModel {
+    data = typeof data === "object" ? data : {};
+    let result = new BaseModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["id"] = this.id;
+    return data;
+  }
+}
+
+export interface IBaseModel {
+  id: number;
+}
+
+export class AccountLatestValueModel extends BaseModel
+  implements IAccountLatestValueModel {
+  amount!: number;
+  description?: string | undefined;
+  currency?: string | undefined;
+  icon?: string | undefined;
+
+  constructor(data?: IAccountLatestValueModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
       this.amount = _data["amount"];
       this.description = _data["description"];
       this.currency = _data["currency"];
@@ -871,17 +970,16 @@ export class AccountLatestValueModel implements IAccountLatestValueModel {
 
   toJSON(data?: any) {
     data = typeof data === "object" ? data : {};
-    data["id"] = this.id;
     data["amount"] = this.amount;
     data["description"] = this.description;
     data["currency"] = this.currency;
     data["icon"] = this.icon;
+    super.toJSON(data);
     return data;
   }
 }
 
-export interface IAccountLatestValueModel {
-  id: number;
+export interface IAccountLatestValueModel extends IBaseModel {
   amount: number;
   description?: string | undefined;
   currency?: string | undefined;
@@ -1155,42 +1253,6 @@ export interface IDailyChangeModel {
   createdAt: Date;
 }
 
-export class BaseModel implements IBaseModel {
-  id!: number;
-
-  constructor(data?: IBaseModel) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data["id"];
-    }
-  }
-
-  static fromJS(data: any): BaseModel {
-    data = typeof data === "object" ? data : {};
-    let result = new BaseModel();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === "object" ? data : {};
-    data["id"] = this.id;
-    return data;
-  }
-}
-
-export interface IBaseModel {
-  id: number;
-}
-
 export class TagModel extends BaseModel implements ITagModel {
   description?: string | undefined;
 
@@ -1299,6 +1361,7 @@ export class AddTransferDto implements IAddTransferDto {
   amount!: number;
   accountFromId!: number;
   accountToId!: number;
+  createdAt!: Date;
 
   constructor(data?: IAddTransferDto) {
     if (data) {
@@ -1315,6 +1378,9 @@ export class AddTransferDto implements IAddTransferDto {
       this.amount = _data["amount"];
       this.accountFromId = _data["accountFromId"];
       this.accountToId = _data["accountToId"];
+      this.createdAt = _data["createdAt"]
+        ? new Date(_data["createdAt"].toString())
+        : <any>undefined;
     }
   }
 
@@ -1331,6 +1397,9 @@ export class AddTransferDto implements IAddTransferDto {
     data["amount"] = this.amount;
     data["accountFromId"] = this.accountFromId;
     data["accountToId"] = this.accountToId;
+    data["createdAt"] = this.createdAt
+      ? this.createdAt.toISOString()
+      : <any>undefined;
     return data;
   }
 }
@@ -1340,6 +1409,114 @@ export interface IAddTransferDto {
   amount: number;
   accountFromId: number;
   accountToId: number;
+  createdAt: Date;
+}
+
+export class TransactionModel extends BaseModel implements ITransactionModel {
+  amount?: number | undefined;
+  createdAt!: Date;
+  description?: string | undefined;
+  expense?: boolean | undefined;
+  userId?: string | undefined;
+  transfer?: boolean | undefined;
+  tags?: TagModel[] | undefined;
+  account?: AccountTransactionModel | undefined;
+
+  constructor(data?: ITransactionModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.amount = _data["amount"];
+      this.createdAt = _data["createdAt"]
+        ? new Date(_data["createdAt"].toString())
+        : <any>undefined;
+      this.description = _data["description"];
+      this.expense = _data["expense"];
+      this.userId = _data["userId"];
+      this.transfer = _data["transfer"];
+      if (Array.isArray(_data["tags"])) {
+        this.tags = [] as any;
+        for (let item of _data["tags"]) this.tags!.push(TagModel.fromJS(item));
+      }
+      this.account = _data["account"]
+        ? AccountTransactionModel.fromJS(_data["account"])
+        : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): TransactionModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TransactionModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["amount"] = this.amount;
+    data["createdAt"] = this.createdAt
+      ? this.createdAt.toISOString()
+      : <any>undefined;
+    data["description"] = this.description;
+    data["expense"] = this.expense;
+    data["userId"] = this.userId;
+    data["transfer"] = this.transfer;
+    if (Array.isArray(this.tags)) {
+      data["tags"] = [];
+      for (let item of this.tags) data["tags"].push(item.toJSON());
+    }
+    data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface ITransactionModel extends IBaseModel {
+  amount?: number | undefined;
+  createdAt: Date;
+  description?: string | undefined;
+  expense?: boolean | undefined;
+  userId?: string | undefined;
+  transfer?: boolean | undefined;
+  tags?: TagModel[] | undefined;
+  account?: AccountTransactionModel | undefined;
+}
+
+export class AccountTransactionModel extends BaseModel
+  implements IAccountTransactionModel {
+  description?: string | undefined;
+
+  constructor(data?: IAccountTransactionModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.description = _data["description"];
+    }
+  }
+
+  static fromJS(data: any): AccountTransactionModel {
+    data = typeof data === "object" ? data : {};
+    let result = new AccountTransactionModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["description"] = this.description;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IAccountTransactionModel extends IBaseModel {
+  description?: string | undefined;
 }
 
 export class ApiException extends Error {
