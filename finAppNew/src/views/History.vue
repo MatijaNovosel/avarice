@@ -114,16 +114,12 @@
         class="rounded-lg"
       >
         <template #item.createdAt="{ item }">
-          {{ item.createdAt }}
+          {{ format(new Date(item.createdAt), "dd.MM.yyyy. HH:mm") }}
           <span class="grey--text">
             ({{
-              formatDistance(
-                parse(item.createdAt, "dd.MM.yyyy. HH:mm:ss", new Date()),
-                new Date(),
-                {
-                  addSuffix: true
-                }
-              )
+              formatDistance(new Date(item.createdAt), new Date(), {
+                addSuffix: true
+              })
             }})
           </span>
         </template>
@@ -142,11 +138,10 @@
           {{ formatCurrencyDisplay(true, item.amount, "HRK") }}
         </template>
         <template #item.account="{ item }">
-          {{ item.account }}
+          {{ item.account.description }}
         </template>
-        <template #item.tagIds="{ item }">
+        <template #item.tags="{ item }">
           <v-chip
-            small
             v-for="(tag, i) in item.tags"
             :key="i"
             class="mr-2"
@@ -170,7 +165,7 @@ import {
   SetupContext,
   watch
 } from "@vue/composition-api";
-import { formatDistance, parse } from "date-fns";
+import { formatDistance, format } from "date-fns";
 import { TagEnum } from "@/constants/tag-enum";
 import { createSelectFromEnum, formatCurrencyDisplay } from "@/helpers";
 import { debounce } from "debounce/index";
@@ -178,7 +173,7 @@ import { ITagService } from "@/interfaces/tagService";
 import { TransactionType } from "@/constants/transactionTypes";
 import { IAccountService } from "@/interfaces/accountService";
 import { User } from "@/models/user";
-import { TagModel, TransactionModel } from "@/apiClient/client";
+import { AccountModel, TagModel, TransactionModel } from "@/apiClient/client";
 
 interface SearchInput {
   description: string | null;
@@ -193,7 +188,7 @@ interface State {
   totalTransactions: number;
   search: SearchInput;
   tags: TagModel[];
-  accounts: any;
+  accounts: AccountModel[];
 }
 
 export default defineComponent({
@@ -225,14 +220,7 @@ export default defineComponent({
       ).getTransactions(
         (context.root.$store.getters["user/data"] as User).id,
         null,
-        null,
-        state.search.description || "",
-        null,
-        null,
-        state.search.tags,
-        state.search.transactionType,
-        state.search.account,
-        state.search.showTransfers
+        null
       );
       state.transactions = transactions;
       await context.root.$store.dispatch("app/setLoading", false);
@@ -282,7 +270,7 @@ export default defineComponent({
       },
       {
         text: "Tags",
-        value: "tagIds",
+        value: "tags",
         sortable: false,
         align: "center"
       }
@@ -291,13 +279,13 @@ export default defineComponent({
     return {
       state,
       formatDistance,
-      parse,
       TagEnum,
       headers,
       formatCurrencyDisplay,
       search,
       transactionTypes,
-      TransactionType
+      TransactionType,
+      format
     };
   }
 });

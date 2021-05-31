@@ -34,11 +34,11 @@ export class Client {
         : Constants.API_BASE_URL;
   }
 
-  account_LatestValues(
+  account_GetLatestValues(
     userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<AccountLatestValueModel[]> {
-    let url_ = this.baseUrl + "/api/account?";
+    let url_ = this.baseUrl + "/api/account/latest-values?";
     if (userId !== undefined && userId !== null)
       url_ += "userId=" + encodeURIComponent("" + userId) + "&";
     url_ = url_.replace(/[?&]$/, "");
@@ -62,11 +62,11 @@ export class Client {
         }
       })
       .then((_response: AxiosResponse) => {
-        return this.processAccount_LatestValues(_response);
+        return this.processAccount_GetLatestValues(_response);
       });
   }
 
-  protected processAccount_LatestValues(
+  protected processAccount_GetLatestValues(
     response: AxiosResponse
   ): Promise<AccountLatestValueModel[]> {
     const status = response.status;
@@ -100,6 +100,74 @@ export class Client {
       );
     }
     return Promise.resolve<AccountLatestValueModel[]>(<any>null);
+  }
+
+  account_GetUserAccounts(
+    userId: string | null | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<AccountModel[]> {
+    let url_ = this.baseUrl + "/api/account?";
+    if (userId !== undefined && userId !== null)
+      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processAccount_GetUserAccounts(_response);
+      });
+  }
+
+  protected processAccount_GetUserAccounts(
+    response: AxiosResponse
+  ): Promise<AccountModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(AccountModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<AccountModel[]>(<any>null);
   }
 
   auth_Register(
@@ -984,6 +1052,39 @@ export interface IAccountLatestValueModel extends IBaseModel {
   description?: string | undefined;
   currency?: string | undefined;
   icon?: string | undefined;
+}
+
+export class AccountModel extends BaseModel implements IAccountModel {
+  description?: string | undefined;
+
+  constructor(data?: IAccountModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.description = _data["description"];
+    }
+  }
+
+  static fromJS(data: any): AccountModel {
+    data = typeof data === "object" ? data : {};
+    let result = new AccountModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["description"] = this.description;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IAccountModel extends IBaseModel {
+  description?: string | undefined;
 }
 
 export class AuthResultModel implements IAuthResultModel {

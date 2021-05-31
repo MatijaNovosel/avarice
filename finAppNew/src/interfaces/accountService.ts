@@ -1,11 +1,8 @@
-import { AccountLatestValueModel } from "@/apiClient/client";
-import {
-  PaymentSource,
-  TagPercentageRecord
-} from "@/models/payment-source";
+import { AccountLatestValueModel, AccountModel } from "@/apiClient/client";
+import { TagPercentageRecord } from "@/models/payment-source";
 
 export interface IAccountService {
-  getAllByUserId(userId: string): Promise<PaymentSource[]>;
+  getAllByUserId(userId: string): Promise<AccountModel[]>;
   getLatestValues(userId: string): Promise<AccountLatestValueModel[]>;
   getTagPercentages(userId: string): Promise<TagPercentageRecord[]>;
   create(): Promise<void>;

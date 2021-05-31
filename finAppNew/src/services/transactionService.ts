@@ -50,14 +50,7 @@ export class TransactionService implements ITransactionService {
   getTransactions(
     userId: string,
     skip?: number | null,
-    take?: number | null,
-    description?: string,
-    min?: number | null,
-    max?: number | null,
-    tags?: number[] | null,
-    transactionType?: number | null,
-    account?: number | null,
-    showTransfers?: boolean | null
+    take?: number | null
   ): Promise<TransactionModel[]> {
     const client = new Client();
     const data = client.transaction_Get(userId);

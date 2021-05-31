@@ -22,6 +22,9 @@ interface GraphAxesGridLinesOptions {
 
 interface GraphAxesTicksOptions {
   display?: boolean;
+  autoSkip?: boolean;
+  maxRotation?: number;
+  minRotation?: number;
 }
 
 interface GraphAxesOptions {

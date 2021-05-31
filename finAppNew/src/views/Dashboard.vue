@@ -319,14 +319,7 @@ export default defineComponent({
       ).getTransactions(
         (context.root.$store.getters["user/data"] as User).id,
         0,
-        10,
-        "",
-        null,
-        null,
-        null,
-        null,
-        null,
-        false
+        10
       );
 
       state.transactions = transactions;
@@ -355,6 +348,11 @@ export default defineComponent({
           {
             gridLines: {
               display: false
+            },
+            ticks: {
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90
             }
           }
         ],
@@ -396,7 +394,12 @@ export default defineComponent({
             gridLines: {
               display: false
             },
-            stacked: true
+            stacked: true,
+            ticks: {
+              autoSkip: false,
+              maxRotation: 90,
+              minRotation: 90
+            }
           }
         ],
         yAxes: [
