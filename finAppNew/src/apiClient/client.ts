@@ -298,6 +298,77 @@ export class Client {
     return Promise.resolve<AuthResultModel>(<any>null);
   }
 
+  auth_Settings(
+    cancelToken?: CancelToken | undefined
+  ): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/auth/settings";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      responseType: "blob",
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/octet-stream"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processAuth_Settings(_response);
+      });
+  }
+
+  protected processAuth_Settings(
+    response: AxiosResponse
+  ): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers
+        ? response.headers["content-disposition"]
+        : undefined;
+      const fileNameMatch = contentDisposition
+        ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition)
+        : undefined;
+      const fileName =
+        fileNameMatch && fileNameMatch.length > 1
+          ? fileNameMatch[1]
+          : undefined;
+      return Promise.resolve({
+        fileName: fileName,
+        status: status,
+        data: response.data as Blob,
+        headers: _headers
+      });
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
   history_Total(
     userId: string | null | undefined,
     from: Date | undefined,
@@ -845,11 +916,19 @@ export class Client {
 
   transaction_Get(
     userId: string | null | undefined,
+    skip: number | undefined,
+    take: number | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<TransactionModel[]> {
     let url_ = this.baseUrl + "/api/transaction?";
     if (userId !== undefined && userId !== null)
       url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    if (skip === null) throw new Error("The parameter 'skip' cannot be null.");
+    else if (skip !== undefined)
+      url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+    if (take === null) throw new Error("The parameter 'take' cannot be null.");
+    else if (take !== undefined)
+      url_ += "take=" + encodeURIComponent("" + take) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -1618,6 +1697,13 @@ export class AccountTransactionModel extends BaseModel
 
 export interface IAccountTransactionModel extends IBaseModel {
   description?: string | undefined;
+}
+
+export interface FileResponse {
+  data: Blob;
+  status: number;
+  fileName?: string;
+  headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {

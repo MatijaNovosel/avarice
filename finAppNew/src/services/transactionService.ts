@@ -49,11 +49,11 @@ export class TransactionService implements ITransactionService {
 
   getTransactions(
     userId: string,
-    skip?: number | null,
-    take?: number | null
+    skip?: number,
+    take?: number
   ): Promise<TransactionModel[]> {
     const client = new Client();
-    const data = client.transaction_Get(userId);
+    const data = client.transaction_Get(userId, skip, take);
     return data;
   }
 }

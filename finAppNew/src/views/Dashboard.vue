@@ -283,9 +283,9 @@ export default defineComponent({
       ) as DailyChange[];
 
       state.graphDataTransactions = {
-        labels: dailyChanges
-          .reverse()
-          .map(x => format(new Date(x.createdAt), "dd.MM.yyyy.")),
+        labels: dailyChanges.map(x =>
+          format(new Date(x.createdAt), "dd.MM.yyyy.")
+        ),
         datasets: [
           {
             type: "bar",
