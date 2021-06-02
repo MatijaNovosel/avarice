@@ -22,6 +22,11 @@ html {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.v-toolbar__content, .v-toolbar__extension {
+.v-toolbar__content,
+.v-toolbar__extension {
   padding: 0px;
+}
+
+.v-data-table tbody tr:hover:not(.v-data-table__expanded__content) {
+  background: transparent !important;
 }

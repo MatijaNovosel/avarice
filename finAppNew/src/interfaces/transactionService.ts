@@ -3,7 +3,7 @@ import {
   CreateTransferDto,
   TransactionAmountRange
 } from "@/models/transaction";
-import { TransactionModel } from "@/apiClient/client";
+import { PageableCollectionOfTransactionModel } from "@/apiClient/client";
 
 export interface ITransactionService {
   addTransaction(payload: AddTransactionDto): Promise<void>;
@@ -16,5 +16,5 @@ export interface ITransactionService {
     userId: string,
     skip?: number | null,
     take?: number | null
-  ): Promise<TransactionModel[]>;
+  ): Promise<PageableCollectionOfTransactionModel>;
 }

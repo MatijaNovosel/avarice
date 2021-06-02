@@ -8,7 +8,7 @@
             hide-details
             dense
             outlined
-            @input="search"
+            @input="searchDebounce"
             label="Description"
           />
         </v-col>
@@ -24,7 +24,7 @@
             item-text="description"
             item-value="id"
             label="Account"
-            @change="search"
+            @change="searchDebounce"
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -40,7 +40,7 @@
             item-text="description"
             item-value="id"
             label="Tags"
-            @change="search"
+            @change="searchDebounce"
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -55,7 +55,7 @@
             label="Transaction type"
             item-text="text"
             item-value="value"
-            @change="search"
+            @change="searchDebounce"
           >
             <template #item="{ item, on, attrs }">
               <span
@@ -101,7 +101,7 @@
             hide-details
             label="Show transfers"
             v-model="state.search.showTransfers"
-            @change="search"
+            @change="searchDebounce"
           />
         </v-col>
       </v-row>
@@ -109,7 +109,11 @@
     <v-col cols="12">
       <v-data-table
         :headers="headers"
+        @update:options="optionsUpdated"
+        :footer-props="{ itemsPerPageOptions: state.itemsPerPageItems }"
         :items="state.transactions"
+        :server-items-length="state.totalTransactions"
+        :options="state.options"
         :items-per-page="15"
         class="rounded-lg"
       >
@@ -142,6 +146,7 @@
         </template>
         <template #item.tags="{ item }">
           <v-chip
+            small
             v-for="(tag, i) in item.tags"
             :key="i"
             class="mr-2"
@@ -174,6 +179,8 @@ import { TransactionType } from "@/constants/transactionTypes";
 import { IAccountService } from "@/interfaces/accountService";
 import { User } from "@/models/user";
 import { AccountModel, TagModel, TransactionModel } from "@/apiClient/client";
+import IGridOptions from "@/models/gridOptions";
+import { stat } from "fs";
 
 interface SearchInput {
   description: string | null;
@@ -189,6 +196,9 @@ interface State {
   search: SearchInput;
   tags: TagModel[];
   accounts: AccountModel[];
+  options: IGridOptions;
+  itemsPerPageItems: number[];
+  searchReady: boolean;
 }
 
 export default defineComponent({
@@ -200,6 +210,7 @@ export default defineComponent({
     );
 
     const state: State = reactive({
+      searchReady: false,
       transactions: [],
       search: {
         description: null,
@@ -210,8 +221,27 @@ export default defineComponent({
       },
       totalTransactions: 0,
       tags: [],
-      accounts: []
+      accounts: [],
+      itemsPerPageItems: [10, 25, 50],
+      options: {
+        page: 1,
+        itemsPerPage: 25
+      }
     });
+
+    function searchTransactions() {
+      state.searchReady = true;
+
+      if (state.options.page != 1) {
+        const itemsPerPage = state.options.itemsPerPage;
+        state.options = {
+          page: 1,
+          itemsPerPage: itemsPerPage
+        };
+      } else {
+        getData();
+      }
+    }
 
     async function getData() {
       await context.root.$store.dispatch("app/setLoading", true);
@@ -219,11 +249,17 @@ export default defineComponent({
         Types.TransactionService
       ).getTransactions(
         (context.root.$store.getters["user/data"] as User).id,
-        null,
-        null
+        (state.options.page - 1) * state.options.itemsPerPage,
+        state.options.itemsPerPage
       );
-      state.transactions = transactions;
+      state.transactions = transactions.results as TransactionModel[];
+      state.totalTransactions = transactions.total;
       await context.root.$store.dispatch("app/setLoading", false);
+    }
+
+    function optionsUpdated(options: IGridOptions) {
+      state.options = options;
+      getData();
     }
 
     onMounted(async () => {
@@ -236,7 +272,7 @@ export default defineComponent({
       getData();
     });
 
-    const search = debounce(() => {
+    const searchDebounce = debounce(() => {
       getData();
     }, 750);
 
@@ -282,10 +318,12 @@ export default defineComponent({
       TagEnum,
       headers,
       formatCurrencyDisplay,
-      search,
+      searchDebounce,
       transactionTypes,
       TransactionType,
-      format
+      format,
+      optionsUpdated,
+      searchTransactions
     };
   }
 });

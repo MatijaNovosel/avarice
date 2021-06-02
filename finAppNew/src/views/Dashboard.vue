@@ -322,7 +322,7 @@ export default defineComponent({
         10
       );
 
-      state.transactions = transactions;
+      state.transactions = transactions.results as TransactionModel[];
 
       await context.root.$store.dispatch("app/setLoading", false);
     }

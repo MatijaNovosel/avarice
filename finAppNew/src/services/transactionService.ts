@@ -8,7 +8,7 @@ import {
   Client,
   AddTransactionDto,
   AddTransferDto,
-  TransactionModel
+  PageableCollectionOfTransactionModel
 } from "@/apiClient/client";
 
 export class TransactionService implements ITransactionService {
@@ -51,7 +51,7 @@ export class TransactionService implements ITransactionService {
     userId: string,
     skip?: number,
     take?: number
-  ): Promise<TransactionModel[]> {
+  ): Promise<PageableCollectionOfTransactionModel> {
     const client = new Client();
     const data = client.transaction_Get(userId, skip, take);
     return data;

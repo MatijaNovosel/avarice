@@ -919,7 +919,7 @@ export class Client {
     skip: number | undefined,
     take: number | undefined,
     cancelToken?: CancelToken | undefined
-  ): Promise<TransactionModel[]> {
+  ): Promise<PageableCollectionOfTransactionModel> {
     let url_ = this.baseUrl + "/api/transaction?";
     if (userId !== undefined && userId !== null)
       url_ += "userId=" + encodeURIComponent("" + userId) + "&";
@@ -956,7 +956,7 @@ export class Client {
 
   protected processTransaction_Get(
     response: AxiosResponse
-  ): Promise<TransactionModel[]> {
+  ): Promise<PageableCollectionOfTransactionModel> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -970,13 +970,7 @@ export class Client {
       const _responseText = response.data;
       let result200: any = null;
       let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200)
-          result200!.push(TransactionModel.fromJS(item));
-      } else {
-        result200 = <any>null;
-      }
+      result200 = PageableCollectionOfTransactionModel.fromJS(resultData200);
       return result200;
     } else if (status !== 200 && status !== 204) {
       const _responseText = response.data;
@@ -987,7 +981,7 @@ export class Client {
         _headers
       );
     }
-    return Promise.resolve<TransactionModel[]>(<any>null);
+    return Promise.resolve<PageableCollectionOfTransactionModel>(<any>null);
   }
 
   transaction_Transfer(
@@ -1590,6 +1584,54 @@ export interface IAddTransferDto {
   accountFromId: number;
   accountToId: number;
   createdAt: Date;
+}
+
+export class PageableCollectionOfTransactionModel
+  implements IPageableCollectionOfTransactionModel {
+  results?: TransactionModel[] | undefined;
+  total!: number;
+
+  constructor(data?: IPageableCollectionOfTransactionModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data["results"])) {
+        this.results = [] as any;
+        for (let item of _data["results"])
+          this.results!.push(TransactionModel.fromJS(item));
+      }
+      this.total = _data["total"];
+    }
+  }
+
+  static fromJS(data: any): PageableCollectionOfTransactionModel {
+    data = typeof data === "object" ? data : {};
+    let result = new PageableCollectionOfTransactionModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    if (Array.isArray(this.results)) {
+      data["results"] = [];
+      for (let item of this.results) data["results"].push(item.toJSON());
+    }
+    data["total"] = this.total;
+    return data;
+  }
+}
+
+export interface IPageableCollectionOfTransactionModel {
+  results?: TransactionModel[] | undefined;
+  total: number;
 }
 
 export class TransactionModel extends BaseModel implements ITransactionModel {
