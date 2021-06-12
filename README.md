@@ -3,8 +3,10 @@ App for managing finances.
 
 Backend -> [Here](https://github.com/MatijaNovosel/fin-app-backend)
 
-![image](https://user-images.githubusercontent.com/36193643/118352747-59ec9a00-b563-11eb-8da2-7999913b3ff6.png)
+![localhost_8080_](https://user-images.githubusercontent.com/36193643/121790160-d31bf300-cbdc-11eb-953e-37497aca96e7.png)
 
-![image](https://user-images.githubusercontent.com/36193643/118352818-c49dd580-b563-11eb-9764-68bd77609d50.png)
+![localhost_8080_ (1)](https://user-images.githubusercontent.com/36193643/121790161-d4e5b680-cbdc-11eb-9d90-05bd4a362bdc.png)
 
-![image](https://user-images.githubusercontent.com/36193643/118352839-f1ea8380-b563-11eb-821b-1802476ef637.png)
+![localhost_8080_ (2)](https://user-images.githubusercontent.com/36193643/121790163-d6af7a00-cbdc-11eb-9838-a09df1ad58df.png)
+
+![localhost_8080_ (3)](https://user-images.githubusercontent.com/36193643/121790165-d8793d80-cbdc-11eb-977b-522fcec43479.png)
