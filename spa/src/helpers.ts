@@ -298,7 +298,7 @@ export function formatCurrencyDisplay(
 ): string {
   return visible
     ? `${val.toLocaleString("en")} ${currency}`
-    : `${val} ${currency}`.replace(/[0-9]/gi, "*");
+    : `${val.toFixed(2)} ${currency}`.replace(/[0-9]/gi, "*");
 }
 
 export function adjustHexColor(color: string, amount: number): string {

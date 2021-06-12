@@ -1,18 +1,9 @@
 <template>
   <div class="center-page d-flex flex-column justify-center align-center">
     <v-card class="rounded-lg elevation-2" :max-width="state.width">
-      <div class="py-2">
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="font-weight-bold">
-              Sign into FinApp
-            </v-list-item-title>
-            <v-list-item-subtitle class="d-none d-sm-block">
-              Track your expenses
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
+      <v-card-title class="text-center justify-center text-h4 my-6">
+        FinApp
+      </v-card-title>
       <v-divider />
       <v-card-text class="pt-5">
         <validation-observer v-slot="{ handleSubmit }">
@@ -26,10 +17,10 @@
                   v-slot="{ errors, required }"
                 >
                   <v-text-field
-                    prepend-icon="mdi-email"
                     v-model="state.email"
                     :error-messages="errors"
                     hide-details="auto"
+                    outlined
                     dense
                   >
                     <template #label>
@@ -49,9 +40,9 @@
                   <v-text-field
                     :type="state.showPassword ? 'text' : 'password'"
                     v-model="state.password"
-                    prepend-icon="mdi-lock"
                     :error-messages="errors"
                     hide-details="auto"
+                    outlined
                     dense
                   >
                     <template #label>
@@ -74,7 +65,7 @@
                   </v-text-field>
                 </validation-provider>
               </v-col>
-              <v-col cols="12" class="text-center text-md-right mt-2">
+              <v-col cols="12" class="text-center mt-2">
                 <v-btn
                   :loading="state.loading"
                   :disabled="state.loading"

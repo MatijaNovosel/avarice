@@ -1,79 +1,79 @@
 <template>
   <v-navigation-drawer
-    color="grey darken-4"
-    right
+    color="grey darken-3"
+    left
     clipped
     app
-    mini-variant
     floating
     permanent
   >
     <v-list dense nav class="mt-1">
       <v-list-item
-        color="red"
+        color="orange"
         exact
         v-for="(item, i) in state.links"
         :key="i"
         :to="item.route"
+        link
       >
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on" v-text="item.icon" />
-          </template>
-          <span>
+        <v-list-item-icon>
+          <v-icon v-text="item.icon" />
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
             {{ item.text }}
-          </span>
-        </v-tooltip>
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
       <v-divider class="my-3" />
       <v-list-item @click="state.newTransactionDialog = true">
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on">
-              mdi-wallet-plus
-            </v-icon>
-          </template>
-          <span>
+        <v-list-item-icon>
+          <v-icon>
+            mdi-wallet-plus
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
             New transaction
-          </span>
-        </v-tooltip>
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
       <v-list-item @click="state.newTransferDialog = true">
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on">
-              mdi-transfer
-            </v-icon>
-          </template>
-          <span>
+        <v-list-item-icon>
+          <v-icon>
+            mdi-transfer
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
             New transfer
-          </span>
-        </v-tooltip>
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
       <v-list-item @click="state.newAccountDialog = true">
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on">
-              mdi-credit-card-plus-outline
-            </v-icon>
-          </template>
-          <span>
-            New Account
-          </span>
-        </v-tooltip>
+        <v-list-item-icon>
+          <v-icon>
+            mdi-credit-card-plus-outline
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            New account
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
       <v-divider class="my-3" />
       <v-list-item @click="logOut">
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-icon color="grey" v-bind="attrs" v-on="on">
-              mdi-logout
-            </v-icon>
-          </template>
-          <span>
+        <v-list-item-icon>
+          <v-icon>
+            mdi-logout
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
             Logout
-          </span>
-        </v-tooltip>
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
     <new-transaction-dialog v-model="state.newTransactionDialog" />

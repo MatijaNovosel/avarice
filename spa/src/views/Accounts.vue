@@ -15,6 +15,7 @@
           }}
         </h4>
         <line-chart
+          ref="lineChart"
           style="height: 370px"
           v-if="state.graphData"
           :chart-data="state.graphData"
@@ -87,6 +88,7 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
+  ref,
   SetupContext,
   watch
 } from "@vue/composition-api";
@@ -113,6 +115,7 @@ export default defineComponent({
   },
   setup(props, context: SetupContext) {
     const vm = getCurrentInstance();
+    const lineChart = ref<any>();
     const state: State = reactive({
       accounts: [],
       account: null,
@@ -145,7 +148,7 @@ export default defineComponent({
         data: history.map(x => x.amount),
         fill: false,
         borderWidth: 5,
-        borderColor: "#43A047"
+        borderColor: "#f57c00"
       };
 
       state.graphData = {
@@ -212,7 +215,8 @@ export default defineComponent({
       formatCurrencyDisplay,
       graphOptions,
       getData,
-      deleteAccount
+      deleteAccount,
+      lineChart
     };
   }
 });

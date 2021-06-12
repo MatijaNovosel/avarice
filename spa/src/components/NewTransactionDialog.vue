@@ -56,7 +56,7 @@
                   rules="required|min:4"
                   v-slot="{ errors, required }"
                 >
-                  <v-textarea
+                  <v-text-field
                     outlined
                     :error-messages="errors"
                     hide-details="auto"
@@ -68,7 +68,7 @@
                       <required-icon v-show="required" />
                       <span>{{ $t("description") }}</span>
                     </template>
-                  </v-textarea>
+                  </v-text-field>
                 </validation-provider>
               </v-col>
               <v-col cols="12">
@@ -78,16 +78,17 @@
                   rules="required"
                   v-slot="{ errors, required }"
                 >
-                  <v-select
+                  <v-combobox
                     :error-messages="errors"
                     hide-details="auto"
-                    dense
                     item-text="description"
                     item-value="id"
-                    :return-object="false"
                     :items="state.tags"
                     v-model="state.tagIds"
+                    hint="* Enter new tags by typing and pressing ENTER"
                     clearable
+                    small-chips
+                    persistent-hint
                     multiple
                     outlined
                   >
@@ -95,7 +96,7 @@
                       <required-icon v-show="required" />
                       <span>{{ $t("tags") }}</span>
                     </template>
-                  </v-select>
+                  </v-combobox>
                 </validation-provider>
               </v-col>
               <v-col cols="12">
@@ -158,7 +159,7 @@
                 <v-switch
                   dense
                   v-model="state.withdrawal"
-                  color="error"
+                  color="orange"
                   inset
                   :label="$t('withdrawal')"
                 />

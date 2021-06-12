@@ -85,25 +85,6 @@
             </template>
           </v-select>
         </v-col>
-        <v-col cols="12" md="6">
-          <v-range-slider
-            hint="[20, 1200] HRK"
-            persistent-hint
-            label="Amount"
-            step="10"
-            ticks="always"
-            tick-size="4"
-          />
-        </v-col>
-        <v-col cols="12" md="6" class="d-flex justify-center">
-          <v-switch
-            dense
-            hide-details
-            label="Show transfers"
-            v-model="state.search.showTransfers"
-            @change="searchDebounce"
-          />
-        </v-col>
       </v-row>
     </v-col>
     <v-col cols="12">

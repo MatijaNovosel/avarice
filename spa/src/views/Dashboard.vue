@@ -4,65 +4,13 @@
       <h3>Overview</h3>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-2 text-right">
-        <v-list-item dense two-line>
-          <v-list-item-content>
-            <v-list-item-subtitle class="pb-2 text-overline">
-              Total amount
-            </v-list-item-subtitle>
-            <v-list-item-title class="font-weight-bold text-subtitle-1">
-              {{ formatCurrencyDisplay(true, state.total, "HRK") }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
+      <amount-card title="Total amount" :amount="state.total" />
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-2 text-right">
-        <v-list-item dense two-line>
-          <v-list-item-content>
-            <v-list-item-subtitle class="pb-2 text-overline">
-              Deposits (Last 30 days)
-            </v-list-item-subtitle>
-            <v-list-item-title
-              class="green--text font-weight-bold text-subtitle-1"
-            >
-              {{
-                formatCurrencyDisplay(
-                  true,
-                  state.recentDepositsAndWithdrawals.deposits,
-                  "HRK"
-                )
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
+      <amount-card subtitleColor="green" title="Deposits (Last 30 days)" :amount="state.recentDepositsAndWithdrawals.deposits" :visible="true" />
     </v-col>
     <v-col cols="12" md="4">
-      <v-card rounded="lg" class="pa-2 text-right">
-        <v-list-item dense two-line>
-          <v-list-item-content>
-            <v-list-item-subtitle class="pb-2 text-overline">
-              Withdrawals (Last 30 days)
-            </v-list-item-subtitle>
-            <v-list-item-title
-              class="red--text font-weight-bold text-subtitle-1"
-            >
-              {{
-                formatCurrencyDisplay(
-                  true,
-                  state.recentDepositsAndWithdrawals.withdrawals,
-                  "HRK"
-                )
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
-    </v-col>
-    <v-col cols="12" class="pb-0 text-overline">
-      <h3>Data visualized</h3>
+      <amount-card subtitleColor="red" title="Withdrawals (Last 30 days)" :amount="state.recentDepositsAndWithdrawals.withdrawals" :visible="true" />
     </v-col>
     <v-col cols="12" md="6">
       <div class="pa-6 rounded-lg text-center" height="450">
@@ -79,10 +27,19 @@
       <div class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
         <line-chart
+          ref="lineChartRef"
           style="height: 370px"
           v-if="state.graphTotalChanges"
           :chart-data="state.graphTotalChanges"
           :options="graphTotalChangesOptions"
+          :bgGradient="{
+            from: 'rgba(245, 124, 0, 0.45)',
+            to: 'rgba(239, 83, 80, 0.7)'
+          }"
+          :strokeGradient="{
+            from: '#ffc107',
+            to: '#f57c00'
+          }"
         />
       </div>
     </v-col>
@@ -155,7 +112,9 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
+  ref,
   SetupContext,
+  onBeforeUpdate,
   watch
 } from "@vue/composition-api";
 import { format, sub, formatDistance } from "date-fns";
@@ -167,6 +126,7 @@ import { DatasetItem } from "@/models/dataset";
 import { User } from "@/models/user";
 import { IHistoryService } from "@/interfaces/historyService";
 import { HistoryTotalModel, TransactionModel } from "@/apiClient/client";
+import AmountCard from "@/components/AmountCard.vue";
 
 interface State {
   history: HistoryTotalModel[];
@@ -183,10 +143,12 @@ export default defineComponent({
   name: "Home",
   components: {
     BarChart,
-    LineChart
+    LineChart,
+    AmountCard
   },
   setup(props, context: SetupContext) {
     const vm = getCurrentInstance();
+    const lineChartRef = ref<any>();
 
     const state: State = reactive({
       history: [],
@@ -266,9 +228,9 @@ export default defineComponent({
       state.totalDataset = {
         label: "Total",
         data: state.history.map(x => x.amount),
-        fill: false,
+        fill: true,
         borderWidth: 5,
-        borderColor: "#43A047"
+        borderColor: "#f57c00"
       };
 
       state.graphTotalChanges = {
@@ -291,8 +253,6 @@ export default defineComponent({
             type: "bar",
             label: "Withdrawals",
             borderColor: "#E53935",
-            borderRadius: 15,
-            borderWidth: 3,
             borderSkipped: false,
             backgroundColor: "#E53935",
             data: dailyChanges.map(x => -x.withdrawals)
@@ -301,8 +261,6 @@ export default defineComponent({
             type: "bar",
             label: "Deposits",
             borderColor: "#43A047",
-            borderRadius: 5,
-            borderWidth: 3,
             borderSkipped: false,
             backgroundColor: "#43A047",
             data: dailyChanges.map(x => x.deposits)
@@ -323,7 +281,6 @@ export default defineComponent({
       );
 
       state.transactions = transactions.results as TransactionModel[];
-
       await context.root.$store.dispatch("app/setLoading", false);
     }
 
@@ -348,11 +305,6 @@ export default defineComponent({
           {
             gridLines: {
               display: false
-            },
-            ticks: {
-              autoSkip: false,
-              maxRotation: 90,
-              minRotation: 90
             }
           }
         ],
@@ -394,18 +346,13 @@ export default defineComponent({
             gridLines: {
               display: false
             },
-            stacked: true,
-            ticks: {
-              autoSkip: false,
-              maxRotation: 90,
-              minRotation: 90
-            }
+            stacked: true
           }
         ],
         yAxes: [
           {
             gridLines: {
-              color: "#424242"
+              display: false
             },
             scaleLabel: {
               display: true,
@@ -454,7 +401,8 @@ export default defineComponent({
       graphTotalChangesOptions,
       headers,
       formatDistance,
-      format
+      format,
+      lineChartRef
     };
   }
 });

@@ -1,6 +1,6 @@
 ﻿<template>
-  <v-app-bar clipped-right app class="elevation-3" height="65">
-    <v-list-item v-if="state.user" class="pl-15">
+  <v-app-bar clipped-left app class="elevation-3" height="65">
+    <v-list-item v-if="state.user">
       <v-list-item-avatar>
         <img alt="" src="/defaultUser.jpg" />
       </v-list-item-avatar>
