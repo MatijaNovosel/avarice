@@ -259,7 +259,6 @@ export default defineComponent({
 
       const payload: AddTransactionDto = {
         amount: parseFloat(state.amount as string),
-        userId: (context.root.$store.getters["user/data"] as User).id,
         description: state.description,
         expense: state.withdrawal,
         accountId: state.account as number,
@@ -286,10 +285,8 @@ export default defineComponent({
       state.loading = true;
       state.accounts = await getService<IAccountService>(
         Types.AccountService
-      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
-      state.tags = await getService<ITagService>(Types.TagService).getTags(
-        (context.root.$store.getters["user/data"] as User).id
-      );
+      ).getLatestValues();
+      state.tags = await getService<ITagService>(Types.TagService).getTags();
       state.loading = false;
     }
 

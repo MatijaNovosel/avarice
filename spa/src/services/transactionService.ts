@@ -21,14 +21,12 @@ export class TransactionService implements ITransactionService {
         createdAt: new Date(),
         expense: payload.expense,
         description: payload.description as string,
-        tagIds: payload.tagIds,
-        userId: payload.userId
+        tagIds: payload.tagIds
       })
     );
   }
 
   getTransactionAmountRange(
-    userId: string,
     expense?: boolean | null
   ): Promise<TransactionAmountRange> {
     throw new Error("Method not implemented.");
@@ -41,19 +39,17 @@ export class TransactionService implements ITransactionService {
         accountFromId: payload.accountFromId,
         accountToId: payload.accountToId,
         amount: payload.amount,
-        userId: payload.userId,
         createdAt: new Date()
       })
     );
   }
 
   getTransactions(
-    userId: string,
     skip?: number,
     take?: number
   ): Promise<PageableCollectionOfTransactionModel> {
     const client = new Client();
-    const data = client.transaction_Get(userId, skip, take);
+    const data = client.transaction_Get(skip, take);
     return data;
   }
 }

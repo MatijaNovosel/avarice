@@ -128,7 +128,7 @@ export default defineComponent({
 
       state.accounts = await getService<IAccountService>(
         Types.AccountService
-      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
+      ).getLatestValues();
 
       if (onLoad == true) {
         state.account = state.accounts[0].id;
@@ -137,7 +137,6 @@ export default defineComponent({
       const history = await getService<IHistoryService>(
         Types.HistoryService
       ).getHistoryForAccount(
-        (context.root.$store.getters["user/data"] as User).id,
         new Date(1970, 11, 0),
         new Date(),
         state.account as number

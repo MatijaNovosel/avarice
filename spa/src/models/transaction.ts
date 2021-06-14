@@ -10,7 +10,6 @@ export interface Transaction {
 }
 
 export interface AddTransactionDto {
-  userId: string;
   amount: number;
   description: string | null;
   expense: boolean;
@@ -20,7 +19,6 @@ export interface AddTransactionDto {
 }
 
 export interface CreateTransferDto {
-  userId: string;
   amount: number;
   accountFromId: number;
   accountToId: number;

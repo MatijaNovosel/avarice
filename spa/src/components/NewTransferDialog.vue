@@ -242,7 +242,6 @@ export default defineComponent({
 
       const payload: CreateTransferDto = {
         amount: parseFloat(state.amount as string),
-        userId: (context.root.$store.getters["user/data"] as User).id,
         accountFromId: state.accountFrom as number,
         accountToId: state.accountTo as number
       };
@@ -265,7 +264,7 @@ export default defineComponent({
     async function getAccounts() {
       state.accounts = await getService<IAccountService>(
         Types.AccountService
-      ).getLatestValues((context.root.$store.getters["user/data"] as User).id);
+      ).getLatestValues();
     }
 
     onMounted(() => {

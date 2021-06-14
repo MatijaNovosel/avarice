@@ -9,6 +9,7 @@ import axios, {
 } from "axios";
 import store from "@/store";
 import Constants from "@/constants/constants";
+import { User } from "@/models/user";
 
 export class Client {
   private instance: AxiosInstance;
@@ -18,7 +19,7 @@ export class Client {
     | undefined = undefined;
 
   constructor(baseUrl?: string, instance?: AxiosInstance) {
-    const user = store.getters["user/data"];
+    const user = store.getters["user/data"] as User;
 
     this.instance = instance
       ? instance
@@ -35,12 +36,9 @@ export class Client {
   }
 
   account_GetLatestValues(
-    userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<AccountLatestValueModel[]> {
-    let url_ = this.baseUrl + "/api/account/latest-values?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    let url_ = this.baseUrl + "/api/account/latest-values";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -103,12 +101,9 @@ export class Client {
   }
 
   account_GetUserAccounts(
-    userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<AccountModel[]> {
-    let url_ = this.baseUrl + "/api/account?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    let url_ = this.baseUrl + "/api/account";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -370,14 +365,11 @@ export class Client {
   }
 
   history_Total(
-    userId: string | null | undefined,
     from: Date | undefined,
     to: Date | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<HistoryTotalModel[]> {
     let url_ = this.baseUrl + "/api/history/total?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
     if (from === null) throw new Error("The parameter 'from' cannot be null.");
     else if (from !== undefined)
       url_ +=
@@ -447,12 +439,9 @@ export class Client {
   }
 
   history_RecentDepositsAndWithdrawals(
-    userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<RecentDepositsAndWithdrawalsModel> {
-    let url_ = this.baseUrl + "/api/history/recent-deposits-and-withdrawals?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    let url_ = this.baseUrl + "/api/history/recent-deposits-and-withdrawals";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -509,12 +498,9 @@ export class Client {
   }
 
   history_DailyChanges(
-    userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<DailyChangeModel[]> {
-    let url_ = this.baseUrl + "/api/history/daily-changes?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    let url_ = this.baseUrl + "/api/history/daily-changes";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -576,13 +562,8 @@ export class Client {
     return Promise.resolve<DailyChangeModel[]>(<any>null);
   }
 
-  history_LatestDate(
-    userId: string | null | undefined,
-    cancelToken?: CancelToken | undefined
-  ): Promise<Date> {
-    let url_ = this.baseUrl + "/api/history/latest-date?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+  history_LatestDate(cancelToken?: CancelToken | undefined): Promise<Date> {
+    let url_ = this.baseUrl + "/api/history/latest-date";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -640,15 +621,12 @@ export class Client {
 
   history_AccountHistoryTotal(
     accountId: number,
-    userId: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<HistoryTotalModel[]> {
-    let url_ = this.baseUrl + "/api/history/account-total/{accountId}?";
+    let url_ = this.baseUrl + "/api/history/account-total/{accountId}";
     if (accountId === undefined || accountId === null)
       throw new Error("The parameter 'accountId' must be defined.");
     url_ = url_.replace("{accountId}", encodeURIComponent("" + accountId));
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -712,7 +690,6 @@ export class Client {
 
   history_AccountHistory(
     accountId: number,
-    userId: string | null | undefined,
     from: Date | undefined,
     to: Date | undefined,
     cancelToken?: CancelToken | undefined
@@ -721,8 +698,6 @@ export class Client {
     if (accountId === undefined || accountId === null)
       throw new Error("The parameter 'accountId' must be defined.");
     url_ = url_.replace("{accountId}", encodeURIComponent("" + accountId));
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
     if (from === null) throw new Error("The parameter 'from' cannot be null.");
     else if (from !== undefined)
       url_ +=
@@ -791,13 +766,73 @@ export class Client {
     return Promise.resolve<HistoryTotalModel[]>(<any>null);
   }
 
-  tag_Get(
-    userId: string | null | undefined,
+  history_TagPercentages(
     cancelToken?: CancelToken | undefined
-  ): Promise<TagModel[]> {
-    let url_ = this.baseUrl + "/api/tag?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+  ): Promise<TagPercentageModel[]> {
+    let url_ = this.baseUrl + "/api/history/tag-percentages";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processHistory_TagPercentages(_response);
+      });
+  }
+
+  protected processHistory_TagPercentages(
+    response: AxiosResponse
+  ): Promise<TagPercentageModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(TagPercentageModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<TagPercentageModel[]>(<any>null);
+  }
+
+  tag_Get(cancelToken?: CancelToken | undefined): Promise<TagModel[]> {
+    let url_ = this.baseUrl + "/api/tag";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -915,14 +950,11 @@ export class Client {
   }
 
   transaction_Get(
-    userId: string | null | undefined,
     skip: number | undefined,
     take: number | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<PageableCollectionOfTransactionModel> {
     let url_ = this.baseUrl + "/api/transaction?";
-    if (userId !== undefined && userId !== null)
-      url_ += "userId=" + encodeURIComponent("" + userId) + "&";
     if (skip === null) throw new Error("The parameter 'skip' cannot be null.");
     else if (skip !== undefined)
       url_ += "skip=" + encodeURIComponent("" + skip) + "&";
@@ -1427,6 +1459,46 @@ export interface IDailyChangeModel {
   createdAt: Date;
 }
 
+export class TagPercentageModel implements ITagPercentageModel {
+  percentage!: number;
+  description?: string | undefined;
+
+  constructor(data?: ITagPercentageModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.percentage = _data["percentage"];
+      this.description = _data["description"];
+    }
+  }
+
+  static fromJS(data: any): TagPercentageModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TagPercentageModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["percentage"] = this.percentage;
+    data["description"] = this.description;
+    return data;
+  }
+}
+
+export interface ITagPercentageModel {
+  percentage: number;
+  description?: string | undefined;
+}
+
 export class TagModel extends BaseModel implements ITagModel {
   description?: string | undefined;
 
@@ -1461,7 +1533,6 @@ export interface ITagModel extends IBaseModel {
 }
 
 export class AddTransactionDto implements IAddTransactionDto {
-  userId?: string | undefined;
   amount!: number;
   description?: string | undefined;
   createdAt!: Date;
@@ -1480,7 +1551,6 @@ export class AddTransactionDto implements IAddTransactionDto {
 
   init(_data?: any) {
     if (_data) {
-      this.userId = _data["userId"];
       this.amount = _data["amount"];
       this.description = _data["description"];
       this.createdAt = _data["createdAt"]
@@ -1504,7 +1574,6 @@ export class AddTransactionDto implements IAddTransactionDto {
 
   toJSON(data?: any) {
     data = typeof data === "object" ? data : {};
-    data["userId"] = this.userId;
     data["amount"] = this.amount;
     data["description"] = this.description;
     data["createdAt"] = this.createdAt
@@ -1521,7 +1590,6 @@ export class AddTransactionDto implements IAddTransactionDto {
 }
 
 export interface IAddTransactionDto {
-  userId?: string | undefined;
   amount: number;
   description?: string | undefined;
   createdAt: Date;
@@ -1531,7 +1599,6 @@ export interface IAddTransactionDto {
 }
 
 export class AddTransferDto implements IAddTransferDto {
-  userId?: string | undefined;
   amount!: number;
   accountFromId!: number;
   accountToId!: number;
@@ -1548,7 +1615,6 @@ export class AddTransferDto implements IAddTransferDto {
 
   init(_data?: any) {
     if (_data) {
-      this.userId = _data["userId"];
       this.amount = _data["amount"];
       this.accountFromId = _data["accountFromId"];
       this.accountToId = _data["accountToId"];
@@ -1567,7 +1633,6 @@ export class AddTransferDto implements IAddTransferDto {
 
   toJSON(data?: any) {
     data = typeof data === "object" ? data : {};
-    data["userId"] = this.userId;
     data["amount"] = this.amount;
     data["accountFromId"] = this.accountFromId;
     data["accountToId"] = this.accountToId;
@@ -1579,7 +1644,6 @@ export class AddTransferDto implements IAddTransferDto {
 }
 
 export interface IAddTransferDto {
-  userId?: string | undefined;
   amount: number;
   accountFromId: number;
   accountToId: number;

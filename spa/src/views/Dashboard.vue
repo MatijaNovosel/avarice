@@ -7,10 +7,20 @@
       <amount-card title="Total amount" :amount="state.total" />
     </v-col>
     <v-col cols="12" md="4">
-      <amount-card subtitleColor="green" title="Deposits (Last 30 days)" :amount="state.recentDepositsAndWithdrawals.deposits" :visible="true" />
+      <amount-card
+        subtitleColor="green"
+        title="Deposits (Last 30 days)"
+        :amount="state.recentDepositsAndWithdrawals.deposits"
+        :visible="true"
+      />
     </v-col>
     <v-col cols="12" md="4">
-      <amount-card subtitleColor="red" title="Withdrawals (Last 30 days)" :amount="state.recentDepositsAndWithdrawals.withdrawals" :visible="true" />
+      <amount-card
+        subtitleColor="red"
+        title="Withdrawals (Last 30 days)"
+        :amount="state.recentDepositsAndWithdrawals.withdrawals"
+        :visible="true"
+      />
     </v-col>
     <v-col cols="12" md="6">
       <div class="pa-6 rounded-lg text-center" height="450">
@@ -175,26 +185,20 @@ export default defineComponent({
 
       const history = await getService<IHistoryService>(
         Types.HistoryService
-      ).getTotal(
-        (context.root.$store.getters["user/data"] as User).id,
-        sub(new Date(), { days: 30 }),
-        new Date()
-      );
+      ).getTotal(sub(new Date(), { days: 30 }), new Date());
 
       storage.saveState("history", JSON.stringify(history));
       state.history = history;
 
       const dailyChanges = await getService<IHistoryService>(
         Types.HistoryService
-      ).getDailyChanges((context.root.$store.getters["user/data"] as User).id);
+      ).getDailyChanges();
 
       storage.saveState("dailyChanges", JSON.stringify(dailyChanges));
 
       const recentDepositsAndWithdrawals = await getService<IHistoryService>(
         Types.HistoryService
-      ).getRecentDepositsAndWithdrawals(
-        (context.root.$store.getters["user/data"] as User).id
-      );
+      ).getRecentDepositsAndWithdrawals();
 
       storage.saveState(
         "recentDepositsAndWithdrawals",
@@ -207,7 +211,7 @@ export default defineComponent({
 
       const latestDate = await getService<IHistoryService>(
         Types.HistoryService
-      ).getLatestDate((context.root.$store.getters["user/data"] as User).id);
+      ).getLatestDate();
 
       const storage = getService<IWebStorage>(Types.WebStorageService);
       const cachedHistory = storage.getSavedState("history");
@@ -274,11 +278,7 @@ export default defineComponent({
 
       const transactions = await getService<ITransactionService>(
         Types.TransactionService
-      ).getTransactions(
-        (context.root.$store.getters["user/data"] as User).id,
-        0,
-        10
-      );
+      ).getTransactions(0, 10);
 
       state.transactions = transactions.results as TransactionModel[];
       await context.root.$store.dispatch("app/setLoading", false);

@@ -7,19 +7,19 @@ import { IAccountService } from "@/interfaces/accountService";
 import { TagPercentageRecord } from "@/models/payment-source";
 
 export class AccountService implements IAccountService {
-  async getAllByUserId(userId: string): Promise<AccountModel[]> {
+  async getAllByUserId(): Promise<AccountModel[]> {
     const client = new Client();
-    const data = await client.account_GetUserAccounts(userId);
+    const data = await client.account_GetUserAccounts();
     return data;
   }
 
-  async getLatestValues(userId: string): Promise<AccountLatestValueModel[]> {
+  async getLatestValues(): Promise<AccountLatestValueModel[]> {
     const client = new Client();
-    const data = await client.account_GetLatestValues(userId);
+    const data = await client.account_GetLatestValues();
     return data;
   }
 
-  getTagPercentages(userId: string): Promise<TagPercentageRecord[]> {
+  getTagPercentages(): Promise<TagPercentageRecord[]> {
     throw new Error("Method not implemented.");
   }
 

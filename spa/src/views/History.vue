@@ -229,7 +229,6 @@ export default defineComponent({
       const transactions = await getService<ITransactionService>(
         Types.TransactionService
       ).getTransactions(
-        (context.root.$store.getters["user/data"] as User).id,
         (state.options.page - 1) * state.options.itemsPerPage,
         state.options.itemsPerPage
       );
@@ -246,10 +245,8 @@ export default defineComponent({
     onMounted(async () => {
       state.accounts = await getService<IAccountService>(
         Types.AccountService
-      ).getAllByUserId((context.root.$store.getters["user/data"] as User).id);
-      state.tags = await getService<ITagService>(Types.TagService).getTags(
-        (context.root.$store.getters["user/data"] as User).id
-      );
+      ).getAllByUserId();
+      state.tags = await getService<ITagService>(Types.TagService).getTags();
       getData();
     });
 
