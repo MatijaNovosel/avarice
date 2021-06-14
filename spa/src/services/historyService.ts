@@ -13,9 +13,7 @@ export class HistoryService implements IHistoryService {
     return data;
   }
 
-  async getRecentDepositsAndWithdrawals(): Promise<
-    RecentDepositsAndWithdrawalsModel
-  > {
+  async getRecentDepositsAndWithdrawals(): Promise<RecentDepositsAndWithdrawalsModel> {
     const client = new Client();
     const data = await client.history_RecentDepositsAndWithdrawals();
     return data;
