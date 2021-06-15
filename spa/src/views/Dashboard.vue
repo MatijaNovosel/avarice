@@ -279,10 +279,7 @@ export default defineComponent({
         Types.TransactionService
       ).getTransactions(0, 10);
 
-      state.transactions = transactions.results?.map(x => {
-        x.description = "Sample";
-        return x;
-      }) as TransactionModel[];
+      state.transactions = transactions.results as TransactionModel[];
       await context.root.$store.dispatch("app/setLoading", false);
     }
 
