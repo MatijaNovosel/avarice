@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <div class="pa-6 rounded-lg text-center" height="450">
+      <v-card class="pa-4 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2 text-overline">
           {{
             `Total changes ${
@@ -21,7 +21,7 @@
           :chart-data="state.graphData"
           :options="graphOptions"
         />
-      </div>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-select

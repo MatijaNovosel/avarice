@@ -1,8 +1,5 @@
 <template>
   <v-row v-if="!state.loading">
-    <v-col cols="12" class="pb-0 text-overline">
-      <h3>Overview</h3>
-    </v-col>
     <v-col cols="12" md="4">
       <amount-card title="Total amount" :amount="state.total" />
     </v-col>
@@ -23,22 +20,22 @@
       />
     </v-col>
     <v-col cols="12" md="6">
-      <div class="pa-6 rounded-lg text-center" height="450">
+      <v-card class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Daily changes</h4>
         <bar-chart
-          style="height: 370px"
+          style="height: 360px"
           v-if="state.graphDataTransactions"
           :chart-data="state.graphDataTransactions"
           :options="dailyChangesGraphOptions"
         />
-      </div>
+      </v-card>
     </v-col>
     <v-col cols="12" md="6">
-      <div class="pa-6 rounded-lg text-center" height="450">
+      <v-card class="pa-6 rounded-lg text-center" height="450">
         <h4 class="mb-5 grey--text lighten-2">Total changes</h4>
         <line-chart
           ref="lineChartRef"
-          style="height: 370px"
+          style="height: 360px"
           v-if="state.graphTotalChanges"
           :chart-data="state.graphTotalChanges"
           :options="graphTotalChangesOptions"
@@ -51,10 +48,7 @@
             to: '#f57c00'
           }"
         />
-      </div>
-    </v-col>
-    <v-col cols="12" class="pb-0 text-overline">
-      <h3>Recent transactions</h3>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-data-table
@@ -65,6 +59,11 @@
         class="rounded-lg"
         dense
       >
+        <template #top>
+          <v-toolbar height="40" flat class="px-5 rounded-t-lg">
+            <v-toolbar-title class="text-overline">Recent transactions</v-toolbar-title>
+          </v-toolbar>
+        </template>
         <template #item.createdAt="{ item }">
           {{ format(new Date(item.createdAt), "dd.MM.yyyy. HH:mm") }}
           <span class="grey--text">
@@ -280,7 +279,10 @@ export default defineComponent({
         Types.TransactionService
       ).getTransactions(0, 10);
 
-      state.transactions = transactions.results as TransactionModel[];
+      state.transactions = transactions.results?.map(x => {
+        x.description = "Sample";
+        return x;
+      }) as TransactionModel[];
       await context.root.$store.dispatch("app/setLoading", false);
     }
 

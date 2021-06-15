@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="lg" class="pa-2 text-right" outlined>
+  <v-card rounded="lg" class="text-right">
     <v-list-item dense two-line>
       <v-list-item-icon>
         <v-btn icon @click="state.visible = !state.visible">
@@ -14,7 +14,7 @@
         </v-list-item-title>
         <v-list-item-title
           :class="state.subtitleColor && `${state.subtitleColor}--text`"
-          class="font-weight-bold text-h6"
+          class="font-weight-bold text-subtitle-1"
         >
           {{ formatCurrencyDisplay(state.visible, state.amount, "HRK") }}
         </v-list-item-title>
