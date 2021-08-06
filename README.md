@@ -1,7 +1,7 @@
 # fin-app
-App for managing finances.
+App for tracking personal finances.
 
-Backend -> [Here](https://github.com/MatijaNovosel/fin-app-backend)
+[Backend](https://github.com/MatijaNovosel/fin-app-backend)
 
 ![localhost_8080_](https://user-images.githubusercontent.com/36193643/122053235-dbe01500-cde6-11eb-9eaa-2cd8b02821bf.png)
 
