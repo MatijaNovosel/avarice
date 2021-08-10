@@ -47,6 +47,7 @@ module.exports = {
     "import/export": "error",
     "import/extensions": "off",
     "import/no-unresolved": "off",
+    "no-var-requires": false,
     "no-empty-function": "off",
     "no-empty": "off",
     "object-curly-newline": "off",

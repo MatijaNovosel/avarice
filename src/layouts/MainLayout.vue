@@ -1,74 +1,89 @@
 <template>
-  <q-layout view="lHh lpR lFf">
+  <q-layout view="lhh lpR lFf">
+    <q-header class="bg-grey-2 row justify-end q-py-md q-pr-md">
+      <q-btn color="white" dense class="q-mr-md">
+        <q-icon
+          class="q-pa-xs"
+          name="mdi-bell-outline"
+          color="grey-9"
+          size="sm"
+        />
+        <q-badge rounded color="orange" floating>22</q-badge>
+      </q-btn>
+      <q-btn color="white" dense>
+        <q-icon
+          class="q-pa-xs"
+          name="mdi-account-outline"
+          color="grey-9"
+          size="sm"
+        />
+        <q-menu>
+          <q-list dense style="min-width: 100px">
+            <q-item class="q-my-sm">
+              <q-item-section avatar>
+                <q-avatar color="primary" text-color="white"> MN </q-avatar>
+              </q-item-section>
+              <q-item-section> Matija Novosel </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable v-close-popup>
+              <q-item-section>New tab</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <q-item-section>New incognito tab</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable v-close-popup>
+              <q-item-section>Log out</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+    </q-header>
     <q-drawer
       show-if-above
       v-model="leftDrawerOpen"
       side="left"
-      class="bg-grey-1"
+      class="bg-white"
     >
       <q-list>
-        <q-item-label header class="text-grey-8">
-          Essential Links
-        </q-item-label>
-        <EssentialLink
+        <q-item-label header class="text-grey-8"> FinApp </q-item-label>
+        <drawer-item
           v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
         />
       </q-list>
     </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <q-page padding class="bg-grey-2">
+        <router-view />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import EssentialLink from "components/EssentialLink.vue";
+import DrawerItem from "src/components/DrawerItem.vue";
 
 const linksList = [
   {
-    title: "Docs",
+    title: "Dashboard",
     caption: "quasar.dev",
-    icon: "school",
+    icon: "dashboard",
     link: "https://quasar.dev"
   },
   {
-    title: "Github",
+    title: "Accounts",
     caption: "github.com/quasarframework",
-    icon: "code",
+    icon: "mdi-account",
     link: "https://github.com/quasarframework"
   },
   {
-    title: "Discord Chat Channel",
+    title: "History",
     caption: "chat.quasar.dev",
-    icon: "chat",
+    icon: "mdi-clock",
     link: "https://chat.quasar.dev"
-  },
-  {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev"
-  },
-  {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev"
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev"
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev"
   }
 ];
 
@@ -77,7 +92,7 @@ import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "MainLayout",
   components: {
-    EssentialLink
+    DrawerItem
   },
   setup() {
     const leftDrawerOpen = ref(false);
