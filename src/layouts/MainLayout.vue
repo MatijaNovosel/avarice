@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lhh lpR lFf">
-    <q-header class="bg-grey-2 row justify-end q-py-md q-pr-md">
-      <q-btn color="white" dense class="q-mr-md">
+    <q-header class="bg-grey-2 row justify-end q-pt-lg q-pr-md">
+      <q-btn flat dense class="q-mr-md bg-white rounded">
         <q-icon
           class="q-pa-xs"
           name="mdi-bell-outline"
@@ -10,7 +10,7 @@
         />
         <q-badge rounded color="orange" floating>22</q-badge>
       </q-btn>
-      <q-btn color="white" dense>
+      <q-btn flat dense class="bg-white rounded">
         <q-icon
           class="q-pa-xs"
           name="mdi-account-outline"
@@ -46,10 +46,15 @@
       side="left"
       class="bg-white"
     >
-      <q-list>
-        <q-item-label header class="text-grey-8"> FinApp </q-item-label>
+      <div class="text-center q-py-lg">
+        <span class="text-h4"> FinApp </span>
+      </div>
+      <q-list class="q-px-md" dense>
         <drawer-item
-          v-for="link in essentialLinks"
+          v-for="(link, i) in essentialLinks"
+          :class="{
+            'q-mb-sm': i != essentialLinks.length - 1
+          }"
           :key="link.title"
           v-bind="link"
         />
@@ -70,20 +75,18 @@ const linksList = [
   {
     title: "Dashboard",
     caption: "quasar.dev",
-    icon: "dashboard",
-    link: "https://quasar.dev"
-  },
-  {
-    title: "Accounts",
-    caption: "github.com/quasarframework",
-    icon: "mdi-account",
-    link: "https://github.com/quasarframework"
+    icon: "mdi-view-dashboard-outline",
+    link: {
+      name: "dashboard"
+    }
   },
   {
     title: "History",
     caption: "chat.quasar.dev",
-    icon: "mdi-clock",
-    link: "https://chat.quasar.dev"
+    icon: "mdi-timer-sand",
+    link: {
+      name: "history"
+    }
   }
 ];
 

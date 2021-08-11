@@ -1,19 +1,17 @@
 <template>
-  <q-item clickable tag="a" target="_blank" :href="link">
+  <q-item :to="link" exact active-class="bg-blue-1" class="rounded-md text-grey-9">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
-    <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>
-        {{ caption }}
-      </q-item-label>
+    <q-item-section class="q-py-sm">
+      <q-item-label class="text-weight-medium">{{ title }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { NavigationRoute } from "src/models/navigation";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   name: "drawer-item",
@@ -27,8 +25,8 @@ export default defineComponent({
       default: ""
     },
     link: {
-      type: String,
-      default: "#"
+      type: Object as PropType<NavigationRoute>,
+      required: true
     },
     icon: {
       type: String,

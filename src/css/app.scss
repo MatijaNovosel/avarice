@@ -1,1 +1,47 @@
-// app global css in SCSS form
+.rounded-sm {
+  border-radius: 8px;
+}
+
+.rounded {
+  border-radius: 10px;
+}
+
+.rounded-md {
+  border-radius: 12px;
+}
+
+.q-item__section--avatar {
+  align-items: center;
+}
+
+.rounded-tr {
+  border-top-right-radius: 10px;
+}
+
+.rounded-t {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.rounded-b {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.rounded-tr-md {
+  border-top-right-radius: 12px;
+}
+
+.rounded-t-md {
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+}
+
+.rounded-b-md {
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.p-rel {
+  position: relative;
+}
