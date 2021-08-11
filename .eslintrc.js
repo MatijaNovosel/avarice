@@ -51,6 +51,8 @@ module.exports = {
     "no-empty-function": "off",
     "no-empty": "off",
     "linebreak-style": "off",
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
     "object-curly-newline": "off",
     "comma-dangle": "off",
     quotes: [0, "double", { avoidEscape: true }],
