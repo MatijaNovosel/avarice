@@ -25,8 +25,6 @@ export default route<StateInterface>(({ store }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const isAuthenticated = store.getters["user/isAuthenticated"] as boolean;
 
-    console.log(to.matched);
-
     if (to.matched.some((record) => record.meta.isAuth)) {
       if (!isAuthenticated) {
         next({

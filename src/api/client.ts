@@ -8,17 +8,15 @@ import axios, {
   CancelToken
 } from "axios";
 import Constants from "src/utils/constants";
-import { useStore } from "vuex";
+import { storeInstance } from "../store";
 
 export class Client {
   private instance: AxiosInstance;
   private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
   constructor(baseUrl?: string, instance?: AxiosInstance) {
-    const store = useStore();
-    const user = store.getters["user/data"];
+    const user = storeInstance?.getters["user/data"];
 
     this.instance = instance
       ? instance
@@ -28,13 +26,10 @@ export class Client {
           }
         });
 
-    this.baseUrl =
-      baseUrl !== undefined && baseUrl !== null ? baseUrl : Constants.API_URL;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : Constants.API_URL;
   }
 
-  account_GetUserAccounts(
-    cancelToken?: CancelToken | undefined
-  ): Promise<Account[]> {
+  account_GetUserAccounts(cancelToken?: CancelToken | undefined): Promise<Account[]> {
     let url_ = this.baseUrl + "/api/account";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -61,9 +56,7 @@ export class Client {
       });
   }
 
-  protected processAccount_GetUserAccounts(
-    response: AxiosResponse
-  ): Promise<Account[]> {
+  protected processAccount_GetUserAccounts(response: AxiosResponse): Promise<Account[]> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -130,9 +123,7 @@ export class Client {
       });
   }
 
-  protected processAuth_Register(
-    response: AxiosResponse
-  ): Promise<AuthResultModel> {
+  protected processAuth_Register(response: AxiosResponse): Promise<AuthResultModel> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -160,10 +151,7 @@ export class Client {
     return Promise.resolve<AuthResultModel>(<any>null);
   }
 
-  auth_Login(
-    payload: LoginModel,
-    cancelToken?: CancelToken | undefined
-  ): Promise<AuthResultModel> {
+  auth_Login(payload: LoginModel, cancelToken?: CancelToken | undefined): Promise<AuthResultModel> {
     let url_ = this.baseUrl + "/api/auth/login";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -194,9 +182,7 @@ export class Client {
       });
   }
 
-  protected processAuth_Login(
-    response: AxiosResponse
-  ): Promise<AuthResultModel> {
+  protected processAuth_Login(response: AxiosResponse): Promise<AuthResultModel> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -224,9 +210,7 @@ export class Client {
     return Promise.resolve<AuthResultModel>(<any>null);
   }
 
-  auth_Settings(
-    cancelToken?: CancelToken | undefined
-  ): Promise<FileResponse | null> {
+  auth_Settings(cancelToken?: CancelToken | undefined): Promise<FileResponse | null> {
     let url_ = this.baseUrl + "/api/auth/settings";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -254,9 +238,7 @@ export class Client {
       });
   }
 
-  protected processAuth_Settings(
-    response: AxiosResponse
-  ): Promise<FileResponse | null> {
+  protected processAuth_Settings(response: AxiosResponse): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -273,10 +255,7 @@ export class Client {
       const fileNameMatch = contentDisposition
         ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition)
         : undefined;
-      const fileName =
-        fileNameMatch && fileNameMatch.length > 1
-          ? fileNameMatch[1]
-          : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
       return Promise.resolve({
         fileName: fileName,
         status: status,
@@ -360,11 +339,9 @@ export class Client {
   ): Promise<PageableCollectionOfTransactionModel> {
     let url_ = this.baseUrl + "/api/transaction?";
     if (skip === null) throw new Error("The parameter 'skip' cannot be null.");
-    else if (skip !== undefined)
-      url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+    else if (skip !== undefined) url_ += "skip=" + encodeURIComponent("" + skip) + "&";
     if (take === null) throw new Error("The parameter 'take' cannot be null.");
-    else if (take !== undefined)
-      url_ += "take=" + encodeURIComponent("" + take) + "&";
+    else if (take !== undefined) url_ += "take=" + encodeURIComponent("" + take) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -453,9 +430,7 @@ export class Client {
       });
   }
 
-  protected processTransaction_Transfer(
-    response: AxiosResponse
-  ): Promise<void> {
+  protected processTransaction_Transfer(response: AxiosResponse): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -487,8 +462,7 @@ export abstract class EntityBaseOfLong implements IEntityBaseOfLong {
   constructor(data?: IEntityBaseOfLong) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -501,9 +475,7 @@ export abstract class EntityBaseOfLong implements IEntityBaseOfLong {
 
   static fromJS(data: any): EntityBaseOfLong {
     data = typeof data === "object" ? data : {};
-    throw new Error(
-      "The abstract class 'EntityBaseOfLong' cannot be instantiated."
-    );
+    throw new Error("The abstract class 'EntityBaseOfLong' cannot be instantiated.");
   }
 
   toJSON(data?: any) {
@@ -562,8 +534,7 @@ export class Account extends Entity implements IAccount {
       this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
       if (Array.isArray(_data["transactions"])) {
         this.transactions = [] as any;
-        for (let item of _data["transactions"])
-          this.transactions!.push(Transaction.fromJS(item));
+        for (let item of _data["transactions"]) this.transactions!.push(Transaction.fromJS(item));
       }
     }
   }
@@ -584,8 +555,7 @@ export class Account extends Entity implements IAccount {
     data["user"] = this.user ? this.user.toJSON() : <any>undefined;
     if (Array.isArray(this.transactions)) {
       data["transactions"] = [];
-      for (let item of this.transactions)
-        data["transactions"].push(item.toJSON());
+      for (let item of this.transactions) data["transactions"].push(item.toJSON());
     }
     super.toJSON(data);
     return data;
@@ -637,8 +607,7 @@ export class IdentityUserOfString implements IIdentityUserOfString {
   constructor(data?: IIdentityUserOfString) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -686,9 +655,7 @@ export class IdentityUserOfString implements IIdentityUserOfString {
     data["phoneNumber"] = this.phoneNumber;
     data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
     data["twoFactorEnabled"] = this.twoFactorEnabled;
-    data["lockoutEnd"] = this.lockoutEnd
-      ? this.lockoutEnd.toISOString()
-      : <any>undefined;
+    data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
     data["lockoutEnabled"] = this.lockoutEnabled;
     data["accessFailedCount"] = this.accessFailedCount;
     return data;
@@ -730,10 +697,7 @@ export interface IIdentityUserOfString {
 }
 
 /** The default implementation of IdentityUser`1 which uses a string as a primary key. */
-export class IdentityUser
-  extends IdentityUserOfString
-  implements IIdentityUser
-{
+export class IdentityUser extends IdentityUserOfString implements IIdentityUser {
   constructor(data?: IIdentityUser) {
     super(data);
   }
@@ -773,18 +737,15 @@ export class User extends IdentityUser implements IUser {
     if (_data) {
       if (Array.isArray(_data["accounts"])) {
         this.accounts = [] as any;
-        for (let item of _data["accounts"])
-          this.accounts!.push(Account.fromJS(item));
+        for (let item of _data["accounts"]) this.accounts!.push(Account.fromJS(item));
       }
       if (Array.isArray(_data["transactions"])) {
         this.transactions = [] as any;
-        for (let item of _data["transactions"])
-          this.transactions!.push(Transaction.fromJS(item));
+        for (let item of _data["transactions"]) this.transactions!.push(Transaction.fromJS(item));
       }
       if (Array.isArray(_data["categories"])) {
         this.categories = [] as any;
-        for (let item of _data["categories"])
-          this.categories!.push(Category.fromJS(item));
+        for (let item of _data["categories"]) this.categories!.push(Category.fromJS(item));
       }
     }
   }
@@ -804,8 +765,7 @@ export class User extends IdentityUser implements IUser {
     }
     if (Array.isArray(this.transactions)) {
       data["transactions"] = [];
-      for (let item of this.transactions)
-        data["transactions"].push(item.toJSON());
+      for (let item of this.transactions) data["transactions"].push(item.toJSON());
     }
     if (Array.isArray(this.categories)) {
       data["categories"] = [];
@@ -846,12 +806,8 @@ export class Transaction extends Entity implements ITransaction {
       this.accountId = _data["accountId"];
       this.categoryId = _data["categoryId"];
       this.userId = _data["userId"];
-      this.account = _data["account"]
-        ? Account.fromJS(_data["account"])
-        : <any>undefined;
-      this.category = _data["category"]
-        ? Category.fromJS(_data["category"])
-        : <any>undefined;
+      this.account = _data["account"] ? Account.fromJS(_data["account"]) : <any>undefined;
+      this.category = _data["category"] ? Category.fromJS(_data["category"]) : <any>undefined;
       this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
     }
   }
@@ -913,8 +869,7 @@ export class Category extends Entity implements ICategory {
       this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
       if (Array.isArray(_data["transactions"])) {
         this.transactions = [] as any;
-        for (let item of _data["transactions"])
-          this.transactions!.push(Transaction.fromJS(item));
+        for (let item of _data["transactions"]) this.transactions!.push(Transaction.fromJS(item));
       }
     }
   }
@@ -935,8 +890,7 @@ export class Category extends Entity implements ICategory {
     data["user"] = this.user ? this.user.toJSON() : <any>undefined;
     if (Array.isArray(this.transactions)) {
       data["transactions"] = [];
-      for (let item of this.transactions)
-        data["transactions"].push(item.toJSON());
+      for (let item of this.transactions) data["transactions"].push(item.toJSON());
     }
     super.toJSON(data);
     return data;
@@ -960,8 +914,7 @@ export class AuthResultModel implements IAuthResultModel {
   constructor(data?: IAuthResultModel) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1010,8 +963,7 @@ export class RegistrationModel implements IRegistrationModel {
   constructor(data?: IRegistrationModel) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1053,8 +1005,7 @@ export class LoginModel implements ILoginModel {
   constructor(data?: ILoginModel) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1097,8 +1048,7 @@ export class AddTransactionDto implements IAddTransactionDto {
   constructor(data?: IAddTransactionDto) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1130,9 +1080,7 @@ export class AddTransactionDto implements IAddTransactionDto {
     data = typeof data === "object" ? data : {};
     data["amount"] = this.amount;
     data["description"] = this.description;
-    data["createdAt"] = this.createdAt
-      ? this.createdAt.toISOString()
-      : <any>undefined;
+    data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
     data["expense"] = this.expense;
     data["accountId"] = this.accountId;
     if (Array.isArray(this.tagIds)) {
@@ -1161,8 +1109,7 @@ export class AddTransferDto implements IAddTransferDto {
   constructor(data?: IAddTransferDto) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1190,9 +1137,7 @@ export class AddTransferDto implements IAddTransferDto {
     data["amount"] = this.amount;
     data["accountFromId"] = this.accountFromId;
     data["accountToId"] = this.accountToId;
-    data["createdAt"] = this.createdAt
-      ? this.createdAt.toISOString()
-      : <any>undefined;
+    data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
     return data;
   }
 }
@@ -1204,17 +1149,14 @@ export interface IAddTransferDto {
   createdAt: Date;
 }
 
-export class PageableCollectionOfTransactionModel
-  implements IPageableCollectionOfTransactionModel
-{
+export class PageableCollectionOfTransactionModel implements IPageableCollectionOfTransactionModel {
   results?: TransactionModel[] | undefined;
   total!: number;
 
   constructor(data?: IPageableCollectionOfTransactionModel) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1223,8 +1165,7 @@ export class PageableCollectionOfTransactionModel
     if (_data) {
       if (Array.isArray(_data["results"])) {
         this.results = [] as any;
-        for (let item of _data["results"])
-          this.results!.push(TransactionModel.fromJS(item));
+        for (let item of _data["results"]) this.results!.push(TransactionModel.fromJS(item));
       }
       this.total = _data["total"];
     }
@@ -1259,8 +1200,7 @@ export class BaseModel implements IBaseModel {
   constructor(data?: IBaseModel) {
     if (data) {
       for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
   }
@@ -1334,9 +1274,7 @@ export class TransactionModel extends BaseModel implements ITransactionModel {
   toJSON(data?: any) {
     data = typeof data === "object" ? data : {};
     data["amount"] = this.amount;
-    data["createdAt"] = this.createdAt
-      ? this.createdAt.toISOString()
-      : <any>undefined;
+    data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
     data["description"] = this.description;
     data["expense"] = this.expense;
     data["userId"] = this.userId;
@@ -1395,10 +1333,7 @@ export interface ITagModel extends IBaseModel {
   description?: string | undefined;
 }
 
-export class AccountTransactionModel
-  extends BaseModel
-  implements IAccountTransactionModel
-{
+export class AccountTransactionModel extends BaseModel implements IAccountTransactionModel {
   description?: string | undefined;
 
   constructor(data?: IAccountTransactionModel) {

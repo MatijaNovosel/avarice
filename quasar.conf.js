@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require("quasar/wrappers");
 
 module.exports = configure((ctx) => ({
@@ -11,12 +12,7 @@ module.exports = configure((ctx) => ({
   },
   boot: ["i18n", "axios"],
   css: ["app.scss"],
-  extras: [
-    "mdi-v5",
-    "roboto-font",
-    "material-icons",
-    "material-icons-outlined"
-  ],
+  extras: ["mdi-v5", "roboto-font", "material-icons", "material-icons-outlined"],
   build: {
     vueRouterMode: "history"
   },
@@ -26,8 +22,12 @@ module.exports = configure((ctx) => ({
     open: true
   },
   framework: {
-    config: {},
-    plugins: []
+    config: {
+      notify: {
+        //
+      }
+    },
+    plugins: ["Notify"]
   },
   animations: [],
   ssr: {
