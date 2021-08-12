@@ -8,7 +8,6 @@ import axios, {
   CancelToken
 } from "axios";
 import Constants from "src/utils/constants";
-import { storeInstance } from "../store";
 
 export class Client {
   private instance: AxiosInstance;
@@ -16,16 +15,7 @@ export class Client {
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
   constructor(baseUrl?: string, instance?: AxiosInstance) {
-    const user = storeInstance?.getters["user/data"];
-
-    this.instance = instance
-      ? instance
-      : axios.create({
-          headers: {
-            Authorization: user ? `Bearer ${user.token}` : ""
-          }
-        });
-
+    this.instance = instance ? instance : axios.create();
     this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : Constants.API_URL;
   }
 

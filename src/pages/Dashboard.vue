@@ -3,61 +3,25 @@
     <div class="row">
       <div class="col-3 q-pr-lg p-rel">
         <q-list class="bg-white q-pa-md rounded">
-          <q-item class="bg-orange-2 rounded q-mb-sm q-py-md" clickable>
-            <q-item-section avatar>
-              <q-icon
-                color="orange-5"
-                size="sm"
-                name="mdi-credit-card-outline"
-              />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium"> Pocket </q-item-label>
-              <q-item-label caption> Balance: 2,500.00 HRK </q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item class="bg-green-2 rounded q-mb-sm q-py-md" clickable>
-            <q-item-section avatar>
-              <q-icon
-                color="green-5"
-                size="sm"
-                name="mdi-credit-card-outline"
-              />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium"> Gyro </q-item-label>
-              <q-item-label caption> Balance: 500.00 HRK </q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item class="bg-red-2 rounded q-mb-sm q-py-md" clickable>
-            <q-item-section avatar>
-              <q-icon color="red-5" size="sm" name="mdi-credit-card-outline" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium"> Checking </q-item-label>
-              <q-item-label caption> Balance: 12,500.00 HRK </q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item class="bg-blue-2 rounded q-py-md" clickable>
-            <q-item-section avatar>
-              <q-icon color="blue-5" size="sm" name="mdi-credit-card-outline" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium"> Euros </q-item-label>
-              <q-item-label caption> Balance: 2,000.00 € </q-item-label>
-            </q-item-section>
-          </q-item>
           <q-item
-            class="q-pa-none row justify-center"
-            style="margin-bottom: -36px"
+            class="bg-orange-2 rounded q-mb-sm q-py-md"
+            clickable
+            v-for="account in state.accounts"
+            :key="account.id"
           >
+            <q-item-section avatar>
+              <q-icon color="orange-5" size="sm" name="mdi-credit-card-outline" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
+              <q-item-label caption>
+                Balance: {{ `${account.balance} ${account.currency}` }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
             <q-btn dense class="q-mr-md bg-grey-2 rounded q-mt-md">
-              <q-icon
-                class="q-pa-xs"
-                name="mdi-plus"
-                color="grey-9"
-                size="sm"
-              />
+              <q-icon class="q-pa-xs" name="mdi-plus" color="grey-9" size="sm" />
             </q-btn>
           </q-item>
         </q-list>
@@ -107,20 +71,10 @@
             <q-card flat class="rounded-md">
               <q-card-section>
                 <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
-                  <q-icon
-                    class="q-pa-xs"
-                    name="mdi-tune-variant"
-                    color="grey-9"
-                    size="sm"
-                  />
+                  <q-icon class="q-pa-xs" name="mdi-tune-variant" color="grey-9" size="sm" />
                 </q-btn>
                 <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
-                  <q-icon
-                    class="q-pa-xs"
-                    name="mdi-calendar-outline"
-                    color="grey-9"
-                    size="sm"
-                  />
+                  <q-icon class="q-pa-xs" name="mdi-calendar-outline" color="grey-9" size="sm" />
                 </q-btn>
               </q-card-section>
             </q-card>
@@ -138,11 +92,15 @@
 
 <script lang="ts">
 import { Transaction } from "src/models/transaction";
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
+import { getService, Types } from "src/di-container";
+import IAccountService from "src/api/interfaces/accountService";
+import { Account } from "src/api/client";
 
 interface State {
   transactions: Transaction[];
+  accounts: Account[];
 }
 
 export default defineComponent({
@@ -153,6 +111,7 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       balance: 2500,
+      accounts: [],
       transactions: [
         {
           id: 1,
@@ -227,6 +186,10 @@ export default defineComponent({
           date: "2021-04-10"
         }
       ]
+    });
+
+    onMounted(async () => {
+      state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
     });
 
     return {

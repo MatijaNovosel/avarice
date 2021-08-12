@@ -3,5 +3,5 @@ export interface AppUser {
   email: string;
   userName: string;
   emailConfirmed: boolean;
-  token?: string;
+  token: string;
 }

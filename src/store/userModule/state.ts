@@ -10,7 +10,7 @@ const storage = getService<IWebStorage>(Types.WebStorageService);
 
 function state(): UserStateInterface {
   return {
-    data: storage.getSavedState("user") as AppUser
+    data: JSON.parse(storage.getSavedState("user")) as AppUser
   };
 }
 

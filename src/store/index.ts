@@ -15,9 +15,6 @@ declare module "@vue/runtime-core" {
 
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol("vuex-key");
 
-// eslint-disable-next-line import/no-mutable-exports
-let storeInstance: VuexStore<StateInterface> | null = null;
-
 export default store(() => {
   const Store = createStore<StateInterface>({
     modules: {
@@ -25,12 +22,9 @@ export default store(() => {
     },
     strict: !!process.env.DEBUGGING
   });
-  storeInstance = Store;
   return Store;
 });
 
 export function useStore() {
   return vuexUseStore(storeKey);
 }
-
-export { storeInstance };
