@@ -146,7 +146,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "PageIndex",
+  name: "Dashboard",
   components: {
     TransactionsTable
   },

@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "",
         name: ROUTE_NAMES.DASHBOARD,
-        component: () => import("pages/Index.vue"),
+        component: () => import("src/pages/Dashboard.vue"),
         meta: {
           isAuth: true
         }
@@ -25,7 +25,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/login",
         name: ROUTE_NAMES.LOGIN,
-        component: () => import("pages/Login.vue")
+        component: () => import("pages/Login.vue"),
+        meta: {
+          guest: true
+        }
       }
     ]
   },
