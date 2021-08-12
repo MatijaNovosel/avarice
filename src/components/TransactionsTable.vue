@@ -9,7 +9,7 @@
       rounded-t-md
     "
   >
-    <span class="text-h5 text-weight-bold"> Transactions </span>
+    <span class="text-weight-bold"> Transactions </span>
     <div class="row">
       <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
         <q-icon
@@ -119,7 +119,8 @@ const columns: QuasarTableColumn<Transaction>[] = [
     name: "amount",
     align: "center",
     label: "Amount",
-    field: "amount"
+    field: "amount",
+    format: (val) => `${val} HRK`
   },
   {
     name: "account",

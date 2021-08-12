@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
+import ROUTE_NAMES from "./routeNames";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -7,13 +8,18 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        name: "dashboard",
+        name: ROUTE_NAMES.DASHBOARD,
         component: () => import("pages/Index.vue")
       },
       {
-        path: "",
-        name: "history",
+        path: "/history",
+        name: ROUTE_NAMES.HISTORY,
         component: () => import("pages/History.vue")
+      },
+      {
+        path: "/login",
+        name: ROUTE_NAMES.LOGIN,
+        component: () => import("pages/Login.vue")
       }
     ]
   },
