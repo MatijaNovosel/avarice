@@ -9,12 +9,18 @@ const routes: RouteRecordRaw[] = [
       {
         path: "",
         name: ROUTE_NAMES.DASHBOARD,
-        component: () => import("pages/Index.vue")
+        component: () => import("pages/Index.vue"),
+        meta: {
+          isAuth: true
+        }
       },
       {
         path: "/history",
         name: ROUTE_NAMES.HISTORY,
-        component: () => import("pages/History.vue")
+        component: () => import("pages/History.vue"),
+        meta: {
+          isAuth: true
+        }
       },
       {
         path: "/login",

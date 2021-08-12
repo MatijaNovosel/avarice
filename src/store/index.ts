@@ -1,13 +1,10 @@
 import { store } from "quasar/wrappers";
 import { InjectionKey } from "vue";
-import {
-  createStore,
-  Store as VuexStore,
-  useStore as vuexUseStore
-} from "vuex";
+import { createStore, Store as VuexStore, useStore as vuexUseStore } from "vuex";
+import userModule from "./userModule";
 
 export interface StateInterface {
-  example: unknown;
+  user: unknown;
 }
 
 declare module "@vue/runtime-core" {
@@ -20,7 +17,9 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol("vuex-ke
 
 export default store(() => {
   const Store = createStore<StateInterface>({
-    modules: {},
+    modules: {
+      user: userModule
+    },
     strict: !!process.env.DEBUGGING
   });
   return Store;
