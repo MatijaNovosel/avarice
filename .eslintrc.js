@@ -35,6 +35,7 @@ module.exports = {
   },
   rules: {
     "generator-star-spacing": "off",
+    "import/prefer-default-export": "off",
     "arrow-parens": "off",
     "one-var": "off",
     "no-void": "off",
@@ -51,7 +52,7 @@ module.exports = {
     "no-var-requires": "off",
     "no-empty-function": "off",
     "no-unused-vars": "off",
-    "camelcase": "off",
+    camelcase: "off",
     "class-methods-use-this": "off",
     "no-empty": "off",
     "linebreak-style": "off",

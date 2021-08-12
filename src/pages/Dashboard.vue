@@ -1,30 +1,8 @@
 <template>
   <q-page padding class="bg-grey-2">
     <div class="row">
-      <div class="col-3 q-pr-lg p-rel">
-        <q-list class="bg-white q-pa-md rounded">
-          <q-item
-            class="bg-orange-2 rounded q-mb-sm q-py-md"
-            clickable
-            v-for="account in state.accounts"
-            :key="account.id"
-          >
-            <q-item-section avatar>
-              <q-icon color="orange-5" size="sm" name="mdi-credit-card-outline" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
-              <q-item-label caption>
-                Balance: {{ `${account.balance} ${account.currency}` }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
-            <q-btn dense class="q-mr-md bg-grey-2 rounded q-mt-md">
-              <q-icon class="q-pa-xs" name="mdi-plus" color="grey-9" size="sm" />
-            </q-btn>
-          </q-item>
-        </q-list>
+      <div class="col-3 q-pr-lg">
+        <account-list :accounts="state.accounts" />
       </div>
       <div class="col-9">
         <div class="row">
@@ -36,7 +14,7 @@
                   <q-chip
                     color="pink-1"
                     size="sm"
-                    class="q-pa-md"
+                    class="q-px-md"
                     text-color="red"
                     icon="mdi-arrow-top-right"
                   >
@@ -45,7 +23,7 @@
                   <q-chip
                     size="sm"
                     color="green-1"
-                    class="q-pa-md"
+                    class="q-px-md"
                     text-color="green"
                     icon="mdi-arrow-bottom-left"
                   >
@@ -94,6 +72,7 @@
 import { Transaction } from "src/models/transaction";
 import { defineComponent, reactive, onMounted } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
+import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { Account } from "src/api/client";
@@ -106,7 +85,8 @@ interface State {
 export default defineComponent({
   name: "Dashboard",
   components: {
-    TransactionsTable
+    TransactionsTable,
+    AccountList
   },
   setup() {
     const state: State = reactive({
