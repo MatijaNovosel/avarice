@@ -1,23 +1,9 @@
 <template>
-  <div
-    class="
-      row
-      justify-between
-      bg-white
-      q-pt-md q-pr-md q-pl-xl
-      items-center
-      rounded-t-md
-    "
-  >
+  <div class="row justify-between bg-white q-pt-md q-pr-md q-pl-xl items-center rounded-t-md">
     <span class="text-weight-bold"> Transactions </span>
     <div class="row">
       <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
-        <q-icon
-          class="q-pa-xs"
-          name="mdi-tune-variant"
-          color="grey-9"
-          size="sm"
-        />
+        <q-icon class="q-pa-xs" name="mdi-tune-variant" color="grey-9" size="sm" />
       </q-btn>
       <q-input dense filled label="Search">
         <template #prepend>
@@ -163,9 +149,7 @@ export default defineComponent({
         rowsPerPage: 5
       },
       data: props.data,
-      pagesNumber: computed(() =>
-        Math.ceil(state.data.length / state.pagination.rowsPerPage)
-      )
+      pagesNumber: computed(() => Math.ceil(state.data.length / state.pagination.rowsPerPage))
     });
 
     return {
@@ -181,6 +165,14 @@ export default defineComponent({
   &::v-deep {
     .q-field__control {
       border-radius: 10px;
+    }
+  }
+}
+
+.q-pagination {
+  &::v-deep {
+    .q-btn {
+      margin-left: 10px;
     }
   }
 }
