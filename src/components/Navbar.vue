@@ -22,7 +22,7 @@
             <q-item-section>New incognito tab</q-item-section>
           </q-item>
           <q-separator />
-          <q-item clickable v-close-popup>
+          <q-item clickable v-close-popup @click="logOut">
             <q-item-section>Log out</q-item-section>
           </q-item>
         </q-list>
@@ -33,8 +33,26 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useStore } from "src/store";
+import { useRouter } from "vue-router";
+import ROUTE_NAMES from "src/router/routeNames";
 
 export default defineComponent({
-  name: "navbar"
+  name: "navbar",
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+
+    async function logOut() {
+      await store.dispatch("user/logout");
+      await router.push({
+        name: ROUTE_NAMES.LOGIN
+      });
+    }
+
+    return {
+      logOut
+    };
+  }
 });
 </script>

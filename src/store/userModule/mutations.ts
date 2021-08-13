@@ -10,9 +10,11 @@ const storage = getService<IWebStorage>(Types.WebStorageService);
 const mutation: MutationTree<UserStateInterface> = {
   login(state, data: AppUser) {
     storage.saveState("user", JSON.stringify(data));
+    state.data = data;
   },
-  logout() {
+  logout(state) {
     storage.removeSavedState("user");
+    state.data = null;
   }
 };
 

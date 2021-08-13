@@ -60,7 +60,7 @@ import IAuthService from "src/api/interfaces/authService";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
-import { useStore } from "../store";
+import { useStore } from "src/store";
 
 interface State {
   email: string | null;
