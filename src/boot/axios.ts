@@ -17,10 +17,13 @@ export default boot(({ app, store }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
 
-  const user = store.getters["user/data"] as AppUser;
-
   api.interceptors.request.use((config) => {
-    config.headers.Authorization = user ? `Bearer ${user.token}` : "";
+    const user = store.getters["user/data"] as AppUser;
+
+    if (user) {
+      config.headers.Authorization = user ? `Bearer ${user.token}` : "";
+    }
+
     return config;
   });
 });
