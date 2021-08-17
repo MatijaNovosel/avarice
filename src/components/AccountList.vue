@@ -10,7 +10,7 @@
             <q-skeleton type="text" />
           </q-item-label>
           <q-item-label caption>
-            <q-skeleton type="text" width="65%" />
+            <q-skeleton type="text" />
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -23,7 +23,7 @@
             <q-skeleton type="text" />
           </q-item-label>
           <q-item-label caption>
-            <q-skeleton type="text" width="90%" />
+            <q-skeleton type="text" />
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -33,7 +33,7 @@
         </q-item-section>
         <q-item-section>
           <q-item-label>
-            <q-skeleton type="text" width="35%" />
+            <q-skeleton type="text" />
           </q-item-label>
           <q-item-label caption>
             <q-skeleton type="text" />
@@ -45,17 +45,17 @@
       <q-item
         class="rounded q-mb-sm q-py-md"
         :class="{
-          'bg-grey-3': state.selectedAccountId != account.id,
-          'bg-blue-2': state.selectedAccountId == account.id
+          'bg-grey-3': selectedAccountId != account.id,
+          'bg-blue-2': selectedAccountId == account.id
         }"
         clickable
         v-for="account in accounts"
         :key="account.id"
-        @click="state.selectedAccountId = account.id"
+        @click="updateSelectedAccountId(account.id)"
       >
         <q-item-section avatar>
           <q-avatar
-            :color="state.selectedAccountId == account.id ? 'primary' : 'grey'"
+            :color="selectedAccountId == account.id ? 'primary' : 'grey'"
             text-color="white"
             size="sm"
           >
@@ -65,7 +65,7 @@
         <q-item-section>
           <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
           <q-item-label caption>
-            Balance: {{ `${account.balance} ${account.currency}` }}
+            Balance: {{ formatBalance(account.balance, account.currency) }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -80,14 +80,12 @@
 
 <script lang="ts">
 import { Account } from "src/api/client";
-import { defineComponent, PropType, reactive } from "vue";
-
-interface State {
-  selectedAccountId: number | null;
-}
+import { formatBalance } from "src/utils/helpers";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   name: "account-list",
+  emits: ["update:selectedAccountId"],
   props: {
     accounts: {
       type: Array as PropType<Account[]>,
@@ -96,15 +94,19 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: false
+    },
+    selectedAccountId: {
+      type: null
     }
   },
-  setup() {
-    const state: State = reactive({
-      selectedAccountId: null
-    });
+  setup(props, { emit }) {
+    function updateSelectedAccountId(id: number) {
+      emit("update:selectedAccountId", id);
+    }
 
     return {
-      state
+      updateSelectedAccountId,
+      formatBalance
     };
   }
 });

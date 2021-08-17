@@ -35,34 +35,49 @@
         <q-icon name="mdi-swap-vertical" size="sm" />
       </q-th>
     </template>
-    <template #body-cell-createdAt="props">
-      <q-td :props="props">
-        {{ format(props.value, "dd.MM.yyyy. HH:mm") }}
-      </q-td>
-    </template>
-    <template #body-cell-category="props">
-      <q-td :props="props">
-        <q-item class="q-pa-none">
-          <q-item-section avatar>
-            <q-icon color="grey-7" size="sm" :name="props.value.icon" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label> {{ props.value.name }} </q-item-label>
-            <q-item-label caption> Category </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-td>
-    </template>
-    <template #body-cell-transactionType="props">
-      <q-td :props="props">
-        <q-btn flat dense :class="`bg-${formatTransactionColor(props.value)}-2`" class="rounded">
-          <q-icon
-            :name="formatTransactionIcon(props.value)"
-            size="1.3em"
-            :color="formatTransactionColor(props.value)"
-          />
-        </q-btn>
-      </q-td>
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td key="id" :props="props">
+          {{ props.row.id }}
+        </q-td>
+        <q-td key="transactionType" :props="props">
+          <q-btn
+            flat
+            dense
+            :class="`bg-${formatTransactionColor(props.row.transactionType)}-2`"
+            class="rounded"
+          >
+            <q-icon
+              :name="formatTransactionIcon(props.row.transactionType)"
+              size="1.3em"
+              :color="formatTransactionColor(props.row.transactionType)"
+            />
+          </q-btn>
+        </q-td>
+        <q-td key="category" :props="props">
+          <q-item class="q-pa-none">
+            <q-item-section avatar>
+              <q-icon color="grey-7" size="sm" :name="props.row.category.icon" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label> {{ props.row.category.name }} </q-item-label>
+              <q-item-label caption> Category </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-td>
+        <q-td key="description" :props="props">
+          {{ props.row.description }}
+        </q-td>
+        <q-td key="amount" :props="props">
+          {{ formatBalance(props.row.amount, "HRK") }}
+        </q-td>
+        <q-td key="account" :props="props">
+          {{ props.row.account }}
+        </q-td>
+        <q-td key="createdAt" :props="props">
+          {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
   <div class="row justify-end q-mt-md">
@@ -81,6 +96,7 @@ import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
+import { formatBalance } from "src/utils/helpers";
 
 interface Props {
   data: IPageableCollectionOfTransactionModel;
@@ -200,7 +216,8 @@ export default defineComponent({
       state,
       format,
       formatTransactionIcon,
-      formatTransactionColor
+      formatTransactionColor,
+      formatBalance
     };
   }
 });

@@ -2,7 +2,11 @@
   <q-page padding class="bg-grey-2">
     <div class="row">
       <div class="col-3 q-pr-lg">
-        <account-list :loading="state.loading" :accounts="state.accounts" />
+        <account-list
+          v-model:selectedAccountId="state.selectedAccountId"
+          :loading="state.loading"
+          :accounts="state.accounts"
+        />
       </div>
       <div class="col-9">
         <div class="row">
@@ -32,7 +36,14 @@
                 </div>
               </q-card-section>
               <q-card-section>
-                <div class="text-h3 text-center">2,500.00 HRK</div>
+                <div class="text-h3 text-center">
+                  {{
+                    formatBalance(
+                      state.accounts.find((x) => x.id == state.selectedAccountId)?.balance,
+                      state.accounts.find((x) => x.id == state.selectedAccountId)?.currency
+                    )
+                  }}
+                </div>
               </q-card-section>
               <q-card-actions class="row justify-center">
                 <q-btn
@@ -76,11 +87,13 @@ import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { Account, IPageableCollectionOfTransactionModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
+import { formatBalance } from "src/utils/helpers";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
   accounts: Account[];
   loading: boolean;
+  selectedAccountId: number | null;
 }
 
 export default defineComponent({
@@ -94,6 +107,7 @@ export default defineComponent({
       balance: 2500,
       loading: false,
       accounts: [],
+      selectedAccountId: null,
       transactions: {
         total: 0,
         results: []
@@ -102,18 +116,23 @@ export default defineComponent({
 
     onMounted(async () => {
       state.loading = true;
+
       state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      state.selectedAccountId = state.accounts[0].id;
+
       const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
       transactions.results?.forEach((t, i) => {
         // eslint-disable-next-line no-param-reassign
         t.id = i + 1;
       });
       state.transactions = transactions;
+
       state.loading = false;
     });
 
     return {
-      state
+      state,
+      formatBalance
     };
   }
 });
