@@ -84,39 +84,48 @@ export default defineComponent({
     async function login() {
       state.loading = true;
 
-      const data = await getService<IAuthService>(Types.AuthService).login(
-        state.email as string,
-        state.password as string
-      );
+      try {
+        const data = await getService<IAuthService>(Types.AuthService).login(
+          state.email as string,
+          state.password as string
+        );
 
-      if (!data.result) {
+        if (!data.result) {
+          $q.notify({
+            message: data.errors?.join(", "),
+            color: "red",
+            position: "top"
+          });
+          state.loading = false;
+          return;
+        }
+
+        const decodedToken: DecodedToken = jwt_decode(data.token as string);
+
+        await store.dispatch("user/login", {
+          id: decodedToken.Id,
+          email: state.email,
+          userName: decodedToken.unique_name,
+          emailConfirmed: false,
+          token: data.token
+        });
+
         $q.notify({
-          message: data.errors?.join(", "),
+          message: "Successfully logged in!",
+          color: "green",
+          position: "top"
+        });
+
+        state.loading = false;
+        await router.push({ name: ROUTE_NAMES.DASHBOARD });
+      } catch (e) {
+        $q.notify({
+          message: (e as Error).message,
           color: "red",
           position: "top"
         });
         state.loading = false;
-        return;
       }
-
-      const decodedToken: DecodedToken = jwt_decode(data.token as string);
-
-      await store.dispatch("user/login", {
-        id: decodedToken.Id,
-        email: state.email,
-        userName: decodedToken.unique_name,
-        emailConfirmed: false,
-        token: data.token
-      });
-
-      $q.notify({
-        message: "Successfully logged in!",
-        color: "green",
-        position: "top"
-      });
-
-      state.loading = false;
-      await router.push({ name: ROUTE_NAMES.DASHBOARD });
     }
 
     return {

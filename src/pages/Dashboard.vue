@@ -76,6 +76,7 @@ import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { Account } from "src/api/client";
+import ITransactionService from "src/api/interfaces/transactionService";
 
 interface State {
   transactions: Transaction[];
@@ -170,6 +171,8 @@ export default defineComponent({
 
     onMounted(async () => {
       state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
+      console.log(transactions);
     });
 
     return {
