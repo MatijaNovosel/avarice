@@ -69,7 +69,14 @@
           {{ props.row.description }}
         </q-td>
         <q-td key="amount" :props="props">
-          {{ formatBalance(props.row.amount, "HRK") }}
+          {{
+            formatBalance(
+              props.row.transactionType == TransactionType.Expense
+                ? props.row.amount * -1
+                : props.row.amount,
+              "HRK"
+            )
+          }}
         </q-td>
         <q-td key="account" :props="props">
           {{ props.row.account }}
@@ -217,7 +224,8 @@ export default defineComponent({
       format,
       formatTransactionIcon,
       formatTransactionColor,
-      formatBalance
+      formatBalance,
+      TransactionType
     };
   }
 });
