@@ -1182,15 +1182,10 @@ export interface IPageableCollectionOfTransactionModel {
   total: number;
 }
 
-export class TransactionModel implements ITransactionModel {
-  amount?: number | undefined;
-  createdAt!: Date;
-  description?: string | undefined;
-  category?: string | undefined;
-  transactionType?: string | undefined;
-  account?: string | undefined;
+export class BaseModel implements IBaseModel {
+  id!: number;
 
-  constructor(data?: ITransactionModel) {
+  constructor(data?: IBaseModel) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -1200,12 +1195,51 @@ export class TransactionModel implements ITransactionModel {
 
   init(_data?: any) {
     if (_data) {
+      this.id = _data["id"];
+    }
+  }
+
+  static fromJS(data: any): BaseModel {
+    data = typeof data === "object" ? data : {};
+    let result = new BaseModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["id"] = this.id;
+    return data;
+  }
+}
+
+export interface IBaseModel {
+  id: number;
+}
+
+export class TransactionModel extends BaseModel implements ITransactionModel {
+  amount?: number | undefined;
+  createdAt!: Date;
+  description?: string | undefined;
+  category?: TransactionCategoryModel | undefined;
+  transactionType?: string | undefined;
+  account?: string | undefined;
+
+  constructor(data?: ITransactionModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
       this.amount = _data["amount"];
       this.createdAt = _data["createdAt"]
         ? new Date(_data["createdAt"].toString())
         : <any>undefined;
       this.description = _data["description"];
-      this.category = _data["category"];
+      this.category = _data["category"]
+        ? TransactionCategoryModel.fromJS(_data["category"])
+        : <any>undefined;
       this.transactionType = _data["transactionType"];
       this.account = _data["account"];
     }
@@ -1223,20 +1257,60 @@ export class TransactionModel implements ITransactionModel {
     data["amount"] = this.amount;
     data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
     data["description"] = this.description;
-    data["category"] = this.category;
+    data["category"] = this.category ? this.category.toJSON() : <any>undefined;
     data["transactionType"] = this.transactionType;
     data["account"] = this.account;
+    super.toJSON(data);
     return data;
   }
 }
 
-export interface ITransactionModel {
+export interface ITransactionModel extends IBaseModel {
   amount?: number | undefined;
   createdAt: Date;
   description?: string | undefined;
-  category?: string | undefined;
+  category?: TransactionCategoryModel | undefined;
   transactionType?: string | undefined;
   account?: string | undefined;
+}
+
+export class TransactionCategoryModel implements ITransactionCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
+
+  constructor(data?: ITransactionCategoryModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.icon = _data["icon"];
+    }
+  }
+
+  static fromJS(data: any): TransactionCategoryModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TransactionCategoryModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["name"] = this.name;
+    data["icon"] = this.icon;
+    return data;
+  }
+}
+
+export interface ITransactionCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
 }
 
 export interface FileResponse {

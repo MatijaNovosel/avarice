@@ -2,7 +2,7 @@
   <q-page padding class="bg-grey-2">
     <div class="row">
       <div class="col-3 q-pr-lg">
-        <account-list :accounts="state.accounts" />
+        <account-list :loading="state.loading" :accounts="state.accounts" />
       </div>
       <div class="col-9">
         <div class="row">
@@ -60,7 +60,7 @@
         </div>
         <div class="row q-mt-lg">
           <div class="col-12">
-            <transactions-table :data="state.transactions" />
+            <transactions-table :loading="state.loading" :data="state.transactions" />
           </div>
         </div>
       </div>
@@ -80,6 +80,7 @@ import ITransactionService from "src/api/interfaces/transactionService";
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
   accounts: Account[];
+  loading: boolean;
 }
 
 export default defineComponent({
@@ -91,6 +92,7 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       balance: 2500,
+      loading: false,
       accounts: [],
       transactions: {
         total: 0,
@@ -99,8 +101,15 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+      state.loading = true;
       state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-      state.transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
+      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
+      transactions.results?.forEach((t, i) => {
+        // eslint-disable-next-line no-param-reassign
+        t.id = i + 1;
+      });
+      state.transactions = transactions;
+      state.loading = false;
     });
 
     return {

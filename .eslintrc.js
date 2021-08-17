@@ -40,6 +40,7 @@ module.exports = {
     "one-var": "off",
     "no-void": "off",
     "multiline-ternary": "off",
+    "no-shadow": "off",
     "import/first": "off",
     "import/named": "error",
     "import/namespace": "error",

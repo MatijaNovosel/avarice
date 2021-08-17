@@ -13,6 +13,7 @@
     </div>
   </div>
   <q-table
+    :loading="loading"
     hide-pagination
     flat
     v-model:pagination="state.pagination"
@@ -29,7 +30,7 @@
         <span> No transactions found! </span>
       </div>
     </template>
-    <template #header-cell-expense="props">
+    <template #header-cell-transactionType="props">
       <q-th :props="props">
         <q-icon name="mdi-swap-vertical" size="sm" />
       </q-th>
@@ -43,30 +44,22 @@
       <q-td :props="props">
         <q-item class="q-pa-none">
           <q-item-section avatar>
-            <q-icon color="grey-7" size="sm" :name="props.value" />
+            <q-icon color="grey-7" size="sm" :name="props.value.icon" />
           </q-item-section>
           <q-item-section>
-            <q-item-label> {{ props.value }} </q-item-label>
+            <q-item-label> {{ props.value.name }} </q-item-label>
             <q-item-label caption> Category </q-item-label>
           </q-item-section>
         </q-item>
       </q-td>
     </template>
-    <template #body-cell-expense="props">
+    <template #body-cell-transactionType="props">
       <q-td :props="props">
-        <q-btn
-          flat
-          dense
-          :class="{
-            'bg-green-2': !props.value,
-            'bg-red-2': props.value
-          }"
-          class="rounded"
-        >
+        <q-btn flat dense :class="`bg-${formatTransactionColor(props.value)}-2`" class="rounded">
           <q-icon
-            :name="!props.value ? 'mdi-arrow-up' : 'mdi-arrow-down'"
+            :name="formatTransactionIcon(props.value)"
             size="1.3em"
-            :color="!props.value ? 'green' : 'red'"
+            :color="formatTransactionColor(props.value)"
           />
         </q-btn>
       </q-td>
@@ -87,6 +80,7 @@ import { defineComponent, PropType, computed, reactive, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api/client";
 import { format } from "date-fns";
+import TransactionType from "src/utils/transactionTypes";
 
 interface Props {
   data: IPageableCollectionOfTransactionModel;
@@ -104,6 +98,10 @@ export default defineComponent({
     data: {
       type: Object as PropType<IPageableCollectionOfTransactionModel>,
       default: () => ({})
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props) {
@@ -126,10 +124,10 @@ export default defineComponent({
         field: "id"
       },
       {
-        name: "expense",
-        label: "Expense",
+        name: "transactionType",
+        label: "",
         align: "center",
-        field: "expense"
+        field: "transactionType"
       },
       {
         name: "category",
@@ -164,6 +162,32 @@ export default defineComponent({
       }
     ];
 
+    function formatTransactionIcon(transactionType: TransactionType) {
+      switch (transactionType) {
+        case TransactionType.Transfer:
+          return "mdi-swap-horizontal";
+        case TransactionType.Income:
+          return "mdi-arrow-up";
+        case TransactionType.Expense:
+          return "mdi-arrow-down";
+        default:
+          return "mdi-account";
+      }
+    }
+
+    function formatTransactionColor(transactionType: TransactionType) {
+      switch (transactionType) {
+        case TransactionType.Transfer:
+          return "grey";
+        case TransactionType.Income:
+          return "green";
+        case TransactionType.Expense:
+          return "red";
+        default:
+          return "yellow";
+      }
+    }
+
     watch(
       () => props.data,
       (val) => {
@@ -174,7 +198,9 @@ export default defineComponent({
     return {
       columns,
       state,
-      format
+      format,
+      formatTransactionIcon,
+      formatTransactionColor
     };
   }
 });
