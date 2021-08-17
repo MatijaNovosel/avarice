@@ -69,17 +69,16 @@
 </template>
 
 <script lang="ts">
-import { Transaction } from "src/models/transaction";
 import { defineComponent, reactive, onMounted } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
-import { Account } from "src/api/client";
+import { Account, IPageableCollectionOfTransactionModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
 
 interface State {
-  transactions: Transaction[];
+  transactions: IPageableCollectionOfTransactionModel;
   accounts: Account[];
 }
 
@@ -93,86 +92,15 @@ export default defineComponent({
     const state: State = reactive({
       balance: 2500,
       accounts: [],
-      transactions: [
-        {
-          id: 1,
-          description: "Food #1",
-          amount: 250,
-          account: "Pocket",
-          category: "mdi-laptop",
-          expense: true,
-          date: "2021-08-20"
-        },
-        {
-          id: 2,
-          description: "Food #2",
-          amount: 150,
-          account: "Gyro",
-          category: "mdi-account",
-          expense: false,
-          date: "2021-10-20"
-        },
-        {
-          id: 3,
-          description: "Salary",
-          amount: 5000,
-          account: "Gyro",
-          category: "mdi-filter",
-          expense: false,
-          date: "2021-12-20"
-        },
-        {
-          id: 4,
-          description: "Lunch money",
-          amount: 1000,
-          account: "Pocket",
-          category: "mdi-food",
-          expense: true,
-          date: "2021-11-20"
-        },
-        {
-          id: 5,
-          description: "Trip",
-          amount: 700,
-          account: "Checking",
-          category: "mdi-taxi",
-          expense: true,
-          date: "2021-04-10"
-        },
-        {
-          id: 6,
-          description: "Trip",
-          amount: 700,
-          account: "Checking",
-          category: "mdi-taxi",
-          expense: true,
-          date: "2021-04-10"
-        },
-        {
-          id: 7,
-          description: "Trip",
-          amount: 700,
-          account: "Checking",
-          category: "mdi-taxi",
-          expense: true,
-          date: "2021-04-10"
-        },
-        {
-          id: 8,
-          description: "Trip",
-          amount: 700,
-          account: "Checking",
-          category: "mdi-taxi",
-          expense: true,
-          date: "2021-04-10"
-        }
-      ]
+      transactions: {
+        total: 0,
+        results: []
+      }
     });
 
     onMounted(async () => {
       state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
-      console.log(transactions);
+      state.transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
     });
 
     return {
