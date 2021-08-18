@@ -11,7 +11,11 @@
       <div class="col-9">
         <div class="row">
           <div class="col-12 col-md-6 q-pr-lg">
-            <total-balance-card :loading="state.loading" :account="state.selectedAccount" />
+            <total-balance-card
+              :loading="state.loading"
+              :account="state.selectedAccount"
+              @new-transaction="state.transactionDialogOpen = true"
+            />
           </div>
           <div class="col-12 col-md-6">
             <account-balance-graph-card :loading="state.loading" />
@@ -25,6 +29,7 @@
       </div>
     </div>
   </q-page>
+  <transaction-dialog v-model:open="state.transactionDialogOpen" />
 </template>
 
 <script lang="ts">
@@ -37,11 +42,13 @@ import { Account, IPageableCollectionOfTransactionModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
+import TransactionDialog from "src/components/TransactionDialog.vue";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
   accounts: Account[];
   loading: boolean;
+  transactionDialogOpen: boolean;
   selectedAccountId: number | null;
   selectedAccount: Account | null;
 }
@@ -52,11 +59,13 @@ export default defineComponent({
     TransactionsTable,
     AccountList,
     TotalBalanceCard,
-    AccountBalanceGraphCard
+    AccountBalanceGraphCard,
+    TransactionDialog
   },
   setup() {
     const state: State = reactive({
       loading: false,
+      transactionDialogOpen: false,
       accounts: [],
       selectedAccountId: null,
       selectedAccount: null,

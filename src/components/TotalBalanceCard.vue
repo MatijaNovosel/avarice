@@ -47,6 +47,7 @@
             label="New transaction"
             class="rounded bg-grey-3"
             icon="mdi-swap-horizontal"
+            @click="$emit('new-transaction')"
           />
         </q-card-actions>
       </q-card>
@@ -71,6 +72,7 @@ interface State {
 
 export default defineComponent({
   name: "total-balance-card",
+  emits: ["new-transaction"],
   props: {
     loading: {
       type: Boolean,
