@@ -22,7 +22,7 @@
               text-color="red"
               icon="mdi-arrow-top-right"
             >
-              <b> 1,500.00 HRK </b>
+              <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
             </q-chip>
             <q-chip
               size="sm"
@@ -31,7 +31,7 @@
               text-color="green"
               icon="mdi-arrow-bottom-left"
             >
-              <b> 500.00 HRK </b>
+              <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
             </q-chip>
           </div>
         </q-card-section>
@@ -55,8 +55,19 @@
 </template>
 
 <script lang="ts">
+import { Account, AccountExpenseAndIncomeModel } from "src/api/client";
+import IAccountService from "src/api/interfaces/accountService";
+import { getService, Types } from "src/di-container";
 import { formatBalance } from "src/utils/helpers";
-import { defineComponent } from "vue";
+import { defineComponent, watch, reactive } from "vue";
+
+interface Props {
+  account: Account | null;
+}
+
+interface State {
+  expenseAndIncome: AccountExpenseAndIncomeModel | null;
+}
 
 export default defineComponent({
   name: "total-balance-card",
@@ -69,9 +80,25 @@ export default defineComponent({
       type: null
     }
   },
-  setup() {
+  setup(props: Props) {
+    const state: State = reactive({
+      expenseAndIncome: null
+    });
+
+    watch(
+      () => props.account,
+      async (val) => {
+        if (val) {
+          state.expenseAndIncome = await getService<IAccountService>(
+            Types.AccountService
+          ).getExpenseAndIncomeInTimePeriod(val.id);
+        }
+      }
+    );
+
     return {
-      formatBalance
+      formatBalance,
+      state
     };
   }
 });

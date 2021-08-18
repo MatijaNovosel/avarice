@@ -35,7 +35,6 @@ import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { Account, IPageableCollectionOfTransactionModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
-import { formatBalance } from "src/utils/helpers";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 
@@ -94,8 +93,7 @@ export default defineComponent({
     );
 
     return {
-      state,
-      formatBalance
+      state
     };
   }
 });
