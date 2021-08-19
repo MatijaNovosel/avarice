@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-3 q-pr-lg">
         <account-list
-          v-model:selectedAccountId="state.selectedAccountId"
+          :selectedAccountId="state.selectedAccountId"
+          @update:selectedAccountId="updateSelectedAccountDebounce"
           :loading="state.loading"
           :accounts="state.accounts"
         />
@@ -43,6 +44,7 @@ import ITransactionService from "src/api/interfaces/transactionService";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 import TransactionDialog from "src/components/TransactionDialog.vue";
+import { debounce } from "quasar";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -75,6 +77,15 @@ export default defineComponent({
       }
     });
 
+    function updateSelectedAccount(accountId: number) {
+      if (state.selectedAccountId === accountId) {
+        return;
+      }
+      state.selectedAccountId = accountId;
+    }
+
+    const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
+
     onMounted(async () => {
       state.loading = true;
 
@@ -102,7 +113,8 @@ export default defineComponent({
     );
 
     return {
-      state
+      state,
+      updateSelectedAccountDebounce
     };
   }
 });
