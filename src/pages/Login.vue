@@ -9,8 +9,12 @@
               square
               filled
               clearable
-              v-model="state.email"
+              hide-bottom-space
+              :error-message="emailErrors"
+              :error="!!emailErrors"
+              v-model="email"
               type="email"
+              dense
               label="Email"
             >
               <template #prepend>
@@ -22,7 +26,11 @@
               square
               filled
               clearable
-              v-model="state.password"
+              hide-bottom-space
+              v-model="password"
+              :error-message="passwordErrors"
+              :error="!!passwordErrors"
+              dense
               type="password"
               label="Password"
             >
@@ -61,11 +69,16 @@ import ROUTE_NAMES from "src/router/routeNames";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
+import { useForm, useField } from "vee-validate";
+import { object, string } from "yup";
 
 interface State {
-  email: string | null;
-  password: string | null;
   loading: boolean;
+}
+
+interface LoginFormSchema {
+  password: string | null;
+  email: string | null;
 }
 
 export default defineComponent({
@@ -75,19 +88,33 @@ export default defineComponent({
     const router = useRouter();
     const $q = useQuasar();
 
-    const state: State = reactive({
-      loading: false,
-      email: null,
-      password: null
+    const schema = object({
+      email: string().required().email().label("Email"),
+      password: string().required()
     });
 
-    async function login() {
+    const { handleSubmit } = useForm<LoginFormSchema>({
+      validationSchema: schema,
+      initialValues: {
+        password: "",
+        email: ""
+      }
+    });
+
+    const { value: email, errorMessage: emailErrors } = useField<string>("email");
+    const { value: password, errorMessage: passwordErrors } = useField<string>("password");
+
+    const state: State = reactive({
+      loading: false
+    });
+
+    const login = handleSubmit(async () => {
       state.loading = true;
 
       try {
         const data = await getService<IAuthService>(Types.AuthService).login(
-          state.email as string,
-          state.password as string
+          email.value,
+          password.value
         );
 
         if (!data.result) {
@@ -104,7 +131,7 @@ export default defineComponent({
 
         await store.dispatch("user/login", {
           id: decodedToken.Id,
-          email: state.email,
+          email: email.value,
           userName: decodedToken.unique_name,
           emailConfirmed: false,
           token: data.token
@@ -126,11 +153,15 @@ export default defineComponent({
         });
         state.loading = false;
       }
-    }
+    });
 
     return {
       state,
-      login
+      login,
+      email,
+      password,
+      emailErrors,
+      passwordErrors
     };
   }
 });

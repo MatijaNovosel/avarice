@@ -11,6 +11,7 @@
       <q-card-section>
         <q-form class="q-gutter-md">
           <q-input dense square filled clearable label="Amount" />
+          <q-input dense square filled clearable label="Description" />
         </q-form>
       </q-card-section>
       <q-card-actions class="q-px-md justify-center">
