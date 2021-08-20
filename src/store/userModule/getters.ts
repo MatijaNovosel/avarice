@@ -9,6 +9,9 @@ const getters: GetterTree<UserStateInterface, StateInterface> = {
   },
   isAuthenticated(state) {
     return state.data != null;
+  },
+  categories(state) {
+    return state.categories;
   }
 };
 

@@ -272,6 +272,60 @@ export class Client {
         return Promise.resolve<FileResponse | null>(<any>null);
     }
 
+    category_GetUserCategories(  cancelToken?: CancelToken | undefined): Promise<CategoryModel[]> {
+        let url_ = this.baseUrl + "/api/category";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCategory_GetUserCategories(_response);
+        });
+    }
+
+    protected processCategory_GetUserCategories(response: AxiosResponse): Promise<CategoryModel[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CategoryModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<CategoryModel[]>(<any>null);
+    }
+
     transaction_Add(payload: AddTransactionDto , cancelToken?: CancelToken | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/transaction";
         url_ = url_.replace(/[?&]$/, "");
@@ -402,6 +456,56 @@ export class Client {
     }
 
     protected processTransaction_Transfer(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(<any>null);
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    transaction_Delete(accountId: number | undefined, id: string , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/transaction/{id}?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (accountId === null)
+            throw new Error("The parameter 'accountId' cannot be null.");
+        else if (accountId !== undefined)
+            url_ += "accountId=" + encodeURIComponent("" + accountId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTransaction_Delete(_response);
+        });
+    }
+
+    protected processTransaction_Delete(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -765,9 +869,11 @@ export class Transaction extends Entity implements ITransaction {
     description?: string | undefined;
     transactionType?: string | undefined;
     accountId?: number | undefined;
+    transferAccountId?: number | undefined;
     categoryId?: number | undefined;
     userId?: string | undefined;
     account?: Account | undefined;
+    transferAccount?: Account | undefined;
     category?: Category | undefined;
     user?: User | undefined;
 
@@ -782,9 +888,11 @@ export class Transaction extends Entity implements ITransaction {
             this.description = _data["description"];
             this.transactionType = _data["transactionType"];
             this.accountId = _data["accountId"];
+            this.transferAccountId = _data["transferAccountId"];
             this.categoryId = _data["categoryId"];
             this.userId = _data["userId"];
             this.account = _data["account"] ? Account.fromJS(_data["account"]) : <any>undefined;
+            this.transferAccount = _data["transferAccount"] ? Account.fromJS(_data["transferAccount"]) : <any>undefined;
             this.category = _data["category"] ? Category.fromJS(_data["category"]) : <any>undefined;
             this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
         }
@@ -803,9 +911,11 @@ export class Transaction extends Entity implements ITransaction {
         data["description"] = this.description;
         data["transactionType"] = this.transactionType;
         data["accountId"] = this.accountId;
+        data["transferAccountId"] = this.transferAccountId;
         data["categoryId"] = this.categoryId;
         data["userId"] = this.userId;
         data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["transferAccount"] = this.transferAccount ? this.transferAccount.toJSON() : <any>undefined;
         data["category"] = this.category ? this.category.toJSON() : <any>undefined;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         super.toJSON(data);
@@ -818,9 +928,11 @@ export interface ITransaction extends IEntity {
     description?: string | undefined;
     transactionType?: string | undefined;
     accountId?: number | undefined;
+    transferAccountId?: number | undefined;
     categoryId?: number | undefined;
     userId?: string | undefined;
     account?: Account | undefined;
+    transferAccount?: Account | undefined;
     category?: Category | undefined;
     user?: User | undefined;
 }
@@ -1066,6 +1178,83 @@ export interface ILoginModel {
     password?: string | undefined;
 }
 
+export class BaseModel implements IBaseModel {
+    id!: number;
+
+    constructor(data?: IBaseModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): BaseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new BaseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IBaseModel {
+    id: number;
+}
+
+export class CategoryModel extends BaseModel implements ICategoryModel {
+    name?: string | undefined;
+    icon?: string | undefined;
+    color?: string | undefined;
+
+    constructor(data?: ICategoryModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.icon = _data["icon"];
+            this.color = _data["color"];
+        }
+    }
+
+    static fromJS(data: any): CategoryModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["icon"] = this.icon;
+        data["color"] = this.color;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ICategoryModel extends IBaseModel {
+    name?: string | undefined;
+    icon?: string | undefined;
+    color?: string | undefined;
+}
+
 export class AddTransactionDto implements IAddTransactionDto {
     amount!: number;
     description?: string | undefined;
@@ -1214,46 +1403,11 @@ export interface IPageableCollectionOfTransactionModel {
     total: number;
 }
 
-export class BaseModel implements IBaseModel {
-    id!: number;
-
-    constructor(data?: IBaseModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): BaseModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new BaseModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IBaseModel {
-    id: number;
-}
-
 export class TransactionModel extends BaseModel implements ITransactionModel {
     amount?: number | undefined;
     createdAt!: Date;
     description?: string | undefined;
+    currency?: string | undefined;
     category?: TransactionCategoryModel | undefined;
     transactionType?: string | undefined;
     account?: string | undefined;
@@ -1268,6 +1422,7 @@ export class TransactionModel extends BaseModel implements ITransactionModel {
             this.amount = _data["amount"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.description = _data["description"];
+            this.currency = _data["currency"];
             this.category = _data["category"] ? TransactionCategoryModel.fromJS(_data["category"]) : <any>undefined;
             this.transactionType = _data["transactionType"];
             this.account = _data["account"];
@@ -1286,6 +1441,7 @@ export class TransactionModel extends BaseModel implements ITransactionModel {
         data["amount"] = this.amount;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["description"] = this.description;
+        data["currency"] = this.currency;
         data["category"] = this.category ? this.category.toJSON() : <any>undefined;
         data["transactionType"] = this.transactionType;
         data["account"] = this.account;
@@ -1298,6 +1454,7 @@ export interface ITransactionModel extends IBaseModel {
     amount?: number | undefined;
     createdAt: Date;
     description?: string | undefined;
+    currency?: string | undefined;
     category?: TransactionCategoryModel | undefined;
     transactionType?: string | undefined;
     account?: string | undefined;

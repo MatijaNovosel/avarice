@@ -3,6 +3,7 @@ import { MutationTree } from "vuex";
 import IWebStorage from "src/api/interfaces/webStorageService";
 import { getService, Types } from "src/di-container";
 import { AppUser } from "src/models/user";
+import { CategoryModel } from "src/api/client";
 import { UserStateInterface } from "./state";
 
 const storage = getService<IWebStorage>(Types.WebStorageService);
@@ -15,6 +16,10 @@ const mutation: MutationTree<UserStateInterface> = {
   logout(state) {
     storage.removeSavedState("user");
     state.data = null;
+  },
+  setCategories(state, data: CategoryModel[]) {
+    storage.saveState("categories", JSON.stringify(data));
+    state.categories = data;
   }
 };
 

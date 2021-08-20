@@ -1,3 +1,4 @@
+import { CategoryModel } from "src/api/client";
 import { AppUser } from "src/models/user";
 import { ActionTree } from "vuex";
 import { StateInterface } from "../index";
@@ -9,6 +10,9 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
   },
   logout(context) {
     context.commit("logout");
+  },
+  setCategories(context, categories: CategoryModel[]) {
+    context.commit("setCategories", categories);
   }
 };
 

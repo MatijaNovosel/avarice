@@ -71,6 +71,7 @@ import { useQuasar } from "quasar";
 import { useStore } from "src/store";
 import { useForm, useField } from "vee-validate";
 import { object, string } from "yup";
+import ICategoryService from "src/api/interfaces/categoryService";
 
 interface State {
   loading: boolean;
@@ -90,7 +91,7 @@ export default defineComponent({
 
     const schema = object({
       email: string().required().email().label("Email"),
-      password: string().required()
+      password: string().required().label("Password")
     });
 
     const { handleSubmit } = useForm<LoginFormSchema>({
@@ -136,6 +137,12 @@ export default defineComponent({
           emailConfirmed: false,
           token: data.token
         });
+
+        const categories = await getService<ICategoryService>(
+          Types.CategoryService
+        ).getUserCategories();
+
+        await store.dispatch("user/setCategories", categories);
 
         $q.notify({
           message: "Successfully logged in!",
