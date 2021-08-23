@@ -34,25 +34,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch } from "vue";
+import { defineComponent, reactive, onMounted, watch, computed } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
-import IAccountService from "src/api/interfaces/accountService";
-import { Account, IPageableCollectionOfTransactionModel } from "src/api/client";
+import { AccountModel, IPageableCollectionOfTransactionModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 import TransactionDialog from "src/components/TransactionDialog.vue";
 import { debounce } from "quasar";
+import { useStore } from "src/store";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
-  accounts: Account[];
   loading: boolean;
   transactionDialogOpen: boolean;
   selectedAccountId: number | null;
-  selectedAccount: Account | null;
+  selectedAccount: AccountModel | null;
+  accounts: AccountModel[];
 }
 
 export default defineComponent({
@@ -65,10 +65,13 @@ export default defineComponent({
     TransactionDialog
   },
   setup() {
+    const store = useStore();
+
     const state: State = reactive({
       loading: false,
       transactionDialogOpen: false,
-      accounts: [],
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      accounts: computed(() => store.getters["user/accounts"] as AccountModel[]),
       selectedAccountId: null,
       selectedAccount: null,
       transactions: {
@@ -88,8 +91,6 @@ export default defineComponent({
 
     onMounted(async () => {
       state.loading = true;
-
-      state.accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
       state.selectedAccountId = state.accounts[0].id;
 
       const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();

@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { Account } from "src/api/client";
+import { AccountModel } from "src/api/client";
 import { formatBalance } from "src/utils/helpers";
 import { defineComponent, PropType } from "vue";
 
@@ -88,7 +88,7 @@ export default defineComponent({
   emits: ["update:selectedAccountId"],
   props: {
     accounts: {
-      type: Array as PropType<Account[]>,
+      type: Array as PropType<AccountModel[]>,
       required: true
     },
     loading: {

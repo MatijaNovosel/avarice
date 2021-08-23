@@ -45,6 +45,7 @@
             :error="!!categoryErrors"
             option-value="id"
             option-label="name"
+            clearable
           />
         </q-form>
       </q-card-section>
@@ -64,7 +65,7 @@
 <script lang="ts">
 import { defineComponent, reactive, watch, computed } from "vue";
 import { useForm, useField } from "vee-validate";
-import { number, object, string } from "yup";
+import { number, object, SchemaOf, string } from "yup";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
 import { CategoryModel } from "src/api/client";
@@ -76,7 +77,8 @@ interface State {
 
 interface CreateTransactionSchema {
   amount: number;
-  category: CategoryModel | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  category: any;
   description: string | null;
 }
 
@@ -93,19 +95,10 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
 
-    const schema = object({
-      amount: number().required().moreThan(0).label("Amount"),
-      description: string().required().min(4).label("Description"),
-      category: object()
-        .shape({
-          name: string(),
-          id: number(),
-          icon: string(),
-          color: string()
-        })
-        .nullable()
-        .required()
-        .label("Category")
+    const schema: SchemaOf<CreateTransactionSchema> = object({
+      amount: number().required().nullable().moreThan(0).label("Amount"),
+      description: string().required().nullable().min(4).label("Description"),
+      category: object().required().nullable().label("Category")
     });
 
     const { handleSubmit, resetForm } = useForm<CreateTransactionSchema>({
@@ -129,8 +122,11 @@ export default defineComponent({
       categories: computed(() => store.getters["user/categories"] as CategoryModel[])
     });
 
-    const createTransaction = handleSubmit(async () => {
-      //
+    const createTransaction = handleSubmit(() => {
+      $q.notify({
+        message: "Transaction created!",
+        color: "green"
+      });
     });
 
     watch(

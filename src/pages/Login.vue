@@ -72,6 +72,7 @@ import { useStore } from "src/store";
 import { useForm, useField } from "vee-validate";
 import { object, string } from "yup";
 import ICategoryService from "src/api/interfaces/categoryService";
+import IAccountService from "src/api/interfaces/accountService";
 
 interface State {
   loading: boolean;
@@ -142,7 +143,10 @@ export default defineComponent({
           Types.CategoryService
         ).getUserCategories();
 
+        const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+
         await store.dispatch("user/setCategories", categories);
+        await store.dispatch("user/setAccounts", accounts);
 
         $q.notify({
           message: "Successfully logged in!",

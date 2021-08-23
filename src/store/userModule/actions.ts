@@ -1,4 +1,4 @@
-import { CategoryModel } from "src/api/client";
+import { AccountModel, CategoryModel } from "src/api/client";
 import { AppUser } from "src/models/user";
 import { ActionTree } from "vuex";
 import { StateInterface } from "../index";
@@ -13,6 +13,9 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
   },
   setCategories(context, categories: CategoryModel[]) {
     context.commit("setCategories", categories);
+  },
+  setAccounts(context, accounts: AccountModel[]) {
+    context.commit("setAccounts", accounts);
   }
 };
 

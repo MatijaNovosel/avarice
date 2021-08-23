@@ -56,14 +56,14 @@
 </template>
 
 <script lang="ts">
-import { Account, AccountExpenseAndIncomeModel } from "src/api/client";
+import { AccountModel, AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { formatBalance } from "src/utils/helpers";
 import { defineComponent, watch, reactive } from "vue";
 
 interface Props {
-  account: Account | null;
+  account: AccountModel | null;
 }
 
 interface State {

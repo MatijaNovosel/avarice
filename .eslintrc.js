@@ -50,6 +50,7 @@ module.exports = {
     "import/extensions": "off",
     "lines-between-class-members": "off",
     "import/no-unresolved": "off",
+    "newline-per-chained-call": "off",
     "no-var-requires": "off",
     "no-empty-function": "off",
     "no-unused-vars": "off",

@@ -12,6 +12,9 @@ const getters: GetterTree<UserStateInterface, StateInterface> = {
   },
   categories(state) {
     return state.categories;
+  },
+  accounts(state) {
+    return state.accounts;
   }
 };
 
