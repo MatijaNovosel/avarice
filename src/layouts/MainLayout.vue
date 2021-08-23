@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lhh lpR lFf">
-    <template v-if="state.showUi">
+    <template v-if="shouldShowUi">
       <navbar />
       <drawer :data="drawerItems" />
     </template>
@@ -14,13 +14,9 @@
 import ROUTE_NAMES from "src/router/routeNames";
 import Navbar from "src/components/Navbar.vue";
 import Drawer from "src/components/Drawer.vue";
-import { defineComponent, reactive, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import { useRoute } from "vue-router";
 import { DrawerItem } from "src/models/common";
-
-interface State {
-  showUi: boolean;
-}
 
 export default defineComponent({
   name: "MainLayout",
@@ -50,13 +46,9 @@ export default defineComponent({
       }
     ];
 
-    const state: State = reactive({
-      showUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string))
-    });
-
     return {
       drawerItems,
-      state
+      shouldShowUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string))
     };
   }
 });

@@ -6,7 +6,7 @@
           :selectedAccountId="state.selectedAccountId"
           @update:selectedAccountId="updateSelectedAccountDebounce"
           :loading="state.loading"
-          :accounts="state.accounts"
+          :accounts="accounts"
         />
       </div>
       <div class="col-9">
@@ -52,7 +52,6 @@ interface State {
   transactionDialogOpen: boolean;
   selectedAccountId: number | null;
   selectedAccount: AccountModel | null;
-  accounts: AccountModel[];
 }
 
 export default defineComponent({
@@ -66,12 +65,12 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
 
     const state: State = reactive({
       loading: false,
       transactionDialogOpen: false,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      accounts: computed(() => store.getters["user/accounts"] as AccountModel[]),
       selectedAccountId: null,
       selectedAccount: null,
       transactions: {
@@ -91,7 +90,7 @@ export default defineComponent({
 
     onMounted(async () => {
       state.loading = true;
-      state.selectedAccountId = state.accounts[0].id;
+      state.selectedAccountId = accounts.value[0].id;
 
       const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
       transactions.results?.forEach((t, i) => {
@@ -106,7 +105,7 @@ export default defineComponent({
     watch(
       () => state.selectedAccountId,
       (val) => {
-        const account = state.accounts.find((x) => x.id === val);
+        const account = accounts.value.find((x) => x.id === val);
         if (account) {
           state.selectedAccount = account;
         }
@@ -115,7 +114,8 @@ export default defineComponent({
 
     return {
       state,
-      updateSelectedAccountDebounce
+      updateSelectedAccountDebounce,
+      accounts
     };
   }
 });

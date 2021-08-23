@@ -39,14 +39,84 @@
             filled
             dense
             v-model="category"
-            :options="state.categories"
+            :options="categories"
             label="Category"
             :error-message="categoryErrors"
             :error="!!categoryErrors"
             option-value="id"
             option-label="name"
             clearable
-          />
+            emit-value
+            map-options
+          >
+            <template #selected-item="scope">
+              <q-item class="q-px-none q-py-sm">
+                <q-item-section avatar>
+                  <q-icon :name="scope.opt.icon" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    {{ scope.opt.name }}
+                  </q-item-label>
+                  <q-item-label caption> Category </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+            <template #option="scope">
+              <q-item class="q-py-sm" v-bind="scope.itemProps">
+                <q-item-section avatar>
+                  <q-icon :name="scope.opt.icon" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    {{ scope.opt.name }}
+                  </q-item-label>
+                  <q-item-label caption> Category </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select
+            hide-bottom-space
+            options-dense
+            filled
+            dense
+            v-model="account"
+            :options="accounts"
+            label="Account"
+            :error-message="accountErrors"
+            :error="!!accountErrors"
+            option-value="id"
+            option-label="name"
+            clearable
+            emit-value
+            map-options
+          >
+            <template #selected-item="scope">
+              <q-item class="q-px-none q-py-sm">
+                <q-item-section>
+                  <q-item-label>
+                    {{ scope.opt.name }}
+                  </q-item-label>
+                  <q-item-label caption>
+                    Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+            <template #option="scope">
+              <q-item class="q-py-sm" v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>
+                    {{ scope.opt.name }}
+                  </q-item-label>
+                  <q-item-label caption>
+                    Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </q-form>
       </q-card-section>
       <q-card-actions class="q-px-md justify-center">
@@ -65,20 +135,20 @@
 <script lang="ts">
 import { defineComponent, reactive, watch, computed } from "vue";
 import { useForm, useField } from "vee-validate";
-import { number, object, SchemaOf, string } from "yup";
+import { number, object, string } from "yup";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
-import { CategoryModel } from "src/api/client";
+import { AccountModel, CategoryModel } from "src/api/client";
+import { formatBalance } from "src/utils/helpers";
 
 interface State {
   open: boolean;
-  categories: CategoryModel[];
 }
 
 interface CreateTransactionSchema {
   amount: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  category: any;
+  category: number | null;
+  account: number | null;
   description: string | null;
 }
 
@@ -95,10 +165,16 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
 
-    const schema: SchemaOf<CreateTransactionSchema> = object({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
+
+    const schema = object({
       amount: number().required().nullable().moreThan(0).label("Amount"),
       description: string().required().nullable().min(4).label("Description"),
-      category: object().required().nullable().label("Category")
+      category: number().required().nullable().label("Category"),
+      account: number().required().nullable().label("Account")
     });
 
     const { handleSubmit, resetForm } = useForm<CreateTransactionSchema>({
@@ -106,20 +182,18 @@ export default defineComponent({
       initialValues: {
         amount: 0,
         category: null,
+        account: null,
         description: ""
       }
     });
 
     const { value: amount, errorMessage: amountErrors } = useField<number>("amount");
     const { value: description, errorMessage: descriptionErrors } = useField<string>("description");
-    const { value: category, errorMessage: categoryErrors } = useField<CategoryModel | null>(
-      "category"
-    );
+    const { value: category, errorMessage: categoryErrors } = useField<number | null>("category");
+    const { value: account, errorMessage: accountErrors } = useField<number | null>("account");
 
     const state: State = reactive({
-      open: props.open,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      categories: computed(() => store.getters["user/categories"] as CategoryModel[])
+      open: props.open
     });
 
     const createTransaction = handleSubmit(() => {
@@ -141,7 +215,8 @@ export default defineComponent({
         values: {
           amount: 0,
           description: "",
-          category: null
+          category: null,
+          account: null
         }
       });
       emit("update:open", false);
@@ -156,7 +231,12 @@ export default defineComponent({
       descriptionErrors,
       createTransaction,
       category,
-      categoryErrors
+      categoryErrors,
+      account,
+      accountErrors,
+      categories,
+      accounts,
+      formatBalance
     };
   }
 });
