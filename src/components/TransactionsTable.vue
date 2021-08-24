@@ -233,18 +233,14 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .q-field {
-  &::v-deep {
-    .q-field__control {
-      border-radius: 10px;
-    }
+  &::v-deep(.q-field__control) {
+    border-radius: 10px;
   }
 }
 
 .q-pagination {
-  &::v-deep {
-    .q-btn {
-      margin-left: 10px;
-    }
+  &::v-deep(.q-btn) {
+    margin-left: 10px;
   }
 }
 </style>

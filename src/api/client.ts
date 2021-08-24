@@ -573,17 +573,10 @@ export class Client {
     return Promise.resolve<void>(<any>null);
   }
 
-  transaction_Delete(
-    accountId: number | undefined,
-    id: string,
-    cancelToken?: CancelToken | undefined
-  ): Promise<void> {
-    let url_ = this.baseUrl + "/api/transaction/{id}?";
+  transaction_Delete(id: number, cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + "/api/transaction/{id}";
     if (id === undefined || id === null) throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
-    if (accountId === null) throw new Error("The parameter 'accountId' cannot be null.");
-    else if (accountId !== undefined)
-      url_ += "accountId=" + encodeURIComponent("" + accountId) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -975,7 +968,6 @@ export class AddTransferDto implements IAddTransferDto {
   amount!: number;
   accountFromId!: number;
   accountToId!: number;
-  createdAt!: Date;
 
   constructor(data?: IAddTransferDto) {
     if (data) {
@@ -990,9 +982,6 @@ export class AddTransferDto implements IAddTransferDto {
       this.amount = _data["amount"];
       this.accountFromId = _data["accountFromId"];
       this.accountToId = _data["accountToId"];
-      this.createdAt = _data["createdAt"]
-        ? new Date(_data["createdAt"].toString())
-        : <any>undefined;
     }
   }
 
@@ -1008,7 +997,6 @@ export class AddTransferDto implements IAddTransferDto {
     data["amount"] = this.amount;
     data["accountFromId"] = this.accountFromId;
     data["accountToId"] = this.accountToId;
-    data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
     return data;
   }
 }
@@ -1017,7 +1005,6 @@ export interface IAddTransferDto {
   amount: number;
   accountFromId: number;
   accountToId: number;
-  createdAt: Date;
 }
 
 export class PageableCollectionOfTransactionModel implements IPageableCollectionOfTransactionModel {
