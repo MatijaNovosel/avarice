@@ -11,3 +11,10 @@ export function formatBalance(balance: number | undefined, currency: string | un
   }
   return "";
 }
+
+export function acronym(txt: string) {
+  return txt
+    .split(" ")
+    .map((item) => item[0])
+    .join("");
+}

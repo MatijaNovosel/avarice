@@ -112,6 +112,16 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => accounts.value,
+      () => {
+        const account = accounts.value.find((x) => x.id === state.selectedAccountId);
+        if (account) {
+          state.selectedAccount = account;
+        }
+      }
+    );
+
     return {
       state,
       updateSelectedAccountDebounce,

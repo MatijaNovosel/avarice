@@ -10,9 +10,16 @@
         <q-list dense style="min-width: 100px">
           <q-item class="q-my-sm">
             <q-item-section avatar>
-              <q-avatar color="primary" text-color="white"> MN </q-avatar>
+              <q-avatar color="primary" text-color="white">
+                {{ acronym(user.userName) }}
+              </q-avatar>
             </q-item-section>
-            <q-item-section> Matija Novosel </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-weight-medium"> {{ user.userName }} </q-item-label>
+              <q-item-label caption>
+                {{ user.email }}
+              </q-item-label>
+            </q-item-section>
           </q-item>
           <q-separator />
           <q-item clickable v-close-popup>
@@ -21,27 +28,31 @@
           <q-item clickable v-close-popup>
             <q-item-section>New incognito tab</q-item-section>
           </q-item>
-          <q-separator />
-          <q-item clickable v-close-popup @click="logOut">
-            <q-item-section>Log out</q-item-section>
-          </q-item>
         </q-list>
       </q-menu>
+    </q-btn>
+    <q-btn flat dense class="q-mx-md bg-white rounded" @click="logOut">
+      <q-icon class="q-pa-xs" name="mdi-power-standby" color="grey-9" size="sm" />
     </q-btn>
   </q-header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 import { useStore } from "src/store";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
+import { AppUser } from "src/models/user";
+import { acronym } from "src/utils/helpers";
 
 export default defineComponent({
   name: "navbar",
   setup() {
     const store = useStore();
     const router = useRouter();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const user = computed(() => store.getters["user/data"] as AppUser);
 
     async function logOut() {
       await store.dispatch("user/logout");
@@ -51,7 +62,9 @@ export default defineComponent({
     }
 
     return {
-      logOut
+      logOut,
+      user,
+      acronym
     };
   }
 });

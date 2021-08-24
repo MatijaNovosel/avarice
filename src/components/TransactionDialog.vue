@@ -212,6 +212,7 @@ import { formatBalance } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TransactionType from "src/utils/transactionTypes";
+import IAccountService from "src/api/interfaces/accountService";
 
 interface State {
   open: boolean;
@@ -333,19 +334,25 @@ export default defineComponent({
 
         if (isTransfer.value) {
           await getService<ITransactionService>(Types.TransactionService).transfer({
-            amount: amount.value,
+            amount: parseFloat(amount.value.toString()),
             accountFromId: account.value as number,
             accountToId: accountTo.value as number
           });
         } else {
           await getService<ITransactionService>(Types.TransactionService).create({
-            amount: amount.value,
+            amount: parseFloat(amount.value.toString()),
             accountId: account.value as number,
             categoryId: category.value as number,
             description: description.value,
-            transactionType: amount.value < 0 ? TransactionType.Expense : TransactionType.Income
+            transactionType:
+              parseFloat(amount.value.toString()) < 0
+                ? TransactionType.Expense
+                : TransactionType.Income
           });
         }
+
+        const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+        await store.dispatch("user/setAccounts", accounts);
 
         $q.notify({
           message: "Transaction added",
