@@ -53,6 +53,7 @@ module.exports = {
     "newline-per-chained-call": "off",
     "no-var-requires": "off",
     "no-empty-function": "off",
+    "no-plusplus": "off",
     "no-unused-vars": "off",
     camelcase: "off",
     "class-methods-use-this": "off",

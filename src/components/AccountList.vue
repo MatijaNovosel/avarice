@@ -72,6 +72,22 @@
       <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
         <q-btn dense class="q-mr-md bg-grey-2 rounded q-mt-sm">
           <q-icon class="q-pa-xs" name="mdi-plus" color="grey-9" size="sm" />
+          <q-menu touch-position>
+            <q-virtual-scroll style="max-height: 300px; width: 260px" :items="heavyList" separator>
+              <template v-slot="{ item, index }">
+                <q-item :key="index" dense>
+                  <q-item-section avatar>
+                    <q-btn flat dense class="q-mx-md bg-white rounded">
+                      <q-icon class="q-pa-xs" :name="item.name" color="grey-9" size="sm" />
+                    </q-btn>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label> {{ item.name }} </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-virtual-scroll>
+          </q-menu>
         </q-btn>
       </q-item>
     </template>
@@ -82,6 +98,7 @@
 import { AccountModel } from "src/api/client";
 import { formatBalance } from "src/utils/helpers";
 import { defineComponent, PropType } from "vue";
+import icons from "../utils/icons.json";
 
 export default defineComponent({
   name: "account-list",
@@ -104,9 +121,18 @@ export default defineComponent({
       emit("update:selectedAccountId", id);
     }
 
+    const heavyList = [];
+
+    for (let i = 0; i < icons.length; i++) {
+      heavyList.push({
+        name: `mdi-${icons[i].icon}`
+      });
+    }
+
     return {
       updateSelectedAccountId,
-      formatBalance
+      formatBalance,
+      heavyList
     };
   }
 });
