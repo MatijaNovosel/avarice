@@ -13,6 +13,7 @@
     "@quasar/extras": "^1.0.0",
     "@types/yup": "^0.29.13",
     "axios": "^0.21.1",
+    "chart.js": "^3.5.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.23.0",
     "inversify": "^5.1.1",
@@ -21,6 +22,7 @@
     "reflect-metadata": "^0.1.13",
     "vee-validate": "^4.4.9",
     "vue-i18n": "^9.0.0-beta.0",
+    "vue3-chart-v2": "^0.8.2",
     "vuex": "^4.0.1",
     "yup": "^0.32.9"
   },

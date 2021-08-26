@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-between bg-white q-pt-md q-pr-md q-pl-xl items-center rounded-t-md">
+  <div class="row justify-between bg-white q-py-md q-pr-md q-pl-xl items-center rounded-t-md">
     <span class="text-weight-bold"> Transactions </span>
     <div class="row">
       <q-btn :disable="state.data.total === 0" flat dense class="q-mr-md bg-grey-2 rounded">
@@ -12,6 +12,7 @@
       </q-input>
     </div>
   </div>
+  <q-separator />
   <q-table
     :loading="loading"
     hide-pagination
@@ -35,7 +36,7 @@
         <q-icon name="mdi-swap-vertical" size="sm" />
       </q-th>
     </template>
-    <template v-slot:body="props">
+    <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
           {{ props.row.id }}

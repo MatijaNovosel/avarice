@@ -35,7 +35,7 @@
             </q-chip>
           </div>
         </q-card-section>
-        <q-card-section>
+        <q-card-section class="q-my-sm">
           <div class="text-h3 text-center">
             {{ formatBalance(account.balance, account.currency) }}
           </div>

@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="bg-grey-2">
     <div class="row">
-      <div class="col-3 q-pr-lg">
+      <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
         <account-list
           :selectedAccountId="state.selectedAccountId"
           @update:selectedAccountId="updateSelectedAccountDebounce"
@@ -9,20 +9,20 @@
           :accounts="accounts"
         />
       </div>
-      <div class="col-9">
+      <div class="col-12 col-md-9">
         <div class="row">
-          <div class="col-12 col-md-6 q-pr-lg">
+          <div class="col-12 col-md-6 q-pr-md-lg">
             <total-balance-card
               :loading="state.loading"
               :account="state.selectedAccount"
               @new-transaction="state.transactionDialogOpen = true"
             />
           </div>
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-md-6 q-pt-md q-pt-md-none">
             <account-balance-graph-card :loading="state.loading" />
           </div>
         </div>
-        <div class="row q-mt-lg">
+        <div class="row q-mt-md">
           <div class="col-12">
             <transactions-table :loading="state.loading" :data="state.transactions" />
           </div>

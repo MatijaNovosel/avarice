@@ -22,6 +22,7 @@ module.exports = configure((ctx) => ({
     open: true
   },
   framework: {
+    cssAddon: true,
     config: {
       notify: {
         //

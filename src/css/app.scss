@@ -1,3 +1,7 @@
+.q-item__section--avatar {
+  align-items: center;
+}
+
 .rounded-sm {
   border-radius: 8px;
 }
@@ -10,17 +14,16 @@
   border-radius: 12px;
 }
 
-.q-item__section--avatar {
-  align-items: center;
-}
-
 .rounded-tr {
   border-top-right-radius: 10px;
 }
+.rounded-tl {
+  border-top-left-radius: 10px;
+}
 
 .rounded-t {
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
+  @extend .rounded-tr;
+  @extend .rounded-tl;
 }
 
 .rounded-b {
@@ -31,15 +34,26 @@
 .rounded-tr-md {
   border-top-right-radius: 12px;
 }
+.rounded-tl-md {
+  border-top-right-radius: 12px;
+}
 
 .rounded-t-md {
-  border-top-right-radius: 12px;
-  border-top-left-radius: 12px;
+  @extend .rounded-tr-md;
+  @extend .rounded-tl-md;
+}
+
+.rounded-bl-md {
+  border-bottom-left-radius: 12px;
+}
+
+.rounded-br-md {
+  border-bottom-right-radius: 12px;
 }
 
 .rounded-b-md {
-  border-bottom-right-radius: 12px;
-  border-bottom-left-radius: 12px;
+  @extend .rounded-br-md;
+  @extend .rounded-bl-md;
 }
 
 .p-rel {
