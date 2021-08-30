@@ -11,13 +11,13 @@ export default defineComponent({
       type: Object,
       required: true
     },
-    chartOptions: {
+    options: {
       type: Object,
       required: false
     }
   },
   mounted() {
-    this.renderChart(this.chartData, this.chartOptions);
+    this.renderChart(this.chartData, this.options);
   }
 });
 </script>

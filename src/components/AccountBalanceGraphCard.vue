@@ -10,17 +10,20 @@
     </q-card-section>
     <q-card-section class="q-pa-none">
       <chart-test
+        v-if="state.chartData"
         style="height: 128px"
         :chart-data="state.chartData"
-        :chart-options="state.chartOptions"
+        :options="state.chartOptions"
       />
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, reactive } from "vue";
 import Chart from "src/components/Chart.vue";
+import { getService, Types } from "src/di-container";
+import IAccountService from "src/api/interfaces/accountService";
 
 export default defineComponent({
   name: "account-balance-graph-card",
@@ -34,18 +37,9 @@ export default defineComponent({
     }
   },
   setup() {
-    const state = {
-      chartData: {
-        datasets: [
-          {
-            pointBackgroundColor: "#ffffff",
-            backgroundColor: "rgb(187, 222, 251)",
-            borderColor: "rgb(187, 222, 251)",
-            data: [15000, 14500, 14700, 13900, 15500, 14500, 13750, 16000, 15250, 14750]
-          }
-        ],
-        labels: [1, 2, 6, 3, 10, 7, 20, 15, 9, 18]
-      },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const state: any = reactive({
+      chartData: null,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -92,7 +86,25 @@ export default defineComponent({
           ]
         }
       }
-    };
+    });
+
+    onMounted(async () => {
+      const graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
+        1
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      state.chartData = {
+        datasets: [
+          {
+            pointBackgroundColor: "#ffffff",
+            backgroundColor: "rgb(187, 222, 251)",
+            borderColor: "rgb(187, 222, 251)",
+            data: graphData.map((x) => x.amount)
+          }
+        ],
+        labels: [15000, 14500, 14700, 13900, 15500, 14500, 13750, 16000, 15250, 14750]
+      };
+    });
 
     return {
       state
