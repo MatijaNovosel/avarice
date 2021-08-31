@@ -54,6 +54,7 @@ module.exports = {
     "no-var-requires": "off",
     "no-empty-function": "off",
     "no-plusplus": "off",
+    "@typescript-eslint/ban-types": "off",
     "no-unused-vars": "off",
     camelcase: "off",
     "class-methods-use-this": "off",

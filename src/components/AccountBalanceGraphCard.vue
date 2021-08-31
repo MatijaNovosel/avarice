@@ -24,6 +24,12 @@ import { defineComponent, onMounted, reactive } from "vue";
 import Chart from "src/components/Chart.vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
+import { GraphData, GraphOptions } from "src/models/graph";
+
+interface State {
+  chartData: GraphData | null;
+  chartOptions: GraphOptions;
+}
 
 export default defineComponent({
   name: "account-balance-graph-card",
@@ -38,7 +44,7 @@ export default defineComponent({
   },
   setup() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const state: any = reactive({
+    const state: State = reactive({
       chartData: null,
       chartOptions: {
         responsive: true,
@@ -102,7 +108,7 @@ export default defineComponent({
             data: graphData.map((x) => x.amount)
           }
         ],
-        labels: [15000, 14500, 14700, 13900, 15500, 14500, 13750, 16000, 15250, 14750]
+        labels: graphData.map((x) => x.amount.toString())
       };
     });
 
