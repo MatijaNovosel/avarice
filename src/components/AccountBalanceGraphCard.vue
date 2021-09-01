@@ -105,7 +105,7 @@ export default defineComponent({
             pointBackgroundColor: "#ffffff",
             backgroundColor: "rgb(187, 222, 251)",
             borderColor: "rgb(187, 222, 251)",
-            data: graphData.map((x) => x.amount)
+            data: graphData.map((x) => x.amount).reverse()
           }
         ],
         labels: graphData.map((x) => x.amount.toString())
