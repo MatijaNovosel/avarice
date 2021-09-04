@@ -226,16 +226,13 @@
                             size="sm"
                           />
                           <q-menu touch-position>
-                            <q-virtual-scroll
-                              style="max-height: 300px"
-                              :items="iconList"
-                              separator
-                            >
+                            <q-virtual-scroll style="max-height: 300px" :items="iconList" separator>
                               <template v-slot="{ item, index }">
                                 <q-item :key="index" dense>
                                   <q-item-section avatar>
                                     <q-btn
                                       flat
+                                      size="small"
                                       dense
                                       class="q-mx-md bg-white rounded"
                                       @click="setCategoryIcon(item.name)"
@@ -251,6 +248,17 @@
                                 </q-item>
                               </template>
                             </q-virtual-scroll>
+                          </q-menu>
+                        </q-btn>
+                        <q-btn size="sm" flat dense class="bg-grey-4 rounded q-ml-md">
+                          <q-icon name="mdi-square" :color="state.selectedColor" />
+                          <q-menu touch-position>
+                            <q-color
+                              v-model="state.selectedColor"
+                              no-header
+                              no-footer
+                              default-view="palette"
+                            />
                           </q-menu>
                         </q-btn>
                       </template>
@@ -296,6 +304,7 @@ interface State {
   closeAfterAdding: boolean;
   panel: string;
   selectedIcon: string;
+  selectedColor: string;
 }
 
 interface CreateTransactionSchema {
@@ -383,6 +392,7 @@ export default defineComponent({
       open: props.open,
       loading: false,
       closeAfterAdding: false,
+      selectedColor: "#ff00ff",
       panel: "newTransaction",
       selectedIcon: "mdi-plus"
     });

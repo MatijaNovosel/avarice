@@ -459,6 +459,64 @@ export class Client {
     return Promise.resolve<CategoryModel[]>(<any>null);
   }
 
+  category_Create(
+    newCategory: CreateCategoryModel,
+    cancelToken?: CancelToken | undefined
+  ): Promise<void> {
+    let url_ = this.baseUrl + "/api/category";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(newCategory);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: "POST",
+      url: url_,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processCategory_Create(_response);
+      });
+  }
+
+  protected processCategory_Create(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
   transaction_Add(
     payload: AddTransactionDto,
     cancelToken?: CancelToken | undefined
@@ -1017,6 +1075,53 @@ export interface ICategoryModel extends IBaseModel {
   name?: string | undefined;
   icon?: string | undefined;
   color?: string | undefined;
+}
+
+export class CreateCategoryModel implements ICreateCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
+  color?: string | undefined;
+  userId?: string | undefined;
+
+  constructor(data?: ICreateCategoryModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.icon = _data["icon"];
+      this.color = _data["color"];
+      this.userId = _data["userId"];
+    }
+  }
+
+  static fromJS(data: any): CreateCategoryModel {
+    data = typeof data === "object" ? data : {};
+    let result = new CreateCategoryModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["name"] = this.name;
+    data["icon"] = this.icon;
+    data["color"] = this.color;
+    data["userId"] = this.userId;
+    return data;
+  }
+}
+
+export interface ICreateCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
+  color?: string | undefined;
+  userId?: string | undefined;
 }
 
 export class AddTransactionDto implements IAddTransactionDto {
