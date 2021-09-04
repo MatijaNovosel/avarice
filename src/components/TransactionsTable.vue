@@ -12,7 +12,6 @@
       </q-input>
     </div>
   </div>
-  <q-separator />
   <q-table
     :loading="loading"
     hide-pagination
@@ -84,6 +83,11 @@
         </q-td>
         <q-td key="createdAt" :props="props">
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
+        </q-td>
+        <q-td key="actions" :props="props">
+          <q-btn flat dense class="bg-red-3 rounded" @click="deleteTransaction(props.row.id)">
+            <q-icon size="1.3em" name="mdi-close" color="white" />
+          </q-btn>
         </q-td>
       </q-tr>
     </template>
@@ -183,6 +187,12 @@ export default defineComponent({
         label: "Created at",
         align: "center",
         field: "createdAt"
+      },
+      {
+        name: "actions",
+        label: "Actions",
+        align: "center",
+        field: "actions"
       }
     ];
 
@@ -212,6 +222,10 @@ export default defineComponent({
       }
     }
 
+    function deleteTransaction(id: number) {
+      //
+    }
+
     watch(
       () => props.data,
       (val) => {
@@ -226,7 +240,8 @@ export default defineComponent({
       formatTransactionIcon,
       formatTransactionColor,
       formatBalance,
-      TransactionType
+      TransactionType,
+      deleteTransaction
     };
   }
 });

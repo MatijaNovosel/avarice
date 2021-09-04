@@ -295,7 +295,6 @@ import { formatBalance } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TransactionType from "src/utils/transactionTypes";
-import IAccountService from "src/api/interfaces/accountService";
 import icons from "../utils/icons.json";
 
 interface State {
@@ -318,7 +317,7 @@ interface CreateTransactionSchema {
 
 export default defineComponent({
   name: "transaction-dialog",
-  emits: ["update:open"],
+  emits: ["update:open", "transaction-added"],
   props: {
     open: {
       type: Boolean,
@@ -445,8 +444,7 @@ export default defineComponent({
           });
         }
 
-        const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-        await store.dispatch("user/setAccounts", accounts);
+        emit("transaction-added");
 
         $q.notify({
           message: "Transaction added",

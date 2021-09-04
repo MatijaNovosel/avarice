@@ -63,7 +63,7 @@ export default defineComponent({
         },
         elements: {
           point: {
-            radius: 3
+            radius: 0
           },
           line: {
             tension: 0.5

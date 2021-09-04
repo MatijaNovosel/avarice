@@ -13,7 +13,7 @@
     <template v-else>
       <q-card class="rounded-md q-px-md q-py-xs" flat>
         <q-card-section class="row items-center justify-between q-pb-sm">
-          <span class="text-weight-bold"> Total balance </span>
+          <span class="text-weight-bold q-pl-md"> Total balance </span>
           <div>
             <q-chip
               color="pink-1"

@@ -30,7 +30,7 @@
       </div>
     </div>
   </q-page>
-  <transaction-dialog v-model:open="state.transactionDialogOpen" />
+  <transaction-dialog v-model:open="state.transactionDialogOpen" @transaction-added="updateData" />
 </template>
 
 <script lang="ts">
@@ -45,6 +45,7 @@ import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue"
 import TransactionDialog from "src/components/TransactionDialog.vue";
 import { debounce } from "quasar";
 import { useStore } from "src/store";
+import IAccountService from "src/api/interfaces/accountService";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -88,19 +89,27 @@ export default defineComponent({
 
     const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
 
-    onMounted(async () => {
-      state.loading = true;
-      state.selectedAccountId = accounts.value[0].id;
-
+    async function getTransactions() {
       const transactions = await getService<ITransactionService>(Types.TransactionService).getAll();
       transactions.results?.forEach((t, i) => {
         // eslint-disable-next-line no-param-reassign
         t.id = i + 1;
       });
       state.transactions = transactions;
+    }
 
+    onMounted(async () => {
+      state.loading = true;
+      state.selectedAccountId = accounts.value[0].id;
+      await getTransactions();
       state.loading = false;
     });
+
+    async function updateData() {
+      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      await store.dispatch("user/setAccounts", accounts);
+      await getTransactions();
+    }
 
     watch(
       () => state.selectedAccountId,
@@ -125,7 +134,8 @@ export default defineComponent({
     return {
       state,
       updateSelectedAccountDebounce,
-      accounts
+      accounts,
+      updateData
     };
   }
 });
