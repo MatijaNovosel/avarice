@@ -24,7 +24,11 @@
         </div>
         <div class="row q-mt-md">
           <div class="col-12">
-            <transactions-table :loading="state.loading" :data="state.transactions" />
+            <transactions-table
+              @delete-transaction="deleteTransaction"
+              :loading="state.loading"
+              :data="state.transactions"
+            />
           </div>
         </div>
       </div>
@@ -46,6 +50,7 @@ import TransactionDialog from "src/components/TransactionDialog.vue";
 import { debounce } from "quasar";
 import { useStore } from "src/store";
 import IAccountService from "src/api/interfaces/accountService";
+import { format } from "date-fns";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -105,10 +110,25 @@ export default defineComponent({
       state.loading = false;
     });
 
-    async function updateData() {
+    async function getAccounts() {
       const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
       await store.dispatch("user/setAccounts", accounts);
+    }
+
+    async function updateData() {
+      await getAccounts();
       await getTransactions();
+    }
+
+    async function deleteTransaction(id: number) {
+      const transaction = state.transactions.results?.find((t) => t.id === id);
+      if (transaction) {
+        await getService<ITransactionService>(Types.TransactionService).delete(
+          parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
+        );
+        await getTransactions();
+        await getAccounts();
+      }
     }
 
     watch(
@@ -135,7 +155,8 @@ export default defineComponent({
       state,
       updateSelectedAccountDebounce,
       accounts,
-      updateData
+      updateData,
+      deleteTransaction
     };
   }
 });

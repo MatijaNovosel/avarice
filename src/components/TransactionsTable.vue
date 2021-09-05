@@ -132,7 +132,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props) {
+  emits: ["delete-transaction"],
+  setup(props: Props, { emit }) {
     const state: State = reactive({
       pagination: {
         sortBy: "desc",
@@ -223,7 +224,7 @@ export default defineComponent({
     }
 
     function deleteTransaction(id: number) {
-      //
+      emit("delete-transaction", id);
     }
 
     watch(

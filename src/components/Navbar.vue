@@ -31,8 +31,8 @@
         </q-list>
       </q-menu>
     </q-btn>
-    <q-btn flat dense class="q-mx-md bg-white rounded" @click="logOut">
-      <q-icon class="q-pa-xs" name="mdi-power-standby" color="grey-9" size="sm" />
+    <q-btn flat dense class="q-mx-md bg-red rounded" @click="logOut">
+      <q-icon class="q-pa-xs" name="mdi-power-standby" color="white" size="sm" />
     </q-btn>
   </q-header>
 </template>
