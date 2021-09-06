@@ -34,7 +34,11 @@
       </div>
     </div>
   </q-page>
-  <transaction-dialog v-model:open="state.transactionDialogOpen" @transaction-added="updateData" />
+  <transaction-dialog
+    v-model:open="state.transactionDialogOpen"
+    @category-added="categoryAdded"
+    @transaction-added="updateData"
+  />
 </template>
 
 <script lang="ts">
@@ -51,6 +55,7 @@ import { debounce } from "quasar";
 import { useStore } from "src/store";
 import IAccountService from "src/api/interfaces/accountService";
 import { format } from "date-fns";
+import ICategoryService from "src/api/interfaces/categoryService";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -131,6 +136,13 @@ export default defineComponent({
       }
     }
 
+    async function categoryAdded() {
+      const categories = await getService<ICategoryService>(
+        Types.CategoryService
+      ).getUserCategories();
+      await store.dispatch("user/setCategories", categories);
+    }
+
     watch(
       () => state.selectedAccountId,
       (val) => {
@@ -156,7 +168,8 @@ export default defineComponent({
       updateSelectedAccountDebounce,
       accounts,
       updateData,
-      deleteTransaction
+      deleteTransaction,
+      categoryAdded
     };
   }
 });

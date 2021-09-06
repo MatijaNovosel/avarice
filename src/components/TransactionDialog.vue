@@ -24,7 +24,7 @@
                 <div class="col-2 justify-center column content-center">
                   <q-toggle
                     style="transform: rotate(-90deg)"
-                    v-model="isTransfer"
+                    v-model="state.isTransfer"
                     checked-icon="check"
                     color="green"
                     label="Transfer"
@@ -35,40 +35,34 @@
                 <div class="col-10">
                   <q-form class="q-gutter-md">
                     <q-input
-                      :error-message="amountErrors"
-                      :error="!!amountErrors"
                       dense
                       square
                       filled
                       hide-bottom-space
                       clearable
                       label="Amount"
-                      v-model="amount"
+                      v-model="state.transaction.amount"
                       suffix="HRK"
                     />
                     <q-input
-                      v-if="!isTransfer"
-                      :error-message="descriptionErrors"
-                      :error="!!descriptionErrors"
+                      v-if="!state.isTransfer"
                       dense
                       square
                       filled
                       hide-bottom-space
                       clearable
                       label="Description"
-                      v-model="description"
+                      v-model="state.transaction.description"
                     />
                     <q-select
-                      v-if="!isTransfer"
+                      v-if="!state.isTransfer"
                       hide-bottom-space
                       options-dense
                       filled
                       dense
-                      v-model="category"
+                      v-model="state.transaction.category"
                       :options="categories"
                       label="Category"
-                      :error-message="categoryErrors"
-                      :error="!!categoryErrors"
                       option-value="id"
                       option-label="name"
                       clearable
@@ -89,7 +83,7 @@
                       <template #selected-item="scope">
                         <q-item class="q-px-none q-py-sm">
                           <q-item-section avatar>
-                            <q-icon :name="scope.opt.icon" :color="scope.opt.color" />
+                            <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
                           </q-item-section>
                           <q-item-section>
                             <q-item-label>
@@ -102,7 +96,11 @@
                       <template #option="scope">
                         <q-item class="q-py-sm" v-bind="scope.itemProps">
                           <q-item-section avatar>
-                            <q-icon :name="scope.opt.icon" :color="scope.opt.color" />
+                            <q-icon
+                              :style="{ color: scope.opt.color }"
+                              :name="scope.opt.icon"
+                              :color="scope.opt.color"
+                            />
                           </q-item-section>
                           <q-item-section>
                             <q-item-label>
@@ -118,11 +116,9 @@
                       options-dense
                       filled
                       dense
-                      v-model="account"
+                      v-model="state.transaction.account"
                       :options="accounts"
-                      :label="isTransfer ? 'Account from' : 'Account'"
-                      :error-message="accountErrors"
-                      :error="!!accountErrors"
+                      :label="state.isTransfer ? 'Account from' : 'Account'"
                       option-value="id"
                       option-label="name"
                       clearable
@@ -136,7 +132,8 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                              Balance:
+                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
                         </q-item>
@@ -148,23 +145,22 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                              Balance:
+                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
                         </q-item>
                       </template>
                     </q-select>
                     <q-select
-                      v-if="isTransfer"
+                      v-if="state.isTransfer"
                       hide-bottom-space
                       options-dense
                       filled
                       dense
-                      v-model="accountTo"
+                      v-model="state.transaction.accountTo"
                       :options="accounts"
                       label="Account to"
-                      :error-message="accountToErrors"
-                      :error="!!accountToErrors"
                       option-value="id"
                       option-label="name"
                       clearable
@@ -178,7 +174,8 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                              Balance:
+                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
                         </q-item>
@@ -190,7 +187,8 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance: {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                              Balance:
+                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
                         </q-item>
@@ -216,7 +214,15 @@
                 </div>
                 <div class="col-10">
                   <q-form class="q-gutter-md">
-                    <q-input dense square filled hide-bottom-space clearable label="Name">
+                    <q-input
+                      v-model="state.categoryName"
+                      dense
+                      square
+                      filled
+                      hide-bottom-space
+                      clearable
+                      label="Name"
+                    >
                       <template #after>
                         <q-btn size="sm" flat dense class="bg-grey-4 rounded q-ml-md">
                           <q-icon
@@ -250,8 +256,11 @@
                             </q-virtual-scroll>
                           </q-menu>
                         </q-btn>
-                        <q-btn size="sm" flat dense class="bg-grey-4 rounded q-ml-md">
-                          <q-icon name="mdi-square" :color="state.selectedColor" />
+                        <q-btn flat dense class="q-ml-md" size="lg">
+                          <q-icon
+                            class="rounded"
+                            :style="{ backgroundColor: state.selectedColor }"
+                          />
                           <q-menu touch-position>
                             <q-color
                               v-model="state.selectedColor"
@@ -276,7 +285,7 @@
             color="light-green-7"
             size="md"
             label="Create"
-            @click="createTransaction"
+            @click="createTransactionOrCategory"
           />
         </q-card-actions>
       </template>
@@ -286,8 +295,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, computed } from "vue";
-import { useForm, useField } from "vee-validate";
-import { number, object, string, boolean } from "yup";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
 import { AccountModel, CategoryModel } from "src/api/client";
@@ -295,7 +302,16 @@ import { formatBalance } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TransactionType from "src/utils/transactionTypes";
+import ICategoryService from "src/api/interfaces/categoryService";
 import icons from "../utils/icons.json";
+
+interface NewTransaction {
+  amount: number;
+  category: number | null;
+  account: number | null;
+  accountTo: number | null;
+  description: string | null;
+}
 
 interface State {
   open: boolean;
@@ -304,20 +320,14 @@ interface State {
   panel: string;
   selectedIcon: string;
   selectedColor: string;
-}
-
-interface CreateTransactionSchema {
-  amount: number;
-  category: number | null;
-  account: number | null;
-  accountTo: number | null;
-  description: string | null;
   isTransfer: boolean;
+  transaction: NewTransaction;
+  categoryName: string | null;
 }
 
 export default defineComponent({
   name: "transaction-dialog",
-  emits: ["update:open", "transaction-added"],
+  emits: ["update:open", "transaction-added", "category-added"],
   props: {
     open: {
       type: Boolean,
@@ -333,80 +343,26 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
 
-    const schema = object({
-      amount: number().required().nullable().not([0]).label("Amount"),
-      description: string()
-        .when("isTransfer", {
-          is: true,
-          then: string().notRequired().nullable(),
-          otherwise: string().required().nullable().min(4).max(50).label("Description")
-        })
-        .defined(),
-      category: number()
-        .when("isTransfer", {
-          is: true,
-          then: number().required().nullable().label("Category"),
-          otherwise: number().notRequired().nullable()
-        })
-        .defined(),
-      account: number()
-        .when("isTransfer", {
-          is: true,
-          then: number().required().nullable().label("Account from"),
-          otherwise: number().required().nullable().label("Account")
-        })
-        .defined(),
-      accountTo: number()
-        .when("isTransfer", {
-          is: true,
-          then: number().required().nullable().label("Account to"),
-          otherwise: number().notRequired().nullable().label("Account to")
-        })
-        .defined(),
-      isTransfer: boolean().notRequired().defined()
-    });
-
-    const { handleSubmit, resetForm } = useForm<CreateTransactionSchema>({
-      validationSchema: schema,
-      initialValues: {
-        isTransfer: false,
-        amount: 0,
-        category: null,
-        account: null,
-        accountTo: null,
-        description: ""
-      }
-    });
-
-    const { value: amount, errorMessage: amountErrors } = useField<number>("amount");
-    const { value: description, errorMessage: descriptionErrors } = useField<string>("description");
-    const { value: category, errorMessage: categoryErrors } = useField<number | null>("category");
-    const { value: account, errorMessage: accountErrors } = useField<number | null>("account");
-    const { value: accountTo, errorMessage: accountToErrors } = useField<number | null>(
-      "accountTo"
-    );
-    const { value: isTransfer } = useField<boolean>("isTransfer");
-
     const state: State = reactive({
       open: props.open,
       loading: false,
       closeAfterAdding: false,
       selectedColor: "#ff00ff",
       panel: "newTransaction",
-      selectedIcon: "mdi-plus"
+      selectedIcon: "mdi-plus",
+      categoryName: null,
+      isTransfer: false,
+      transaction: {
+        amount: 0,
+        category: null,
+        account: null,
+        accountTo: null,
+        description: null
+      }
     });
 
     function resetFormData(resetCloseAfterAdding?: boolean) {
-      resetForm({
-        values: {
-          isTransfer: false,
-          amount: 0,
-          description: "",
-          category: null,
-          account: null,
-          accountTo: null
-        }
-      });
+      // Reset here
       if (resetCloseAfterAdding) {
         state.closeAfterAdding = false;
       }
@@ -421,41 +377,55 @@ export default defineComponent({
       state.selectedIcon = name;
     }
 
-    const createTransaction = handleSubmit(async () => {
+    const createTransactionOrCategory = async () => {
       try {
         state.loading = true;
 
-        if (isTransfer.value) {
-          await getService<ITransactionService>(Types.TransactionService).transfer({
-            amount: parseFloat(amount.value.toString()),
-            accountFromId: account.value as number,
-            accountToId: accountTo.value as number
+        if (state.panel === "newTransaction") {
+          if (state.isTransfer) {
+            await getService<ITransactionService>(Types.TransactionService).transfer({
+              amount: state.transaction.amount,
+              accountFromId: state.transaction.account as number,
+              accountToId: state.transaction.accountTo as number
+            });
+          } else {
+            await getService<ITransactionService>(Types.TransactionService).create({
+              amount: state.transaction.amount,
+              accountId: state.transaction.account as number,
+              categoryId: state.transaction.category as number,
+              description: state.transaction.description as string,
+              transactionType:
+                state.transaction.amount < 0 ? TransactionType.Expense : TransactionType.Income
+            });
+          }
+
+          emit("transaction-added");
+
+          $q.notify({
+            message: "Transaction added",
+            color: "green",
+            position: "top"
           });
+
+          if (state.closeAfterAdding) {
+            closeDialog();
+          } else {
+            resetFormData();
+          }
         } else {
-          await getService<ITransactionService>(Types.TransactionService).create({
-            amount: parseFloat(amount.value.toString()),
-            accountId: account.value as number,
-            categoryId: category.value as number,
-            description: description.value,
-            transactionType:
-              parseFloat(amount.value.toString()) < 0
-                ? TransactionType.Expense
-                : TransactionType.Income
+          await getService<ICategoryService>(Types.CategoryService).createCategory({
+            name: state.categoryName as string,
+            icon: state.selectedIcon,
+            color: state.selectedColor
           });
-        }
 
-        emit("transaction-added");
+          emit("category-added");
 
-        $q.notify({
-          message: "Transaction added",
-          color: "green",
-          position: "top"
-        });
-
-        if (state.closeAfterAdding) {
-          closeDialog();
-        } else {
-          resetFormData();
+          $q.notify({
+            message: "Category added",
+            color: "green",
+            position: "top"
+          });
         }
       } catch (e) {
         $q.notify({
@@ -464,11 +434,9 @@ export default defineComponent({
           position: "top"
         });
       } finally {
-        setTimeout(() => {
-          state.loading = false;
-        }, 1500);
+        state.loading = false;
       }
-    });
+    };
 
     watch(
       () => props.open,
@@ -488,21 +456,10 @@ export default defineComponent({
     return {
       state,
       closeDialog,
-      amount,
-      description,
-      amountErrors,
-      descriptionErrors,
-      createTransaction,
-      category,
-      categoryErrors,
-      account,
-      accountErrors,
+      createTransactionOrCategory,
       categories,
       accounts,
       formatBalance,
-      isTransfer,
-      accountTo,
-      accountToErrors,
       iconList,
       setCategoryIcon
     };

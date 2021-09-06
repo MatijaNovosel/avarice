@@ -10,9 +10,7 @@
               filled
               clearable
               hide-bottom-space
-              :error-message="emailErrors"
-              :error="!!emailErrors"
-              v-model="email"
+              v-model="state.login.email"
               type="email"
               dense
               label="Email"
@@ -27,9 +25,7 @@
               filled
               clearable
               hide-bottom-space
-              v-model="password"
-              :error-message="passwordErrors"
-              :error="!!passwordErrors"
+              v-model="state.login.password"
               dense
               type="password"
               label="Password"
@@ -69,18 +65,17 @@ import ROUTE_NAMES from "src/router/routeNames";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
-import { useForm, useField } from "vee-validate";
-import { object, string } from "yup";
 import ICategoryService from "src/api/interfaces/categoryService";
 import IAccountService from "src/api/interfaces/accountService";
 
-interface State {
-  loading: boolean;
-}
-
-interface LoginFormSchema {
+interface LoginForm {
   password: string | null;
   email: string | null;
+}
+
+interface State {
+  loading: boolean;
+  login: LoginForm;
 }
 
 export default defineComponent({
@@ -90,33 +85,21 @@ export default defineComponent({
     const router = useRouter();
     const $q = useQuasar();
 
-    const schema = object({
-      email: string().required().email().label("Email"),
-      password: string().required().label("Password")
-    });
-
-    const { handleSubmit } = useForm<LoginFormSchema>({
-      validationSchema: schema,
-      initialValues: {
-        password: "",
-        email: ""
+    const state: State = reactive({
+      loading: false,
+      login: {
+        password: null,
+        email: null
       }
     });
 
-    const { value: email, errorMessage: emailErrors } = useField<string>("email");
-    const { value: password, errorMessage: passwordErrors } = useField<string>("password");
-
-    const state: State = reactive({
-      loading: false
-    });
-
-    const login = handleSubmit(async () => {
+    const login = async () => {
       state.loading = true;
 
       try {
         const data = await getService<IAuthService>(Types.AuthService).login(
-          email.value,
-          password.value
+          state.login.email as string,
+          state.login.password as string
         );
 
         if (!data.result) {
@@ -133,7 +116,7 @@ export default defineComponent({
 
         await store.dispatch("user/login", {
           id: decodedToken.Id,
-          email: email.value,
+          email: state.login.email,
           userName: decodedToken.unique_name,
           emailConfirmed: false,
           token: data.token
@@ -164,15 +147,11 @@ export default defineComponent({
         });
         state.loading = false;
       }
-    });
+    };
 
     return {
       state,
-      login,
-      email,
-      password,
-      emailErrors,
-      passwordErrors
+      login
     };
   }
 });

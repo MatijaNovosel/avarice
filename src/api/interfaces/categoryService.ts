@@ -1,6 +1,6 @@
-import { CategoryModel, CreateCategoryModel } from "src/api/client";
+import { CategoryModel, ICreateCategoryModel } from "src/api/client";
 
 export default interface ICategoryService {
   getUserCategories(): Promise<CategoryModel[]>;
-  createCategory(payload: CreateCategoryModel): Promise<void>;
+  createCategory(payload: ICreateCategoryModel): Promise<void>;
 }
