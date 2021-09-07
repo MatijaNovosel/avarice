@@ -306,7 +306,7 @@ import ICategoryService from "src/api/interfaces/categoryService";
 import icons from "../utils/icons.json";
 
 interface NewTransaction {
-  amount: number;
+  amount: string | null;
   category: number | null;
   account: number | null;
   accountTo: number | null;
@@ -353,7 +353,7 @@ export default defineComponent({
       categoryName: null,
       isTransfer: false,
       transaction: {
-        amount: 0,
+        amount: "0",
         category: null,
         account: null,
         accountTo: null,
@@ -384,18 +384,20 @@ export default defineComponent({
         if (state.panel === "newTransaction") {
           if (state.isTransfer) {
             await getService<ITransactionService>(Types.TransactionService).transfer({
-              amount: state.transaction.amount,
+              amount: parseFloat(state.transaction.amount as string),
               accountFromId: state.transaction.account as number,
               accountToId: state.transaction.accountTo as number
             });
           } else {
             await getService<ITransactionService>(Types.TransactionService).create({
-              amount: state.transaction.amount,
+              amount: parseFloat(state.transaction.amount as string),
               accountId: state.transaction.account as number,
               categoryId: state.transaction.category as number,
               description: state.transaction.description as string,
               transactionType:
-                state.transaction.amount < 0 ? TransactionType.Expense : TransactionType.Income
+                parseFloat(state.transaction.amount as string) < 0
+                  ? TransactionType.Expense
+                  : TransactionType.Income
             });
           }
 
