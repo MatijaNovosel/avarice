@@ -1040,6 +1040,7 @@ export class CategoryModel extends BaseModel implements ICategoryModel {
   name?: string | undefined;
   icon?: string | undefined;
   color?: string | undefined;
+  parent?: CategoryModel | undefined;
 
   constructor(data?: ICategoryModel) {
     super(data);
@@ -1051,6 +1052,7 @@ export class CategoryModel extends BaseModel implements ICategoryModel {
       this.name = _data["name"];
       this.icon = _data["icon"];
       this.color = _data["color"];
+      this.parent = _data["parent"] ? CategoryModel.fromJS(_data["parent"]) : <any>undefined;
     }
   }
 
@@ -1066,6 +1068,7 @@ export class CategoryModel extends BaseModel implements ICategoryModel {
     data["name"] = this.name;
     data["icon"] = this.icon;
     data["color"] = this.color;
+    data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
     super.toJSON(data);
     return data;
   }
@@ -1075,6 +1078,7 @@ export interface ICategoryModel extends IBaseModel {
   name?: string | undefined;
   icon?: string | undefined;
   color?: string | undefined;
+  parent?: CategoryModel | undefined;
 }
 
 export class CreateCategoryModel implements ICreateCategoryModel {

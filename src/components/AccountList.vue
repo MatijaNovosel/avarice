@@ -113,7 +113,7 @@ export default defineComponent({
       default: false
     },
     selectedAccountId: {
-      type: null
+      type: Number as PropType<number | null>
     }
   },
   setup(props, { emit }) {

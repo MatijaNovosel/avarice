@@ -60,11 +60,7 @@ import { AccountModel, AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { formatBalance } from "src/utils/helpers";
-import { defineComponent, watch, reactive } from "vue";
-
-interface Props {
-  account: AccountModel | null;
-}
+import { defineComponent, watch, reactive, PropType } from "vue";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
@@ -79,10 +75,10 @@ export default defineComponent({
       default: false
     },
     account: {
-      type: null
+      type: Object as PropType<AccountModel | null>
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const state: State = reactive({
       expenseAndIncome: null
     });

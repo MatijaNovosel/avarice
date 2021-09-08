@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="state.open" persistent>
-    <q-card style="width: 700px">
+    <q-card style="min-width: 700px">
       <template v-if="state.loading">
         <div class="column items-center justify-center q-py-xl">
           <q-spinner color="green" size="3em" :thickness="10" />
@@ -40,10 +40,12 @@
                       filled
                       hide-bottom-space
                       clearable
-                      label="Amount"
+                      label=""
                       v-model="state.transaction.amount"
                       suffix="HRK"
-                    />
+                    >
+                      <template #label> <required-icon /> Amount </template>
+                    </q-input>
                     <q-input
                       v-if="!state.isTransfer"
                       dense
@@ -51,9 +53,11 @@
                       filled
                       hide-bottom-space
                       clearable
-                      label="Description"
+                      label=""
                       v-model="state.transaction.description"
-                    />
+                    >
+                      <template #label> <required-icon /> Description </template>
+                    </q-input>
                     <q-select
                       v-if="!state.isTransfer"
                       hide-bottom-space
@@ -62,13 +66,14 @@
                       dense
                       v-model="state.transaction.category"
                       :options="categories"
-                      label="Category"
+                      label=""
                       option-value="id"
                       option-label="name"
                       clearable
                       emit-value
                       map-options
                     >
+                      <template #label> <required-icon /> Category </template>
                       <template #after>
                         <q-btn
                           @click="state.panel = 'newCategory'"
@@ -118,13 +123,16 @@
                       dense
                       v-model="state.transaction.account"
                       :options="accounts"
-                      :label="state.isTransfer ? 'Account from' : 'Account'"
+                      label=""
                       option-value="id"
                       option-label="name"
                       clearable
                       emit-value
                       map-options
                     >
+                      <template #label>
+                        <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
+                      </template>
                       <template #selected-item="scope">
                         <q-item class="q-px-none q-py-sm">
                           <q-item-section>
@@ -160,13 +168,14 @@
                       dense
                       v-model="state.transaction.accountTo"
                       :options="accounts"
-                      label="Account to"
+                      label=""
                       option-value="id"
                       option-label="name"
                       clearable
                       emit-value
                       map-options
                     >
+                      <template #label> <required-icon /> Account to </template>
                       <template #selected-item="scope">
                         <q-item class="q-px-none q-py-sm">
                           <q-item-section>
@@ -219,10 +228,11 @@
                       dense
                       square
                       filled
+                      label=""
                       hide-bottom-space
                       clearable
-                      label="Name"
                     >
+                      <template #label> <required-icon /> Category name </template>
                       <template #after>
                         <q-btn size="sm" flat dense class="bg-grey-4 rounded q-ml-md">
                           <q-icon
@@ -272,6 +282,51 @@
                         </q-btn>
                       </template>
                     </q-input>
+                    <q-select
+                      hide-bottom-space
+                      options-dense
+                      filled
+                      dense
+                      v-model="state.newCategoryParent"
+                      :options="categories"
+                      option-value="id"
+                      option-label="name"
+                      label="Parent category"
+                      clearable
+                      emit-value
+                      map-options
+                    >
+                      <template #selected-item="scope">
+                        <q-item class="q-px-none q-py-sm">
+                          <q-item-section avatar>
+                            <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+                          </q-item-section>
+                          <q-item-section>
+                            <q-item-label>
+                              {{ scope.opt.name }}
+                            </q-item-label>
+                            <q-item-label caption> Category </q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </template>
+                      <template #option="scope">
+                        <q-item class="q-py-sm" v-bind="scope.itemProps">
+                          <q-item-section avatar>
+                            <q-icon
+                              :style="{ color: scope.opt.color }"
+                              :name="scope.opt.icon"
+                              :color="scope.opt.color"
+                            />
+                          </q-item-section>
+                          <q-item-section>
+                            <q-item-label>
+                              {{ scope.opt.name }}
+                            </q-item-label>
+                            <q-item-label caption> Category </q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </template>
+                    </q-select>
                   </q-form>
                 </div>
               </div>
@@ -303,6 +358,7 @@ import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import TransactionType from "src/utils/transactionTypes";
 import ICategoryService from "src/api/interfaces/categoryService";
+import RequiredIcon from "src/components/RequiredIcon.vue";
 import icons from "../utils/icons.json";
 
 interface NewTransaction {
@@ -323,11 +379,15 @@ interface State {
   isTransfer: boolean;
   transaction: NewTransaction;
   categoryName: string | null;
+  newCategoryParent: number | null;
 }
 
 export default defineComponent({
   name: "transaction-dialog",
   emits: ["update:open", "transaction-added", "category-added"],
+  components: {
+    RequiredIcon
+  },
   props: {
     open: {
       type: Boolean,
@@ -346,6 +406,7 @@ export default defineComponent({
     const state: State = reactive({
       open: props.open,
       loading: false,
+      newCategoryParent: null,
       closeAfterAdding: false,
       selectedColor: "#ff00ff",
       panel: "newTransaction",
@@ -409,6 +470,14 @@ export default defineComponent({
             position: "top"
           });
 
+          state.transaction = {
+            amount: "0",
+            category: null,
+            account: null,
+            accountTo: null,
+            description: null
+          };
+
           if (state.closeAfterAdding) {
             closeDialog();
           } else {
@@ -422,6 +491,10 @@ export default defineComponent({
           });
 
           emit("category-added");
+
+          state.categoryName = null;
+          state.selectedIcon = "mdi-plus";
+          state.selectedColor = "#ff00ff";
 
           $q.notify({
             message: "Category added",
