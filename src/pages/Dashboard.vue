@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
         <account-list
-          :selectedAccountId="state.selectedAccountId"
-          @update:selectedAccountId="updateSelectedAccountDebounce"
+          :selected-account="state.selectedAccount"
+          @update:selected-account="updateSelectedAccountDebounce"
           :loading="state.loading"
           :accounts="accounts"
         />
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch, computed } from "vue";
+import { defineComponent, reactive, onMounted, computed } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
@@ -61,7 +61,6 @@ interface State {
   transactions: IPageableCollectionOfTransactionModel;
   loading: boolean;
   transactionDialogOpen: boolean;
-  selectedAccountId: number | null;
   selectedAccount: AccountModel | null;
 }
 
@@ -82,7 +81,6 @@ export default defineComponent({
     const state: State = reactive({
       loading: false,
       transactionDialogOpen: false,
-      selectedAccountId: null,
       selectedAccount: null,
       transactions: {
         total: 0,
@@ -90,11 +88,13 @@ export default defineComponent({
       }
     });
 
-    function updateSelectedAccount(accountId: number) {
-      if (state.selectedAccountId === accountId) {
-        return;
+    function updateSelectedAccount(account: AccountModel) {
+      if (state.selectedAccount) {
+        if (state.selectedAccount.id === account.id) {
+          return;
+        }
+        state.selectedAccount = account;
       }
-      state.selectedAccountId = accountId;
     }
 
     const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
@@ -110,7 +110,7 @@ export default defineComponent({
 
     onMounted(async () => {
       state.loading = true;
-      state.selectedAccountId = accounts.value[0].id;
+      state.selectedAccount = accounts.value[0];
       await getTransactions();
       state.loading = false;
     });
@@ -142,26 +142,6 @@ export default defineComponent({
       ).getUserCategories();
       await store.dispatch("user/setCategories", categories);
     }
-
-    watch(
-      () => state.selectedAccountId,
-      (val) => {
-        const account = accounts.value.find((x) => x.id === val);
-        if (account) {
-          state.selectedAccount = account;
-        }
-      }
-    );
-
-    watch(
-      () => accounts.value,
-      () => {
-        const account = accounts.value.find((x) => x.id === state.selectedAccountId);
-        if (account) {
-          state.selectedAccount = account;
-        }
-      }
-    );
 
     return {
       state,

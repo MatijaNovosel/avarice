@@ -61,7 +61,9 @@
             </q-item-section>
             <q-item-section>
               <q-item-label> {{ props.row.category.name }} </q-item-label>
-              <q-item-label caption> Category </q-item-label>
+              <q-item-label caption v-if="props.row.category.parentName">
+                {{ props.row.category.parentName }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-td>

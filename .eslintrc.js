@@ -58,6 +58,7 @@ module.exports = {
     "no-unused-vars": "off",
     camelcase: "off",
     "class-methods-use-this": "off",
+    "prefer-destructuring": "off",
     "no-empty": "off",
     "linebreak-style": "off",
     "implicit-arrow-linebreak": "off",
