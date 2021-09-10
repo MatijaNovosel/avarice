@@ -94,7 +94,11 @@
                             <q-item-label>
                               {{ scope.opt.name }}
                             </q-item-label>
-                            <q-item-label caption> Category </q-item-label>
+                            <q-item-label caption class="text-grey-7">
+                              {{
+                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
+                              }}
+                            </q-item-label>
                           </q-item-section>
                         </q-item>
                       </template>
@@ -111,7 +115,11 @@
                             <q-item-label>
                               {{ scope.opt.name }}
                             </q-item-label>
-                            <q-item-label caption> Category </q-item-label>
+                            <q-item-label caption class="text-grey-7">
+                              {{
+                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
+                              }}
+                            </q-item-label>
                           </q-item-section>
                         </q-item>
                       </template>
@@ -140,7 +148,6 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance:
                               {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
@@ -153,7 +160,6 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance:
                               {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
@@ -183,7 +189,6 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance:
                               {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
@@ -196,7 +201,6 @@
                               {{ scope.opt.name }}
                             </q-item-label>
                             <q-item-label caption>
-                              Balance:
                               {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
                             </q-item-label>
                           </q-item-section>
@@ -216,9 +220,9 @@
                     size="xs"
                     flat
                     dense
-                    class="bg-grey-4 rounded"
+                    class="bg-grey-9 rounded"
                   >
-                    <q-icon class="q-pa-xs" name="mdi-chevron-left" color="bg-grey-6" size="xs" />
+                    <q-icon class="q-pa-xs" name="mdi-chevron-left" size="xs" />
                   </q-btn>
                 </div>
                 <div class="col-10">
@@ -234,13 +238,8 @@
                     >
                       <template #label> <required-icon /> Category name </template>
                       <template #after>
-                        <q-btn size="sm" flat dense class="bg-grey-4 rounded q-ml-md">
-                          <q-icon
-                            class="q-pa-xs"
-                            :name="state.selectedIcon"
-                            color="bg-grey-6"
-                            size="sm"
-                          />
+                        <q-btn size="sm" flat dense class="bg-grey-9 rounded q-ml-md">
+                          <q-icon class="q-pa-xs" :name="state.selectedIcon" size="sm" />
                           <q-menu touch-position>
                             <q-virtual-scroll style="max-height: 300px" :items="iconList" separator>
                               <template v-slot="{ item, index }">
@@ -250,7 +249,7 @@
                                       flat
                                       size="small"
                                       dense
-                                      class="q-mx-md bg-white rounded"
+                                      class="q-ma-sm rounded"
                                       @click="setCategoryIcon(item.name)"
                                     >
                                       <q-icon
@@ -305,7 +304,11 @@
                             <q-item-label>
                               {{ scope.opt.name }}
                             </q-item-label>
-                            <q-item-label caption> Category </q-item-label>
+                            <q-item-label caption class="text-grey-7">
+                              {{
+                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
+                              }}
+                            </q-item-label>
                           </q-item-section>
                         </q-item>
                       </template>
@@ -322,7 +325,11 @@
                             <q-item-label>
                               {{ scope.opt.name }}
                             </q-item-label>
-                            <q-item-label caption> Category </q-item-label>
+                            <q-item-label caption class="text-grey-7">
+                              {{
+                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
+                              }}
+                            </q-item-label>
                           </q-item-section>
                         </q-item>
                       </template>
@@ -487,7 +494,8 @@ export default defineComponent({
           await getService<ICategoryService>(Types.CategoryService).createCategory({
             name: state.categoryName as string,
             icon: state.selectedIcon,
-            color: state.selectedColor
+            color: state.selectedColor,
+            parentId: state.newCategoryParent || undefined
           });
 
           emit("category-added");

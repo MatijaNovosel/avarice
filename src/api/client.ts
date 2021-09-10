@@ -1085,6 +1085,7 @@ export class CreateCategoryModel implements ICreateCategoryModel {
   name?: string | undefined;
   icon?: string | undefined;
   color?: string | undefined;
+  parentId?: number | undefined;
 
   constructor(data?: ICreateCategoryModel) {
     if (data) {
@@ -1099,6 +1100,7 @@ export class CreateCategoryModel implements ICreateCategoryModel {
       this.name = _data["name"];
       this.icon = _data["icon"];
       this.color = _data["color"];
+      this.parentId = _data["parentId"];
     }
   }
 
@@ -1114,6 +1116,7 @@ export class CreateCategoryModel implements ICreateCategoryModel {
     data["name"] = this.name;
     data["icon"] = this.icon;
     data["color"] = this.color;
+    data["parentId"] = this.parentId;
     return data;
   }
 }
@@ -1122,6 +1125,7 @@ export interface ICreateCategoryModel {
   name?: string | undefined;
   icon?: string | undefined;
   color?: string | undefined;
+  parentId?: number | undefined;
 }
 
 export class AddTransactionDto implements IAddTransactionDto {
