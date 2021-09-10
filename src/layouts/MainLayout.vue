@@ -49,7 +49,7 @@ export default defineComponent({
         caption: "User created categories",
         icon: "mdi-tag-multiple",
         link: {
-          name: ROUTE_NAMES.HISTORY
+          name: ROUTE_NAMES.CATEGORIES
         }
       },
       {
@@ -57,7 +57,23 @@ export default defineComponent({
         caption: "Predefined transactions",
         icon: "mdi-file-multiple",
         link: {
-          name: ROUTE_NAMES.HISTORY
+          name: ROUTE_NAMES.TEMPLATES
+        }
+      },
+      {
+        title: "Statistics",
+        caption: "Visual representation of user data",
+        icon: "mdi-chart-line",
+        link: {
+          name: ROUTE_NAMES.STATISTICS
+        }
+      },
+      {
+        title: "Settings",
+        caption: "App and user preferences",
+        icon: "mdi-cog",
+        link: {
+          name: ROUTE_NAMES.SETTINGS
         }
       }
     ];
