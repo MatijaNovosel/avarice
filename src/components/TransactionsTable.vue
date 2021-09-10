@@ -87,6 +87,15 @@
         <q-td key="actions" :props="props">
           <q-btn flat dense class="bg-red-8 rounded" @click="deleteTransaction(props.row.id)">
             <q-icon size="1.3em" name="mdi-close" color="white" />
+            <q-tooltip> Delete transaction </q-tooltip>
+          </q-btn>
+          <q-btn flat dense class="bg-grey-7 rounded q-ml-md">
+            <q-icon size="1.3em" name="mdi-pencil" color="white" />
+            <q-tooltip> Edit transction </q-tooltip>
+          </q-btn>
+          <q-btn flat dense class="bg-grey-9 rounded q-ml-md">
+            <q-icon size="1.3em" name="mdi-repeat" color="white" />
+            <q-tooltip> Create copy of transaction </q-tooltip>
           </q-btn>
         </q-td>
       </q-tr>

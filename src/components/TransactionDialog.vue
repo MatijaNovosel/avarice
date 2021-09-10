@@ -207,6 +207,16 @@
                         </q-item>
                       </template>
                     </q-select>
+                    <div class="row justify-end">
+                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                        <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
+                        <q-tooltip> Select template </q-tooltip>
+                      </q-btn>
+                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                        <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
+                        <q-tooltip> Select location </q-tooltip>
+                      </q-btn>
+                    </div>
                     <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
                     <q-checkbox
                       v-model="state.saveAsTemplate"
@@ -345,11 +355,11 @@
           </q-tab-panels>
         </q-card-section>
         <q-separator />
-        <q-card-actions class="q-px-md justify-center">
+        <q-card-actions class="q-pa-md justify-end">
           <q-btn
             unelevated
             color="light-green-7"
-            size="md"
+            size="sm"
             label="Create"
             @click="createTransactionOrCategory"
           />
