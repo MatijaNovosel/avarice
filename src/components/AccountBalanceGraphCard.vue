@@ -11,7 +11,7 @@
     <q-card-section class="q-pa-none">
       <chart-test
         v-if="state.chartData"
-        style="height: 110px; margin-top: 15px"
+        style="height: 115px; margin-top: 15px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
       />

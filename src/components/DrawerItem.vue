@@ -5,6 +5,7 @@
     </q-item-section>
     <q-item-section class="q-py-sm">
       <q-item-label class="text-weight-medium">{{ title }}</q-item-label>
+      <q-item-label caption class="text-grey-7">{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>

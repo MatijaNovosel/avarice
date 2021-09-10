@@ -30,7 +30,7 @@ export default defineComponent({
     const drawerItems: DrawerItem[] = [
       {
         title: "Dashboard",
-        caption: "quasar.dev",
+        caption: "Data overview",
         icon: "mdi-view-dashboard-outline",
         link: {
           name: ROUTE_NAMES.DASHBOARD
@@ -38,8 +38,24 @@ export default defineComponent({
       },
       {
         title: "History",
-        caption: "chat.quasar.dev",
+        caption: "Detailed transaction history",
         icon: "mdi-timer-sand",
+        link: {
+          name: ROUTE_NAMES.HISTORY
+        }
+      },
+      {
+        title: "Categories",
+        caption: "User created categories",
+        icon: "mdi-tag-multiple",
+        link: {
+          name: ROUTE_NAMES.HISTORY
+        }
+      },
+      {
+        title: "Templates",
+        caption: "Predefined transactions",
+        icon: "mdi-file-multiple",
         link: {
           name: ROUTE_NAMES.HISTORY
         }

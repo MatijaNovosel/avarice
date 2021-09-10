@@ -208,6 +208,10 @@
                       </template>
                     </q-select>
                     <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
+                    <q-checkbox
+                      v-model="state.saveAsTemplate"
+                      label="Save as a template after creating"
+                    />
                   </q-form>
                 </div>
               </div>
@@ -384,6 +388,7 @@ interface State {
   selectedIcon: string;
   selectedColor: string;
   isTransfer: boolean;
+  saveAsTemplate: boolean;
   transaction: NewTransaction;
   categoryName: string | null;
   newCategoryParent: number | null;
@@ -420,6 +425,7 @@ export default defineComponent({
       selectedIcon: "mdi-plus",
       categoryName: null,
       isTransfer: false,
+      saveAsTemplate: false,
       transaction: {
         amount: "0",
         category: null,
