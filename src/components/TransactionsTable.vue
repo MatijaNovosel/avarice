@@ -1,9 +1,9 @@
 <template>
-  <div class="row justify-between bg-white q-py-md q-pr-md q-pl-xl items-center rounded-t-md">
-    <span class="text-weight-bold"> Transactions </span>
+  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-xl items-center rounded-t-md">
+    <span class="text-weight-bold text-grey-6"> Transactions </span>
     <div class="row">
-      <q-btn :disable="state.data.total === 0" flat dense class="q-mr-md bg-grey-2 rounded">
-        <q-icon class="q-pa-xs" name="mdi-tune-variant" color="grey-9" size="sm" />
+      <q-btn :disable="state.data.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
+        <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
       </q-btn>
       <q-input :disable="state.data.total === 0" dense filled label="Search">
         <template #prepend>
@@ -17,7 +17,7 @@
     hide-pagination
     flat
     v-model:pagination="state.pagination"
-    class="rounded-b-md q-pa-md"
+    class="rounded-b-md q-pa-md rounded-t-none"
     :rows="state.data.results"
     :columns="columns"
     row-key="id"
@@ -44,25 +44,30 @@
           <q-btn
             flat
             dense
-            :class="`bg-${formatTransactionColor(props.row.transactionType)}-2`"
+            :class="`bg-${formatTransactionColor(props.row.transactionType)}-6`"
             class="rounded"
           >
             <q-icon
               :name="formatTransactionIcon(props.row.transactionType)"
               size="1.3em"
-              :color="formatTransactionColor(props.row.transactionType)"
+              :class="`text-${formatTransactionColor(props.row.transactionType)}-2`"
             />
           </q-btn>
         </q-td>
         <q-td key="category" :props="props">
           <q-item class="q-pa-none">
-            <q-item-section avatar>
-              <q-icon color="grey-7" size="sm" :name="props.row.category.icon" />
+            <q-item-section
+              avatar
+              :style="{
+                color: props.row.category.color
+              }"
+            >
+              <q-icon size="sm" :name="props.row.category.icon" />
             </q-item-section>
             <q-item-section>
               <q-item-label> {{ props.row.category.name }} </q-item-label>
-              <q-item-label caption v-if="props.row.category.parentName">
-                {{ props.row.category.parentName }}
+              <q-item-label caption class="text-grey-7">
+                {{ props.row.category.parentName || "No parent category" }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -87,7 +92,7 @@
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
         </q-td>
         <q-td key="actions" :props="props">
-          <q-btn flat dense class="bg-red-3 rounded" @click="deleteTransaction(props.row.id)">
+          <q-btn flat dense class="bg-red-8 rounded" @click="deleteTransaction(props.row.id)">
             <q-icon size="1.3em" name="mdi-close" color="white" />
           </q-btn>
         </q-td>

@@ -1,5 +1,5 @@
 <template>
-  <q-list class="bg-white q-pa-md rounded">
+  <q-list class="bg-dark q-pa-md rounded">
     <template v-if="loading">
       <q-item>
         <q-item-section avatar>
@@ -42,12 +42,13 @@
       </q-item>
     </template>
     <template v-else>
+      <span class="q-mb-md text-grey row justify-center"> Accounts </span>
       <template v-if="selectedAccount && accounts.length !== 0">
         <q-item
           class="rounded q-mb-sm q-py-md"
           :class="{
-            'bg-grey-3': selectedAccount.id != account.id,
-            'bg-blue-2': selectedAccount.id == account.id
+            'bg-grey-9 text-grey-2': selectedAccount.id != account.id,
+            'bg-dark-pink text-black': selectedAccount.id == account.id
           }"
           clickable
           v-for="account in accounts"
@@ -56,31 +57,31 @@
         >
           <q-item-section avatar>
             <q-avatar
-              :color="selectedAccount.id == account.id ? 'primary' : 'grey'"
+              :color="selectedAccount.id == account.id ? 'grey-7' : 'grey'"
               text-color="white"
-              size="sm"
+              size="md"
             >
               {{ account.name && account.name[0] }}
             </q-avatar>
           </q-item-section>
           <q-item-section>
             <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
-            <q-item-label caption>
-              Balance: {{ formatBalance(account.balance, account.currency) }}
+            <q-item-label class="text-caption">
+              {{ formatBalance(account.balance, account.currency) }}
             </q-item-label>
           </q-item-section>
         </q-item>
       </template>
       <q-item v-else>
-        <q-item>
+        <q-item class="text-black">
           <q-item-section>
             <q-item-label class="text-weight-medium"> No accounts found, create one! </q-item-label>
           </q-item-section>
         </q-item>
       </q-item>
       <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
-        <q-btn dense class="q-mr-md bg-grey-2 rounded q-mt-sm">
-          <q-icon class="q-pa-xs" name="mdi-plus" color="grey-9" size="sm" />
+        <q-btn dense class="q-mr-md bg-dark-pink rounded q-mt-sm">
+          <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="sm" />
         </q-btn>
       </q-item>
     </template>

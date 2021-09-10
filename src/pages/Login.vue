@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-3 window-height window-width row justify-center items-center">
+  <q-page class="window-height window-width row justify-center items-center">
     <div class="row">
       <q-card flat class="q-pa-md shadow-1 rounded">
         <q-card-section>

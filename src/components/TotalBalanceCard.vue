@@ -10,48 +10,27 @@
         </q-card-section>
       </q-card>
     </template>
-    <template v-else>
-      <q-card class="rounded-md q-px-md q-py-xs" flat>
-        <q-card-section class="row items-center justify-between q-pb-sm">
-          <span class="text-weight-bold q-pl-md"> Total balance </span>
-          <div>
-            <q-chip
-              color="pink-1"
-              size="sm"
-              class="q-px-md"
-              text-color="red"
-              icon="mdi-arrow-top-right"
-            >
-              <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
-            </q-chip>
-            <q-chip
-              size="sm"
-              color="green-1"
-              class="q-px-md"
-              text-color="green"
-              icon="mdi-arrow-bottom-left"
-            >
-              <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
-            </q-chip>
-          </div>
-        </q-card-section>
-        <q-card-section class="q-my-sm">
-          <div class="text-h3 text-center">
-            {{ formatBalance(account.balance, account.currency) }}
-          </div>
-        </q-card-section>
-        <q-card-actions class="row justify-center">
-          <q-btn
-            flat
-            size="sm"
-            label="New transaction"
-            class="rounded bg-grey-3"
-            icon="mdi-swap-horizontal"
-            @click="$emit('new-transaction')"
-          />
-        </q-card-actions>
-      </q-card>
-    </template>
+    <q-card class="rounded-md q-px-md q-py-sm" flat style="height: 200px" v-else>
+      <q-card-section class="row items-center justify-between q-pb-sm">
+        <span class="text-grey-6"> Total balance </span>
+      </q-card-section>
+      <q-card-section class="column q-pb-sm">
+        <span class="text-h3">
+          {{ formatBalance(account.balance, account.currency) }}
+        </span>
+        <span class="text-caption text-grey-5 q-pt-xs">
+          <span class="text-red-5">15% less</span> value in last time period
+        </span>
+      </q-card-section>
+      <q-card-section class="q-pt-xs">
+        <q-chip color="red-4" size="sm" class="q-px-md">
+          <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
+        </q-chip>
+        <q-chip size="sm" color="green-4" class="q-px-md">
+          <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
+        </q-chip>
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 

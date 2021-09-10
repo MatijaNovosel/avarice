@@ -17,6 +17,7 @@
 .rounded-tr {
   border-top-right-radius: 10px;
 }
+
 .rounded-tl {
   border-top-left-radius: 10px;
 }
@@ -24,6 +25,11 @@
 .rounded-t {
   @extend .rounded-tr;
   @extend .rounded-tl;
+}
+
+.rounded-t-none {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 
 .rounded-b {
@@ -34,6 +40,7 @@
 .rounded-tr-md {
   border-top-right-radius: 12px;
 }
+
 .rounded-tl-md {
   border-top-left-radius: 12px;
 }
@@ -58,4 +65,16 @@
 
 .p-rel {
   position: relative;
+}
+
+.bg-dark-1 {
+  background-color: #111010;
+}
+
+.bg-dark-pink {
+  background-color: #bb86fc;
+}
+
+.text-dark-pink {
+  color: #bb86fc;
 }

@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="bg-grey-2">
+  <q-page padding class="bg-dark-1">
     <div class="row">
       <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
         <account-list

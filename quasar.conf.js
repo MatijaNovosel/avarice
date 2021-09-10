@@ -24,6 +24,7 @@ module.exports = configure((ctx) => ({
   framework: {
     cssAddon: true,
     config: {
+      dark: true,
       notify: {
         //
       }

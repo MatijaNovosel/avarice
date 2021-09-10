@@ -12,8 +12,8 @@
           <span class="text-h6">
             New {{ state.panel == "newTransaction" ? "transaction" : "category" }}
           </span>
-          <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-2 rounded">
-            <q-icon class="q-pa-xs" name="mdi-close" color="grey-9" size="xs" />
+          <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-9 rounded">
+            <q-icon class="q-pa-xs" name="mdi-close" size="xs" />
           </q-btn>
         </q-card-section>
         <q-separator />

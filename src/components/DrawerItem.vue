@@ -1,5 +1,5 @@
 <template>
-  <q-item :to="link" exact active-class="bg-blue-1" class="rounded-md text-grey-9">
+  <q-item :to="link" exact active-class="bg-grey-9" class="rounded-md text-grey-2">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>

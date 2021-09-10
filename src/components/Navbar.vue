@@ -1,11 +1,11 @@
 <template>
-  <q-header class="bg-grey-2 row justify-end q-pt-lg q-pr-md">
-    <q-btn flat dense class="q-mr-md bg-white rounded">
-      <q-icon class="q-pa-xs" name="mdi-bell-outline" color="grey-9" size="sm" />
-      <q-badge rounded color="orange" floating>22</q-badge>
+  <q-header class="bg-dark-1 row justify-end q-pt-lg q-pr-md">
+    <q-btn flat dense class="q-mr-md bg-grey-10 rounded">
+      <q-icon class="q-pa-xs" name="mdi-bell-outline" size="sm" />
+      <q-badge rounded class="bg-dark-pink text-black" floating>22</q-badge>
     </q-btn>
-    <q-btn flat dense class="bg-white rounded">
-      <q-icon class="q-pa-xs" name="mdi-account-outline" color="grey-9" size="sm" />
+    <q-btn flat dense class="bg-grey-10 rounded">
+      <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
       <q-menu>
         <q-list dense style="min-width: 100px">
           <q-item class="q-my-sm">
@@ -31,8 +31,11 @@
         </q-list>
       </q-menu>
     </q-btn>
-    <q-btn flat dense class="q-mx-md bg-red rounded" @click="logOut">
-      <q-icon class="q-pa-xs" name="mdi-power-standby" color="white" size="sm" />
+    <q-btn flat dense class="q-ml-md bg-grey-10 rounded" @click="createTransaction">
+      <q-icon class="q-pa-xs" name="mdi-plus" size="sm" />
+    </q-btn>
+    <q-btn flat dense class="q-mx-md bg-dark-pink rounded" @click="logOut">
+      <q-icon class="q-pa-xs" name="mdi-power-standby" color="black" size="sm" />
     </q-btn>
   </q-header>
 </template>
@@ -61,10 +64,15 @@ export default defineComponent({
       });
     }
 
+    function createTransaction() {
+      //
+    }
+
     return {
       logOut,
       user,
-      acronym
+      acronym,
+      createTransaction
     };
   }
 });

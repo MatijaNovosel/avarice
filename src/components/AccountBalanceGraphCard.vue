@@ -1,17 +1,17 @@
 <template>
-  <q-card flat class="rounded-t-md">
+  <q-card flat class="rounded-t-md" style="height: 200px">
     <q-card-section>
-      <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
-        <q-icon class="q-pa-xs" name="mdi-tune-variant" color="grey-9" size="sm" />
+      <q-btn flat dense class="q-mr-md bg-grey-9 rounded">
+        <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
       </q-btn>
-      <q-btn flat dense class="q-mr-md bg-grey-2 rounded">
-        <q-icon class="q-pa-xs" name="mdi-calendar-outline" color="grey-9" size="sm" />
+      <q-btn flat dense class="q-mr-md bg-grey-9 rounded">
+        <q-icon class="q-pa-xs" name="mdi-calendar-outline" size="sm" />
       </q-btn>
     </q-card-section>
     <q-card-section class="q-pa-none">
       <chart-test
         v-if="state.chartData"
-        style="height: 128px"
+        style="height: 110px; margin-top: 15px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
       />
@@ -66,7 +66,7 @@ export default defineComponent({
             radius: 0
           },
           line: {
-            tension: 0.5
+            tension: 0
           }
         },
         scales: {
@@ -103,8 +103,8 @@ export default defineComponent({
         datasets: [
           {
             pointBackgroundColor: "#ffffff",
-            backgroundColor: "rgb(187, 222, 251)",
-            borderColor: "rgb(187, 222, 251)",
+            backgroundColor: "#bb86fc",
+            borderColor: "#bb86fc",
             data: graphData.map((x) => x.amount).reverse()
           }
         ],

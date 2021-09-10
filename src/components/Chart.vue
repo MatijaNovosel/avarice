@@ -21,3 +21,10 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped lang="scss">
+canvas {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+</style>

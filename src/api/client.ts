@@ -1327,6 +1327,7 @@ export interface ITransactionModel extends IBaseModel {
 export class TransactionCategoryModel implements ITransactionCategoryModel {
   name?: string | undefined;
   icon?: string | undefined;
+  color?: string | undefined;
   parentName?: string | undefined;
 
   constructor(data?: ITransactionCategoryModel) {
@@ -1341,6 +1342,7 @@ export class TransactionCategoryModel implements ITransactionCategoryModel {
     if (_data) {
       this.name = _data["name"];
       this.icon = _data["icon"];
+      this.color = _data["color"];
       this.parentName = _data["parentName"];
     }
   }
@@ -1356,6 +1358,7 @@ export class TransactionCategoryModel implements ITransactionCategoryModel {
     data = typeof data === "object" ? data : {};
     data["name"] = this.name;
     data["icon"] = this.icon;
+    data["color"] = this.color;
     data["parentName"] = this.parentName;
     return data;
   }
@@ -1364,6 +1367,7 @@ export class TransactionCategoryModel implements ITransactionCategoryModel {
 export interface ITransactionCategoryModel {
   name?: string | undefined;
   icon?: string | undefined;
+  color?: string | undefined;
   parentName?: string | undefined;
 }
 
