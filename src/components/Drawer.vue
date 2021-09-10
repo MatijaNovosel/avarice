@@ -1,7 +1,7 @@
 <template>
   <q-drawer show-if-above v-model="state.drawer" side="left" class="bg-grey-10">
     <div class="text-center q-py-lg">
-      <span class="text-h4 text-dark-pink"> FinApp </span>
+      <span class="text-h4 text-dark-red"> FinApp </span>
     </div>
     <q-list class="q-px-md" dense>
       <drawer-item

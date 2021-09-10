@@ -12,11 +12,7 @@
       <div class="col-12 col-md-9">
         <div class="row">
           <div class="col-12 col-md-6 q-pr-md-lg">
-            <total-balance-card
-              :loading="state.loading"
-              :account="state.selectedAccount"
-              @new-transaction="state.transactionDialogOpen = true"
-            />
+            <total-balance-card :loading="state.loading" :account="state.selectedAccount" />
           </div>
           <div class="col-12 col-md-6 q-pt-md q-pt-md-none">
             <account-balance-graph-card :loading="state.loading" />
@@ -42,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, computed } from "vue";
+import { defineComponent, reactive, onMounted, computed, watch } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
@@ -75,8 +71,13 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+    const createTransactionTrigger = computed(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      () => store.getters["app/createTransactionTrigger"] as boolean
+    );
 
     const state: State = reactive({
       loading: false,
@@ -142,6 +143,16 @@ export default defineComponent({
       ).getUserCategories();
       await store.dispatch("user/setCategories", categories);
     }
+
+    watch(
+      () => createTransactionTrigger,
+      () => {
+        state.transactionDialogOpen = true;
+      },
+      {
+        deep: true
+      }
+    );
 
     return {
       state,

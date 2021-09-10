@@ -42,13 +42,13 @@
       </q-item>
     </template>
     <template v-else>
-      <span class="q-mb-md text-grey row justify-center"> Accounts </span>
+      <span class="q-mb-md text-grey row"> Accounts </span>
       <template v-if="selectedAccount && accounts.length !== 0">
         <q-item
           class="rounded q-mb-sm q-py-md"
           :class="{
-            'bg-grey-9 text-grey-2': selectedAccount.id != account.id,
-            'bg-dark-pink text-black': selectedAccount.id == account.id
+            'bg-grey-9': selectedAccount.id != account.id,
+            'bg-grey-6': selectedAccount.id == account.id
           }"
           clickable
           v-for="account in accounts"
@@ -80,7 +80,7 @@
         </q-item>
       </q-item>
       <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
-        <q-btn dense class="q-mr-md bg-dark-pink rounded q-mt-sm">
+        <q-btn dense class="q-mr-md bg-dark-red rounded q-mt-sm">
           <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="sm" />
         </q-btn>
       </q-item>

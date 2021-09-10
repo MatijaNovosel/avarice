@@ -2,7 +2,7 @@
   <q-header class="bg-dark-1 row justify-end q-pt-lg q-pr-md">
     <q-btn flat dense class="q-mr-md bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-bell-outline" size="sm" />
-      <q-badge rounded class="bg-dark-pink text-black" floating>22</q-badge>
+      <q-badge rounded class="bg-dark-red text-black" floating>22</q-badge>
     </q-btn>
     <q-btn flat dense class="bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
@@ -34,7 +34,7 @@
     <q-btn flat dense class="q-ml-md bg-grey-10 rounded" @click="createTransaction">
       <q-icon class="q-pa-xs" name="mdi-plus" size="sm" />
     </q-btn>
-    <q-btn flat dense class="q-mx-md bg-dark-pink rounded" @click="logOut">
+    <q-btn flat dense class="q-mx-md bg-dark-red rounded" @click="logOut">
       <q-icon class="q-pa-xs" name="mdi-power-standby" color="black" size="sm" />
     </q-btn>
   </q-header>
@@ -64,8 +64,8 @@ export default defineComponent({
       });
     }
 
-    function createTransaction() {
-      //
+    async function createTransaction() {
+      await store.dispatch("app/createTransaction");
     }
 
     return {

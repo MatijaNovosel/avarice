@@ -103,8 +103,8 @@ export default defineComponent({
         datasets: [
           {
             pointBackgroundColor: "#ffffff",
-            backgroundColor: "#bb86fc",
-            borderColor: "#bb86fc",
+            backgroundColor: "#ca4133",
+            borderColor: "#ca4133",
             data: graphData.map((x) => x.amount).reverse()
           }
         ],

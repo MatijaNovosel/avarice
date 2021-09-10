@@ -18,7 +18,7 @@
         <span class="text-h3">
           {{ formatBalance(account.balance, account.currency) }}
         </span>
-        <span class="text-caption text-grey-5 q-pt-xs">
+        <span class="text-caption text-grey-7 q-pt-xs">
           <span class="text-red-5">15% less</span> value in last time period
         </span>
       </q-card-section>
@@ -47,7 +47,6 @@ interface State {
 
 export default defineComponent({
   name: "total-balance-card",
-  emits: ["new-transaction"],
   props: {
     loading: {
       type: Boolean,
