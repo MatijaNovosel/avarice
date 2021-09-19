@@ -454,6 +454,7 @@ export default defineComponent({
 
     function closeDialog() {
       resetFormData(true);
+      state.panel = "newTransaction";
       emit("update:open", false);
     }
 
