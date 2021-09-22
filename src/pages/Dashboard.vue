@@ -119,6 +119,7 @@ export default defineComponent({
     async function getAccounts() {
       const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
       await store.dispatch("user/setAccounts", accounts);
+      state.selectedAccount = accounts[0];
     }
 
     async function updateData() {
