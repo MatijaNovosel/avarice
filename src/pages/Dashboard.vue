@@ -11,11 +11,14 @@
       </div>
       <div class="col-12 col-md-9">
         <div class="row">
-          <div class="col-12 col-md-6 q-pr-md-lg">
+          <div class="col-12 col-md-6 q-pr-md-md">
             <total-balance-card :loading="state.loading" :account="state.selectedAccount" />
           </div>
           <div class="col-12 col-md-6 q-pt-md q-pt-md-none">
             <account-balance-graph-card :loading="state.loading" />
+          </div>
+          <div class="col-12 col-md-6 q-pt-md q-pr-md-md">
+            <heat-map />
           </div>
         </div>
         <div class="row q-mt-md">
@@ -53,6 +56,7 @@ import { useStore } from "src/store";
 import IAccountService from "src/api/interfaces/accountService";
 import { format } from "date-fns";
 import ICategoryService from "src/api/interfaces/categoryService";
+import HeatMap from "src/components/HeatMap.vue";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -69,7 +73,8 @@ export default defineComponent({
     AccountList,
     TotalBalanceCard,
     AccountBalanceGraphCard,
-    TransactionDialog
+    TransactionDialog,
+    HeatMap
   },
   setup() {
     const store = useStore();

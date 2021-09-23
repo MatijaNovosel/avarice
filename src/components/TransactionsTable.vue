@@ -23,6 +23,7 @@
     :loading="loading"
     hide-pagination
     flat
+    dense
     v-model:pagination="state.pagination"
     class="rounded-b-md q-pa-md rounded-t-none"
     :rows="data.results"

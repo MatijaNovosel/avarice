@@ -71,6 +71,8 @@ module.exports = {
     "prefer-promise-reject-errors": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "func-names": "off",
+    "@typescript-eslint/restrict-template-expressions": "off"
   }
 };
