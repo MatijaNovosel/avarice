@@ -517,6 +517,178 @@ export class Client {
     return Promise.resolve<void>(<any>null);
   }
 
+  template_Add(payload: AddTemplateDto, cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + "/api/template";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(payload);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: "POST",
+      url: url_,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processTemplate_Add(_response);
+      });
+  }
+
+  protected processTemplate_Add(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  template_Get(
+    skip: number | undefined,
+    take: number | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<PageableCollectionOfTemplateModel> {
+    let url_ = this.baseUrl + "/api/template?";
+    if (skip === null) throw new Error("The parameter 'skip' cannot be null.");
+    else if (skip !== undefined) url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+    if (take === null) throw new Error("The parameter 'take' cannot be null.");
+    else if (take !== undefined) url_ += "take=" + encodeURIComponent("" + take) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processTemplate_Get(_response);
+      });
+  }
+
+  protected processTemplate_Get(
+    response: AxiosResponse
+  ): Promise<PageableCollectionOfTemplateModel> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = PageableCollectionOfTemplateModel.fromJS(resultData200);
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<PageableCollectionOfTemplateModel>(<any>null);
+  }
+
+  template_Delete(id: number, cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + "/api/template/{id}";
+    if (id === undefined || id === null) throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "DELETE",
+      url: url_,
+      headers: {},
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processTemplate_Delete(_response);
+      });
+  }
+
+  protected processTemplate_Delete(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
   transaction_Add(
     payload: AddTransactionDto,
     cancelToken?: CancelToken | undefined
@@ -578,6 +750,7 @@ export class Client {
   transaction_Get(
     skip: number | undefined,
     take: number | undefined,
+    description: string | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<PageableCollectionOfTransactionModel> {
     let url_ = this.baseUrl + "/api/transaction?";
@@ -585,6 +758,8 @@ export class Client {
     else if (skip !== undefined) url_ += "skip=" + encodeURIComponent("" + skip) + "&";
     if (take === null) throw new Error("The parameter 'take' cannot be null.");
     else if (take !== undefined) url_ += "take=" + encodeURIComponent("" + take) + "&";
+    if (description !== undefined && description !== null)
+      url_ += "description=" + encodeURIComponent("" + description) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{
@@ -1126,6 +1301,208 @@ export interface ICreateCategoryModel {
   icon?: string | undefined;
   color?: string | undefined;
   parentId?: number | undefined;
+}
+
+export class AddTemplateDto implements IAddTemplateDto {
+  amount!: number;
+  description?: string | undefined;
+  transactionType?: string | undefined;
+  accountId!: number;
+  categoryId!: number;
+  accountToId?: number | undefined;
+
+  constructor(data?: IAddTemplateDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.amount = _data["amount"];
+      this.description = _data["description"];
+      this.transactionType = _data["transactionType"];
+      this.accountId = _data["accountId"];
+      this.categoryId = _data["categoryId"];
+      this.accountToId = _data["accountToId"];
+    }
+  }
+
+  static fromJS(data: any): AddTemplateDto {
+    data = typeof data === "object" ? data : {};
+    let result = new AddTemplateDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["amount"] = this.amount;
+    data["description"] = this.description;
+    data["transactionType"] = this.transactionType;
+    data["accountId"] = this.accountId;
+    data["categoryId"] = this.categoryId;
+    data["accountToId"] = this.accountToId;
+    return data;
+  }
+}
+
+export interface IAddTemplateDto {
+  amount: number;
+  description?: string | undefined;
+  transactionType?: string | undefined;
+  accountId: number;
+  categoryId: number;
+  accountToId?: number | undefined;
+}
+
+export class PageableCollectionOfTemplateModel implements IPageableCollectionOfTemplateModel {
+  results?: TemplateModel[] | undefined;
+  total!: number;
+
+  constructor(data?: IPageableCollectionOfTemplateModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data["results"])) {
+        this.results = [] as any;
+        for (let item of _data["results"]) this.results!.push(TemplateModel.fromJS(item));
+      }
+      this.total = _data["total"];
+    }
+  }
+
+  static fromJS(data: any): PageableCollectionOfTemplateModel {
+    data = typeof data === "object" ? data : {};
+    let result = new PageableCollectionOfTemplateModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    if (Array.isArray(this.results)) {
+      data["results"] = [];
+      for (let item of this.results) data["results"].push(item.toJSON());
+    }
+    data["total"] = this.total;
+    return data;
+  }
+}
+
+export interface IPageableCollectionOfTemplateModel {
+  results?: TemplateModel[] | undefined;
+  total: number;
+}
+
+export class TemplateModel extends BaseModel implements ITemplateModel {
+  amount?: number | undefined;
+  description?: string | undefined;
+  currency?: string | undefined;
+  category?: TemplateCategoryModel | undefined;
+  transactionType?: string | undefined;
+  account?: string | undefined;
+
+  constructor(data?: ITemplateModel) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.amount = _data["amount"];
+      this.description = _data["description"];
+      this.currency = _data["currency"];
+      this.category = _data["category"]
+        ? TemplateCategoryModel.fromJS(_data["category"])
+        : <any>undefined;
+      this.transactionType = _data["transactionType"];
+      this.account = _data["account"];
+    }
+  }
+
+  static fromJS(data: any): TemplateModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TemplateModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["amount"] = this.amount;
+    data["description"] = this.description;
+    data["currency"] = this.currency;
+    data["category"] = this.category ? this.category.toJSON() : <any>undefined;
+    data["transactionType"] = this.transactionType;
+    data["account"] = this.account;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface ITemplateModel extends IBaseModel {
+  amount?: number | undefined;
+  description?: string | undefined;
+  currency?: string | undefined;
+  category?: TemplateCategoryModel | undefined;
+  transactionType?: string | undefined;
+  account?: string | undefined;
+}
+
+export class TemplateCategoryModel implements ITemplateCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
+  color?: string | undefined;
+  parentName?: string | undefined;
+
+  constructor(data?: ITemplateCategoryModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.icon = _data["icon"];
+      this.color = _data["color"];
+      this.parentName = _data["parentName"];
+    }
+  }
+
+  static fromJS(data: any): TemplateCategoryModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TemplateCategoryModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["name"] = this.name;
+    data["icon"] = this.icon;
+    data["color"] = this.color;
+    data["parentName"] = this.parentName;
+    return data;
+  }
+}
+
+export interface ITemplateCategoryModel {
+  name?: string | undefined;
+  icon?: string | undefined;
+  color?: string | undefined;
+  parentName?: string | undefined;
 }
 
 export class AddTransactionDto implements IAddTransactionDto {

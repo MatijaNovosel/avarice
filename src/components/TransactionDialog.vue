@@ -207,6 +207,11 @@
                         </q-item>
                       </template>
                     </q-select>
+                    <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
+                    <q-checkbox
+                      v-model="state.saveAsTemplate"
+                      label="Save as a template after creating"
+                    />
                     <div class="row justify-end">
                       <q-btn flat dense class="q-ml-md bg-dark-red rounded">
                         <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
@@ -217,11 +222,6 @@
                         <q-tooltip> Select location </q-tooltip>
                       </q-btn>
                     </div>
-                    <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
-                    <q-checkbox
-                      v-model="state.saveAsTemplate"
-                      label="Save as a template after creating"
-                    />
                   </q-form>
                 </div>
               </div>

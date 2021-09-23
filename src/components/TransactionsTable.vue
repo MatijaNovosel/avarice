@@ -1,11 +1,18 @@
 <template>
-  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-xl items-center rounded-t-md">
-    <span class="text-weight-bold text-grey-6"> Transactions </span>
+  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md">
+    <span class="text-grey-6"> Transactions </span>
     <div class="row">
-      <q-btn :disable="state.data.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
+      <q-btn :disable="data.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
       </q-btn>
-      <q-input :disable="state.data.total === 0" dense filled label="Search">
+      <q-input
+        @input="searchDebounce"
+        v-model="state.search"
+        :disable="data.total === 0"
+        dense
+        filled
+        label="Search"
+      >
         <template #prepend>
           <q-icon name="mdi-magnify" />
         </template>
@@ -18,7 +25,7 @@
     flat
     v-model:pagination="state.pagination"
     class="rounded-b-md q-pa-md rounded-t-none"
-    :rows="state.data.results"
+    :rows="data.results"
     :columns="columns"
     row-key="id"
     separator="none"
@@ -27,7 +34,7 @@
     <template #no-data>
       <div class="full-width row flex-center text-grey-6 q-gutter-sm q-pt-md">
         <q-icon size="2em" name="mdi-database-alert" />
-        <span> No transactions found! </span>
+        <span> {{ $t("noTransactionsFound") }}! </span>
       </div>
     </template>
     <template #header-cell-transactionType="props">
@@ -112,21 +119,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, reactive, watch } from "vue";
+import { defineComponent, PropType, computed, reactive } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
-
-interface Props {
-  data: IPageableCollectionOfTransactionModel;
-}
+import { debounce } from "quasar";
 
 interface State {
   pagination: QuasarTablePagination;
   pagesNumber: number;
-  data: IPageableCollectionOfTransactionModel;
+  search: string | null;
 }
 
 export default defineComponent({
@@ -141,17 +145,17 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ["delete-transaction"],
-  setup(props: Props, { emit }) {
+  emits: ["delete-transaction", "search"],
+  setup(props, { emit }) {
     const state: State = reactive({
+      search: null,
       pagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 5
       },
-      data: props.data,
-      pagesNumber: computed(() => Math.ceil(state.data.total / state.pagination.rowsPerPage))
+      pagesNumber: computed(() => Math.ceil(props.data.total / state.pagination.rowsPerPage))
     });
 
     const columns: QuasarTableColumn<TransactionModel>[] = [
@@ -236,12 +240,11 @@ export default defineComponent({
       emit("delete-transaction", id);
     }
 
-    watch(
-      () => props.data,
-      (val) => {
-        state.data = val;
+    const searchDebounce = debounce(() => {
+      if (state.search && state.search !== "") {
+        emit("search", state.search);
       }
-    );
+    }, 300);
 
     return {
       columns,
@@ -251,7 +254,8 @@ export default defineComponent({
       formatTransactionColor,
       formatBalance,
       TransactionType,
-      deleteTransaction
+      deleteTransaction,
+      searchDebounce
     };
   }
 });
