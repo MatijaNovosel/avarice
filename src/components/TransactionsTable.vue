@@ -185,7 +185,7 @@ export default defineComponent({
       },
       {
         name: "amount",
-        align: "center",
+        align: "left",
         label: "Amount",
         field: "amount",
         format: (val) => `${val} HRK`
@@ -193,13 +193,13 @@ export default defineComponent({
       {
         name: "account",
         label: "Account",
-        align: "center",
+        align: "left",
         field: "account"
       },
       {
         name: "createdAt",
         label: "Created at",
-        align: "center",
+        align: "left",
         field: "createdAt"
       },
       {

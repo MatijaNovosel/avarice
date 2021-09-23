@@ -12,7 +12,7 @@
     </template>
     <q-card class="rounded-md q-px-md q-py-sm" flat style="height: 200px" v-else>
       <q-card-section class="row items-center justify-between q-pb-sm">
-        <span class="text-grey-6"> Total balance </span>
+        <span class="text-grey-6"> Account balance </span>
       </q-card-section>
       <q-card-section class="column q-pb-sm">
         <span class="text-h3">

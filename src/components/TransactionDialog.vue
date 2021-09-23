@@ -454,6 +454,7 @@ export default defineComponent({
 
     function closeDialog() {
       resetFormData(true);
+      state.panel = "newTransaction";
       emit("update:open", false);
     }
 
@@ -519,6 +520,7 @@ export default defineComponent({
           state.categoryName = null;
           state.selectedIcon = "mdi-plus";
           state.selectedColor = "#ff00ff";
+          state.newCategoryParent = null;
 
           $q.notify({
             message: "Category added",
