@@ -73,6 +73,8 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "func-names": "off",
-    "@typescript-eslint/restrict-template-expressions": "off"
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "prefer-template": "off"
   }
 };

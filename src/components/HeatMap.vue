@@ -14,6 +14,15 @@ import * as d3 from "d3";
 import { format, sub, getWeek } from "date-fns";
 import { randInt } from "src/utils/helpers";
 
+interface d3MouseEvent {
+  layerX: number;
+  layerY: number;
+}
+
+interface QuasarHTMLElement {
+  $el: HTMLElement;
+}
+
 interface DataItem {
   date: string;
   weekDay: string;
@@ -23,18 +32,18 @@ interface DataItem {
 export default defineComponent({
   name: "heat-map",
   setup() {
-    const heatmapCard = ref(null);
+    const heatmapCard = ref<QuasarHTMLElement | null>(null);
 
     function initHeatMap() {
       const card = heatmapCard.value;
       const margin = { top: 20, right: 25, bottom: 20, left: 35 };
-      const width = card.$el.clientWidth - margin.left - margin.right;
+      const width = card && card.$el.clientWidth - margin.left - margin.right;
       const height = 200 - margin.top - margin.bottom;
 
       const svg = d3
         .select("#heat-map")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", width || 0 + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -55,7 +64,7 @@ export default defineComponent({
 
       const x = d3
         .scaleBand()
-        .range([0, width - 50])
+        .range([0, width || 0 - 50])
         .domain(dates);
       const y = d3.scaleBand().range([height, 0]).domain(weekDays);
 
@@ -68,17 +77,45 @@ export default defineComponent({
 
       const getColor = d3.scaleSequential().interpolator(d3.interpolateReds).domain([1, 50]);
 
+      // create a tooltip
+      const tooltip = d3
+        .select("#heat-map")
+        .append("div")
+        .style("opacity", 0)
+        .style("background-color", "#111010")
+        .style("border-radius", "5px")
+        .style("font-size", "12px")
+        .style("padding", "6px 8px")
+        .style("position", "absolute")
+        .style("color", "white");
+
+      const mouseover = function () {
+        tooltip.style("opacity", 1);
+      };
+      const mousemove = function (event: d3MouseEvent, d: DataItem) {
+        tooltip
+          .html(`${d.value} transactions on this date`)
+          .style("left", `${event.layerX + 10}px`)
+          .style("top", `${event.layerY}px`);
+      };
+      const mouseleave = function () {
+        tooltip.style("opacity", 0);
+      };
+
       svg
         .selectAll()
         .data(data, (d) => `${d && d.date}:${d && d.weekDay}`)
         .join("rect")
-        .attr("x", (d) => (x(d.date) as number) + 25)
+        .attr("x", (d) => (x(d.date) as number) + 10)
         .attr("y", (d) => y(d.weekDay) as number)
         .attr("width", 15)
         .attr("height", 15)
         .attr("rx", 4)
         .attr("ry", 4)
-        .style("fill", (d) => getColor(d.value));
+        .style("fill", (d) => getColor(d.value))
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave);
     }
 
     onMounted(() => {
