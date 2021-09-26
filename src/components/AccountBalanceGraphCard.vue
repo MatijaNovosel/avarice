@@ -66,7 +66,7 @@ export default defineComponent({
             radius: 0
           },
           line: {
-            tension: 0
+            tension: 0.3
           }
         },
         scales: {

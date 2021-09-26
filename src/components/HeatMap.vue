@@ -1,5 +1,5 @@
 <template>
-  <q-card class="rounded-md q-px-md" flat style="height: 250px" ref="heatmapCard">
+  <q-card class="rounded-md q-px-md" flat style="height: 260px" ref="heatmapCard">
     <q-card-section class="column q-pb-none">
       <span class="text-grey-6"> Activity heatmap </span>
       <span class="text-grey-8 text-caption"> Number of entries per day </span>
@@ -11,7 +11,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import * as d3 from "d3";
-import { format, sub, getWeek } from "date-fns";
+import { format, add, sub, getWeek, startOfWeek, differenceInDays } from "date-fns";
 import { randInt } from "src/utils/helpers";
 
 interface d3MouseEvent {
@@ -24,9 +24,10 @@ interface QuasarHTMLElement {
 }
 
 interface DataItem {
-  date: string;
+  week: string;
   weekDay: string;
   value: number;
+  date: string;
 }
 
 export default defineComponent({
@@ -43,30 +44,38 @@ export default defineComponent({
       const svg = d3
         .select("#heat-map")
         .append("svg")
-        .attr("width", width || 0 + margin.left + margin.right)
+        .attr("width", (width || 0) + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
       const data: DataItem[] = [];
 
-      [...Array.from({ length: 100 }, (x, i) => i)].forEach((n) => {
-        const date = sub(new Date(), { days: n });
+      const startingWeek = startOfWeek(sub(new Date(), { weeks: 4 }), {
+        weekStartsOn: 1
+      });
+      const dayDiff = differenceInDays(new Date(), startingWeek);
+
+      [...Array.from({ length: dayDiff }, (x, i) => i)].forEach((n) => {
+        const date = add(startingWeek, { days: n });
         data.push({
-          date: getWeek(date).toString(),
+          week: getWeek(date, {
+            weekStartsOn: 1
+          }).toString(),
           weekDay: format(date, "EEEEEE"),
-          value: randInt(1, 50)
+          value: randInt(1, 50),
+          date: format(date, "dd.MM.yyyy.")
         });
       });
 
-      const dates = data.map((d) => d.date);
+      const weeks = data.map((d) => d.week);
       const weekDays = data.map((d) => d.weekDay);
 
       const x = d3
         .scaleBand()
-        .range([0, width || 0 - 50])
-        .domain(dates);
-      const y = d3.scaleBand().range([height, 0]).domain(weekDays);
+        .range([0, (width || 0) - margin.left - margin.right])
+        .domain(weeks);
+      const y = d3.scaleBand().range([0, height]).domain(weekDays);
 
       svg
         .append("g")
@@ -82,7 +91,7 @@ export default defineComponent({
         .select("#heat-map")
         .append("div")
         .style("opacity", 0)
-        .style("background-color", "#111010")
+        .style("background-color", "black")
         .style("border-radius", "5px")
         .style("font-size", "12px")
         .style("padding", "6px 8px")
@@ -92,26 +101,26 @@ export default defineComponent({
       const mouseover = function () {
         tooltip.style("opacity", 1);
       };
+
       const mousemove = function (event: d3MouseEvent, d: DataItem) {
         tooltip
-          .html(`${d.value} transactions on this date`)
+          .html(`<b>${d.value}</b><i> transactions on </i><b>${d.date}</b>`)
           .style("left", `${event.layerX + 10}px`)
           .style("top", `${event.layerY}px`);
       };
+
       const mouseleave = function () {
         tooltip.style("opacity", 0);
       };
 
       svg
         .selectAll()
-        .data(data, (d) => `${d && d.date}:${d && d.weekDay}`)
+        .data(data, (d) => `${d && d.week}:${d && d.weekDay}`)
         .join("rect")
-        .attr("x", (d) => (x(d.date) as number) + 10)
+        .attr("x", (d) => (x(d.week) as number) + 15)
         .attr("y", (d) => y(d.weekDay) as number)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("rx", 4)
-        .attr("ry", 4)
+        .attr("width", x.bandwidth())
+        .attr("height", y.bandwidth())
         .style("fill", (d) => getColor(d.value))
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)

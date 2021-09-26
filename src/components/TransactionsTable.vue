@@ -50,10 +50,10 @@
         </q-td>
         <q-td key="transactionType" :props="props">
           <q-btn
+            size="sm"
             flat
             dense
             :class="`bg-${formatTransactionColor(props.row.transactionType)}-6`"
-            class="rounded"
           >
             <q-icon
               :name="formatTransactionIcon(props.row.transactionType)"
