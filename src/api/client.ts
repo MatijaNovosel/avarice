@@ -924,6 +924,71 @@ export class Client {
     }
     return Promise.resolve<void>(<any>null);
   }
+
+  transaction_GetHeatmap(
+    cancelToken?: CancelToken | undefined
+  ): Promise<TransactionActivityHeatmapModel[]> {
+    let url_ = this.baseUrl + "/api/transaction/heatmap";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <AxiosRequestConfig>{
+      method: "GET",
+      url: url_,
+      headers: {
+        Accept: "application/json"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processTransaction_GetHeatmap(_response);
+      });
+  }
+
+  protected processTransaction_GetHeatmap(
+    response: AxiosResponse
+  ): Promise<TransactionActivityHeatmapModel[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(TransactionActivityHeatmapModel.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<TransactionActivityHeatmapModel[]>(<any>null);
+  }
 }
 
 export class BaseModel implements IBaseModel {
@@ -1750,6 +1815,53 @@ export interface ITransactionCategoryModel {
   icon?: string | undefined;
   color?: string | undefined;
   parentName?: string | undefined;
+}
+
+export class TransactionActivityHeatmapModel implements ITransactionActivityHeatmapModel {
+  week!: number;
+  value!: number;
+  date!: Date;
+  weekDay?: string | undefined;
+
+  constructor(data?: ITransactionActivityHeatmapModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.week = _data["week"];
+      this.value = _data["value"];
+      this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+      this.weekDay = _data["weekDay"];
+    }
+  }
+
+  static fromJS(data: any): TransactionActivityHeatmapModel {
+    data = typeof data === "object" ? data : {};
+    let result = new TransactionActivityHeatmapModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["week"] = this.week;
+    data["value"] = this.value;
+    data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+    data["weekDay"] = this.weekDay;
+    return data;
+  }
+}
+
+export interface ITransactionActivityHeatmapModel {
+  week: number;
+  value: number;
+  date: Date;
+  weekDay?: string | undefined;
 }
 
 export interface FileResponse {

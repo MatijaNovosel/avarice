@@ -20,6 +20,9 @@
           <div class="col-12 col-md-6 q-pt-md q-pr-md-md">
             <heat-map />
           </div>
+          <div class="col-12 col-md-6 q-pt-md">
+            <histogram />
+          </div>
         </div>
         <div class="row q-mt-md">
           <div class="col-12">
@@ -57,6 +60,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import { format } from "date-fns";
 import ICategoryService from "src/api/interfaces/categoryService";
 import HeatMap from "src/components/HeatMap.vue";
+import Histogram from "src/components/Histogram.vue";
 
 interface State {
   transactions: IPageableCollectionOfTransactionModel;
@@ -74,7 +78,8 @@ export default defineComponent({
     TotalBalanceCard,
     AccountBalanceGraphCard,
     TransactionDialog,
-    HeatMap
+    HeatMap,
+    Histogram
   },
   setup() {
     const store = useStore();

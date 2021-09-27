@@ -11,8 +11,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import * as d3 from "d3";
-import { format, add, sub, getWeek, startOfWeek, differenceInDays } from "date-fns";
-import { randInt } from "src/utils/helpers";
+import { getService, Types } from "src/di-container";
+import ITransactionService from "src/api/interfaces/transactionService";
+import { TransactionActivityHeatmapModel } from "src/api/client";
+import { format } from "date-fns";
 
 interface d3MouseEvent {
   layerX: number;
@@ -23,19 +25,12 @@ interface QuasarHTMLElement {
   $el: HTMLElement;
 }
 
-interface DataItem {
-  week: string;
-  weekDay: string;
-  value: number;
-  date: string;
-}
-
 export default defineComponent({
   name: "heat-map",
   setup() {
     const heatmapCard = ref<QuasarHTMLElement | null>(null);
 
-    function initHeatMap() {
+    async function initHeatMap() {
       const card = heatmapCard.value;
       const margin = { top: 20, right: 25, bottom: 20, left: 35 };
       const width = card && card.$el.clientWidth - margin.left - margin.right;
@@ -49,27 +44,10 @@ export default defineComponent({
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-      const data: DataItem[] = [];
+      const data = await getService<ITransactionService>(Types.TransactionService).getHeatmap();
 
-      const startingWeek = startOfWeek(sub(new Date(), { weeks: 4 }), {
-        weekStartsOn: 1
-      });
-      const dayDiff = differenceInDays(new Date(), startingWeek);
-
-      [...Array.from({ length: dayDiff }, (x, i) => i)].forEach((n) => {
-        const date = add(startingWeek, { days: n });
-        data.push({
-          week: getWeek(date, {
-            weekStartsOn: 1
-          }).toString(),
-          weekDay: format(date, "EEEEEE"),
-          value: randInt(1, 50),
-          date: format(date, "dd.MM.yyyy.")
-        });
-      });
-
-      const weeks = data.map((d) => d.week);
-      const weekDays = data.map((d) => d.weekDay);
+      const weeks = data.map((d) => d.week.toString());
+      const weekDays = data.map((d) => d.weekDay as string);
 
       const x = d3
         .scaleBand()
@@ -84,7 +62,10 @@ export default defineComponent({
         .select(".domain")
         .remove();
 
-      const getColor = d3.scaleSequential().interpolator(d3.interpolateReds).domain([1, 50]);
+      const getColor = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateReds)
+        .domain([0, data.map((x) => x.value).sort((a, b) => b - a)[0]]);
 
       // create a tooltip
       const tooltip = d3
@@ -98,13 +79,13 @@ export default defineComponent({
         .style("position", "absolute")
         .style("color", "white");
 
-      const mouseover = function () {
+      const mouseover = () => {
         tooltip.style("opacity", 1);
       };
 
-      const mousemove = function (event: d3MouseEvent, d: DataItem) {
+      const mousemove = (event: d3MouseEvent, d: TransactionActivityHeatmapModel) => {
         tooltip
-          .html(`<b>${d.value}</b><i> transactions on </i><b>${d.date}</b>`)
+          .html(`<b>${d.value}</b><i> transactions on </i><b>${format(d.date, "dd.MM.yyyy.")}</b>`)
           .style("left", `${event.layerX + 10}px`)
           .style("top", `${event.layerY}px`);
       };
@@ -117,8 +98,8 @@ export default defineComponent({
         .selectAll()
         .data(data, (d) => `${d && d.week}:${d && d.weekDay}`)
         .join("rect")
-        .attr("x", (d) => (x(d.week) as number) + 15)
-        .attr("y", (d) => y(d.weekDay) as number)
+        .attr("x", (d) => (x(d.week.toString()) as number) + 15)
+        .attr("y", (d) => y(d.weekDay as string) as number)
         .attr("width", x.bandwidth())
         .attr("height", y.bandwidth())
         .style("fill", (d) => getColor(d.value))
@@ -127,8 +108,8 @@ export default defineComponent({
         .on("mouseleave", mouseleave);
     }
 
-    onMounted(() => {
-      initHeatMap();
+    onMounted(async () => {
+      await initHeatMap();
     });
 
     return {
