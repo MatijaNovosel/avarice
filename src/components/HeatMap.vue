@@ -67,7 +67,6 @@ export default defineComponent({
         .interpolator(d3.interpolateReds)
         .domain([0, data.map((x) => x.value).sort((a, b) => b - a)[0]]);
 
-      // create a tooltip
       const tooltip = d3
         .select("#heat-map")
         .append("div")

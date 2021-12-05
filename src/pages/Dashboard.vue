@@ -74,10 +74,10 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
     const createTransactionTrigger = computed(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line
       () => store.getters["app/createTransactionTrigger"] as boolean
     );
 
@@ -111,7 +111,7 @@ export default defineComponent({
       );
 
       transactions.results?.forEach((t, i) => {
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line
         t.id = i + 1;
       });
 

@@ -54,7 +54,7 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line
     const user = computed(() => store.getters["user/data"] as AppUser);
 
     async function logOut() {

@@ -1,5 +1,10 @@
 import { route } from "quasar/wrappers";
-import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import {
+  createMemoryHistory,
+  createRouter,
+  createWebHashHistory,
+  createWebHistory
+} from "vue-router";
 import { StateInterface } from "../store";
 import ROUTE_NAMES from "./routeNames";
 import routes from "./routes";
@@ -22,7 +27,7 @@ export default route<StateInterface>(({ store }) => {
   });
 
   Router.beforeEach((to, from, next) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line
     const isAuthenticated = store.getters["user/isAuthenticated"] as boolean;
 
     if (to.matched.some((record) => record.meta.isAuth)) {

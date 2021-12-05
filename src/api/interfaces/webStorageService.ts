@@ -1,6 +1,6 @@
 export default interface IWebStorageService {
   saveState(key: string, data: string): void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line
   getSavedState(key: string): any;
   removeSavedState(key: string): void;
 }

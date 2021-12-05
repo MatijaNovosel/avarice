@@ -11,7 +11,7 @@
     <q-card-section class="q-pa-none">
       <line-chart
         v-if="state.chartData"
-        style="height: 115px; margin-top: 15px"
+        style="height: 130px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
       />
@@ -25,6 +25,7 @@ import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
 import { LineChart } from "vue-chart-3";
+import { format } from "date-fns";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -48,6 +49,19 @@ export default defineComponent({
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: "nearest",
+          axis: "x",
+          intersect: false
+        },
+        scales: {
+          y: {
+            display: false
+          },
+          x: {
+            display: false
+          }
+        },
         plugins: {
           legend: {
             display: false
@@ -60,15 +74,22 @@ export default defineComponent({
       const graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
         1
       );
+
       state.chartData = {
         datasets: [
           {
-            pointBackgroundColor: "#ffffff",
+            pointBackgroundColor: "rgba(0, 0, 0, 0)",
+            pointBorderColor: "rgba(0, 0, 0, 0)",
             backgroundColor: "#ca4133",
             borderColor: "#ca4133",
-            data: graphData.map((x) => x.amount).reverse()
+            pointRadius: 0,
+            fill: true,
+            data: graphData.map((dataItem) => dataItem.amount).reverse(),
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "red"
           }
-        ]
+        ],
+        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm"))
       };
     });
 
