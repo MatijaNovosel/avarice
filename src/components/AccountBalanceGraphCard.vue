@@ -7,6 +7,22 @@
       <q-btn flat dense class="q-mr-md bg-grey-9 rounded">
         <q-icon class="q-pa-xs" name="mdi-calendar-outline" size="sm" />
       </q-btn>
+      <q-btn-toggle
+        v-model="state.timePeriod"
+        toggle-color="grey-7"
+        color="grey-9"
+        text-color="white"
+        toggle-text-color="white"
+        unelevated
+        size="sm"
+        :options="[
+          { label: '7D', value: '7D' },
+          { label: '30D', value: '30D' },
+          { label: '12W', value: '12W' },
+          { label: '6M', value: '6M' },
+          { label: '1Y', value: '1Y' }
+        ]"
+      />
     </q-card-section>
     <q-card-section class="q-pa-none">
       <line-chart
@@ -30,6 +46,7 @@ import { format } from "date-fns";
 interface State {
   chartData: ChartData<"line"> | null;
   chartOptions: ChartOptions<"line">;
+  timePeriod: string | null;
 }
 
 export default defineComponent({
@@ -46,6 +63,7 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       chartData: null,
+      timePeriod: "30D",
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -86,7 +104,7 @@ export default defineComponent({
             fill: true,
             data: graphData.map((dataItem) => dataItem.amount).reverse(),
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "red"
+            pointHoverBackgroundColor: "#ff3f2b"
           }
         ],
         labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm"))
