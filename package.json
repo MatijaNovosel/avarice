@@ -10,6 +10,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@quasar/cli": "^1.2.2",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "chart.js": "^3.5.1",
@@ -20,8 +21,8 @@
     "jwt-decode": "^3.1.2",
     "quasar": "^2.0.0",
     "reflect-metadata": "^0.1.13",
+    "vue-chart-3": "^3.0.3",
     "vue-i18n": "^9.0.0-beta.0",
-    "vue3-chart-v2": "^0.8.2",
     "vuex": "^4.0.1"
   },
   "devDependencies": {

@@ -9,7 +9,7 @@
       </q-btn>
     </q-card-section>
     <q-card-section class="q-pa-none">
-      <chart-test
+      <line-chart
         v-if="state.chartData"
         style="height: 115px; margin-top: 15px"
         :chart-data="state.chartData"
@@ -21,20 +21,20 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from "vue";
-import Chart from "src/components/Chart.vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
-import { GraphData, GraphOptions } from "src/models/graph";
+import { ChartData, ChartOptions } from "chart.js";
+import { LineChart } from "vue-chart-3";
 
 interface State {
-  chartData: GraphData | null;
-  chartOptions: GraphOptions;
+  chartData: ChartData<"line"> | null;
+  chartOptions: ChartOptions<"line">;
 }
 
 export default defineComponent({
   name: "account-balance-graph-card",
   components: {
-    "chart-test": Chart
+    LineChart
   },
   props: {
     loading: {
@@ -43,53 +43,15 @@ export default defineComponent({
     }
   },
   setup() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state: State = reactive({
       chartData: null,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: {
-            left: -10,
-            bottom: -10
+        plugins: {
+          legend: {
+            display: false
           }
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false
-        },
-        elements: {
-          point: {
-            radius: 0
-          },
-          line: {
-            tension: 0.3
-          }
-        },
-        scales: {
-          xAxes: [
-            {
-              ticks: {
-                display: false
-              },
-              gridLines: {
-                display: false
-              }
-            }
-          ],
-          yAxes: [
-            {
-              ticks: {
-                display: false
-              },
-              gridLines: {
-                display: false
-              }
-            }
-          ]
         }
       }
     });
@@ -98,7 +60,6 @@ export default defineComponent({
       const graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
         1
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       state.chartData = {
         datasets: [
           {
@@ -107,8 +68,7 @@ export default defineComponent({
             borderColor: "#ca4133",
             data: graphData.map((x) => x.amount).reverse()
           }
-        ],
-        labels: graphData.map((x) => x.amount.toString())
+        ]
       };
     });
 
