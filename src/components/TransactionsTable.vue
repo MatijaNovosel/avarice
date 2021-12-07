@@ -1,14 +1,17 @@
 <template>
-  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md">
+  <div
+    class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md"
+    v-if="state.transactions"
+  >
     <span class="text-grey-6"> Transactions </span>
     <div class="row">
-      <q-btn :disable="data.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
+      <q-btn :disable="state.transactions.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
       </q-btn>
       <q-input
         @input="searchDebounce"
         v-model="state.search"
-        :disable="data.total === 0"
+        :disable="state.transactions.total === 0"
         dense
         filled
         label="Search"
@@ -20,13 +23,14 @@
     </div>
   </div>
   <q-table
-    :loading="loading"
+    v-if="state.transactions"
+    :loading="state.loading"
     hide-pagination
     flat
     dense
     v-model:pagination="state.pagination"
     class="rounded-b-md q-pa-md rounded-t-none"
-    :rows="data.results"
+    :rows="state.transactions.results"
     :columns="columns"
     row-key="id"
     separator="none"
@@ -83,7 +87,11 @@
         <q-td key="description" :props="props">
           {{ props.row.description }}
         </q-td>
-        <q-td key="amount" :props="props">
+        <q-td
+          key="amount"
+          :props="props"
+          :class="`text-${formatTransactionColor(props.row.transactionType)}`"
+        >
           {{ formatBalance(props.row.amount, "HRK") }}
         </q-td>
         <q-td key="account" :props="props">
@@ -115,48 +123,53 @@
       v-model="state.pagination.page"
       color="grey-9"
       :max="state.pagesNumber"
+      :max-pages="5"
+      @update:model-value="paginationUpdated"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, reactive } from "vue";
+import { defineComponent, computed, reactive, onMounted } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
 import { debounce } from "quasar";
+import { getService, Types } from "src/di-container";
+import ITransactionService from "src/api/interfaces/transactionService";
 
 interface State {
   pagination: QuasarTablePagination;
   pagesNumber: number;
   search: string | null;
+  transactions: IPageableCollectionOfTransactionModel | null;
+  loading: boolean;
 }
 
 export default defineComponent({
   name: "transactions-table",
-  props: {
-    data: {
-      type: Object as PropType<IPageableCollectionOfTransactionModel>,
-      default: () => ({})
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    }
-  },
   emits: ["delete-transaction", "search"],
   setup(props, { emit }) {
+    const itemsPerPage = 5;
+
     const state: State = reactive({
       search: null,
+      transactions: null,
       pagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 5
       },
-      pagesNumber: computed(() => Math.ceil(props.data.total / state.pagination.rowsPerPage))
+      loading: false,
+      pagesNumber: computed(() => {
+        if (state.transactions) {
+          return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
+        }
+        return 0;
+      })
     });
 
     const columns: QuasarTableColumn<TransactionModel>[] = [
@@ -247,6 +260,32 @@ export default defineComponent({
       }
     }, 300);
 
+    const paginationUpdated = (page: number) => {
+      console.log(page);
+    };
+
+    const getTransactions = async (description?: string) => {
+      state.loading = true;
+
+      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
+        itemsPerPage,
+        1,
+        description || ""
+      );
+
+      transactions.results?.forEach((t, i) => {
+        // eslint-disable-next-line
+        t.id = i + 1;
+      });
+
+      state.transactions = transactions;
+      state.loading = false;
+    };
+
+    onMounted(async () => {
+      await getTransactions();
+    });
+
     return {
       columns,
       state,
@@ -256,7 +295,8 @@ export default defineComponent({
       formatBalance,
       TransactionType,
       deleteTransaction,
-      searchDebounce
+      searchDebounce,
+      paginationUpdated
     };
   }
 });

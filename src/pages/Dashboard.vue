@@ -20,12 +20,7 @@
         </div>
         <div class="row q-mt-md">
           <div class="col-12">
-            <transactions-table
-              @search="filterTransactions"
-              @delete-transaction="deleteTransaction"
-              :loading="state.transactionsLoading"
-              :data="state.transactions"
-            />
+            <transactions-table @delete-transaction="deleteTransaction" />
           </div>
         </div>
       </div>
@@ -103,26 +98,9 @@ export default defineComponent({
 
     const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
 
-    async function getTransactions(description?: string) {
-      state.transactionsLoading = true;
-
-      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
-        description || ""
-      );
-
-      transactions.results?.forEach((t, i) => {
-        // eslint-disable-next-line
-        t.id = i + 1;
-      });
-
-      state.transactions = transactions;
-      state.transactionsLoading = false;
-    }
-
-    onMounted(async () => {
+    onMounted(() => {
       state.loading = true;
       state.selectedAccount = accounts.value[0];
-      await getTransactions();
       state.loading = false;
     });
 
@@ -134,7 +112,6 @@ export default defineComponent({
 
     async function updateData() {
       await getAccounts();
-      await getTransactions();
     }
 
     async function deleteTransaction(id: number) {
@@ -143,7 +120,6 @@ export default defineComponent({
         await getService<ITransactionService>(Types.TransactionService).delete(
           parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
         );
-        await getTransactions();
         await getAccounts();
       }
     }
@@ -165,18 +141,13 @@ export default defineComponent({
       }
     );
 
-    async function filterTransactions(description: string) {
-      await getTransactions(description);
-    }
-
     return {
       state,
       updateSelectedAccountDebounce,
       accounts,
       updateData,
       deleteTransaction,
-      categoryAdded,
-      filterTransactions
+      categoryAdded
     };
   }
 });

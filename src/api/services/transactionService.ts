@@ -29,9 +29,13 @@ class TransactionService implements ITransactionService {
     const client = new Client(CONSTANTS.API_URL, api);
     await client.transaction_Delete(id);
   }
-  async getAll(description?: string): Promise<PageableCollectionOfTransactionModel> {
+  async getAll(
+    itemsPerPage: number,
+    page: number,
+    description?: string
+  ): Promise<PageableCollectionOfTransactionModel> {
     const client = new Client(CONSTANTS.API_URL, api);
-    const data = await client.transaction_Get(0, 25, description);
+    const data = await client.transaction_Get(itemsPerPage * page, itemsPerPage, description);
     return data;
   }
 }
