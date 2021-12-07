@@ -28,7 +28,6 @@
     hide-pagination
     flat
     dense
-    v-model:pagination="state.pagination"
     class="rounded-b-md q-pa-md rounded-t-none"
     :rows="state.transactions.results"
     :columns="columns"
@@ -150,10 +149,8 @@ interface State {
 
 export default defineComponent({
   name: "transactions-table",
-  emits: ["delete-transaction", "search"],
+  emits: ["delete-transaction"],
   setup(props, { emit }) {
-    const itemsPerPage = 5;
-
     const state: State = reactive({
       search: null,
       transactions: null,
@@ -256,20 +253,16 @@ export default defineComponent({
 
     const searchDebounce = debounce(() => {
       if (state.search && state.search !== "") {
-        emit("search", state.search);
+        //
       }
     }, 300);
-
-    const paginationUpdated = (page: number) => {
-      console.log(page);
-    };
 
     const getTransactions = async (description?: string) => {
       state.loading = true;
 
       const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
-        itemsPerPage,
-        1,
+        state.pagination.rowsPerPage,
+        state.pagination.page - 1,
         description || ""
       );
 
@@ -280,6 +273,10 @@ export default defineComponent({
 
       state.transactions = transactions;
       state.loading = false;
+    };
+
+    const paginationUpdated = async () => {
+      await getTransactions();
     };
 
     onMounted(async () => {
