@@ -24,3 +24,14 @@ export function randInt(start: number, end: number) {
   const max = Math.floor(end);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  if (chunkSize <= 0) {
+    throw new Error("Invalid chunk size");
+  }
+  const res: T[][] = [];
+  for (let i = 0, len = array.length; i < len; i += chunkSize) {
+    res.push(array.slice(i, i + chunkSize));
+  }
+  return res;
+}

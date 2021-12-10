@@ -10,6 +10,8 @@ import TransactionService from "./api/services/transactionService";
 import ITransactionService from "./api/interfaces/transactionService";
 import CategoryService from "./api/services/categoryService";
 import ICategoryService from "./api/interfaces/categoryService";
+import TemplateService from "./api/services/templateService";
+import ITemplateService from "./api/interfaces/templateService";
 
 export class Types {
   static readonly WebStorageService = Symbol("IWebStorageService");
@@ -17,6 +19,7 @@ export class Types {
   static readonly AccountService = Symbol("IAccountService");
   static readonly TransactionService = Symbol("ITransactionService");
   static readonly CategoryService = Symbol("ICategoryService");
+  static readonly TemplateService = Symbol("ITemplateService");
 }
 
 const DIContainer = new Container();
@@ -28,6 +31,7 @@ DIContainer.bind<ICategoryService>(Types.CategoryService).toConstantValue(new Ca
 DIContainer.bind<ITransactionService>(Types.TransactionService).toConstantValue(
   new TransactionService()
 );
+DIContainer.bind<ITemplateService>(Types.TemplateService).toConstantValue(new TemplateService());
 
 export function getService<T>(symbol: symbol): T {
   return DIContainer.get<T>(symbol);

@@ -107,7 +107,7 @@ export default defineComponent({
             pointHoverBackgroundColor: "#ff3f2b"
           }
         ],
-        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm"))
+        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm")).reverse()
       };
     });
 
@@ -117,3 +117,10 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss">
+canvas {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+</style>
