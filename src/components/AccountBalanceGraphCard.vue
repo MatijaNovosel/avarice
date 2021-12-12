@@ -83,6 +83,26 @@ export default defineComponent({
         plugins: {
           legend: {
             display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                let label = context.dataset.label || "";
+
+                if (label) {
+                  label += ": ";
+                }
+
+                if (context.parsed.y !== null) {
+                  label += new Intl.NumberFormat("hr-HR", {
+                    style: "currency",
+                    currency: "HRK"
+                  }).format(context.parsed.y);
+                }
+
+                return label;
+              }
+            }
           }
         }
       }

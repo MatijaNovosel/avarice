@@ -7,6 +7,12 @@
     <div class="row">
       <q-btn :disable="state.transactions.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
+        <q-menu>
+          <div class="column no-wrap q-pa-md">
+            <q-toggle label="Show transfers" />
+            <q-toggle label="Bluetooth" />
+          </div>
+        </q-menu>
       </q-btn>
       <q-input
         @input="searchDebounce"
@@ -300,12 +306,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.q-field {
-  &::v-deep(.q-field__control) {
-    border-radius: 10px;
-  }
-}
-
 .q-pagination {
   &::v-deep(.q-btn) {
     margin-left: 10px;
