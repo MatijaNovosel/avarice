@@ -252,7 +252,12 @@
                     >
                       <template #label> <required-icon /> Category name </template>
                       <template #after>
-                        <q-btn flat dense class="q-ml-md" size="lg">
+                        <q-icon
+                          class="rounded bg-black q-pa-sm"
+                          :style="{ color: state.selectedColor }"
+                          :name="state.selectedIcon"
+                        />
+                        <q-btn flat dense size="lg">
                           <q-icon
                             class="rounded"
                             :style="{ backgroundColor: state.selectedColor }"
@@ -326,13 +331,17 @@
                         <q-icon size="xs" name="mdi-magnify" />
                       </template>
                     </q-input>
-                    <q-list ref="scrollTargetRef" class="scroll" style="max-height: 250px">
+                    <q-list
+                      ref="scrollTargetRef"
+                      class="scroll bg-icon-list q-pt-md rounded"
+                      style="max-height: 250px"
+                    >
                       <q-infinite-scroll @load="onIconLoad" :offset="50">
                         <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
                           <q-btn
                             v-for="(icon, j) in icons"
                             :key="j"
-                            class="bg-black q-pa-sm q-ma-xs rounded"
+                            class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
                             flat
                             dense
                             @click="setCategoryIcon(icon.name)"
@@ -344,14 +353,14 @@
                               :name="icon.name"
                             >
                               <q-tooltip>
-                                {{ icon.name }}
+                                {{ icon.name.split("mdi-")[1] }}
                               </q-tooltip>
                             </q-icon>
                           </q-btn>
                         </div>
                         <template #loading>
                           <div class="row justify-center q-my-md">
-                            <q-spinner-dots color="primary" size="40px" />
+                            <q-spinner-dots :style="{ color: state.selectedColor }" size="40px" />
                           </div>
                         </template>
                       </q-infinite-scroll>
@@ -435,7 +444,7 @@ export default defineComponent({
     const store = useStore();
     const scrollTargetRef = ref<HTMLElement | null>(null);
 
-    const iconList = [];
+    const iconList: Icon[] = [];
 
     for (let i = 0; i < icons.length; i += 5) {
       iconList.push({
@@ -609,3 +618,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped lang="scss">
+.bg-icon-list {
+  background-color: #151414;
+}
+</style>
