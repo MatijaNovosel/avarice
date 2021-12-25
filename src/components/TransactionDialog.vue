@@ -326,7 +326,14 @@
                         </q-item>
                       </template>
                     </q-select>
-                    <q-input placeholder="Search icons" dense filled>
+                    <q-input
+                      placeholder="Search icons"
+                      dense
+                      filled
+                      clearable
+                      @update:model-value="searchIcons"
+                      v-model="state.iconSearchText"
+                    >
                       <template #append>
                         <q-icon size="xs" name="mdi-magnify" />
                       </template>
@@ -335,8 +342,16 @@
                       ref="scrollTargetRef"
                       class="scroll bg-icon-list q-pt-md rounded"
                       style="max-height: 250px"
+                      :class="{
+                        'q-pb-md': categoryInfiniteLoadDisabled
+                      }"
                     >
-                      <q-infinite-scroll @load="onIconLoad" :offset="50">
+                      <q-infinite-scroll
+                        @load="onIconLoad"
+                        :disable="categoryInfiniteLoadDisabled"
+                        :offset="50"
+                        v-if="state.icons.length !== 0"
+                      >
                         <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
                           <q-btn
                             v-for="(icon, j) in icons"
@@ -344,16 +359,16 @@
                             class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
                             flat
                             dense
-                            @click="setCategoryIcon(icon.name)"
+                            @click="setCategoryIcon(icon)"
                           >
                             <q-icon
                               :style="{
                                 color: state.selectedColor
                               }"
-                              :name="icon.name"
+                              :name="icon"
                             >
                               <q-tooltip>
-                                {{ icon.name.split("mdi-")[1] }}
+                                {{ icon.split("mdi-")[1] }}
                               </q-tooltip>
                             </q-icon>
                           </q-btn>
@@ -364,6 +379,14 @@
                           </div>
                         </template>
                       </q-infinite-scroll>
+                      <q-item v-else>
+                        <q-item-section>
+                          <q-item-label> No icons found. </q-item-label>
+                          <q-item-label caption class="text-grey-7">
+                            Try searching with other parameters.
+                          </q-item-label>
+                        </q-item-section>
+                      </q-item>
                     </q-list>
                   </q-form>
                 </div>
@@ -408,23 +431,21 @@ interface NewTransaction {
   description: string | null;
 }
 
-interface Icon {
-  name: string;
-}
-
 interface State {
   open: boolean;
   loading: boolean;
   closeAfterAdding: boolean;
   panel: string;
   selectedIcon: string;
+  iconSearchText: string | null;
   selectedColor: string;
   isTransfer: boolean;
   saveAsTemplate: boolean;
   transaction: NewTransaction;
   categoryName: string | null;
   newCategoryParent: number | null;
-  icons: Icon[][];
+  icons: string[][];
+  tempIcons: string[][];
 }
 
 export default defineComponent({
@@ -444,15 +465,13 @@ export default defineComponent({
     const store = useStore();
     const scrollTargetRef = ref<HTMLElement | null>(null);
 
-    const iconList: Icon[] = [];
+    const iconList: string[] = [];
 
     for (let i = 0; i < icons.length; i += 5) {
-      iconList.push({
-        name: `mdi-${icons[i].icon}`
-      });
+      iconList.push(`mdi-${icons[i].icon}`);
     }
 
-    const chunkedIconList = chunkArray<Icon>(iconList, 10);
+    const chunkedIconList = chunkArray<string>(iconList, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
@@ -462,7 +481,9 @@ export default defineComponent({
     const state: State = reactive({
       open: props.open,
       loading: false,
+      tempIcons: [],
       newCategoryParent: null,
+      iconSearchText: null,
       closeAfterAdding: false,
       selectedColor: "#ff00ff",
       panel: "newTransaction",
@@ -590,6 +611,18 @@ export default defineComponent({
       }
     };
 
+    const searchIcons = () => {
+      if (state.iconSearchText !== "" && state.iconSearchText !== null) {
+        state.tempIcons = [...state.icons];
+        state.icons = chunkArray<string>(
+          iconList.filter((icon) => icon.includes(state.iconSearchText as string)),
+          10
+        );
+      } else {
+        state.icons = [...state.tempIcons];
+      }
+    };
+
     watch(
       () => props.open,
       (val) => {
@@ -613,7 +646,11 @@ export default defineComponent({
       formatBalance,
       setCategoryIcon,
       onIconLoad,
-      scrollTargetRef
+      scrollTargetRef,
+      searchIcons,
+      categoryInfiniteLoadDisabled: computed(
+        () => state.iconSearchText !== "" && state.iconSearchText !== null
+      )
     };
   }
 });
