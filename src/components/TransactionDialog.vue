@@ -86,7 +86,7 @@
                         </q-btn>
                       </template>
                       <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
+                        <q-item class="q-px-none q-pb-sm q-pt-md">
                           <q-item-section avatar>
                             <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
                           </q-item-section>
@@ -288,7 +288,7 @@
                       map-options
                     >
                       <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
+                        <q-item class="q-px-none q-pb-sm q-pt-md">
                           <q-item-section avatar>
                             <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
                           </q-item-section>
@@ -411,7 +411,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, computed, ref } from "vue";
-import { useQuasar } from "quasar";
+import { useQuasar, debounce } from "quasar";
 import { useStore } from "src/store";
 import { AccountModel, CategoryModel } from "src/api/client";
 import { chunkArray, formatBalance } from "src/utils/helpers";
@@ -515,6 +515,8 @@ export default defineComponent({
     function closeDialog() {
       resetFormData(true);
       state.panel = "newTransaction";
+      state.icons = [];
+      state.tempIcons = [];
       emit("update:open", false);
     }
 
@@ -614,18 +616,20 @@ export default defineComponent({
       }
     };
 
-    const searchIcons = () => {
+    const searchIcons = debounce(() => {
       if (state.iconSearchText !== "" && state.iconSearchText !== null) {
         // TODO: Memorize initial icons before first actual search
         state.tempIcons = [...state.icons];
         state.icons = chunkArray<string>(
-          iconList.filter((icon) => icon.includes(state.iconSearchText as string)),
+          iconList.filter((icon) =>
+            icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
+          ),
           10
         );
       } else {
         state.icons = [...state.tempIcons];
       }
-    };
+    }, 750);
 
     watch(
       () => props.open,

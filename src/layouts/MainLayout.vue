@@ -1,10 +1,26 @@
 <template>
-  <q-layout view="lhh lpR lFf">
+  <q-layout view="lhh lpR lFf" class="layout q-mx-auto">
     <template v-if="shouldShowUi">
       <navbar />
-      <drawer :data="drawerItems" />
     </template>
     <q-page-container>
+      <q-tabs
+        v-model="tab"
+        dense
+        class="text-grey q-mt-md"
+        active-color="red"
+        indicator-color="red"
+        align="center"
+        narrow-indicator
+      >
+        <q-route-tab
+          v-for="(route, i) in routes"
+          :key="i"
+          :label="route.title"
+          :to="route.link"
+          exact
+        />
+      </q-tabs>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -13,21 +29,20 @@
 <script lang="ts">
 import ROUTE_NAMES from "src/router/routeNames";
 import Navbar from "src/components/Navbar.vue";
-import Drawer from "src/components/Drawer.vue";
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { DrawerItem } from "src/models/common";
 
 export default defineComponent({
   name: "MainLayout",
   components: {
-    Drawer,
     Navbar
   },
   setup() {
     const route = useRoute();
+    const tab = ref("mails");
 
-    const drawerItems: DrawerItem[] = [
+    const routes: DrawerItem[] = [
       {
         title: "Dashboard",
         caption: "Data overview",
@@ -79,9 +94,16 @@ export default defineComponent({
     ];
 
     return {
-      drawerItems,
-      shouldShowUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string))
+      shouldShowUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string)),
+      tab,
+      routes
     };
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.layout {
+  width: 1500px;
+}
+</style>

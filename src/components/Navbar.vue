@@ -1,5 +1,5 @@
 <template>
-  <q-header class="bg-dark-1 row justify-end q-pt-lg q-pr-md">
+  <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm">
     <q-btn flat dense class="q-mr-md bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-bell-outline" size="sm" />
       <q-badge rounded class="bg-dark-red text-black" floating>22</q-badge>
@@ -34,7 +34,10 @@
     <q-btn flat dense class="q-ml-md bg-grey-10 rounded" @click="createTransaction">
       <q-icon class="q-pa-xs" name="mdi-plus" size="sm" />
     </q-btn>
-    <q-btn flat dense class="q-mx-md bg-dark-red rounded" @click="logOut">
+    <q-btn flat dense class="q-mx-md bg-grey-10 rounded">
+      <q-icon class="q-pa-xs" name="mdi-eyedropper-variant" size="sm" />
+    </q-btn>
+    <q-btn flat dense class="q-mr-md bg-dark-red rounded" @click="logOut">
       <q-icon class="q-pa-xs" name="mdi-power-standby" color="black" size="sm" />
     </q-btn>
   </q-header>
@@ -77,3 +80,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.layout {
+  width: 1500px;
+}
+</style>
