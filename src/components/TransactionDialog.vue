@@ -562,8 +562,9 @@ export default defineComponent({
 
           $q.notify({
             message: "Transaction added",
-            color: "green",
-            position: "top"
+            color: "dark",
+            textColor: "green",
+            position: "bottom"
           });
 
           state.transaction = {
@@ -596,15 +597,17 @@ export default defineComponent({
 
           $q.notify({
             message: "Category added",
-            color: "green",
-            position: "top"
+            color: "dark",
+            position: "bottom",
+            textColor: "green"
           });
         }
       } catch (e) {
         $q.notify({
           message: (e as Error).message,
-          color: "red",
-          position: "top"
+          color: "dark",
+          textColor: "red",
+          position: "bottom"
         });
       } finally {
         state.loading = false;
@@ -613,6 +616,7 @@ export default defineComponent({
 
     const searchIcons = () => {
       if (state.iconSearchText !== "" && state.iconSearchText !== null) {
+        // TODO: Memorize initial icons before first actual search
         state.tempIcons = [...state.icons];
         state.icons = chunkArray<string>(
           iconList.filter((icon) => icon.includes(state.iconSearchText as string)),

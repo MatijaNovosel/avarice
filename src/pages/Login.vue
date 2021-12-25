@@ -105,8 +105,9 @@ export default defineComponent({
         if (!data.result) {
           $q.notify({
             message: data.errors?.join(", "),
-            color: "red",
-            position: "top"
+            color: "dark",
+            textColor: "red",
+            position: "bottom"
           });
           state.loading = false;
           return;
@@ -133,8 +134,9 @@ export default defineComponent({
 
         $q.notify({
           message: "Successfully logged in!",
-          color: "green",
-          position: "top"
+          color: "dark",
+          textColor: "green",
+          position: "bottom"
         });
 
         state.loading = false;
@@ -142,8 +144,9 @@ export default defineComponent({
       } catch (e) {
         $q.notify({
           message: (e as Error).message,
-          color: "red",
-          position: "top"
+          color: "dark",
+          textColor: "red",
+          position: "bottom"
         });
         state.loading = false;
       }

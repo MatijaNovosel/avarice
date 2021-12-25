@@ -141,7 +141,7 @@ import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
-import { debounce } from "quasar";
+import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 
@@ -155,8 +155,9 @@ interface State {
 
 export default defineComponent({
   name: "transactions-table",
-  emits: ["delete-transaction"],
-  setup(props, { emit }) {
+  setup() {
+    const $q = useQuasar();
+
     const state: State = reactive({
       search: null,
       transactions: null,
@@ -253,10 +254,6 @@ export default defineComponent({
       }
     }
 
-    function deleteTransaction(id: number) {
-      emit("delete-transaction", id);
-    }
-
     const searchDebounce = debounce(() => {
       if (state.search && state.search !== "") {
         //
@@ -280,6 +277,31 @@ export default defineComponent({
       state.transactions = transactions;
       state.loading = false;
     };
+
+    async function deleteTransaction(id: number) {
+      const transaction = state.transactions?.results?.find((t) => t.id === id);
+      try {
+        if (transaction) {
+          await getService<ITransactionService>(Types.TransactionService).delete(
+            parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
+          );
+          $q.notify({
+            message: "Transaction deleted!",
+            color: "dark",
+            position: "bottom",
+            textColor: "green"
+          });
+          await getTransactions();
+        }
+      } catch (e) {
+        $q.notify({
+          message: (e as Error).message,
+          color: "dark",
+          textColor: "red",
+          position: "bottom"
+        });
+      }
+    }
 
     const paginationUpdated = async () => {
       await getTransactions();
