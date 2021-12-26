@@ -15,13 +15,7 @@
         toggle-text-color="white"
         unelevated
         size="sm"
-        :options="[
-          { label: '7D', value: '7D' },
-          { label: '30D', value: '30D' },
-          { label: '12W', value: '12W' },
-          { label: '6M', value: '6M' },
-          { label: '1Y', value: '1Y' }
-        ]"
+        :options="graphDateOptions"
       />
     </q-card-section>
     <q-card-section class="q-pa-none">
@@ -42,6 +36,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
 import { LineChart } from "vue-chart-3";
 import { format } from "date-fns";
+import { SelectItem } from "src/models/common";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -108,6 +103,14 @@ export default defineComponent({
       }
     });
 
+    const graphDateOptions: SelectItem[] = [
+      { label: "7D", value: "7D" },
+      { label: "30D", value: "30D" },
+      { label: "12W", value: "12W" },
+      { label: "6M", value: "6M" },
+      { label: "1Y", value: "1Y" }
+    ];
+
     onMounted(async () => {
       const graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
         1
@@ -132,7 +135,8 @@ export default defineComponent({
     });
 
     return {
-      state
+      state,
+      graphDateOptions
     };
   }
 });

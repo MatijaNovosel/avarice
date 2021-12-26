@@ -8,3 +8,8 @@ export interface DrawerItem {
   icon: string;
   link: DrawerItemLink;
 }
+
+export interface SelectItem {
+  label: string;
+  value: string;
+}

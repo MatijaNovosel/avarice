@@ -256,7 +256,11 @@
                           class="rounded bg-black q-pa-sm"
                           :style="{ color: state.selectedColor }"
                           :name="state.selectedIcon"
-                        />
+                        >
+                          <q-tooltip>
+                            {{ state.selectedIcon.split("mdi-")[1] }}
+                          </q-tooltip>
+                        </q-icon>
                         <q-btn flat dense size="lg">
                           <q-icon
                             class="rounded"
@@ -326,7 +330,7 @@
                         </q-item>
                       </template>
                     </q-select>
-                    <q-input placeholder="Search icons" dense filled>
+                    <q-input placeholder="Search icons" dense filled v-model="state.iconSearchText">
                       <template #append>
                         <q-icon size="xs" name="mdi-magnify" />
                       </template>
@@ -344,16 +348,16 @@
                             class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
                             flat
                             dense
-                            @click="setCategoryIcon(icon.name)"
+                            @click="setCategoryIcon(`mdi-${icon}`)"
                           >
                             <q-icon
                               :style="{
                                 color: state.selectedColor
                               }"
-                              :name="icon.name"
+                              :name="`mdi-${icon}`"
                             >
                               <q-tooltip>
-                                {{ icon.name.split("mdi-")[1] }}
+                                {{ icon }}
                               </q-tooltip>
                             </q-icon>
                           </q-btn>
@@ -398,7 +402,7 @@ import TransactionType from "src/utils/transactionTypes";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
-import icons from "../utils/icons.json";
+import icons from "../utils/icons";
 
 interface NewTransaction {
   amount: string | null;
@@ -406,10 +410,6 @@ interface NewTransaction {
   account: number | null;
   accountTo: number | null;
   description: string | null;
-}
-
-interface Icon {
-  name: string;
 }
 
 interface State {
@@ -423,8 +423,10 @@ interface State {
   saveAsTemplate: boolean;
   transaction: NewTransaction;
   categoryName: string | null;
+  iconSearchText: string | null;
   newCategoryParent: number | null;
-  icons: Icon[][];
+  icons: string[][];
+  filteredIcons: string[];
 }
 
 export default defineComponent({
@@ -443,16 +445,7 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const scrollTargetRef = ref<HTMLElement | null>(null);
-
-    const iconList: Icon[] = [];
-
-    for (let i = 0; i < icons.length; i += 5) {
-      iconList.push({
-        name: `mdi-${icons[i].icon}`
-      });
-    }
-
-    const chunkedIconList = chunkArray<Icon>(iconList, 10);
+    const chunkedIconList = chunkArray<string>(icons, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
@@ -471,6 +464,8 @@ export default defineComponent({
       isTransfer: false,
       saveAsTemplate: false,
       icons: [],
+      filteredIcons: [],
+      iconSearchText: null,
       transaction: {
         amount: "0",
         category: null,
@@ -601,7 +596,7 @@ export default defineComponent({
       setTimeout(() => {
         state.icons.push(chunkedIconList[index + 4]);
         done();
-      }, 1500);
+      }, 600);
     };
 
     return {
