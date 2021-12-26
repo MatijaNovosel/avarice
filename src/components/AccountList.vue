@@ -48,23 +48,13 @@
           class="rounded q-mb-sm q-py-sm"
           :class="{
             'bg-grey-9': selectedAccount.id != account.id,
-            'bg-red-6': selectedAccount.id == account.id
+            'bg-accent': selectedAccount.id == account.id
           }"
           clickable
           v-for="account in accounts"
           :key="account.id"
           @click="updateSelectedAccount(account)"
         >
-          <q-item-section avatar>
-            <q-avatar
-              rounded
-              :color="selectedAccount.id == account.id ? 'red-9' : 'grey'"
-              text-color="white"
-              size="md"
-            >
-              {{ account.name && account.name[0] }}
-            </q-avatar>
-          </q-item-section>
           <q-item-section>
             <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
             <q-item-label
@@ -100,7 +90,7 @@
         </q-item-section>
       </q-item>
       <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
-        <q-btn dense class="q-mr-md bg-dark-red rounded q-mt-sm">
+        <q-btn dense class="q-mr-md bg-accent rounded q-mt-sm">
           <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="sm" />
         </q-btn>
       </q-item>

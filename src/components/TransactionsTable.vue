@@ -54,6 +54,25 @@
     </template>
     <template #body="props">
       <q-tr :props="props">
+        <q-menu context-menu touch-position>
+          <q-list dense>
+            <q-item clickable @click="deleteTransaction(props.row.id)">
+              <q-item-section>
+                <q-item-label> Delete transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>
+                <q-item-label> Edit transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>
+                <q-item-label> Create copy of transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
         <q-td key="id" :props="props">
           {{ props.row.id }}
         </q-td>

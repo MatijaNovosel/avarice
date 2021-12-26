@@ -6,11 +6,10 @@
     <q-page-container>
       <q-tabs
         v-if="shouldShowUi"
-        v-model="tab"
         dense
         class="text-grey q-mt-md"
-        active-color="red"
-        indicator-color="red"
+        active-color="accent"
+        indicator-color="accent"
         align="center"
         narrow-indicator
       >
@@ -30,9 +29,11 @@
 <script lang="ts">
 import ROUTE_NAMES from "src/router/routeNames";
 import Navbar from "src/components/Navbar.vue";
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { DrawerItem } from "src/models/common";
+import { useStore } from "src/store";
+import { setCssVar } from "quasar";
 
 export default defineComponent({
   name: "MainLayout",
@@ -41,7 +42,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const tab = ref("mails");
+    const store = useStore();
 
     const routes: DrawerItem[] = [
       {
@@ -94,9 +95,13 @@ export default defineComponent({
       }
     ];
 
+    onMounted(() => {
+      // eslint-disable-next-line
+      setCssVar("accent", store.getters["app/accentColor"] as string);
+    });
+
     return {
       shouldShowUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string)),
-      tab,
       routes
     };
   }
