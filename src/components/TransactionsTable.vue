@@ -37,6 +37,7 @@
     class="rounded-b-md q-pa-md rounded-t-none"
     :rows="state.transactions.results"
     :columns="columns"
+    :pagination="state.pagination"
     row-key="id"
     separator="none"
   >
@@ -105,17 +106,27 @@
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
         </q-td>
         <q-td key="actions" :props="props">
-          <q-btn flat dense class="bg-red-8 rounded" @click="deleteTransaction(props.row.id)">
-            <q-icon size="1.3em" name="mdi-close" color="white" />
-            <q-tooltip> Delete transaction </q-tooltip>
-          </q-btn>
-          <q-btn flat dense class="bg-grey-7 rounded q-ml-md">
-            <q-icon size="1.3em" name="mdi-pencil" color="white" />
-            <q-tooltip> Edit transction </q-tooltip>
-          </q-btn>
-          <q-btn flat dense class="bg-grey-9 rounded q-ml-md">
-            <q-icon size="1.3em" name="mdi-repeat" color="white" />
-            <q-tooltip> Create copy of transaction </q-tooltip>
+          <q-btn flat round size="sm">
+            <q-icon size="2.6em" name="mdi-dots-horizontal" color="grey" />
+            <q-menu>
+              <q-list dense>
+                <q-item clickable @click="deleteTransaction(props.row.id)">
+                  <q-item-section>
+                    <q-item-label> Delete transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>
+                    <q-item-label> Edit transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>
+                    <q-item-label> Create copy of transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-btn>
         </q-td>
       </q-tr>
@@ -252,7 +263,7 @@ export default defineComponent({
       },
       {
         name: "actions",
-        label: "Actions",
+        label: "",
         align: "center",
         field: "actions"
       }
