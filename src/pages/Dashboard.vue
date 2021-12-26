@@ -20,7 +20,7 @@
         </div>
         <div class="row q-mt-md">
           <div class="col-12">
-            <transactions-table @delete-transaction="deleteTransaction" />
+            <transactions-table hide-page-selection />
           </div>
         </div>
       </div>
@@ -38,19 +38,16 @@ import { defineComponent, reactive, onMounted, computed, watch } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
-import { AccountModel, IPageableCollectionOfTransactionModel } from "src/api/client";
-import ITransactionService from "src/api/interfaces/transactionService";
+import { AccountModel } from "src/api/client";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 import TransactionDialog from "src/components/TransactionDialog.vue";
 import { debounce } from "quasar";
 import { useStore } from "src/store";
 import IAccountService from "src/api/interfaces/accountService";
-import { format } from "date-fns";
 import ICategoryService from "src/api/interfaces/categoryService";
 
 interface State {
-  transactions: IPageableCollectionOfTransactionModel;
   loading: boolean;
   transactionsLoading: boolean;
   transactionDialogOpen: boolean;
@@ -80,11 +77,7 @@ export default defineComponent({
       loading: false,
       transactionsLoading: false,
       transactionDialogOpen: false,
-      selectedAccount: null,
-      transactions: {
-        total: 0,
-        results: []
-      }
+      selectedAccount: null
     });
 
     function updateSelectedAccount(account: AccountModel) {
@@ -114,16 +107,6 @@ export default defineComponent({
       await getAccounts();
     }
 
-    async function deleteTransaction(id: number) {
-      const transaction = state.transactions.results?.find((t) => t.id === id);
-      if (transaction) {
-        await getService<ITransactionService>(Types.TransactionService).delete(
-          parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
-        );
-        await getAccounts();
-      }
-    }
-
     async function categoryAdded() {
       const categories = await getService<ICategoryService>(
         Types.CategoryService
@@ -146,7 +129,6 @@ export default defineComponent({
       updateSelectedAccountDebounce,
       accounts,
       updateData,
-      deleteTransaction,
       categoryAdded
     };
   }

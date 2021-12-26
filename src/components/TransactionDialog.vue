@@ -86,7 +86,7 @@
                         </q-btn>
                       </template>
                       <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
+                        <q-item class="q-px-none q-pb-sm q-pt-md">
                           <q-item-section avatar>
                             <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
                           </q-item-section>
@@ -292,7 +292,7 @@
                       map-options
                     >
                       <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
+                        <q-item class="q-px-none q-pb-sm q-pt-md">
                           <q-item-section avatar>
                             <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
                           </q-item-section>
@@ -330,7 +330,14 @@
                         </q-item>
                       </template>
                     </q-select>
-                    <q-input placeholder="Search icons" dense filled v-model="state.iconSearchText">
+                    <q-input
+                      placeholder="Search icons"
+                      dense
+                      filled
+                      clearable
+                      @update:model-value="searchIcons"
+                      v-model="state.iconSearchText"
+                    >
                       <template #append>
                         <q-icon size="xs" name="mdi-magnify" />
                       </template>
@@ -339,8 +346,16 @@
                       ref="scrollTargetRef"
                       class="scroll bg-icon-list q-pt-md rounded"
                       style="max-height: 250px"
+                      :class="{
+                        'q-pb-md': categoryInfiniteLoadDisabled
+                      }"
                     >
-                      <q-infinite-scroll @load="onIconLoad" :offset="50">
+                      <q-infinite-scroll
+                        @load="onIconLoad"
+                        :disable="categoryInfiniteLoadDisabled"
+                        :offset="50"
+                        v-if="state.icons.length !== 0"
+                      >
                         <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
                           <q-btn
                             v-for="(icon, j) in icons"
@@ -368,6 +383,14 @@
                           </div>
                         </template>
                       </q-infinite-scroll>
+                      <q-item v-else>
+                        <q-item-section>
+                          <q-item-label> No icons found. </q-item-label>
+                          <q-item-label caption class="text-grey-7">
+                            Try searching with other parameters.
+                          </q-item-label>
+                        </q-item-section>
+                      </q-item>
                     </q-list>
                   </q-form>
                 </div>
@@ -392,7 +415,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watch, computed, ref } from "vue";
-import { useQuasar } from "quasar";
+import { useQuasar, debounce } from "quasar";
 import { useStore } from "src/store";
 import { AccountModel, CategoryModel } from "src/api/client";
 import { chunkArray, formatBalance } from "src/utils/helpers";
@@ -402,7 +425,7 @@ import TransactionType from "src/utils/transactionTypes";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
-import icons from "../utils/icons";
+import iconList from "../utils/icons";
 
 interface NewTransaction {
   amount: string | null;
@@ -418,15 +441,16 @@ interface State {
   closeAfterAdding: boolean;
   panel: string;
   selectedIcon: string;
+  iconSearchText: string | null;
   selectedColor: string;
   isTransfer: boolean;
   saveAsTemplate: boolean;
   transaction: NewTransaction;
   categoryName: string | null;
-  iconSearchText: string | null;
   newCategoryParent: number | null;
   icons: string[][];
-  filteredIcons: string[];
+  filteredIcons: string[][];
+  tempIcons: string[][];
 }
 
 export default defineComponent({
@@ -445,7 +469,7 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const scrollTargetRef = ref<HTMLElement | null>(null);
-    const chunkedIconList = chunkArray<string>(icons, 10);
+    const chunkedIconList = chunkArray<string>(iconList, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
@@ -455,7 +479,9 @@ export default defineComponent({
     const state: State = reactive({
       open: props.open,
       loading: false,
+      tempIcons: [],
       newCategoryParent: null,
+      iconSearchText: null,
       closeAfterAdding: false,
       selectedColor: "#ff00ff",
       panel: "newTransaction",
@@ -465,7 +491,6 @@ export default defineComponent({
       saveAsTemplate: false,
       icons: [],
       filteredIcons: [],
-      iconSearchText: null,
       transaction: {
         amount: "0",
         category: null,
@@ -489,6 +514,8 @@ export default defineComponent({
     function closeDialog() {
       resetFormData(true);
       state.panel = "newTransaction";
+      state.icons = [];
+      state.tempIcons = [];
       emit("update:open", false);
     }
 
@@ -536,8 +563,9 @@ export default defineComponent({
 
           $q.notify({
             message: "Transaction added",
-            color: "green",
-            position: "top"
+            color: "dark",
+            textColor: "green",
+            position: "bottom"
           });
 
           state.transaction = {
@@ -570,20 +598,37 @@ export default defineComponent({
 
           $q.notify({
             message: "Category added",
-            color: "green",
-            position: "top"
+            color: "dark",
+            position: "bottom",
+            textColor: "green"
           });
         }
       } catch (e) {
         $q.notify({
           message: (e as Error).message,
-          color: "red",
-          position: "top"
+          color: "dark",
+          textColor: "red",
+          position: "bottom"
         });
       } finally {
         state.loading = false;
       }
     };
+
+    const searchIcons = debounce(() => {
+      if (state.iconSearchText !== "" && state.iconSearchText !== null) {
+        // TODO: Memorize initial icons before first actual search
+        state.tempIcons = [...state.icons];
+        state.icons = chunkArray<string>(
+          iconList.filter((icon) =>
+            icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
+          ),
+          10
+        );
+      } else {
+        state.icons = [...state.tempIcons];
+      }
+    }, 750);
 
     watch(
       () => props.open,
@@ -608,7 +653,11 @@ export default defineComponent({
       formatBalance,
       setCategoryIcon,
       onIconLoad,
-      scrollTargetRef
+      scrollTargetRef,
+      searchIcons,
+      categoryInfiniteLoadDisabled: computed(
+        () => state.iconSearchText !== "" && state.iconSearchText !== null
+      )
     };
   }
 });

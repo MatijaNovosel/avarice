@@ -37,9 +37,9 @@
     class="rounded-b-md q-pa-md rounded-t-none"
     :rows="state.transactions.results"
     :columns="columns"
+    :pagination="state.pagination"
     row-key="id"
     separator="none"
-    :rows-per-page-options="[5, 10, 15]"
   >
     <template #no-data>
       <div class="full-width row flex-center text-grey-6 q-gutter-sm q-pt-md">
@@ -54,6 +54,25 @@
     </template>
     <template #body="props">
       <q-tr :props="props">
+        <q-menu context-menu touch-position>
+          <q-list dense>
+            <q-item clickable @click="deleteTransaction(props.row.id)">
+              <q-item-section>
+                <q-item-label> Delete transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>
+                <q-item-label> Edit transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>
+                <q-item-label> Create copy of transaction </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
         <q-td key="id" :props="props">
           {{ props.row.id }}
         </q-td>
@@ -106,23 +125,52 @@
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
         </q-td>
         <q-td key="actions" :props="props">
-          <q-btn flat dense class="bg-red-8 rounded" @click="deleteTransaction(props.row.id)">
-            <q-icon size="1.3em" name="mdi-close" color="white" />
-            <q-tooltip> Delete transaction </q-tooltip>
-          </q-btn>
-          <q-btn flat dense class="bg-grey-7 rounded q-ml-md">
-            <q-icon size="1.3em" name="mdi-pencil" color="white" />
-            <q-tooltip> Edit transction </q-tooltip>
-          </q-btn>
-          <q-btn flat dense class="bg-grey-9 rounded q-ml-md">
-            <q-icon size="1.3em" name="mdi-repeat" color="white" />
-            <q-tooltip> Create copy of transaction </q-tooltip>
+          <q-btn flat round size="sm">
+            <q-icon size="2.6em" name="mdi-dots-horizontal" color="grey" />
+            <q-menu>
+              <q-list dense>
+                <q-item clickable @click="deleteTransaction(props.row.id)">
+                  <q-item-section>
+                    <q-item-label> Delete transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>
+                    <q-item-label> Edit transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>
+                    <q-item-label> Create copy of transaction </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-btn>
         </q-td>
       </q-tr>
     </template>
   </q-table>
   <div class="row justify-end q-mt-md">
+    <q-btn v-if="!hidePageSelection" no-caps class="bg-accent">
+      {{ state.pagination.rowsPerPage }} records per page
+      <q-menu>
+        <q-list dense>
+          <q-item
+            @click="state.pagination.rowsPerPage = rowsPerPage"
+            v-for="(rows, i) in rowsPerPageOptions"
+            :key="i"
+            clickable
+          >
+            <q-item-section>
+              <q-item-label>
+                {{ rows }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
     <q-pagination
       direction-links
       v-model="state.pagination.page"
@@ -141,7 +189,7 @@ import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
-import { debounce } from "quasar";
+import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 
@@ -155,8 +203,21 @@ interface State {
 
 export default defineComponent({
   name: "transactions-table",
-  emits: ["delete-transaction"],
-  setup(props, { emit }) {
+  props: {
+    rowsPerPage: {
+      type: Number,
+      default: 5,
+      required: false
+    },
+    hidePageSelection: {
+      type: Boolean,
+      default: false,
+      required: false
+    }
+  },
+  setup(props) {
+    const $q = useQuasar();
+
     const state: State = reactive({
       search: null,
       transactions: null,
@@ -164,7 +225,7 @@ export default defineComponent({
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 5
+        rowsPerPage: props.rowsPerPage
       },
       loading: false,
       pagesNumber: computed(() => {
@@ -221,7 +282,7 @@ export default defineComponent({
       },
       {
         name: "actions",
-        label: "Actions",
+        label: "",
         align: "center",
         field: "actions"
       }
@@ -253,10 +314,6 @@ export default defineComponent({
       }
     }
 
-    function deleteTransaction(id: number) {
-      emit("delete-transaction", id);
-    }
-
     const searchDebounce = debounce(() => {
       if (state.search && state.search !== "") {
         //
@@ -281,6 +338,31 @@ export default defineComponent({
       state.loading = false;
     };
 
+    async function deleteTransaction(id: number) {
+      const transaction = state.transactions?.results?.find((t) => t.id === id);
+      try {
+        if (transaction) {
+          await getService<ITransactionService>(Types.TransactionService).delete(
+            parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
+          );
+          $q.notify({
+            message: "Transaction deleted!",
+            color: "dark",
+            position: "bottom",
+            textColor: "green"
+          });
+          await getTransactions();
+        }
+      } catch (e) {
+        $q.notify({
+          message: (e as Error).message,
+          color: "dark",
+          textColor: "red",
+          position: "bottom"
+        });
+      }
+    }
+
     const paginationUpdated = async () => {
       await getTransactions();
     };
@@ -299,7 +381,8 @@ export default defineComponent({
       TransactionType,
       deleteTransaction,
       searchDebounce,
-      paginationUpdated
+      paginationUpdated,
+      rowsPerPageOptions: [5, 10, 15]
     };
   }
 });

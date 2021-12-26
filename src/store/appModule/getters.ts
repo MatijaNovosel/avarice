@@ -5,6 +5,9 @@ import { AppStateInterface } from "./state";
 const getters: GetterTree<AppStateInterface, StateInterface> = {
   createTransactionTrigger(state): boolean {
     return state.createTransactionTrigger;
+  },
+  accentColor(state): string | null {
+    return state.accentColor;
   }
 };
 

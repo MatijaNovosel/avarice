@@ -26,7 +26,13 @@
         <q-chip color="red-4" size="sm" class="q-px-md">
           <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
         </q-chip>
-        <q-chip size="sm" color="green-4" class="q-px-md">
+        <q-chip
+          size="sm"
+          :style="{
+            backgroundColor: '#6ca16f'
+          }"
+          class="q-px-md"
+        >
           <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
         </q-chip>
       </q-card-section>

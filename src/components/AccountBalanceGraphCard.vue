@@ -24,24 +24,28 @@
         style="height: 130px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
+        ref="lineChartRef"
       />
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, reactive, computed, ref, watch } from "vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
 import { LineChart } from "vue-chart-3";
 import { format } from "date-fns";
+import { useStore } from "src/store";
+import { AccountHistoryModel } from "src/api/client";
 import { SelectItem } from "src/models/common";
 
 interface State {
   chartData: ChartData<"line"> | null;
   chartOptions: ChartOptions<"line">;
   timePeriod: string | null;
+  graphData: AccountHistoryModel[] | null;
 }
 
 export default defineComponent({
@@ -56,8 +60,15 @@ export default defineComponent({
     }
   },
   setup() {
+    const store = useStore();
+    const lineChartRef = ref(null);
+
+    // eslint-disable-next-line
+    const accentColor = computed(() => store.getters["app/accentColor"] as string);
+
     const state: State = reactive({
       chartData: null,
+      graphData: null,
       timePeriod: "30D",
       chartOptions: {
         responsive: true,
@@ -111,32 +122,45 @@ export default defineComponent({
       { label: "1Y", value: "1Y" }
     ];
 
+    const updateGraph = () => {
+      if (state.graphData) {
+        state.chartData = {
+          datasets: [
+            {
+              pointBackgroundColor: "rgba(0, 0, 0, 0)",
+              pointBorderColor: "rgba(0, 0, 0, 0)",
+              backgroundColor: accentColor.value,
+              borderColor: accentColor.value,
+              pointRadius: 0,
+              fill: true,
+              data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "#ff3f2b"
+            }
+          ],
+          labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
+        };
+      }
+    };
+
     onMounted(async () => {
-      const graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
+      state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
         1
       );
-
-      state.chartData = {
-        datasets: [
-          {
-            pointBackgroundColor: "rgba(0, 0, 0, 0)",
-            pointBorderColor: "rgba(0, 0, 0, 0)",
-            backgroundColor: "#ca4133",
-            borderColor: "#ca4133",
-            pointRadius: 0,
-            fill: true,
-            data: graphData.map((dataItem) => dataItem.amount).reverse(),
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "#ff3f2b"
-          }
-        ],
-        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm")).reverse()
-      };
+      updateGraph();
     });
+
+    watch(
+      () => accentColor.value,
+      () => {
+        updateGraph();
+      }
+    );
 
     return {
       state,
-      graphDateOptions
+      graphDateOptions,
+      lineChartRef
     };
   }
 });
