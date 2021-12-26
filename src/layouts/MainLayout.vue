@@ -3,7 +3,7 @@
     <template v-if="shouldShowUi">
       <navbar />
     </template>
-    <q-page-container>
+    <q-page-container class="q-pt-none">
       <q-tabs
         v-if="shouldShowUi"
         dense
@@ -108,8 +108,12 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .layout {
   width: 1500px;
+}
+
+.q-page {
+  min-height: 0px !important;
 }
 </style>

@@ -152,7 +152,7 @@
     </template>
   </q-table>
   <div class="row justify-end q-mt-md">
-    <q-btn v-if="!hidePageSelection">
+    <q-btn v-if="!hidePageSelection" no-caps class="bg-accent">
       {{ state.pagination.rowsPerPage }} records per page
       <q-menu>
         <q-list dense>
@@ -160,7 +160,7 @@
             @click="state.pagination.rowsPerPage = rowsPerPage"
             v-for="(rows, i) in rowsPerPageOptions"
             :key="i"
-            :disabled="rows === state.pagination.rowsPerPage"
+            clickable
           >
             <q-item-section>
               <q-item-label>
