@@ -10,7 +10,7 @@
         <q-list dense style="min-width: 100px">
           <q-item class="q-my-sm">
             <q-item-section avatar>
-              <q-avatar color="primary" text-color="white">
+              <q-avatar color="accent" text-color="white">
                 {{ acronym(user.userName) }}
               </q-avatar>
             </q-item-section>
@@ -23,10 +23,7 @@
           </q-item>
           <q-separator />
           <q-item clickable v-close-popup>
-            <q-item-section>New tab</q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup>
-            <q-item-section>New incognito tab</q-item-section>
+            <q-item-section> User settings </q-item-section>
           </q-item>
         </q-list>
       </q-menu>

@@ -135,7 +135,8 @@ export default defineComponent({
               fill: true,
               data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
               pointHoverRadius: 5,
-              pointHoverBackgroundColor: "#ff3f2b"
+              pointHoverBackgroundColor: "#ff3f2b",
+              tension: 0.2
             }
           ],
           labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()

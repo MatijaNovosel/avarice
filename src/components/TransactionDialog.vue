@@ -26,7 +26,7 @@
                     style="transform: rotate(-90deg)"
                     v-model="state.isTransfer"
                     checked-icon="check"
-                    color="green"
+                    color="accent"
                     label="Transfer"
                     unchecked-icon="clear"
                     class="q-pl-md"
@@ -80,9 +80,9 @@
                           size="xs"
                           flat
                           dense
-                          class="bg-green-5 rounded"
+                          class="bg-accent rounded q-ml-sm"
                         >
-                          <q-icon class="q-pa-xs" name="mdi-plus" color="white" size="xs" />
+                          <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="xs" />
                         </q-btn>
                       </template>
                       <template #selected-item="scope">
@@ -213,11 +213,11 @@
                       label="Save as a template after creating"
                     />
                     <div class="row justify-end">
-                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                      <q-btn flat dense class="q-ml-md bg-accent rounded">
                         <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
                         <q-tooltip> Select template </q-tooltip>
                       </q-btn>
-                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                      <q-btn flat dense class="q-ml-md bg-accent rounded">
                         <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
                         <q-tooltip> Select location </q-tooltip>
                       </q-btn>
