@@ -119,52 +119,38 @@ export default defineComponent({
       }
     });
 
+    const updateGraph = () => {
+      if (state.graphData) {
+        state.chartData = {
+          datasets: [
+            {
+              pointBackgroundColor: "rgba(0, 0, 0, 0)",
+              pointBorderColor: "rgba(0, 0, 0, 0)",
+              backgroundColor: accentColor.value,
+              borderColor: accentColor.value,
+              pointRadius: 0,
+              fill: true,
+              data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "#ff3f2b"
+            }
+          ],
+          labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
+        };
+      }
+    };
+
     onMounted(async () => {
       state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
         1
       );
-
-      state.chartData = {
-        datasets: [
-          {
-            pointBackgroundColor: "rgba(0, 0, 0, 0)",
-            pointBorderColor: "rgba(0, 0, 0, 0)",
-            backgroundColor: accentColor.value,
-            borderColor: accentColor.value,
-            pointRadius: 0,
-            fill: true,
-            data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "#ff3f2b"
-          }
-        ],
-        labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
-      };
+      updateGraph();
     });
 
     watch(
       () => accentColor.value,
       () => {
-        if (state.graphData) {
-          state.chartData = {
-            datasets: [
-              {
-                pointBackgroundColor: "rgba(0, 0, 0, 0)",
-                pointBorderColor: "rgba(0, 0, 0, 0)",
-                backgroundColor: accentColor.value,
-                borderColor: accentColor.value,
-                pointRadius: 0,
-                fill: true,
-                data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#ff3f2b"
-              }
-            ],
-            labels: state.graphData
-              .map((dataItem) => format(dataItem.date, "dd.MM.yyyy."))
-              .reverse()
-          };
-        }
+        updateGraph();
       }
     );
 
