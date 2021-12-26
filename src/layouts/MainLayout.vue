@@ -1,10 +1,11 @@
 <template>
-  <q-layout view="lhh lpR lFf" class="layout q-mx-auto">
+  <q-layout view="lhh lpR lFf" :class="{ layout: shouldShowUi }" class="q-mx-auto">
     <template v-if="shouldShowUi">
       <navbar />
     </template>
     <q-page-container>
       <q-tabs
+        v-if="shouldShowUi"
         v-model="tab"
         dense
         class="text-grey q-mt-md"

@@ -39,7 +39,6 @@
     :columns="columns"
     row-key="id"
     separator="none"
-    :rows-per-page-options="[5, 10, 15]"
   >
     <template #no-data>
       <div class="full-width row flex-center text-grey-6 q-gutter-sm q-pt-md">
@@ -123,6 +122,25 @@
     </template>
   </q-table>
   <div class="row justify-end q-mt-md">
+    <q-btn v-if="!hidePageSelection">
+      {{ state.pagination.rowsPerPage }} records per page
+      <q-menu>
+        <q-list dense>
+          <q-item
+            @click="state.pagination.rowsPerPage = rowsPerPage"
+            v-for="(rows, i) in rowsPerPageOptions"
+            :key="i"
+            :disabled="rows === state.pagination.rowsPerPage"
+          >
+            <q-item-section>
+              <q-item-label>
+                {{ rows }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
     <q-pagination
       direction-links
       v-model="state.pagination.page"
@@ -155,7 +173,19 @@ interface State {
 
 export default defineComponent({
   name: "transactions-table",
-  setup() {
+  props: {
+    rowsPerPage: {
+      type: Number,
+      default: 5,
+      required: false
+    },
+    hidePageSelection: {
+      type: Boolean,
+      default: false,
+      required: false
+    }
+  },
+  setup(props) {
     const $q = useQuasar();
 
     const state: State = reactive({
@@ -165,7 +195,7 @@ export default defineComponent({
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 5
+        rowsPerPage: props.rowsPerPage
       },
       loading: false,
       pagesNumber: computed(() => {
@@ -321,7 +351,8 @@ export default defineComponent({
       TransactionType,
       deleteTransaction,
       searchDebounce,
-      paginationUpdated
+      paginationUpdated,
+      rowsPerPageOptions: [5, 10, 15]
     };
   }
 });

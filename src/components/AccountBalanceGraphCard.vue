@@ -127,7 +127,7 @@ export default defineComponent({
             pointHoverBackgroundColor: "#ff3f2b"
           }
         ],
-        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy. HH:mm")).reverse()
+        labels: graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
       };
     });
 
