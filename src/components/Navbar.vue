@@ -1,9 +1,5 @@
 <template>
   <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm">
-    <q-btn flat dense class="q-mr-md bg-grey-10 rounded">
-      <q-icon class="q-pa-xs" name="mdi-bell-outline" size="sm" />
-      <q-badge rounded color="accent" class="text-black" floating> 22 </q-badge>
-    </q-btn>
     <q-btn flat dense class="bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
       <q-menu>

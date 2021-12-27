@@ -43,30 +43,38 @@
     </template>
     <template v-else>
       <span class="q-mb-md text-grey row"> Accounts </span>
-      <template v-if="selectedAccount && accounts.length !== 0">
-        <q-item
-          class="rounded q-mb-sm q-py-sm"
-          :class="{
-            'bg-grey-9': selectedAccount.id != account.id,
-            'bg-accent': selectedAccount.id == account.id
-          }"
-          clickable
-          v-for="account in accounts"
-          :key="account.id"
-          @click="updateSelectedAccount(account)"
+      <template v-if="selectedAccount && accountsList.length !== 0">
+        <Container
+          group-name="accounts"
+          @drop="onDrop"
+          drag-class="card-ghost"
+          drop-class="card-ghost-drop"
+          :drop-placeholder="dropPlaceholderOptions"
         >
-          <q-item-section>
-            <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
-            <q-item-label
-              class="text-caption"
+          <Draggable v-for="account in accountsList" :key="account.id">
+            <q-item
+              class="rounded q-mb-sm q-py-sm"
               :class="{
-                'text-grey-6': selectedAccount.id != account.id
+                'bg-grey-9': selectedAccount.id != account.id,
+                'bg-accent': selectedAccount.id == account.id
               }"
+              clickable
+              @click="updateSelectedAccount(account)"
             >
-              {{ formatBalance(account.balance, account.currency) }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
+              <q-item-section>
+                <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
+                <q-item-label
+                  class="text-caption"
+                  :class="{
+                    'text-grey-6': selectedAccount.id != account.id
+                  }"
+                >
+                  {{ formatBalance(account.balance, account.currency) }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </Draggable>
+        </Container>
       </template>
       <q-item v-else>
         <q-item class="text-black">
@@ -101,11 +109,19 @@
 <script lang="ts">
 import { AccountModel } from "src/api/client";
 import { formatBalance } from "src/utils/helpers";
-import { defineComponent, PropType, computed } from "vue";
+import { defineComponent, PropType, computed, ref } from "vue";
+import { Container, Draggable } from "vue3-smooth-dnd";
+
+interface DropResult<T> {
+  removedIndex: number;
+  addedIndex: number;
+  payload: T;
+}
 
 export default defineComponent({
   name: "account-list",
   emits: ["update:selected-account"],
+  components: { Container, Draggable },
   props: {
     accounts: {
       type: Array as PropType<AccountModel[]>,
@@ -124,9 +140,45 @@ export default defineComponent({
       emit("update:selected-account", account);
     }
 
+    const accountsList = ref(props.accounts);
+
+    const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
+      const { removedIndex, addedIndex, payload } = dropResult;
+
+      if (removedIndex === null && addedIndex === null) return arr;
+
+      const result = [...arr];
+
+      let itemToAdd = payload;
+
+      if (removedIndex !== null) {
+        itemToAdd = result.splice(removedIndex, 1)[0];
+      }
+
+      if (addedIndex !== null) {
+        result.splice(addedIndex, 0, itemToAdd);
+      }
+
+      return result;
+    };
+
+    const onDrop = (dropResult: DropResult<AccountModel>) => {
+      accountsList.value = applyDrag(accountsList.value, dropResult);
+    };
+
+    const dropPlaceholderOptions = {
+      className: "drop-preview",
+      animationDuration: "150",
+      showOnTop: true
+    };
+
     return {
       updateSelectedAccount,
       formatBalance,
+      onDrop,
+      applyDrag,
+      accountsList,
+      dropPlaceholderOptions,
       totalBalance: computed(() => {
         if (props.accounts) {
           return props.accounts.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
@@ -137,3 +189,21 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+.card-ghost {
+  transition: transform 0.18s ease;
+  transform: rotateZ(5deg);
+}
+
+.card-ghost-drop {
+  transition: transform 0.18s ease-in-out;
+  transform: rotateZ(0deg);
+}
+
+.drop-preview {
+  background-color: rgba(150, 150, 200, 0.1);
+  border: 1px dashed #abc;
+  margin: 5px;
+}
+</style>
