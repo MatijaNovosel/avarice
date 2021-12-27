@@ -2,6 +2,10 @@
 
 App for tracking personal finances.
 
-![image](https://user-images.githubusercontent.com/36193643/134396763-9e91e720-c775-4aaf-a340-f63375cd04cb.png)
+![image](https://user-images.githubusercontent.com/36193643/147499340-9fc08d9d-639a-4095-b068-486a5fcd94d6.png)
+
+![image](https://user-images.githubusercontent.com/36193643/147499436-06417fa9-801a-4dcb-80e9-3c0999208071.png)
+
+![image](https://user-images.githubusercontent.com/36193643/147499467-af0b9099-cc87-449a-b860-5e07f3573201.png)
 
 [Backend](https://github.com/MatijaNovosel/fin-app-backend)
