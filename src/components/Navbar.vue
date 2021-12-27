@@ -63,8 +63,6 @@ export default defineComponent({
 
     // eslint-disable-next-line
     const user = computed(() => store.getters["user/data"] as AppUser);
-    // eslint-disable-next-line
-    const accentColor = computed(() => store.getters["app/accentColor"] as string | null);
 
     async function logOut() {
       await store.dispatch("user/logout");
@@ -89,15 +87,8 @@ export default defineComponent({
       user,
       acronym,
       createTransaction,
-      selectedColor,
-      accentColor
+      selectedColor
     };
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.layout {
-  width: 1500px;
-}
-</style>

@@ -110,7 +110,7 @@ export default defineComponent({
 
 <style lang="scss">
 .layout {
-  width: 1500px;
+  width: 1350px;
 }
 
 .q-page {
