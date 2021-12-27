@@ -15,13 +15,7 @@
         toggle-text-color="white"
         unelevated
         size="sm"
-        :options="[
-          { label: '7D', value: '7D' },
-          { label: '30D', value: '30D' },
-          { label: '12W', value: '12W' },
-          { label: '6M', value: '6M' },
-          { label: '1Y', value: '1Y' }
-        ]"
+        :options="graphDateOptions"
       />
     </q-card-section>
     <q-card-section class="q-pa-none">
@@ -45,6 +39,7 @@ import { LineChart } from "vue-chart-3";
 import { format } from "date-fns";
 import { useStore } from "src/store";
 import { AccountHistoryModel } from "src/api/client";
+import { SelectItem } from "src/models/common";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -119,6 +114,14 @@ export default defineComponent({
       }
     });
 
+    const graphDateOptions: SelectItem[] = [
+      { label: "7D", value: "7D" },
+      { label: "30D", value: "30D" },
+      { label: "12W", value: "12W" },
+      { label: "6M", value: "6M" },
+      { label: "1Y", value: "1Y" }
+    ];
+
     const updateGraph = () => {
       if (state.graphData) {
         state.chartData = {
@@ -132,7 +135,8 @@ export default defineComponent({
               fill: true,
               data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
               pointHoverRadius: 5,
-              pointHoverBackgroundColor: "#ff3f2b"
+              pointHoverBackgroundColor: "#ff3f2b",
+              tension: 0.2
             }
           ],
           labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
@@ -156,6 +160,7 @@ export default defineComponent({
 
     return {
       state,
+      graphDateOptions,
       lineChartRef
     };
   }

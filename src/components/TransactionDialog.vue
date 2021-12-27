@@ -26,7 +26,7 @@
                     style="transform: rotate(-90deg)"
                     v-model="state.isTransfer"
                     checked-icon="check"
-                    color="green"
+                    color="accent"
                     label="Transfer"
                     unchecked-icon="clear"
                     class="q-pl-md"
@@ -80,9 +80,9 @@
                           size="xs"
                           flat
                           dense
-                          class="bg-green-5 rounded"
+                          class="bg-accent rounded q-ml-sm"
                         >
-                          <q-icon class="q-pa-xs" name="mdi-plus" color="white" size="xs" />
+                          <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="xs" />
                         </q-btn>
                       </template>
                       <template #selected-item="scope">
@@ -213,11 +213,11 @@
                       label="Save as a template after creating"
                     />
                     <div class="row justify-end">
-                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                      <q-btn flat dense class="q-ml-md bg-accent rounded">
                         <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
                         <q-tooltip> Select template </q-tooltip>
                       </q-btn>
-                      <q-btn flat dense class="q-ml-md bg-dark-red rounded">
+                      <q-btn flat dense class="q-ml-md bg-accent rounded">
                         <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
                         <q-tooltip> Select location </q-tooltip>
                       </q-btn>
@@ -256,7 +256,11 @@
                           class="rounded bg-black q-pa-sm"
                           :style="{ color: state.selectedColor }"
                           :name="state.selectedIcon"
-                        />
+                        >
+                          <q-tooltip>
+                            {{ state.selectedIcon.split("mdi-")[1] }}
+                          </q-tooltip>
+                        </q-icon>
                         <q-btn flat dense size="lg">
                           <q-icon
                             class="rounded"
@@ -359,16 +363,16 @@
                             class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
                             flat
                             dense
-                            @click="setCategoryIcon(icon)"
+                            @click="setCategoryIcon(`mdi-${icon}`)"
                           >
                             <q-icon
                               :style="{
                                 color: state.selectedColor
                               }"
-                              :name="icon"
+                              :name="`mdi-${icon}`"
                             >
                               <q-tooltip>
-                                {{ icon.split("mdi-")[1] }}
+                                {{ icon }}
                               </q-tooltip>
                             </q-icon>
                           </q-btn>
@@ -421,7 +425,7 @@ import TransactionType from "src/utils/transactionTypes";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
-import icons from "../utils/icons.json";
+import iconList from "../utils/icons";
 
 interface NewTransaction {
   amount: string | null;
@@ -445,6 +449,7 @@ interface State {
   categoryName: string | null;
   newCategoryParent: number | null;
   icons: string[][];
+  filteredIcons: string[][];
   tempIcons: string[][];
 }
 
@@ -464,13 +469,6 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const scrollTargetRef = ref<HTMLElement | null>(null);
-
-    const iconList: string[] = [];
-
-    for (let i = 0; i < icons.length; i += 5) {
-      iconList.push(`mdi-${icons[i].icon}`);
-    }
-
     const chunkedIconList = chunkArray<string>(iconList, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -492,6 +490,7 @@ export default defineComponent({
       isTransfer: false,
       saveAsTemplate: false,
       icons: [],
+      filteredIcons: [],
       transaction: {
         amount: "0",
         category: null,
@@ -642,7 +641,7 @@ export default defineComponent({
       setTimeout(() => {
         state.icons.push(chunkedIconList[index + 4]);
         done();
-      }, 1500);
+      }, 600);
     };
 
     return {
