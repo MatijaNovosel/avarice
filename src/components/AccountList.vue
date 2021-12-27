@@ -45,6 +45,7 @@
       <span class="q-mb-md text-grey row"> Accounts </span>
       <template v-if="selectedAccount && accountsList.length !== 0">
         <Container
+          orientation="vertical"
           group-name="accounts"
           @drop="onDrop"
           drag-class="card-ghost"
@@ -108,15 +109,10 @@
 
 <script lang="ts">
 import { AccountModel } from "src/api/client";
+import { DropResult } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
 import { defineComponent, PropType, computed, ref } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
-
-interface DropResult<T> {
-  removedIndex: number;
-  addedIndex: number;
-  payload: T;
-}
 
 export default defineComponent({
   name: "account-list",
@@ -189,21 +185,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style>
-.card-ghost {
-  transition: transform 0.18s ease;
-  transform: rotateZ(5deg);
-}
-
-.card-ghost-drop {
-  transition: transform 0.18s ease-in-out;
-  transform: rotateZ(0deg);
-}
-
-.drop-preview {
-  background-color: rgba(150, 150, 200, 0.1);
-  border: 1px dashed #abc;
-  margin: 5px;
-}
-</style>
