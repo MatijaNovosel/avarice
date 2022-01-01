@@ -157,7 +157,7 @@
       <q-menu>
         <q-list dense>
           <q-item
-            @click="state.pagination.rowsPerPage = rowsPerPage"
+            @click="changeRowsPerPage(rows)"
             v-for="(rows, i) in rowsPerPageOptions"
             :key="i"
             clickable
@@ -367,6 +367,11 @@ export default defineComponent({
       await getTransactions();
     };
 
+    const changeRowsPerPage = async (rows: number) => {
+      state.pagination.rowsPerPage = rows;
+      await getTransactions();
+    };
+
     onMounted(async () => {
       await getTransactions();
     });
@@ -382,6 +387,7 @@ export default defineComponent({
       deleteTransaction,
       searchDebounce,
       paginationUpdated,
+      changeRowsPerPage,
       rowsPerPageOptions: [5, 10, 15]
     };
   }
