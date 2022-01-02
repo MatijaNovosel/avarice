@@ -20,7 +20,7 @@
         </div>
         <div class="row q-mt-md">
           <div class="col-12">
-            <transactions-table hide-page-selection />
+            <transactions-table hide-select-all hide-page-selection />
           </div>
         </div>
       </div>

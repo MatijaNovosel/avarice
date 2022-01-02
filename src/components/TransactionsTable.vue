@@ -6,6 +6,7 @@
     <span class="text-grey-6"> Transactions </span>
     <div class="row">
       <q-btn
+        v-if="!hideSelectAll"
         @click="setSelectionMode"
         :disable="state.transactions.total === 0"
         flat
@@ -69,7 +70,7 @@
     </template>
     <template #header-cell-selection="props">
       <q-th :props="props">
-        <q-checkbox size="sm" v-model="state.selectAll" @change="selectAllTriggered" />
+        <q-checkbox size="sm" v-model="state.selectAll" @update:model-value="selectAllTriggered" />
       </q-th>
     </template>
     <template #body="props">
@@ -239,6 +240,11 @@ export default defineComponent({
       required: false
     },
     hidePageSelection: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    hideSelectAll: {
       type: Boolean,
       default: false,
       required: false
@@ -422,7 +428,12 @@ export default defineComponent({
     }
 
     const selectAllTriggered = () => {
-      //
+      if (state.transactions) {
+        state.transactions.data.forEach((t) => {
+          // eslint-disable-next-line
+          t.selected = state.selectAll;
+        });
+      }
     };
 
     const setSelectionMode = () => {
