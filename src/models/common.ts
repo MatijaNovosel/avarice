@@ -19,3 +19,8 @@ export interface DropResult<T> {
   addedIndex: number;
   payload: T;
 }
+
+export interface PageableCollection<T> {
+  data: T[];
+  total: number;
+}

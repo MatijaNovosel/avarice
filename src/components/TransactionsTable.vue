@@ -5,6 +5,20 @@
   >
     <span class="text-grey-6"> Transactions </span>
     <div class="row">
+      <q-btn
+        @click="setSelectionMode"
+        :disable="state.transactions.total === 0"
+        flat
+        dense
+        :class="{
+          'bg-grey-9': state.selectionMode === 'none',
+          'bg-blue-7': state.selectionMode === 'multiple'
+        }"
+        class="q-mr-md rounded"
+      >
+        <q-icon class="q-pa-xs" name="mdi-selection-multiple" size="sm" />
+        <q-tooltip> Select multiple records </q-tooltip>
+      </q-btn>
       <q-btn :disable="state.transactions.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
         <q-menu>
@@ -31,13 +45,14 @@
   <q-table
     v-if="state.transactions"
     :loading="state.loading"
-    hide-pagination
+    hide-bottom
     flat
     dense
     class="rounded-b-md q-pa-md rounded-t-none"
-    :rows="state.transactions.results"
+    :rows="state.transactions.data"
     :columns="columns"
     :pagination="state.pagination"
+    :rows-per-page-options="rowsPerPageOptions"
     row-key="id"
     separator="none"
   >
@@ -50,6 +65,11 @@
     <template #header-cell-transactionType="props">
       <q-th :props="props">
         <q-icon name="mdi-swap-vertical" size="sm" />
+      </q-th>
+    </template>
+    <template #header-cell-selection="props">
+      <q-th :props="props">
+        <q-checkbox size="sm" v-model="state.selectAll" @change="selectAllTriggered" />
       </q-th>
     </template>
     <template #body="props">
@@ -73,8 +93,8 @@
             </q-item>
           </q-list>
         </q-menu>
-        <q-td key="id" :props="props">
-          {{ props.row.id }}
+        <q-td key="selection" :props="props">
+          <q-checkbox size="sm" v-model="props.row.selected" />
         </q-td>
         <q-td key="transactionType" :props="props">
           <q-btn
@@ -154,7 +174,7 @@
   <div class="row justify-end q-mt-md">
     <q-btn v-if="!hidePageSelection" no-caps class="bg-accent">
       {{ state.pagination.rowsPerPage }} records per page
-      <q-menu>
+      <q-menu auto-close>
         <q-list dense>
           <q-item
             @click="changeRowsPerPage(rows)"
@@ -183,22 +203,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, onMounted } from "vue";
+import { defineComponent, computed, reactive, onMounted, Ref } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
-import { IPageableCollectionOfTransactionModel, TransactionModel } from "src/api/client";
+import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
 import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
+import { PageableCollection } from "src/models/common";
+
+interface TransactionModelExtended extends ITransactionModel {
+  id: number;
+  selected: boolean;
+}
 
 interface State {
   pagination: QuasarTablePagination;
   pagesNumber: number;
   search: string | null;
-  transactions: IPageableCollectionOfTransactionModel | null;
+  transactions: PageableCollection<TransactionModelExtended> | null;
   loading: boolean;
+  selectAll: boolean;
+  selectedRows: number[];
+  selectionMode: string;
 }
 
 export default defineComponent({
@@ -219,6 +248,8 @@ export default defineComponent({
     const $q = useQuasar();
 
     const state: State = reactive({
+      selectionMode: "none",
+      selectedRows: [],
       search: null,
       transactions: null,
       pagination: {
@@ -228,6 +259,7 @@ export default defineComponent({
         rowsPerPage: props.rowsPerPage
       },
       loading: false,
+      selectAll: false,
       pagesNumber: computed(() => {
         if (state.transactions) {
           return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
@@ -236,57 +268,67 @@ export default defineComponent({
       })
     });
 
-    const columns: QuasarTableColumn<TransactionModel>[] = [
-      {
-        name: "id",
-        label: "N°",
-        align: "center",
-        field: "id"
-      },
-      {
-        name: "transactionType",
-        label: "",
-        align: "center",
-        field: "transactionType"
-      },
-      {
-        name: "category",
-        label: "Category",
-        align: "left",
-        field: "category"
-      },
-      {
-        name: "description",
-        label: "Description",
-        align: "left",
-        field: "description"
-      },
-      {
-        name: "amount",
-        align: "left",
-        label: "Amount",
-        field: "amount",
-        format: (val) => `${val} HRK`
-      },
-      {
-        name: "account",
-        label: "Account",
-        align: "left",
-        field: "account"
-      },
-      {
-        name: "createdAt",
-        label: "Created at",
-        align: "left",
-        field: "createdAt"
-      },
-      {
-        name: "actions",
-        label: "",
-        align: "center",
-        field: "actions"
+    const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() => {
+      let cols: QuasarTableColumn<TransactionModelExtended>[] = [
+        {
+          name: "transactionType",
+          label: "",
+          align: "center",
+          field: "transactionType"
+        },
+        {
+          name: "category",
+          label: "Category",
+          align: "left",
+          field: "category"
+        },
+        {
+          name: "description",
+          label: "Description",
+          align: "left",
+          field: "description"
+        },
+        {
+          name: "amount",
+          align: "left",
+          label: "Amount",
+          field: "amount",
+          format: (val) => `${val} HRK`
+        },
+        {
+          name: "account",
+          label: "Account",
+          align: "left",
+          field: "account"
+        },
+        {
+          name: "createdAt",
+          label: "Created at",
+          align: "left",
+          field: "createdAt"
+        },
+        {
+          name: "actions",
+          label: "",
+          align: "center",
+          field: "actions"
+        }
+      ];
+
+      if (state.selectionMode === "multiple") {
+        cols = [
+          {
+            name: "selection",
+            label: "",
+            align: "center",
+            field: "selected"
+          },
+          ...cols
+        ];
       }
-    ];
+
+      return cols;
+    });
 
     function formatTransactionIcon(transactionType: TransactionType) {
       switch (transactionType) {
@@ -323,35 +365,22 @@ export default defineComponent({
     const getTransactions = async (description?: string) => {
       state.loading = true;
 
-      const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
-        state.pagination.rowsPerPage,
-        state.pagination.page - 1,
-        description || ""
-      );
-
-      transactions.results?.forEach((t, i) => {
-        // eslint-disable-next-line
-        t.id = i + 1;
-      });
-
-      state.transactions = transactions;
-      state.loading = false;
-    };
-
-    async function deleteTransaction(id: number) {
-      const transaction = state.transactions?.results?.find((t) => t.id === id);
       try {
-        if (transaction) {
-          await getService<ITransactionService>(Types.TransactionService).delete(
-            parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
-          );
-          $q.notify({
-            message: "Transaction deleted!",
-            color: "dark",
-            position: "bottom",
-            textColor: "green"
-          });
-          await getTransactions();
+        const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
+          state.pagination.rowsPerPage,
+          state.pagination.page - 1,
+          description || ""
+        );
+
+        if (transactions.results) {
+          state.transactions = {
+            data: transactions.results?.map((t, i) => ({
+              ...t,
+              id: i + 1,
+              selected: false
+            })),
+            total: transactions.total
+          };
         }
       } catch (e) {
         $q.notify({
@@ -361,7 +390,48 @@ export default defineComponent({
           position: "bottom"
         });
       }
+
+      state.loading = false;
+    };
+
+    async function deleteTransaction(id: number) {
+      if (state.transactions) {
+        const transaction = state.transactions.data.find((t) => t.id === id);
+        try {
+          if (transaction) {
+            await getService<ITransactionService>(Types.TransactionService).delete(
+              parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
+            );
+            $q.notify({
+              message: "Transaction deleted!",
+              color: "dark",
+              position: "bottom",
+              textColor: "green"
+            });
+            await getTransactions();
+          }
+        } catch (e) {
+          $q.notify({
+            message: (e as Error).message,
+            color: "dark",
+            textColor: "red",
+            position: "bottom"
+          });
+        }
+      }
     }
+
+    const selectAllTriggered = () => {
+      //
+    };
+
+    const setSelectionMode = () => {
+      if (state.selectionMode === "none") {
+        state.selectionMode = "multiple";
+      } else {
+        state.selectionMode = "none";
+      }
+    };
 
     const paginationUpdated = async () => {
       await getTransactions();
@@ -388,6 +458,8 @@ export default defineComponent({
       searchDebounce,
       paginationUpdated,
       changeRowsPerPage,
+      setSelectionMode,
+      selectAllTriggered,
       rowsPerPageOptions: [5, 10, 15]
     };
   }
