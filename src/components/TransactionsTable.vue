@@ -30,12 +30,13 @@
         </q-menu>
       </q-btn>
       <q-input
-        @input="searchDebounce"
+        @update:model-value="searchDebounce"
         v-model="state.search"
         :disable="state.transactions.total === 0"
         dense
         filled
         label="Search"
+        clearable
       >
         <template #prepend>
           <q-icon name="mdi-magnify" />
@@ -362,20 +363,14 @@ export default defineComponent({
       }
     }
 
-    const searchDebounce = debounce(() => {
-      if (state.search && state.search !== "") {
-        //
-      }
-    }, 300);
-
-    const getTransactions = async (description?: string) => {
+    const getTransactions = async () => {
       state.loading = true;
 
       try {
         const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
           state.pagination.rowsPerPage,
           state.pagination.page - 1,
-          description || ""
+          state.search || ""
         );
 
         if (transactions.results) {
@@ -452,6 +447,10 @@ export default defineComponent({
       state.pagination.rowsPerPage = rows;
       await getTransactions();
     };
+
+    const searchDebounce = debounce(async () => {
+      await getTransactions();
+    }, 300);
 
     onMounted(async () => {
       await getTransactions();
