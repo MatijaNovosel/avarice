@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, computed, watch } from "vue";
+import { defineComponent, reactive, onMounted, computed, watch, provide, ref } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
@@ -65,6 +65,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const transactionAddedTrigger = ref(false);
+
+    provide("transactionAdded", transactionAddedTrigger);
 
     // eslint-disable-next-line
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
@@ -104,6 +107,7 @@ export default defineComponent({
     }
 
     async function updateData() {
+      transactionAddedTrigger.value = !transactionAddedTrigger.value;
       await getAccounts();
     }
 

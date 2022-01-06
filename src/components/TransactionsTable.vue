@@ -32,7 +32,6 @@
       <q-input
         @update:model-value="searchDebounce"
         v-model="state.search"
-        :disable="state.transactions.total === 0"
         dense
         filled
         label="Search"
@@ -47,7 +46,7 @@
   <q-table
     v-if="state.transactions"
     :loading="state.loading"
-    hide-bottom
+    hide-pagination
     flat
     dense
     class="rounded-b-md q-pa-md rounded-t-none"
@@ -173,7 +172,7 @@
       </q-tr>
     </template>
   </q-table>
-  <div class="row justify-end q-mt-md">
+  <div class="row justify-end q-mt-md" v-if="state.transactions && state.transactions.total !== 0">
     <q-btn v-if="!hidePageSelection" no-caps class="bg-accent">
       {{ state.pagination.rowsPerPage }} records per page
       <q-menu auto-close>
@@ -205,7 +204,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, onMounted, Ref } from "vue";
+import { defineComponent, computed, reactive, onMounted, Ref, inject, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
@@ -253,6 +252,7 @@ export default defineComponent({
   },
   setup(props) {
     const $q = useQuasar();
+    const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
 
     const state: State = reactive({
       selectionMode: "none",
@@ -451,6 +451,18 @@ export default defineComponent({
     const searchDebounce = debounce(async () => {
       await getTransactions();
     }, 300);
+
+    watch(
+      () => transactionAddedTrigger,
+      async (val: Ref<boolean> | undefined) => {
+        if (val) {
+          await getTransactions();
+        }
+      },
+      {
+        deep: true
+      }
+    );
 
     onMounted(async () => {
       await getTransactions();
