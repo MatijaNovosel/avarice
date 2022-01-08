@@ -22,6 +22,7 @@
       </q-btn>
       <q-btn flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
+        <q-badge v-if="state.activeFilters" rounded color="accent" floating align="top" />
         <q-menu>
           <div class="column no-wrap q-pa-md">
             <q-select
@@ -246,6 +247,7 @@ interface State {
   transactions: PageableCollection<TransactionModelExtended> | null;
   loading: boolean;
   selectAll: boolean;
+  activeFilters: boolean;
   selectedRows: number[];
   selectionMode: string;
   transactionType: string | null;
@@ -280,6 +282,12 @@ export default defineComponent({
       selectedRows: [],
       search: null,
       transactions: null,
+      activeFilters: computed(() => {
+        if (state.transactionType) {
+          return true;
+        }
+        return false;
+      }),
       pagination: {
         sortBy: "desc",
         descending: false,
