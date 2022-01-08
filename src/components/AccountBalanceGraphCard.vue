@@ -114,7 +114,7 @@ export default defineComponent({
       }
     });
 
-    const graphDateOptions: SelectItem[] = [
+    const graphDateOptions: SelectItem<string, string>[] = [
       { label: "7D", value: "7D" },
       { label: "30D", value: "30D" },
       { label: "12W", value: "12W" },

@@ -9,9 +9,9 @@ export interface DrawerItem {
   link: DrawerItemLink;
 }
 
-export interface SelectItem {
-  label: string;
-  value: string;
+export interface SelectItem<A, B> {
+  label: A;
+  value: B;
 }
 
 export interface DropResult<T> {

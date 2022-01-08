@@ -20,12 +20,27 @@
         <q-icon class="q-pa-xs" name="mdi-selection-multiple" size="sm" />
         <q-tooltip> Select multiple records </q-tooltip>
       </q-btn>
-      <q-btn :disable="state.transactions.total === 0" flat dense class="q-mr-md rounded bg-grey-9">
+      <q-btn flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
         <q-menu>
           <div class="column no-wrap q-pa-md">
-            <q-toggle label="Show transfers" />
-            <q-toggle label="Bluetooth" />
+            <q-select
+              clearable
+              filled
+              dense
+              hide-bottom-space
+              v-model="state.transactionType"
+              :options="transactionTypeOptions"
+              option-value="value"
+              option-label="label"
+              map-options
+              emit-value
+              label="Transaction type"
+              @update:model-value="filterUpdated"
+              :style="{
+                width: '200px'
+              }"
+            />
           </div>
         </q-menu>
       </q-btn>
@@ -41,6 +56,10 @@
           <q-icon name="mdi-magnify" />
         </template>
       </q-input>
+      <q-btn flat dense class="q-mx-md rounded bg-grey-9">
+        <q-icon class="q-pa-xs" name="mdi-information" size="sm" />
+        <q-tooltip> Tip: You can right click on a row to display cooresponding actions! </q-tooltip>
+      </q-btn>
     </div>
   </div>
   <q-table
@@ -129,8 +148,8 @@
             </q-item-section>
           </q-item>
         </q-td>
-        <q-td key="description" :props="props">
-          {{ props.row.description }}
+        <q-td key="description" :props="props" class="text-grey-7">
+          {{ props.row.description || "No description" }}
         </q-td>
         <q-td
           key="amount"
@@ -213,7 +232,7 @@ import { formatBalance } from "src/utils/helpers";
 import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
-import { PageableCollection } from "src/models/common";
+import { PageableCollection, SelectItem } from "src/models/common";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -229,6 +248,7 @@ interface State {
   selectAll: boolean;
   selectedRows: number[];
   selectionMode: string;
+  transactionType: string | null;
 }
 
 export default defineComponent({
@@ -256,6 +276,7 @@ export default defineComponent({
 
     const state: State = reactive({
       selectionMode: "none",
+      transactionType: null,
       selectedRows: [],
       search: null,
       transactions: null,
@@ -370,7 +391,8 @@ export default defineComponent({
         const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
           state.pagination.rowsPerPage,
           state.pagination.page - 1,
-          state.search || ""
+          state.search || "",
+          state.transactionType
         );
 
         if (transactions.results) {
@@ -439,6 +461,10 @@ export default defineComponent({
       }
     };
 
+    const filterUpdated = async () => {
+      await getTransactions();
+    };
+
     const paginationUpdated = async () => {
       await getTransactions();
     };
@@ -464,6 +490,13 @@ export default defineComponent({
       }
     );
 
+    const transactionTypeOptions = Object.entries(TransactionType).map<SelectItem<string, string>>(
+      (x) => ({
+        label: x[0],
+        value: x[1]
+      })
+    );
+
     onMounted(async () => {
       await getTransactions();
     });
@@ -482,6 +515,8 @@ export default defineComponent({
       changeRowsPerPage,
       setSelectionMode,
       selectAllTriggered,
+      transactionTypeOptions,
+      filterUpdated,
       rowsPerPageOptions: [5, 10, 15]
     };
   }

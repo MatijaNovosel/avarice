@@ -32,10 +32,16 @@ class TransactionService implements ITransactionService {
   async getAll(
     itemsPerPage: number,
     page: number,
-    description?: string
+    description?: string,
+    transactionType?: string | null
   ): Promise<PageableCollectionOfTransactionModel> {
     const client = new Client(CONSTANTS.API_URL, api);
-    const data = await client.transaction_Get(itemsPerPage * page, itemsPerPage, description);
+    const data = await client.transaction_Get(
+      itemsPerPage * page,
+      itemsPerPage,
+      description,
+      transactionType
+    );
     return data;
   }
 }
