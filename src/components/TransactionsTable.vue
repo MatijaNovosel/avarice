@@ -39,9 +39,63 @@
               label="Transaction type"
               @update:model-value="filterUpdated"
               :style="{
-                width: '200px'
+                width: '300px'
               }"
             />
+            <q-select
+              hide-bottom-space
+              options-dense
+              filled
+              dense
+              v-model="state.categoryType"
+              :options="categories"
+              label="Category"
+              option-value="id"
+              option-label="name"
+              @update:model-value="filterUpdated"
+              class="q-mt-sm"
+              clearable
+              emit-value
+              map-options
+            >
+              <template #selected-item="scope">
+                <q-item class="q-px-none q-pb-sm q-pt-md">
+                  <q-item-section avatar>
+                    <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #option="scope">
+                <q-item class="q-py-sm" v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-icon
+                      :style="{ color: scope.opt.color }"
+                      :name="scope.opt.icon"
+                      :color="scope.opt.color"
+                    />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-btn size="sm" class="q-mt-sm" color="accent" :disable="!state.activeFilters">
+              Clear
+            </q-btn>
           </div>
         </q-menu>
       </q-btn>
@@ -226,7 +280,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, onMounted, Ref, inject, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
-import { ITransactionModel } from "src/api/client";
+import { CategoryModel, ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
@@ -234,6 +288,7 @@ import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import { PageableCollection, SelectItem } from "src/models/common";
+import { useStore } from "src/store";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -243,6 +298,7 @@ interface TransactionModelExtended extends ITransactionModel {
 interface State {
   pagination: QuasarTablePagination;
   pagesNumber: number;
+  categoryType: number | null;
   search: string | null;
   transactions: PageableCollection<TransactionModelExtended> | null;
   loading: boolean;
@@ -275,15 +331,20 @@ export default defineComponent({
   setup(props) {
     const $q = useQuasar();
     const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
+    const store = useStore();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
 
     const state: State = reactive({
       selectionMode: "none",
       transactionType: null,
+      categoryType: null,
       selectedRows: [],
       search: null,
       transactions: null,
       activeFilters: computed(() => {
-        if (state.transactionType) {
+        if (state.transactionType || state.categoryType) {
           return true;
         }
         return false;
@@ -400,7 +461,8 @@ export default defineComponent({
           state.pagination.rowsPerPage,
           state.pagination.page - 1,
           state.search || "",
-          state.transactionType
+          state.transactionType,
+          state.categoryType
         );
 
         if (transactions.results) {
@@ -525,6 +587,7 @@ export default defineComponent({
       selectAllTriggered,
       transactionTypeOptions,
       filterUpdated,
+      categories,
       rowsPerPageOptions: [5, 10, 15]
     };
   }

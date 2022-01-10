@@ -753,6 +753,7 @@ export class Client {
     take: number | undefined,
     description: string | null | undefined,
     transactionType: string | null | undefined,
+    categoryType: number | null | undefined,
     cancelToken?: CancelToken | undefined
   ): Promise<PageableCollectionOfTransactionModel> {
     let url_ = this.baseUrl + "/api/transaction?";
@@ -764,6 +765,8 @@ export class Client {
       url_ += "description=" + encodeURIComponent("" + description) + "&";
     if (transactionType !== undefined && transactionType !== null)
       url_ += "transactionType=" + encodeURIComponent("" + transactionType) + "&";
+    if (categoryType !== undefined && categoryType !== null)
+      url_ += "categoryType=" + encodeURIComponent("" + categoryType) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
     let options_ = <AxiosRequestConfig>{

@@ -473,6 +473,7 @@ export default defineComponent({
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
 

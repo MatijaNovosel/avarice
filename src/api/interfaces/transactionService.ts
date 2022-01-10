@@ -10,7 +10,8 @@ export default interface ITransactionService {
     itemsPerPage: number,
     page: number,
     description?: string,
-    transactionType?: string | null
+    transactionType?: string | null,
+    categoryType?: number | null
   ): Promise<PageableCollectionOfTransactionModel>;
   getHeatmap(): Promise<TransactionActivityHeatmapModel[]>;
   create(payload: IAddTransactionDto): Promise<void>;

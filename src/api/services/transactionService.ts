@@ -33,14 +33,16 @@ class TransactionService implements ITransactionService {
     itemsPerPage: number,
     page: number,
     description?: string,
-    transactionType?: string | null
+    transactionType?: string | null,
+    categoryType?: number | null
   ): Promise<PageableCollectionOfTransactionModel> {
     const client = new Client(CONSTANTS.API_URL, api);
     const data = await client.transaction_Get(
       itemsPerPage * page,
       itemsPerPage,
       description,
-      transactionType
+      transactionType,
+      categoryType
     );
     return data;
   }
