@@ -7,4 +7,6 @@
 
 ![image](https://user-images.githubusercontent.com/36193643/147499467-af0b9099-cc87-449a-b860-5e07f3573201.png)
 
-[Backend](https://github.com/MatijaNovosel/fin-app-backend)
+<p align=center>
+  <a href="https://github.com/MatijaNovosel/fin-app-backend">Backend</a>
+</p>
