@@ -3,6 +3,9 @@
 <p align=center>
   <a href="https://github.com/MatijaNovosel/fin-app-backend">Backend</a>
 </p>
+<p align=center>
+  <a href="https://github.com/MatijaNovosel/fin-app-mobile">Mobile version</a>
+</p>
 
 ![image](https://user-images.githubusercontent.com/36193643/147499340-9fc08d9d-639a-4095-b068-486a5fcd94d6.png)
 
