@@ -9,8 +9,6 @@
 
 ## 🔨 Built With
 
-- [MySQL](https://www.mysql.com/)
-- [.NET Core](https://dotnet.microsoft.com/)
 - [Vue 3](https://vuejs.org/)
 - [Quasar](https://quasar.dev/)
 
