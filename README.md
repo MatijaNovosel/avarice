@@ -7,6 +7,12 @@
   📱 <a href="https://github.com/MatijaNovosel/fin-app-mobile">Mobile version</a>
 </p>
 
+## 🔨 Built With
+
+- [MySQL](https://www.mysql.com/)
+- [.NET Core](https://dotnet.microsoft.com/)
+- [Vue 3](https://vuejs.org/)
+
 ![image](https://user-images.githubusercontent.com/36193643/147499340-9fc08d9d-639a-4095-b068-486a5fcd94d6.png)
 
 ![image](https://user-images.githubusercontent.com/36193643/147499436-06417fa9-801a-4dcb-80e9-3c0999208071.png)
