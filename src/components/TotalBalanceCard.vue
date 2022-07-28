@@ -40,48 +40,39 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { AccountModel, AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { formatBalance } from "src/utils/helpers";
-import { defineComponent, watch, reactive, PropType } from "vue";
+import { watch, reactive, PropType } from "vue";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
 }
 
-export default defineComponent({
-  name: "total-balance-card",
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    account: {
-      type: Object as PropType<AccountModel | null>
-    }
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false
   },
-  setup(props) {
-    const state: State = reactive({
-      expenseAndIncome: null
-    });
-
-    watch(
-      () => props.account,
-      async (val) => {
-        if (val) {
-          state.expenseAndIncome = await getService<IAccountService>(
-            Types.AccountService
-          ).getExpenseAndIncomeInTimePeriod(val.id);
-        }
-      }
-    );
-
-    return {
-      formatBalance,
-      state
-    };
+  account: {
+    type: Object as PropType<AccountModel | null>
   }
 });
+
+const state: State = reactive({
+  expenseAndIncome: null
+});
+
+watch(
+  () => props.account,
+  async (val) => {
+    if (val) {
+      state.expenseAndIncome = await getService<IAccountService>(
+        Types.AccountService
+      ).getExpenseAndIncomeInTimePeriod(val.id);
+    }
+  }
+);
 </script>

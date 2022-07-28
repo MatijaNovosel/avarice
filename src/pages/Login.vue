@@ -55,8 +55,8 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from "vue";
+<script lang="ts" setup>
+import { reactive } from "vue";
 import { DecodedToken } from "src/models/auth";
 import jwt_decode from "jwt-decode";
 import { getService, Types } from "src/di-container";
@@ -78,84 +78,74 @@ interface State {
   login: LoginForm;
 }
 
-export default defineComponent({
-  name: "Login",
-  setup() {
-    const store = useStore();
-    const router = useRouter();
-    const $q = useQuasar();
+const store = useStore();
+const router = useRouter();
+const $q = useQuasar();
 
-    const state: State = reactive({
-      loading: false,
-      login: {
-        password: null,
-        email: null
-      }
-    });
-
-    const login = async () => {
-      state.loading = true;
-
-      try {
-        const data = await getService<IAuthService>(Types.AuthService).login(
-          state.login.email as string,
-          state.login.password as string
-        );
-
-        if (!data.result) {
-          $q.notify({
-            message: data.errors?.join(", "),
-            color: "dark",
-            textColor: "red",
-            position: "bottom"
-          });
-          state.loading = false;
-          return;
-        }
-
-        const decodedToken: DecodedToken = jwt_decode(data.token as string);
-
-        await store.dispatch("user/login", {
-          id: decodedToken.Id,
-          email: state.login.email,
-          userName: decodedToken.unique_name,
-          emailConfirmed: false,
-          token: data.token
-        });
-
-        const categories = await getService<ICategoryService>(
-          Types.CategoryService
-        ).getUserCategories();
-
-        const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-
-        await store.dispatch("user/setCategories", categories);
-        await store.dispatch("user/setAccounts", accounts);
-
-        $q.notify({
-          message: "Successfully logged in!",
-          color: "dark",
-          textColor: "green",
-          position: "bottom"
-        });
-
-        state.loading = false;
-        await router.push({ name: ROUTE_NAMES.DASHBOARD });
-      } catch (e) {
-        $q.notify({
-          message: (e as Error).message,
-          color: "dark",
-          textColor: "red",
-          position: "bottom"
-        });
-        state.loading = false;
-      }
-    };
-
-    return {
-      state,
-      login
-    };
+const state: State = reactive({
+  loading: false,
+  login: {
+    password: null,
+    email: null
   }
 });
+
+const login = async () => {
+  state.loading = true;
+
+  try {
+    const data = await getService<IAuthService>(Types.AuthService).login(
+      state.login.email as string,
+      state.login.password as string
+    );
+
+    if (!data.result) {
+      $q.notify({
+        message: data.errors?.join(", "),
+        color: "dark",
+        textColor: "red",
+        position: "bottom"
+      });
+      state.loading = false;
+      return;
+    }
+
+    const decodedToken: DecodedToken = jwt_decode(data.token as string);
+
+    await store.dispatch("user/login", {
+      id: decodedToken.Id,
+      email: state.login.email,
+      userName: decodedToken.unique_name,
+      emailConfirmed: false,
+      token: data.token
+    });
+
+    const categories = await getService<ICategoryService>(
+      Types.CategoryService
+    ).getUserCategories();
+
+    const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+
+    await store.dispatch("user/setCategories", categories);
+    await store.dispatch("user/setAccounts", accounts);
+
+    $q.notify({
+      message: "Successfully logged in!",
+      color: "dark",
+      textColor: "green",
+      position: "bottom"
+    });
+
+    state.loading = false;
+    await router.push({ name: ROUTE_NAMES.DASHBOARD });
+  } catch (e) {
+    $q.notify({
+      message: (e as Error).message,
+      color: "dark",
+      textColor: "red",
+      position: "bottom"
+    });
+    state.loading = false;
+  }
+};
 </script>

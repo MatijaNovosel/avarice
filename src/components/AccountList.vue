@@ -107,81 +107,69 @@
   </q-list>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { AccountModel } from "src/api/client";
 import { DropResult } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
-import { defineComponent, PropType, computed, ref } from "vue";
+import { PropType, computed, ref } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 
-export default defineComponent({
-  name: "account-list",
-  emits: ["update:selected-account"],
-  components: { Container, Draggable },
-  props: {
-    accounts: {
-      type: Array as PropType<AccountModel[]>,
-      required: true
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    selectedAccount: {
-      type: Object as PropType<AccountModel | null>
-    }
+const emit = defineEmits(["update:selected-account"]);
+
+const props = defineProps({
+  accounts: {
+    type: Array as PropType<AccountModel[]>,
+    required: true
   },
-  setup(props, { emit }) {
-    function updateSelectedAccount(account: AccountModel) {
-      emit("update:selected-account", account);
-    }
-
-    const accountsList = ref(props.accounts);
-
-    const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
-      const { removedIndex, addedIndex, payload } = dropResult;
-
-      if (removedIndex === null && addedIndex === null) return arr;
-
-      const result = [...arr];
-
-      let itemToAdd = payload;
-
-      if (removedIndex !== null) {
-        itemToAdd = result.splice(removedIndex, 1)[0];
-      }
-
-      if (addedIndex !== null) {
-        result.splice(addedIndex, 0, itemToAdd);
-      }
-
-      return result;
-    };
-
-    const onDrop = (dropResult: DropResult<AccountModel>) => {
-      accountsList.value = applyDrag(accountsList.value, dropResult);
-    };
-
-    const dropPlaceholderOptions = {
-      className: "drop-preview",
-      animationDuration: "150",
-      showOnTop: true
-    };
-
-    return {
-      updateSelectedAccount,
-      formatBalance,
-      onDrop,
-      applyDrag,
-      accountsList,
-      dropPlaceholderOptions,
-      totalBalance: computed(() => {
-        if (props.accounts) {
-          return props.accounts.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
-        }
-        return 0;
-      })
-    };
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  selectedAccount: {
+    type: Object as PropType<AccountModel | null>
   }
+});
+
+function updateSelectedAccount(account: AccountModel) {
+  emit("update:selected-account", account);
+}
+
+const accountsList = ref(props.accounts);
+
+const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
+  const { removedIndex, addedIndex, payload } = dropResult;
+
+  if (removedIndex === null && addedIndex === null) return arr;
+
+  const result = [...arr];
+
+  let itemToAdd = payload;
+
+  if (removedIndex !== null) {
+    itemToAdd = result.splice(removedIndex, 1)[0];
+  }
+
+  if (addedIndex !== null) {
+    result.splice(addedIndex, 0, itemToAdd);
+  }
+
+  return result;
+};
+
+const onDrop = (dropResult: DropResult<AccountModel>) => {
+  accountsList.value = applyDrag(accountsList.value, dropResult);
+};
+
+const dropPlaceholderOptions = {
+  className: "drop-preview",
+  animationDuration: "150",
+  showOnTop: true
+};
+
+const totalBalance = computed(() => {
+  if (props.accounts) {
+    return props.accounts.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
+  }
+  return 0;
 });
 </script>

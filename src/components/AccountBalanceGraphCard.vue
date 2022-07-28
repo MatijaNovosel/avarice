@@ -30,8 +30,8 @@
   </q-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, reactive, computed, ref, watch } from "vue";
+<script lang="ts" setup>
+import { onMounted, reactive, computed, ref, watch } from "vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
@@ -48,123 +48,108 @@ interface State {
   graphData: AccountHistoryModel[] | null;
 }
 
-export default defineComponent({
-  name: "account-balance-graph-card",
-  components: {
-    LineChart
-  },
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const store = useStore();
-    const lineChartRef = ref(null);
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  }
+});
 
-    // eslint-disable-next-line
-    const accentColor = computed(() => store.getters["app/accentColor"] as string);
+const store = useStore();
+const lineChartRef = ref(null);
 
-    const state: State = reactive({
-      chartData: null,
-      graphData: null,
-      timePeriod: "30D",
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: "nearest",
-          axis: "x",
-          intersect: false
-        },
-        scales: {
-          y: {
-            display: false
-          },
-          x: {
-            display: false
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            callbacks: {
-              label: (context) => {
-                let label = context.dataset.label || "";
+// eslint-disable-next-line
+const accentColor = computed(() => store.getters["app/accentColor"] as string);
 
-                if (label) {
-                  label += ": ";
-                }
+const state: State = reactive({
+  chartData: null,
+  graphData: null,
+  timePeriod: "30D",
+  chartOptions: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: "nearest",
+      axis: "x",
+      intersect: false
+    },
+    scales: {
+      y: {
+        display: false
+      },
+      x: {
+        display: false
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            let label = context.dataset.label || "";
 
-                if (context.parsed.y !== null) {
-                  label += new Intl.NumberFormat("hr-HR", {
-                    style: "currency",
-                    currency: "HRK"
-                  }).format(context.parsed.y);
-                }
-
-                return label;
-              }
+            if (label) {
+              label += ": ";
             }
+
+            if (context.parsed.y !== null) {
+              label += new Intl.NumberFormat("hr-HR", {
+                style: "currency",
+                currency: "HRK"
+              }).format(context.parsed.y);
+            }
+
+            return label;
           }
         }
       }
-    });
-
-    const graphDateOptions: SelectItem<string, string>[] = [
-      { label: "7D", value: "7D" },
-      { label: "30D", value: "30D" },
-      { label: "12W", value: "12W" },
-      { label: "6M", value: "6M" },
-      { label: "1Y", value: "1Y" }
-    ];
-
-    const updateGraph = () => {
-      if (state.graphData) {
-        state.chartData = {
-          datasets: [
-            {
-              pointBackgroundColor: "rgba(0, 0, 0, 0)",
-              pointBorderColor: "rgba(0, 0, 0, 0)",
-              backgroundColor: accentColor.value,
-              borderColor: accentColor.value,
-              pointRadius: 0,
-              fill: true,
-              data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "#ff3f2b",
-              tension: 0.2
-            }
-          ],
-          labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
-        };
-      }
-    };
-
-    onMounted(async () => {
-      state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
-        1
-      );
-      updateGraph();
-    });
-
-    watch(
-      () => accentColor.value,
-      () => {
-        updateGraph();
-      }
-    );
-
-    return {
-      state,
-      graphDateOptions,
-      lineChartRef
-    };
+    }
   }
 });
+
+const graphDateOptions: SelectItem<string, string>[] = [
+  { label: "7D", value: "7D" },
+  { label: "30D", value: "30D" },
+  { label: "12W", value: "12W" },
+  { label: "6M", value: "6M" },
+  { label: "1Y", value: "1Y" }
+];
+
+const updateGraph = () => {
+  if (state.graphData) {
+    state.chartData = {
+      datasets: [
+        {
+          pointBackgroundColor: "rgba(0, 0, 0, 0)",
+          pointBorderColor: "rgba(0, 0, 0, 0)",
+          backgroundColor: accentColor.value,
+          borderColor: accentColor.value,
+          pointRadius: 0,
+          fill: true,
+          data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "#ff3f2b",
+          tension: 0.2
+        }
+      ],
+      labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
+    };
+  }
+};
+
+onMounted(async () => {
+  state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(1);
+  updateGraph();
+});
+
+watch(
+  () => accentColor.value,
+  () => {
+    updateGraph();
+  }
+);
 </script>
 
 <style lang="scss">

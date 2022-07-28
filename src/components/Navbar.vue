@@ -39,49 +39,36 @@
   </q-header>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref, watch } from "vue";
+<script lang="ts" setup>
+import { computed, ref, watch } from "vue";
 import { useStore } from "src/store";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
 import { AppUser } from "src/models/user";
 import { acronym } from "src/utils/helpers";
 
-export default defineComponent({
-  name: "navbar",
-  setup() {
-    const store = useStore();
-    const router = useRouter();
-    const selectedColor = ref(null);
+const store = useStore();
+const router = useRouter();
+const selectedColor = ref(null);
 
-    // eslint-disable-next-line
-    const user = computed(() => store.getters["user/data"] as AppUser);
+// eslint-disable-next-line
+const user = computed(() => store.getters["user/data"] as AppUser);
 
-    async function logOut() {
-      await store.dispatch("user/logout");
-      await router.push({
-        name: ROUTE_NAMES.LOGIN
-      });
-    }
+async function logOut() {
+  await store.dispatch("user/logout");
+  await router.push({
+    name: ROUTE_NAMES.LOGIN
+  });
+}
 
-    async function createTransaction() {
-      await store.dispatch("app/createTransaction");
-    }
+async function createTransaction() {
+  await store.dispatch("app/createTransaction");
+}
 
-    watch(
-      () => selectedColor.value,
-      async (val) => {
-        await store.dispatch("app/changeAccentColor", val);
-      }
-    );
-
-    return {
-      logOut,
-      user,
-      acronym,
-      createTransaction,
-      selectedColor
-    };
+watch(
+  () => selectedColor.value,
+  async (val) => {
+    await store.dispatch("app/changeAccentColor", val);
   }
-});
+);
 </script>

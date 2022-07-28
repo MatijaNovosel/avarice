@@ -6,14 +6,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
 import TransactionsTable from "src/components/TransactionsTable.vue";
-
-export default defineComponent({
-  name: "History",
-  components: {
-    TransactionsTable
-  }
-});
 </script>

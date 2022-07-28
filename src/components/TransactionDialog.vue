@@ -413,8 +413,8 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, watch, computed, ref } from "vue";
+<script lang="ts" setup>
+import { reactive, watch, computed, ref } from "vue";
 import { useQuasar, debounce } from "quasar";
 import { useStore } from "src/store";
 import { AccountModel, CategoryModel } from "src/api/client";
@@ -453,215 +453,197 @@ interface State {
   tempIcons: string[][];
 }
 
-export default defineComponent({
-  name: "transaction-dialog",
-  emits: ["update:open", "transaction-added", "category-added"],
-  components: {
-    RequiredIcon
-  },
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props, { emit }) {
-    const $q = useQuasar();
-    const store = useStore();
-    const scrollTargetRef = ref<HTMLElement | null>(null);
-    const chunkedIconList = chunkArray<string>(iconList, 10);
+const emit = defineEmits(["update:open", "transaction-added", "category-added"]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
+  }
+});
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
+const $q = useQuasar();
+const store = useStore();
+const scrollTargetRef = ref<HTMLElement | null>(null);
+const chunkedIconList = chunkArray<string>(iconList, 10);
 
-    const state: State = reactive({
-      open: props.open,
-      loading: false,
-      tempIcons: [],
-      newCategoryParent: null,
-      iconSearchText: null,
-      closeAfterAdding: false,
-      selectedColor: "#ff00ff",
-      panel: "newTransaction",
-      selectedIcon: "mdi-plus",
-      categoryName: null,
-      isTransfer: false,
-      saveAsTemplate: false,
-      icons: [],
-      filteredIcons: [],
-      transaction: {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
+
+const state: State = reactive({
+  open: props.open,
+  loading: false,
+  tempIcons: [],
+  newCategoryParent: null,
+  iconSearchText: null,
+  closeAfterAdding: false,
+  selectedColor: "#ff00ff",
+  panel: "newTransaction",
+  selectedIcon: "mdi-plus",
+  categoryName: null,
+  isTransfer: false,
+  saveAsTemplate: false,
+  icons: [],
+  filteredIcons: [],
+  transaction: {
+    amount: "0",
+    category: null,
+    account: null,
+    accountTo: null,
+    description: null
+  }
+});
+
+for (let i = 0; i < 5; i++) {
+  state.icons.push(chunkedIconList[i]);
+}
+
+function resetFormData(resetCloseAfterAdding?: boolean) {
+  // Reset here
+  if (resetCloseAfterAdding) {
+    state.closeAfterAdding = false;
+  }
+}
+
+function closeDialog() {
+  resetFormData(true);
+  state.panel = "newTransaction";
+  state.icons = [];
+  state.tempIcons = [];
+  emit("update:open", false);
+}
+
+function setCategoryIcon(name: string) {
+  state.selectedIcon = name;
+}
+
+const createTransactionOrCategory = async () => {
+  try {
+    state.loading = true;
+
+    if (state.panel === "newTransaction") {
+      if (state.isTransfer) {
+        await getService<ITransactionService>(Types.TransactionService).transfer({
+          amount: parseFloat(state.transaction.amount as string),
+          accountFromId: state.transaction.account as number,
+          accountToId: state.transaction.accountTo as number
+        });
+      } else {
+        await getService<ITransactionService>(Types.TransactionService).create({
+          amount: parseFloat(state.transaction.amount as string),
+          accountId: state.transaction.account as number,
+          categoryId: state.transaction.category as number,
+          description: state.transaction.description as string,
+          transactionType:
+            parseFloat(state.transaction.amount as string) < 0
+              ? TransactionType.Expense
+              : TransactionType.Income
+        });
+        if (state.saveAsTemplate) {
+          await getService<ITemplateService>(Types.TemplateService).create({
+            amount: parseFloat(state.transaction.amount as string),
+            accountId: state.transaction.account as number,
+            categoryId: state.transaction.category as number,
+            description: state.transaction.description as string,
+            transactionType:
+              parseFloat(state.transaction.amount as string) < 0
+                ? TransactionType.Expense
+                : TransactionType.Income
+          });
+        }
+      }
+
+      emit("transaction-added");
+
+      $q.notify({
+        message: "Transaction added",
+        color: "dark",
+        textColor: "green",
+        position: "bottom"
+      });
+
+      state.transaction = {
         amount: "0",
         category: null,
         account: null,
         accountTo: null,
         description: null
-      }
-    });
+      };
 
-    for (let i = 0; i < 5; i++) {
-      state.icons.push(chunkedIconList[i]);
-    }
-
-    function resetFormData(resetCloseAfterAdding?: boolean) {
-      // Reset here
-      if (resetCloseAfterAdding) {
-        state.closeAfterAdding = false;
-      }
-    }
-
-    function closeDialog() {
-      resetFormData(true);
-      state.panel = "newTransaction";
-      state.icons = [];
-      state.tempIcons = [];
-      emit("update:open", false);
-    }
-
-    function setCategoryIcon(name: string) {
-      state.selectedIcon = name;
-    }
-
-    const createTransactionOrCategory = async () => {
-      try {
-        state.loading = true;
-
-        if (state.panel === "newTransaction") {
-          if (state.isTransfer) {
-            await getService<ITransactionService>(Types.TransactionService).transfer({
-              amount: parseFloat(state.transaction.amount as string),
-              accountFromId: state.transaction.account as number,
-              accountToId: state.transaction.accountTo as number
-            });
-          } else {
-            await getService<ITransactionService>(Types.TransactionService).create({
-              amount: parseFloat(state.transaction.amount as string),
-              accountId: state.transaction.account as number,
-              categoryId: state.transaction.category as number,
-              description: state.transaction.description as string,
-              transactionType:
-                parseFloat(state.transaction.amount as string) < 0
-                  ? TransactionType.Expense
-                  : TransactionType.Income
-            });
-            if (state.saveAsTemplate) {
-              await getService<ITemplateService>(Types.TemplateService).create({
-                amount: parseFloat(state.transaction.amount as string),
-                accountId: state.transaction.account as number,
-                categoryId: state.transaction.category as number,
-                description: state.transaction.description as string,
-                transactionType:
-                  parseFloat(state.transaction.amount as string) < 0
-                    ? TransactionType.Expense
-                    : TransactionType.Income
-              });
-            }
-          }
-
-          emit("transaction-added");
-
-          $q.notify({
-            message: "Transaction added",
-            color: "dark",
-            textColor: "green",
-            position: "bottom"
-          });
-
-          state.transaction = {
-            amount: "0",
-            category: null,
-            account: null,
-            accountTo: null,
-            description: null
-          };
-
-          if (state.closeAfterAdding) {
-            closeDialog();
-          } else {
-            resetFormData();
-          }
-        } else {
-          await getService<ICategoryService>(Types.CategoryService).createCategory({
-            name: state.categoryName as string,
-            icon: state.selectedIcon,
-            color: state.selectedColor,
-            parentId: state.newCategoryParent || undefined
-          });
-
-          emit("category-added");
-
-          state.categoryName = null;
-          state.selectedIcon = "mdi-plus";
-          state.selectedColor = "#ff00ff";
-          state.newCategoryParent = null;
-
-          $q.notify({
-            message: "Category added",
-            color: "dark",
-            position: "bottom",
-            textColor: "green"
-          });
-        }
-      } catch (e) {
-        $q.notify({
-          message: (e as Error).message,
-          color: "dark",
-          textColor: "red",
-          position: "bottom"
-        });
-      } finally {
-        state.loading = false;
-      }
-    };
-
-    const searchIcons = debounce(() => {
-      if (state.iconSearchText !== "" && state.iconSearchText !== null) {
-        // TODO: Memorize initial icons before first actual search
-        state.tempIcons = [...state.icons];
-        state.icons = chunkArray<string>(
-          iconList.filter((icon) =>
-            icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
-          ),
-          10
-        );
+      if (state.closeAfterAdding) {
+        closeDialog();
       } else {
-        state.icons = [...state.tempIcons];
+        resetFormData();
       }
-    }, 750);
+    } else {
+      await getService<ICategoryService>(Types.CategoryService).createCategory({
+        name: state.categoryName as string,
+        icon: state.selectedIcon,
+        color: state.selectedColor,
+        parentId: state.newCategoryParent || undefined
+      });
 
-    watch(
-      () => props.open,
-      (val) => {
-        state.open = val;
-      }
-    );
+      emit("category-added");
 
-    const onIconLoad = (index: number, done: () => void) => {
-      setTimeout(() => {
-        state.icons.push(chunkedIconList[index + 4]);
-        done();
-      }, 600);
-    };
+      state.categoryName = null;
+      state.selectedIcon = "mdi-plus";
+      state.selectedColor = "#ff00ff";
+      state.newCategoryParent = null;
 
-    return {
-      state,
-      closeDialog,
-      createTransactionOrCategory,
-      categories,
-      accounts,
-      formatBalance,
-      setCategoryIcon,
-      onIconLoad,
-      scrollTargetRef,
-      searchIcons,
-      categoryInfiniteLoadDisabled: computed(
-        () => state.iconSearchText !== "" && state.iconSearchText !== null
-      )
-    };
+      $q.notify({
+        message: "Category added",
+        color: "dark",
+        position: "bottom",
+        textColor: "green"
+      });
+    }
+  } catch (e) {
+    $q.notify({
+      message: (e as Error).message,
+      color: "dark",
+      textColor: "red",
+      position: "bottom"
+    });
+  } finally {
+    state.loading = false;
   }
-});
+};
+
+const searchIcons = debounce(() => {
+  if (state.iconSearchText !== "" && state.iconSearchText !== null) {
+    // TODO: Memorize initial icons before first actual search
+    state.tempIcons = [...state.icons];
+    state.icons = chunkArray<string>(
+      iconList.filter((icon) =>
+        icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
+      ),
+      10
+    );
+  } else {
+    state.icons = [...state.tempIcons];
+  }
+}, 750);
+
+watch(
+  () => props.open,
+  (val) => {
+    state.open = val;
+  }
+);
+
+const onIconLoad = (index: number, done: () => void) => {
+  setTimeout(() => {
+    state.icons.push(chunkedIconList[index + 4]);
+    done();
+  }, 600);
+};
+
+const categoryInfiniteLoadDisabled = computed(
+  () => state.iconSearchText !== "" && state.iconSearchText !== null
+);
 </script>
 
 <style scoped lang="scss">

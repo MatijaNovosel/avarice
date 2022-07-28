@@ -277,8 +277,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive, onMounted, Ref, inject, watch } from "vue";
+<script lang="ts" setup>
+import { computed, reactive, onMounted, Ref, inject, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { CategoryModel, ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
@@ -309,289 +309,266 @@ interface State {
   transactionType: string | null;
 }
 
-export default defineComponent({
-  name: "transactions-table",
-  props: {
-    rowsPerPage: {
-      type: Number,
-      default: 5,
-      required: false
-    },
-    hidePageSelection: {
-      type: Boolean,
-      default: false,
-      required: false
-    },
-    hideSelectAll: {
-      type: Boolean,
-      default: false,
-      required: false
-    }
+const props = defineProps({
+  rowsPerPage: {
+    type: Number,
+    default: 5,
+    required: false
   },
-  setup(props) {
-    const $q = useQuasar();
-    const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
-    const store = useStore();
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
-
-    const state: State = reactive({
-      selectionMode: "none",
-      transactionType: null,
-      categoryType: null,
-      selectedRows: [],
-      search: null,
-      transactions: null,
-      activeFilters: computed(() => {
-        if (state.transactionType || state.categoryType) {
-          return true;
-        }
-        return false;
-      }),
-      pagination: {
-        sortBy: "desc",
-        descending: false,
-        page: 1,
-        rowsPerPage: props.rowsPerPage
-      },
-      loading: false,
-      selectAll: false,
-      pagesNumber: computed(() => {
-        if (state.transactions) {
-          return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
-        }
-        return 0;
-      })
-    });
-
-    const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() => {
-      let cols: QuasarTableColumn<TransactionModelExtended>[] = [
-        {
-          name: "transactionType",
-          label: "",
-          align: "center",
-          field: "transactionType"
-        },
-        {
-          name: "category",
-          label: "Category",
-          align: "left",
-          field: "category"
-        },
-        {
-          name: "description",
-          label: "Description",
-          align: "left",
-          field: "description"
-        },
-        {
-          name: "amount",
-          align: "left",
-          label: "Amount",
-          field: "amount",
-          format: (val) => `${val} HRK`
-        },
-        {
-          name: "account",
-          label: "Account",
-          align: "left",
-          field: "account"
-        },
-        {
-          name: "createdAt",
-          label: "Created at",
-          align: "left",
-          field: "createdAt"
-        },
-        {
-          name: "actions",
-          label: "",
-          align: "center",
-          field: "actions"
-        }
-      ];
-
-      if (state.selectionMode === "multiple") {
-        cols = [
-          {
-            name: "selection",
-            label: "",
-            align: "center",
-            field: "selected"
-          },
-          ...cols
-        ];
-      }
-
-      return cols;
-    });
-
-    function formatTransactionIcon(transactionType: TransactionType) {
-      switch (transactionType) {
-        case TransactionType.Transfer:
-          return "mdi-swap-horizontal";
-        case TransactionType.Income:
-          return "mdi-arrow-up";
-        case TransactionType.Expense:
-          return "mdi-arrow-down";
-        default:
-          return "mdi-account";
-      }
-    }
-
-    function formatTransactionColor(transactionType: TransactionType) {
-      switch (transactionType) {
-        case TransactionType.Transfer:
-          return "grey";
-        case TransactionType.Income:
-          return "green";
-        case TransactionType.Expense:
-          return "red";
-        default:
-          return "yellow";
-      }
-    }
-
-    const getTransactions = async () => {
-      state.loading = true;
-
-      try {
-        const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
-          state.pagination.rowsPerPage,
-          state.pagination.page - 1,
-          state.search || "",
-          state.transactionType,
-          state.categoryType
-        );
-
-        if (transactions.results) {
-          state.transactions = {
-            data: transactions.results?.map((t, i) => ({
-              ...t,
-              id: i + 1,
-              selected: false
-            })),
-            total: transactions.total
-          };
-        }
-      } catch (e) {
-        $q.notify({
-          message: (e as Error).message,
-          color: "dark",
-          textColor: "red",
-          position: "bottom"
-        });
-      }
-
-      state.loading = false;
-    };
-
-    async function deleteTransaction(id: number) {
-      if (state.transactions) {
-        const transaction = state.transactions.data.find((t) => t.id === id);
-        try {
-          if (transaction) {
-            await getService<ITransactionService>(Types.TransactionService).delete(
-              parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
-            );
-            $q.notify({
-              message: "Transaction deleted!",
-              color: "dark",
-              position: "bottom",
-              textColor: "green"
-            });
-            await getTransactions();
-          }
-        } catch (e) {
-          $q.notify({
-            message: (e as Error).message,
-            color: "dark",
-            textColor: "red",
-            position: "bottom"
-          });
-        }
-      }
-    }
-
-    const selectAllTriggered = () => {
-      if (state.transactions) {
-        state.transactions.data.forEach((t) => {
-          // eslint-disable-next-line
-          t.selected = state.selectAll;
-        });
-      }
-    };
-
-    const setSelectionMode = () => {
-      if (state.selectionMode === "none") {
-        state.selectionMode = "multiple";
-      } else {
-        state.selectionMode = "none";
-      }
-    };
-
-    const filterUpdated = async () => {
-      await getTransactions();
-    };
-
-    const paginationUpdated = async () => {
-      await getTransactions();
-    };
-
-    const changeRowsPerPage = async (rows: number) => {
-      state.pagination.rowsPerPage = rows;
-      await getTransactions();
-    };
-
-    const searchDebounce = debounce(async () => {
-      await getTransactions();
-    }, 300);
-
-    watch(
-      () => transactionAddedTrigger,
-      async (val: Ref<boolean> | undefined) => {
-        if (val) {
-          await getTransactions();
-        }
-      },
-      {
-        deep: true
-      }
-    );
-
-    const transactionTypeOptions = Object.entries(TransactionType).map<SelectItem<string, string>>(
-      (x) => ({
-        label: x[0],
-        value: x[1]
-      })
-    );
-
-    onMounted(async () => {
-      await getTransactions();
-    });
-
-    return {
-      columns,
-      state,
-      format,
-      formatTransactionIcon,
-      formatTransactionColor,
-      formatBalance,
-      TransactionType,
-      deleteTransaction,
-      searchDebounce,
-      paginationUpdated,
-      changeRowsPerPage,
-      setSelectionMode,
-      selectAllTriggered,
-      transactionTypeOptions,
-      filterUpdated,
-      categories,
-      rowsPerPageOptions: [5, 10, 15]
-    };
+  hidePageSelection: {
+    type: Boolean,
+    default: false,
+    required: false
+  },
+  hideSelectAll: {
+    type: Boolean,
+    default: false,
+    required: false
   }
 });
+const $q = useQuasar();
+const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
+const store = useStore();
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
+
+const state: State = reactive({
+  selectionMode: "none",
+  transactionType: null,
+  categoryType: null,
+  selectedRows: [],
+  search: null,
+  transactions: null,
+  activeFilters: computed(() => {
+    if (state.transactionType || state.categoryType) {
+      return true;
+    }
+    return false;
+  }),
+  pagination: {
+    sortBy: "desc",
+    descending: false,
+    page: 1,
+    rowsPerPage: props.rowsPerPage
+  },
+  loading: false,
+  selectAll: false,
+  pagesNumber: computed(() => {
+    if (state.transactions) {
+      return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
+    }
+    return 0;
+  })
+});
+
+const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() => {
+  let cols: QuasarTableColumn<TransactionModelExtended>[] = [
+    {
+      name: "transactionType",
+      label: "",
+      align: "center",
+      field: "transactionType"
+    },
+    {
+      name: "category",
+      label: "Category",
+      align: "left",
+      field: "category"
+    },
+    {
+      name: "description",
+      label: "Description",
+      align: "left",
+      field: "description"
+    },
+    {
+      name: "amount",
+      align: "left",
+      label: "Amount",
+      field: "amount",
+      format: (val) => `${val} HRK`
+    },
+    {
+      name: "account",
+      label: "Account",
+      align: "left",
+      field: "account"
+    },
+    {
+      name: "createdAt",
+      label: "Created at",
+      align: "left",
+      field: "createdAt"
+    },
+    {
+      name: "actions",
+      label: "",
+      align: "center",
+      field: "actions"
+    }
+  ];
+
+  if (state.selectionMode === "multiple") {
+    cols = [
+      {
+        name: "selection",
+        label: "",
+        align: "center",
+        field: "selected"
+      },
+      ...cols
+    ];
+  }
+
+  return cols;
+});
+
+function formatTransactionIcon(transactionType: TransactionType) {
+  switch (transactionType) {
+    case TransactionType.Transfer:
+      return "mdi-swap-horizontal";
+    case TransactionType.Income:
+      return "mdi-arrow-up";
+    case TransactionType.Expense:
+      return "mdi-arrow-down";
+    default:
+      return "mdi-account";
+  }
+}
+
+function formatTransactionColor(transactionType: TransactionType) {
+  switch (transactionType) {
+    case TransactionType.Transfer:
+      return "grey";
+    case TransactionType.Income:
+      return "green";
+    case TransactionType.Expense:
+      return "red";
+    default:
+      return "yellow";
+  }
+}
+
+const getTransactions = async () => {
+  state.loading = true;
+
+  try {
+    const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
+      state.pagination.rowsPerPage,
+      state.pagination.page - 1,
+      state.search || "",
+      state.transactionType,
+      state.categoryType
+    );
+
+    if (transactions.results) {
+      state.transactions = {
+        data: transactions.results?.map((t, i) => ({
+          ...t,
+          id: i + 1,
+          selected: false
+        })),
+        total: transactions.total
+      };
+    }
+  } catch (e) {
+    $q.notify({
+      message: (e as Error).message,
+      color: "dark",
+      textColor: "red",
+      position: "bottom"
+    });
+  }
+
+  state.loading = false;
+};
+
+async function deleteTransaction(id: number) {
+  if (state.transactions) {
+    const transaction = state.transactions.data.find((t) => t.id === id);
+    try {
+      if (transaction) {
+        await getService<ITransactionService>(Types.TransactionService).delete(
+          parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
+        );
+        $q.notify({
+          message: "Transaction deleted!",
+          color: "dark",
+          position: "bottom",
+          textColor: "green"
+        });
+        await getTransactions();
+      }
+    } catch (e) {
+      $q.notify({
+        message: (e as Error).message,
+        color: "dark",
+        textColor: "red",
+        position: "bottom"
+      });
+    }
+  }
+}
+
+const selectAllTriggered = () => {
+  if (state.transactions) {
+    state.transactions.data.forEach((t) => {
+      // eslint-disable-next-line
+      t.selected = state.selectAll;
+    });
+  }
+};
+
+const setSelectionMode = () => {
+  if (state.selectionMode === "none") {
+    state.selectionMode = "multiple";
+  } else {
+    state.selectionMode = "none";
+  }
+};
+
+const filterUpdated = async () => {
+  await getTransactions();
+};
+
+const paginationUpdated = async () => {
+  await getTransactions();
+};
+
+const changeRowsPerPage = async (rows: number) => {
+  state.pagination.rowsPerPage = rows;
+  await getTransactions();
+};
+
+const searchDebounce = debounce(async () => {
+  await getTransactions();
+}, 300);
+
+watch(
+  () => transactionAddedTrigger,
+  async (val: Ref<boolean> | undefined) => {
+    if (val) {
+      await getTransactions();
+    }
+  },
+  {
+    deep: true
+  }
+);
+
+const transactionTypeOptions = Object.entries(TransactionType).map<SelectItem<string, string>>(
+  (x) => ({
+    label: x[0],
+    value: x[1]
+  })
+);
+
+onMounted(async () => {
+  await getTransactions();
+});
+
+const rowsPerPageOptions = [5, 10, 15];
 </script>
 
 <style scoped lang="scss">

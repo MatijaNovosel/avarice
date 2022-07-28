@@ -33,8 +33,8 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, onMounted, computed, watch, provide, ref } from "vue";
+<script lang="ts" setup>
+import { reactive, onMounted, computed, watch, provide, ref } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
@@ -54,87 +54,65 @@ interface State {
   selectedAccount: AccountModel | null;
 }
 
-export default defineComponent({
-  name: "Dashboard",
-  components: {
-    TransactionsTable,
-    AccountList,
-    TotalBalanceCard,
-    AccountBalanceGraphCard,
-    TransactionDialog
-  },
-  setup() {
-    const store = useStore();
-    const transactionAddedTrigger = ref(false);
+const store = useStore();
+const transactionAddedTrigger = ref(false);
 
-    provide("transactionAdded", transactionAddedTrigger);
+provide("transactionAdded", transactionAddedTrigger);
 
-    // eslint-disable-next-line
-    const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
-    const createTransactionTrigger = computed(
-      // eslint-disable-next-line
-      () => store.getters["app/createTransactionTrigger"] as boolean
-    );
+// eslint-disable-next-line
+const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
+const createTransactionTrigger = computed(
+  // eslint-disable-next-line
+  () => store.getters["app/createTransactionTrigger"] as boolean
+);
 
-    const state: State = reactive({
-      loading: false,
-      transactionsLoading: false,
-      transactionDialogOpen: false,
-      selectedAccount: null
-    });
-
-    function updateSelectedAccount(account: AccountModel) {
-      if (state.selectedAccount) {
-        if (state.selectedAccount.id === account.id) {
-          return;
-        }
-        state.selectedAccount = account;
-      }
-    }
-
-    const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
-
-    onMounted(() => {
-      state.loading = true;
-      state.selectedAccount = accounts.value[0];
-      state.loading = false;
-    });
-
-    async function getAccounts() {
-      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-      await store.dispatch("user/setAccounts", accounts);
-      state.selectedAccount = accounts[0];
-    }
-
-    async function updateData() {
-      transactionAddedTrigger.value = !transactionAddedTrigger.value;
-      await getAccounts();
-    }
-
-    async function categoryAdded() {
-      const categories = await getService<ICategoryService>(
-        Types.CategoryService
-      ).getUserCategories();
-      await store.dispatch("user/setCategories", categories);
-    }
-
-    watch(
-      () => createTransactionTrigger,
-      () => {
-        state.transactionDialogOpen = true;
-      },
-      {
-        deep: true
-      }
-    );
-
-    return {
-      state,
-      updateSelectedAccountDebounce,
-      accounts,
-      updateData,
-      categoryAdded
-    };
-  }
+const state: State = reactive({
+  loading: false,
+  transactionsLoading: false,
+  transactionDialogOpen: false,
+  selectedAccount: null
 });
+
+function updateSelectedAccount(account: AccountModel) {
+  if (state.selectedAccount) {
+    if (state.selectedAccount.id === account.id) {
+      return;
+    }
+    state.selectedAccount = account;
+  }
+}
+
+const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
+
+onMounted(() => {
+  state.loading = true;
+  state.selectedAccount = accounts.value[0];
+  state.loading = false;
+});
+
+async function getAccounts() {
+  const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+  await store.dispatch("user/setAccounts", accounts);
+  state.selectedAccount = accounts[0];
+}
+
+async function updateData() {
+  transactionAddedTrigger.value = !transactionAddedTrigger.value;
+  await getAccounts();
+}
+
+async function categoryAdded() {
+  const categories = await getService<ICategoryService>(Types.CategoryService).getUserCategories();
+  await store.dispatch("user/setCategories", categories);
+}
+
+watch(
+  () => createTransactionTrigger,
+  () => {
+    state.transactionDialogOpen = true;
+  },
+  {
+    deep: true
+  }
+);
 </script>

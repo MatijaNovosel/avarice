@@ -16,34 +16,23 @@
   </q-drawer>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { DrawerItem as DrawerItemModel } from "src/models/common";
-import { defineComponent, PropType, reactive } from "vue";
+import { PropType, reactive } from "vue";
 import DrawerItem from "src/components/DrawerItem.vue";
 
 interface State {
   drawer: boolean;
 }
 
-export default defineComponent({
-  name: "account-list",
-  components: {
-    DrawerItem
-  },
-  props: {
-    data: {
-      type: Array as PropType<DrawerItemModel[]>,
-      required: true
-    }
-  },
-  setup() {
-    const state: State = reactive({
-      drawer: true
-    });
-
-    return {
-      state
-    };
+defineProps({
+  data: {
+    type: Array as PropType<DrawerItemModel[]>,
+    required: true
   }
+});
+
+const state: State = reactive({
+  drawer: true
 });
 </script>

@@ -13,7 +13,7 @@ export interface QuasarTableColumn<T> {
 }
 
 export interface QuasarTablePagination {
-  sortBy: string | null;
+  sortBy?: string;
   descending: boolean;
   page: number;
   rowsPerPage: number;
