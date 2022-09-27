@@ -1,4 +1,4 @@
-<h1 align=center>FinApp</h1>
+<h1 align=center>Avarice</h1>
 <p align=center>App for tracking personal finances</p>
 <p align=center>
   💾 <a href="https://github.com/MatijaNovosel/fin-app-backend">Backend</a>
