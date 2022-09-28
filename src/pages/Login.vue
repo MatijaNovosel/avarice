@@ -9,11 +9,13 @@
               square
               filled
               clearable
-              hide-bottom-space
               v-model="state.login.email"
               type="email"
               dense
               label="Email"
+              :error="$v.email.$error"
+              :error-message="collectErrors($v.email.$errors)"
+              :hide-bottom-space="!$v.email.$error"
             >
               <template #prepend>
                 <q-icon name="mdi-email" />
@@ -24,11 +26,13 @@
               square
               filled
               clearable
-              hide-bottom-space
               v-model="state.login.password"
               dense
               type="password"
               label="Password"
+              :error="$v.password.$error"
+              :error-message="collectErrors($v.password.$errors)"
+              :hide-bottom-space="!$v.password.$error"
             >
               <template #prepend>
                 <q-icon name="mdi-account" />
@@ -45,6 +49,7 @@
             size="md"
             class="full-width"
             label="Login"
+            :disable="$v.$invalid"
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-none">
@@ -65,8 +70,11 @@ import ROUTE_NAMES from "src/router/routeNames";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "src/store";
+import { required, email } from "@vuelidate/validators";
 import ICategoryService from "src/api/interfaces/categoryService";
 import IAccountService from "src/api/interfaces/accountService";
+import useVuelidate from "@vuelidate/core";
+import { collectErrors } from "src/utils/helpers";
 
 interface LoginForm {
   password: string | null;
@@ -82,13 +90,20 @@ const store = useStore();
 const router = useRouter();
 const $q = useQuasar();
 
-const state: State = reactive({
+const rules = {
+  password: { required, $autoDirty: true },
+  email: { required, email, $autoDirty: true }
+};
+
+const state = reactive<State>({
   loading: false,
   login: {
     password: null,
     email: null
   }
 });
+
+const $v = useVuelidate(rules, state.login);
 
 const login = async () => {
   state.loading = true;
