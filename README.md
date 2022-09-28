@@ -25,25 +25,66 @@
 - Transaction entry templating
 - Visual representation of user data
 
-## Install the dependencies
+## Set up the frontend
+
+### Install the dependencies
+
 ```bash
 npm install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
 ```bash
 quasar dev
 ```
 
 ### Lint the files
+
 ```bash
 npm run lint
 ```
 
 ### Build the app for production
+
 ```bash
 quasar build
 ```
 
 ### Customize the configuration
+
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+
+## Set up the backend
+
+### Install the dot net core dependencies
+
+Clone the backend [here](https://github.com/MatijaNovosel/avarice-backend).
+
+```bash
+dotnet restore
+```
+
+### Restore the MySQL database
+
+```bash
+dotnet ef database update
+```
+
+### Set the local MySQL connection string
+
+```bash
+dotnet user-secrets set "connectionString" "Server={server};Database={db};Uid={uid};Pwd={pwd};"
+```
+
+### Set the 16 character JWT signing key
+
+```bash
+dotnet user-secrets set "secretKey" "{key}"
+```
+
+### Run the backend
+
+```bash
+dotnet run
+```
