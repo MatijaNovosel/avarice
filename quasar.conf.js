@@ -42,8 +42,8 @@ module.exports = configure((ctx) => ({
     workboxPluginMode: "GenerateSW",
     workboxOptions: {},
     manifest: {
-      name: "FinApp",
-      short_name: "FinApp",
+      name: "Avarice",
+      short_name: "Avarice",
       description: "App for tracking personal finances.",
       display: "standalone",
       orientation: "portrait",

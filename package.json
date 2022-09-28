@@ -1,5 +1,5 @@
 {
-  "name": "finapp",
+  "name": "avarice",
   "version": "0.0.1",
   "private": true,
   "description": "App for tracking personal finances.",
@@ -55,5 +55,5 @@
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   },
-  "productName": "FinApp"
+  "productName": "Avarice"
 }
