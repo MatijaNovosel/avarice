@@ -14,7 +14,8 @@ module.exports = configure((ctx) => ({
   css: ["app.scss"],
   extras: ["mdi-v5", "roboto-font", "material-icons", "material-icons-outlined"],
   build: {
-    vueRouterMode: "history"
+    vueRouterMode: "history",
+    distDir: ctx.mode.spa ? "public" : null
   },
   devServer: {
     https: false,
