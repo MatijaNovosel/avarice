@@ -101,7 +101,9 @@ export default defineComponent({
     });
 
     return {
-      shouldShowUi: computed(() => ![ROUTE_NAMES.LOGIN].includes(route.name as string)),
+      shouldShowUi: computed(
+        () => ![ROUTE_NAMES.LOGIN, ROUTE_NAMES.REGISTER].includes(route.name as string)
+      ),
       routes
     };
   }

@@ -76,27 +76,27 @@
             </q-item>
           </Draggable>
         </Container>
+        <q-item class="rounded q-mb-sm q-py-sm bg-grey-9">
+          <q-item-section avatar>
+            <q-avatar rounded color="grey-8" text-color="white" size="md"> T </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-weight-medium"> Total </q-item-label>
+            <q-item-label class="text-caption">
+              {{ formatBalance(totalBalance, "HRK") }}
+            </q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-icon name="mdi-lock" color="grey-6" />
+          </q-item-section>
+        </q-item>
       </template>
       <q-item v-else>
-        <q-item class="text-black">
+        <q-item>
           <q-item-section>
             <q-item-label class="text-weight-medium"> No accounts found, create one! </q-item-label>
           </q-item-section>
         </q-item>
-      </q-item>
-      <q-item class="rounded q-mb-sm q-py-sm bg-grey-9">
-        <q-item-section avatar>
-          <q-avatar rounded color="grey-8" text-color="white" size="md"> T </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label class="text-weight-medium"> Total </q-item-label>
-          <q-item-label class="text-caption">
-            {{ formatBalance(totalBalance, "HRK") }}
-          </q-item-label>
-        </q-item-section>
-        <q-item-section avatar>
-          <q-icon name="mdi-lock" color="grey-6" />
-        </q-item-section>
       </q-item>
       <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
         <q-btn dense class="q-mr-md bg-accent rounded q-mt-sm">
