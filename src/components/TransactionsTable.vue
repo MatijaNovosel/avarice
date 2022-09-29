@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md"
-    v-if="state.transactions"
-  >
+  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md">
     <span class="text-grey-6"> Transactions </span>
     <div class="row">
       <q-btn
@@ -22,7 +19,7 @@
       </q-btn>
       <q-btn flat dense class="q-mr-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
-        <q-badge v-if="state.activeFilters" rounded color="accent" floating align="top" />
+        <q-badge v-if="activeFilters" rounded color="accent" floating align="top" />
         <q-menu>
           <div class="column no-wrap q-pa-md">
             <q-select
@@ -93,7 +90,7 @@
                 </q-item>
               </template>
             </q-select>
-            <q-btn size="sm" class="q-mt-sm" color="accent" :disable="!state.activeFilters">
+            <q-btn size="sm" class="q-mt-sm" color="accent" :disable="!activeFilters">
               Clear
             </q-btn>
           </div>
@@ -270,7 +267,7 @@
       direction-links
       v-model="state.pagination.page"
       color="grey-9"
-      :max="state.pagesNumber"
+      :max="pagesNumber"
       :max-pages="5"
       @update:model-value="paginationUpdated"
     />
@@ -297,13 +294,11 @@ interface TransactionModelExtended extends ITransactionModel {
 
 interface State {
   pagination: QuasarTablePagination;
-  pagesNumber: number;
   categoryType: number | null;
   search: string | null;
-  transactions: PageableCollection<TransactionModelExtended> | null;
+  transactions: PageableCollection<TransactionModelExtended>;
   loading: boolean;
   selectAll: boolean;
-  activeFilters: boolean;
   selectedRows: number[];
   selectionMode: string;
   transactionType: string | null;
@@ -326,26 +321,34 @@ const props = defineProps({
     required: false
   }
 });
+
 const $q = useQuasar();
 const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
 const store = useStore();
+const rowsPerPageOptions = [5, 10, 15];
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
 
-const state: State = reactive({
+const activeFilters = computed(() => state.transactionType || state.categoryType);
+
+const pagesNumber = computed(() => {
+  if (state.transactions) {
+    return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
+  }
+  return 0;
+});
+
+const state = reactive<State>({
   selectionMode: "none",
   transactionType: null,
   categoryType: null,
   selectedRows: [],
   search: null,
-  transactions: null,
-  activeFilters: computed(() => {
-    if (state.transactionType || state.categoryType) {
-      return true;
-    }
-    return false;
-  }),
+  transactions: {
+    data: [],
+    total: 0
+  },
   pagination: {
     sortBy: "desc",
     descending: false,
@@ -353,13 +356,7 @@ const state: State = reactive({
     rowsPerPage: props.rowsPerPage
   },
   loading: false,
-  selectAll: false,
-  pagesNumber: computed(() => {
-    if (state.transactions) {
-      return Math.ceil(state.transactions.total / state.pagination.rowsPerPage);
-    }
-    return 0;
-  })
+  selectAll: false
 });
 
 const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() => {
@@ -489,9 +486,7 @@ async function deleteTransaction(id: number) {
     const transaction = state.transactions.data.find((t) => t.id === id);
     try {
       if (transaction) {
-        await getService<ITransactionService>(Types.TransactionService).delete(
-          parseFloat(format(new Date(transaction.createdAt), "yyyyMMddHHmmss"))
-        );
+        await getService<ITransactionService>(Types.TransactionService).delete(transaction.id);
         $q.notify({
           message: "Transaction deleted!",
           color: "dark",
@@ -567,8 +562,6 @@ const transactionTypeOptions = Object.entries(TransactionType).map<SelectItem<st
 onMounted(async () => {
   await getTransactions();
 });
-
-const rowsPerPageOptions = [5, 10, 15];
 </script>
 
 <style scoped lang="scss">
