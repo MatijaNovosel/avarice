@@ -101,7 +101,7 @@ async function categoryAdded() {
 }
 
 watch(
-  () => appStore.createTransactionTrigger,
+  () => appStore.openTransactionDialogTrigger,
   () => (state.transactionDialogOpen = true),
   {
     deep: true
