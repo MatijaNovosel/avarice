@@ -47,8 +47,8 @@ import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
 import { acronym, formatBalance } from "src/utils/helpers";
-import { useAppStore } from "src/store/app";
-import { useUserStore } from "src/store/user";
+import { useAppStore } from "src/stores/app";
+import { useUserStore } from "src/stores/user";
 
 const appStore = useAppStore();
 const userStore = useUserStore();

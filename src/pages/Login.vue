@@ -76,7 +76,7 @@ import ICategoryService from "src/api/interfaces/categoryService";
 import IAccountService from "src/api/interfaces/accountService";
 import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
-import { useUserStore } from "src/store/user";
+import { useUserStore } from "src/stores/user";
 
 interface LoginForm {
   password: string | null;

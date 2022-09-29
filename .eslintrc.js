@@ -1,24 +1,16 @@
-const { resolve } = require("path");
-
 module.exports = {
   root: true,
   parserOptions: {
-    extraFileExtensions: [".vue"],
-    parser: "@typescript-eslint/parser",
-    project: resolve(__dirname, "./tsconfig.json"),
-    tsconfigRootDir: __dirname,
-    ecmaVersion: 2018,
-    sourceType: "module"
+    parser: require.resolve("@typescript-eslint/parser"),
+    extraFileExtensions: [".vue"]
   },
   env: {
-    browser: true
+    browser: true,
+    es2021: true,
+    node: true,
+    "vue/setup-compiler-macros": true
   },
-  extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:vue/vue3-essential",
-    "standard"
-  ],
+  extends: ["plugin:@typescript-eslint/recommended", "plugin:vue/vue3-essential", "standard"],
   plugins: ["@typescript-eslint", "vue"],
   globals: {
     ga: "readonly",
@@ -30,11 +22,7 @@ module.exports = {
     __QUASAR_SSR_PWA__: "readonly",
     process: "readonly",
     Capacitor: "readonly",
-    chrome: "readonly",
-    defineProps: "readonly",
-    defineEmits: "readonly",
-    defineExpose: "readonly",
-    withDefaults: "readonly"
+    chrome: "readonly"
   },
   rules: {
     "generator-star-spacing": "off",
@@ -58,6 +46,7 @@ module.exports = {
     "lines-between-class-members": "off",
     "import/no-extraneous-dependencies": "off",
     "prefer-promise-reject-errors": "off",
+    "vue/multi-word-component-names": "off",
     quotes: ["warn", "double", { avoidEscape: true }],
     semi: "off",
     "space-before-function-paren": "off",

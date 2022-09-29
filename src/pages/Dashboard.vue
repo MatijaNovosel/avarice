@@ -45,8 +45,8 @@ import TransactionDialog from "src/components/TransactionDialog.vue";
 import { debounce } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import ICategoryService from "src/api/interfaces/categoryService";
-import { useAppStore } from "src/store/app";
-import { useUserStore } from "src/store/user";
+import { useAppStore } from "src/stores/app";
+import { useUserStore } from "src/stores/user";
 
 interface State {
   loading: boolean;

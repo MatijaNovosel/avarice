@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { boot } from "quasar/wrappers";
 import axios, { AxiosInstance } from "axios";
 import CONSTANTS from "src/utils/constants";
-import { useUserStore } from "src/store/user";
+import { useUserStore } from "src/stores/user";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {

@@ -285,8 +285,8 @@ import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import { PageableCollection, SelectItem } from "src/models/common";
-import { useAppStore } from "src/store/app";
-import { useUserStore } from "src/store/user";
+import { useAppStore } from "src/stores/app";
+import { useUserStore } from "src/stores/user";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -508,7 +508,6 @@ async function deleteTransaction(id: number) {
 const selectAllTriggered = () => {
   if (state.transactions) {
     state.transactions.data.forEach((t) => {
-      // eslint-disable-next-line
       t.selected = state.selectAll;
     });
   }

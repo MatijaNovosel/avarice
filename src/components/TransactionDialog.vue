@@ -424,7 +424,7 @@ import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
 import iconList from "../utils/icons";
-import { useUserStore } from "src/store/user";
+import { useUserStore } from "src/stores/user";
 
 interface NewTransaction {
   amount: string | null;

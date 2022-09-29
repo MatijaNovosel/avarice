@@ -10,7 +10,7 @@ module.exports = configure((ctx) => ({
       }
     }
   },
-  boot: ["i18n", "axios", "charts", "pinia"],
+  boot: ["i18n", "axios", "charts"],
   css: ["app.scss"],
   extras: ["mdi-v5", "roboto-font", "material-icons", "material-icons-outlined"],
   build: {
@@ -26,9 +26,7 @@ module.exports = configure((ctx) => ({
     cssAddon: true,
     config: {
       dark: true,
-      notify: {
-        //
-      }
+      notify: {}
     },
     plugins: ["Notify"]
   },
