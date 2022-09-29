@@ -40,6 +40,7 @@ import { format } from "date-fns";
 import { useStore } from "src/store";
 import { AccountHistoryModel } from "src/api/client";
 import { SelectItem } from "src/models/common";
+import { formatBalance } from "src/utils/helpers";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -88,20 +89,7 @@ const state: State = reactive({
       tooltip: {
         callbacks: {
           label: (context) => {
-            let label = context.dataset.label || "";
-
-            if (label) {
-              label += ": ";
-            }
-
-            if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat("hr-HR", {
-                style: "currency",
-                currency: "HRK"
-              }).format(context.parsed.y);
-            }
-
-            return label;
+            return formatBalance(context.parsed.y, "HRK");
           }
         }
       }
