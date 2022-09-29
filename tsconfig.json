@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "preserve",
     "experimentalDecorators": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["pinia-plugin-persist"]
   }
 }
