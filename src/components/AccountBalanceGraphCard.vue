@@ -40,7 +40,7 @@ import { format } from "date-fns";
 import { AccountHistoryModel } from "src/api/client";
 import { SelectItem } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
-import { useAppStore } from "src/store/app";
+import { useAppStore } from "src/stores/app";
 
 interface State {
   chartData: ChartData<"line"> | null;

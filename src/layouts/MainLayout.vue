@@ -33,7 +33,7 @@ import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { DrawerItem } from "src/models/common";
 import { setCssVar } from "quasar";
-import { useAppStore } from "src/store/app";
+import { useAppStore } from "src/stores/app";
 
 const route = useRoute();
 const appStore = useAppStore();
