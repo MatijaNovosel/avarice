@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="loading || !account">
+    <template v-if="loading">
       <q-card flat class="q-pa-md">
         <q-skeleton height="55px" square />
         <q-card-section>
@@ -10,32 +10,45 @@
         </q-card-section>
       </q-card>
     </template>
-    <q-card class="rounded-md q-px-md q-py-sm" flat style="height: 200px" v-else>
-      <q-card-section class="row items-center justify-between q-pb-sm">
-        <span class="text-grey-6"> Account balance </span>
-      </q-card-section>
-      <q-card-section class="column q-pb-sm">
-        <span class="text-h3">
-          {{ formatBalance(account.balance, account.currency) }}
-        </span>
-        <span class="text-caption text-grey-7 q-pt-xs">
-          <span class="text-red-5">15% less</span> value in last time period
-        </span>
-      </q-card-section>
-      <q-card-section class="q-pt-xs">
-        <q-chip color="red-4" size="sm" class="q-px-md">
-          <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
-        </q-chip>
-        <q-chip
-          size="sm"
-          :style="{
-            backgroundColor: '#6ca16f'
-          }"
-          class="q-px-md"
-        >
-          <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
-        </q-chip>
-      </q-card-section>
+    <q-card
+      class="rounded-md q-px-md q-py-sm"
+      :class="{
+        'flex items-center justify-center': account == null
+      }"
+      flat
+      style="height: 200px"
+      v-else
+    >
+      <template v-if="account">
+        <q-card-section class="row items-center justify-between q-pb-sm">
+          <span class="text-grey-6"> Account balance </span>
+        </q-card-section>
+        <q-card-section class="column q-pb-sm">
+          <span class="text-h3">
+            {{ formatBalance(account.balance, account.currency) }}
+          </span>
+          <span class="text-caption text-grey-7 q-pt-xs">
+            <span class="text-red-5">15% less</span> value in last time period
+          </span>
+        </q-card-section>
+        <q-card-section class="q-pt-xs">
+          <q-chip color="red-4" size="sm" class="q-px-md">
+            <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
+          </q-chip>
+          <q-chip
+            size="sm"
+            :style="{
+              backgroundColor: '#6ca16f'
+            }"
+            class="q-px-md"
+          >
+            <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
+          </q-chip>
+        </q-card-section>
+      </template>
+      <template v-else>
+        <span>No accounts found.</span>
+      </template>
     </q-card>
   </div>
 </template>
@@ -61,7 +74,7 @@ const props = defineProps({
   }
 });
 
-const state: State = reactive({
+const state = reactive<State>({
   expenseAndIncome: null
 });
 

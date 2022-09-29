@@ -1,5 +1,8 @@
 <template>
-  <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm">
+  <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm items-center">
+    <div class="q-mr-md bg-dark q-px-md q-py-sm rounded text-bold">
+      {{ formatBalance(totalAccountValue, "HRK") }}
+    </div>
     <q-btn flat dense class="bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
       <q-menu>
@@ -45,7 +48,8 @@ import { useStore } from "src/store";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
 import { AppUser } from "src/models/user";
-import { acronym } from "src/utils/helpers";
+import { acronym, formatBalance } from "src/utils/helpers";
+import { AccountModel } from "src/api/client";
 
 const store = useStore();
 const router = useRouter();
@@ -53,6 +57,12 @@ const selectedColor = ref(null);
 
 // eslint-disable-next-line
 const user = computed(() => store.getters["user/data"] as AppUser);
+const totalAccountValue = computed(() =>
+  // eslint-disable-next-line
+  (store.getters["user/accounts"] as AccountModel[])
+    .map((a) => a.balance)
+    .reduce((sum, val) => sum + val, 0)
+);
 
 async function logOut() {
   await store.dispatch("user/logout");

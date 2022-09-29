@@ -9,7 +9,23 @@
               square
               filled
               clearable
-              v-model="state.login.email"
+              v-model="state.auth.username"
+              dense
+              label="Username"
+              :error="$v.username.$error"
+              :error-message="collectErrors($v.username.$errors)"
+              :hide-bottom-space="!$v.username.$error"
+            >
+              <template #prepend>
+                <q-icon name="mdi-account" />
+              </template>
+            </q-input>
+            <q-input
+              :disabled="state.loading"
+              square
+              filled
+              clearable
+              v-model="state.auth.email"
               type="email"
               dense
               label="Email"
@@ -26,10 +42,11 @@
               square
               filled
               clearable
-              v-model="state.login.password"
+              v-model="state.auth.password"
               dense
               type="password"
               label="Password"
+              autocomplete="new-password"
               :error="$v.password.$error"
               :error-message="collectErrors($v.password.$errors)"
               :hide-bottom-space="!$v.password.$error"
@@ -43,19 +60,17 @@
         <q-card-actions class="q-px-md">
           <q-btn
             :loading="state.loading"
-            @click="login"
+            @click="register"
             unelevated
             color="light-green-7"
             size="md"
             class="full-width"
-            label="Login"
+            label="Register"
             :disable="$v.$invalid"
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-none">
-          <router-link class="text-grey-6" :to="{ name: ROUTE_NAMES.REGISTER }">
-            Create an account
-          </router-link>
+          <router-link class="text-grey-6" :to="{ name: ROUTE_NAMES.LOGIN }"> Sign in </router-link>
         </q-card-section>
       </q-card>
     </div>
@@ -64,56 +79,62 @@
 
 <script lang="ts" setup>
 import { reactive } from "vue";
-import { DecodedToken } from "src/models/auth";
-import jwt_decode from "jwt-decode";
 import { getService, Types } from "src/di-container";
 import IAuthService from "src/api/interfaces/authService";
-import ROUTE_NAMES from "src/router/routeNames";
-import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
-import { useStore } from "src/store";
-import { required, email } from "@vuelidate/validators";
-import ICategoryService from "src/api/interfaces/categoryService";
-import IAccountService from "src/api/interfaces/accountService";
+import { required, email, helpers } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
+import ROUTE_NAMES from "src/router/routeNames";
 
-interface LoginForm {
+interface Auth {
+  username: string | null;
   password: string | null;
   email: string | null;
 }
 
 interface State {
   loading: boolean;
-  login: LoginForm;
+  auth: Auth;
 }
 
-const store = useStore();
-const router = useRouter();
 const $q = useQuasar();
 
+const mustMeetRequirements = (value: string) =>
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(value);
+
 const rules = {
-  password: { required, $autoDirty: true },
+  password: {
+    required,
+    $autoDirty: true,
+    mustMeetRequirements: helpers.withMessage(
+      "Password must be max 8 characters, have one special character and a number!",
+      mustMeetRequirements
+    )
+  },
+  username: { required, $autoDirty: true },
   email: { required, email, $autoDirty: true }
 };
 
 const state = reactive<State>({
   loading: false,
-  login: {
+  auth: {
+    username: null,
     password: null,
     email: null
   }
 });
 
-const $v = useVuelidate(rules, state.login);
+const $v = useVuelidate(rules, state.auth);
 
-const login = async () => {
+const register = async () => {
   state.loading = true;
 
   try {
-    const data = await getService<IAuthService>(Types.AuthService).login(
-      state.login.email as string,
-      state.login.password as string
+    const data = await getService<IAuthService>(Types.AuthService).register(
+      state.auth.username as string,
+      state.auth.email as string,
+      state.auth.password as string
     );
 
     if (!data.result) {
@@ -127,34 +148,20 @@ const login = async () => {
       return;
     }
 
-    const decodedToken: DecodedToken = jwt_decode(data.token as string);
-
-    await store.dispatch("user/login", {
-      id: decodedToken.Id,
-      email: state.login.email,
-      userName: decodedToken.unique_name,
-      emailConfirmed: false,
-      token: data.token
-    });
-
-    const categories = await getService<ICategoryService>(
-      Types.CategoryService
-    ).getUserCategories();
-
-    const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-
-    await store.dispatch("user/setCategories", categories);
-    await store.dispatch("user/setAccounts", accounts);
-
     $q.notify({
-      message: "Successfully logged in!",
+      message: "Successfully registered an account!",
       color: "dark",
       textColor: "green",
       position: "bottom"
     });
 
     state.loading = false;
-    await router.push({ name: ROUTE_NAMES.DASHBOARD });
+    state.auth = {
+      username: null,
+      password: null,
+      email: null
+    };
+    $v.value.$reset();
   } catch (e) {
     $q.notify({
       message: (e as Error).message,

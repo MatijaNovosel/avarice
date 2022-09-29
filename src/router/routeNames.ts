@@ -1,5 +1,6 @@
 class ROUTE_NAMES {
   static LOGIN = "login";
+  static REGISTER = "register";
   static DASHBOARD = "dashboard";
   static HISTORY = "history";
   static TEMPLATES = "templates";

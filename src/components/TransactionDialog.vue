@@ -473,7 +473,7 @@ const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
 
-const state: State = reactive({
+const state = reactive<State>({
   open: props.open,
   loading: false,
   tempIcons: [],

@@ -32,7 +32,7 @@ defineProps({
   }
 });
 
-const state: State = reactive({
+const state = reactive<State>({
   drawer: true
 });
 </script>
