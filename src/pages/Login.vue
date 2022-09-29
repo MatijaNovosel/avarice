@@ -71,12 +71,12 @@ import IAuthService from "src/api/interfaces/authService";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
-import { useStore } from "src/store";
 import { required, email } from "@vuelidate/validators";
 import ICategoryService from "src/api/interfaces/categoryService";
 import IAccountService from "src/api/interfaces/accountService";
 import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
+import { useUserStore } from "src/store/user";
 
 interface LoginForm {
   password: string | null;
@@ -88,7 +88,7 @@ interface State {
   login: LoginForm;
 }
 
-const store = useStore();
+const userStore = useUserStore();
 const router = useRouter();
 const $q = useQuasar();
 
@@ -129,12 +129,12 @@ const login = async () => {
 
     const decodedToken: DecodedToken = jwt_decode(data.token as string);
 
-    await store.dispatch("user/login", {
+    userStore.login({
       id: decodedToken.Id,
-      email: state.login.email,
+      email: state.login.email as string,
       userName: decodedToken.unique_name,
       emailConfirmed: false,
-      token: data.token
+      token: data.token as string
     });
 
     const categories = await getService<ICategoryService>(
@@ -143,8 +143,8 @@ const login = async () => {
 
     const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
 
-    await store.dispatch("user/setCategories", categories);
-    await store.dispatch("user/setAccounts", accounts);
+    userStore.setCategories(categories);
+    userStore.setAccounts(accounts);
 
     $q.notify({
       message: "Successfully logged in!",

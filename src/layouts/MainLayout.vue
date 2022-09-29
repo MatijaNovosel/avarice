@@ -26,96 +26,78 @@
   </q-layout>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import ROUTE_NAMES from "src/router/routeNames";
 import Navbar from "src/components/Navbar.vue";
-import { defineComponent, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { DrawerItem } from "src/models/common";
-import { useStore } from "src/store";
 import { setCssVar } from "quasar";
+import { useAppStore } from "src/store/app";
 
-export default defineComponent({
-  name: "MainLayout",
-  components: {
-    Navbar
+const route = useRoute();
+const appStore = useAppStore();
+
+const shouldShowUi = computed(
+  () => ![ROUTE_NAMES.LOGIN, ROUTE_NAMES.REGISTER].includes(route.name as string)
+);
+
+const routes: DrawerItem[] = [
+  {
+    title: "Dashboard",
+    caption: "Data overview",
+    icon: "mdi-view-dashboard-outline",
+    link: {
+      name: ROUTE_NAMES.DASHBOARD
+    }
   },
-  setup() {
-    const route = useRoute();
-    const store = useStore();
-
-    const routes: DrawerItem[] = [
-      {
-        title: "Dashboard",
-        caption: "Data overview",
-        icon: "mdi-view-dashboard-outline",
-        link: {
-          name: ROUTE_NAMES.DASHBOARD
-        }
-      },
-      {
-        title: "History",
-        caption: "Detailed transaction history",
-        icon: "mdi-timer-sand",
-        link: {
-          name: ROUTE_NAMES.HISTORY
-        }
-      },
-      {
-        title: "Categories",
-        caption: "User created categories",
-        icon: "mdi-tag-multiple",
-        link: {
-          name: ROUTE_NAMES.CATEGORIES
-        }
-      },
-      {
-        title: "Templates",
-        caption: "Predefined transactions",
-        icon: "mdi-file-multiple",
-        link: {
-          name: ROUTE_NAMES.TEMPLATES
-        }
-      },
-      {
-        title: "Statistics",
-        caption: "Visual representation of user data",
-        icon: "mdi-chart-line",
-        link: {
-          name: ROUTE_NAMES.STATISTICS
-        }
-      },
-      {
-        title: "Settings",
-        caption: "App and user preferences",
-        icon: "mdi-cog",
-        link: {
-          name: ROUTE_NAMES.SETTINGS
-        }
-      }
-    ];
-
-    onMounted(() => {
-      // eslint-disable-next-line
-      setCssVar("accent", store.getters["app/accentColor"] as string);
-    });
-
-    return {
-      shouldShowUi: computed(
-        () => ![ROUTE_NAMES.LOGIN, ROUTE_NAMES.REGISTER].includes(route.name as string)
-      ),
-      routes
-    };
+  {
+    title: "History",
+    caption: "Detailed transaction history",
+    icon: "mdi-timer-sand",
+    link: {
+      name: ROUTE_NAMES.HISTORY
+    }
+  },
+  {
+    title: "Categories",
+    caption: "User created categories",
+    icon: "mdi-tag-multiple",
+    link: {
+      name: ROUTE_NAMES.CATEGORIES
+    }
+  },
+  {
+    title: "Templates",
+    caption: "Predefined transactions",
+    icon: "mdi-file-multiple",
+    link: {
+      name: ROUTE_NAMES.TEMPLATES
+    }
+  },
+  {
+    title: "Statistics",
+    caption: "Visual representation of user data",
+    icon: "mdi-chart-line",
+    link: {
+      name: ROUTE_NAMES.STATISTICS
+    }
+  },
+  {
+    title: "Settings",
+    caption: "App and user preferences",
+    icon: "mdi-cog",
+    link: {
+      name: ROUTE_NAMES.SETTINGS
+    }
   }
-});
+];
+
+onMounted(() => setCssVar("accent", appStore.accentColor));
 </script>
 
 <style lang="scss">
 .layout {
   width: 1350px;
-}
-
-.q-page {
-  min-height: 0px !important;
 }
 </style>

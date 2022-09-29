@@ -1,5 +1,5 @@
 <template>
-  <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm items-center">
+  <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm items-center" v-if="user">
     <div class="q-mr-md bg-dark q-px-md q-py-sm rounded text-bold">
       {{ formatBalance(totalAccountValue, "HRK") }}
     </div>
@@ -44,41 +44,35 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { useStore } from "src/store";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
-import { AppUser } from "src/models/user";
 import { acronym, formatBalance } from "src/utils/helpers";
-import { AccountModel } from "src/api/client";
+import { useAppStore } from "src/store/app";
+import { useUserStore } from "src/store/user";
 
-const store = useStore();
+const appStore = useAppStore();
+const userStore = useUserStore();
 const router = useRouter();
-const selectedColor = ref(null);
+const selectedColor = ref<string>("#ffffff");
 
-// eslint-disable-next-line
-const user = computed(() => store.getters["user/data"] as AppUser);
+const user = computed(() => userStore.data);
 const totalAccountValue = computed(() =>
-  // eslint-disable-next-line
-  (store.getters["user/accounts"] as AccountModel[])
-    .map((a) => a.balance)
-    .reduce((sum, val) => sum + val, 0)
+  userStore.accounts.map((a) => a.balance).reduce((sum, val) => sum + val, 0)
 );
 
 async function logOut() {
-  await store.dispatch("user/logout");
+  userStore.logout();
   await router.push({
     name: ROUTE_NAMES.LOGIN
   });
 }
 
-async function createTransaction() {
-  await store.dispatch("app/createTransaction");
-}
+const createTransaction = () => {
+  appStore.createTransaction();
+};
 
 watch(
   () => selectedColor.value,
-  async (val) => {
-    await store.dispatch("app/changeAccentColor", val);
-  }
+  (val) => appStore.changeAccentColor(appStore, val)
 );
 </script>

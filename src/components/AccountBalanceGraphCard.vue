@@ -31,16 +31,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, computed, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { getService, Types } from "src/di-container";
 import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
 import { LineChart } from "vue-chart-3";
 import { format } from "date-fns";
-import { useStore } from "src/store";
 import { AccountHistoryModel } from "src/api/client";
 import { SelectItem } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
+import { useAppStore } from "src/store/app";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -56,11 +56,8 @@ defineProps({
   }
 });
 
-const store = useStore();
+const appStore = useAppStore();
 const lineChartRef = ref(null);
-
-// eslint-disable-next-line
-const accentColor = computed(() => store.getters["app/accentColor"] as string);
 
 const state = reactive<State>({
   chartData: null,
@@ -112,8 +109,8 @@ const updateGraph = () => {
         {
           pointBackgroundColor: "rgba(0, 0, 0, 0)",
           pointBorderColor: "rgba(0, 0, 0, 0)",
-          backgroundColor: accentColor.value,
-          borderColor: accentColor.value,
+          backgroundColor: appStore.accentColor,
+          borderColor: appStore.accentColor,
           pointRadius: 0,
           fill: true,
           data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
@@ -133,7 +130,7 @@ onMounted(async () => {
 });
 
 watch(
-  () => accentColor.value,
+  () => appStore.accentColor,
   () => {
     updateGraph();
   }

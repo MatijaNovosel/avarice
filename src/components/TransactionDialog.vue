@@ -416,8 +416,6 @@
 <script lang="ts" setup>
 import { reactive, watch, computed, ref } from "vue";
 import { useQuasar, debounce } from "quasar";
-import { useStore } from "src/store";
-import { AccountModel, CategoryModel } from "src/api/client";
 import { chunkArray, formatBalance } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
@@ -426,6 +424,7 @@ import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
 import iconList from "../utils/icons";
+import { useUserStore } from "src/store/user";
 
 interface NewTransaction {
   amount: string | null;
@@ -463,15 +462,12 @@ const props = defineProps({
 });
 
 const $q = useQuasar();
-const store = useStore();
+const userStore = useUserStore();
 const scrollTargetRef = ref<HTMLElement | null>(null);
 const chunkedIconList = chunkArray<string>(iconList, 10);
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-const accounts = computed(() => store.getters["user/accounts"] as AccountModel[]);
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
+const accounts = computed(() => userStore.accounts);
+const categories = computed(() => userStore.categories);
 
 const state = reactive<State>({
   open: props.open,

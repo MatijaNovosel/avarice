@@ -275,9 +275,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, Ref, inject, watch } from "vue";
+import { computed, reactive, onMounted, Ref, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
-import { CategoryModel, ITransactionModel } from "src/api/client";
+import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
 import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
@@ -285,7 +285,8 @@ import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import { PageableCollection, SelectItem } from "src/models/common";
-import { useStore } from "src/store";
+import { useAppStore } from "src/store/app";
+import { useUserStore } from "src/store/user";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -323,13 +324,11 @@ const props = defineProps({
 });
 
 const $q = useQuasar();
-const transactionAddedTrigger: Ref<boolean> | undefined = inject("transactionAdded");
-const store = useStore();
+const userStore = useUserStore();
+const appStore = useAppStore();
 const rowsPerPageOptions = [5, 10, 15];
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-const categories = computed(() => store.getters["user/categories"] as CategoryModel[]);
-
+const categories = computed(() => userStore.categories);
 const activeFilters = computed(() => state.transactionType || state.categoryType);
 
 const pagesNumber = computed(() => {
@@ -541,11 +540,9 @@ const searchDebounce = debounce(async () => {
 }, 300);
 
 watch(
-  () => transactionAddedTrigger,
-  async (val: Ref<boolean> | undefined) => {
-    if (val) {
-      await getTransactions();
-    }
+  () => appStore.createTransactionTrigger,
+  async () => {
+    await getTransactions();
   },
   {
     deep: true

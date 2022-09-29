@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-param-reassign */
 import { boot } from "quasar/wrappers";
 import axios, { AxiosInstance } from "axios";
 import CONSTANTS from "src/utils/constants";
-import { AppUser } from "src/models/user";
+import { useUserStore } from "src/store/user";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
@@ -13,12 +12,13 @@ declare module "@vue/runtime-core" {
 
 const api = axios.create({ baseURL: CONSTANTS.API_URL });
 
-export default boot(({ app, store }) => {
+export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
 
   api.interceptors.request.use((config) => {
-    const user = store.getters["user/data"] as AppUser;
+    const userStore = useUserStore();
+    const user = userStore.data;
 
     if (user) {
       config.headers.Authorization = user ? `Bearer ${user.token}` : "";
