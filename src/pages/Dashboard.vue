@@ -66,7 +66,7 @@ const createTransactionTrigger = computed(
   () => store.getters["app/createTransactionTrigger"] as boolean
 );
 
-const state: State = reactive({
+const state = reactive<State>({
   loading: false,
   transactionsLoading: false,
   transactionDialogOpen: false,

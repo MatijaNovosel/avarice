@@ -74,7 +74,7 @@ const props = defineProps({
   }
 });
 
-const state: State = reactive({
+const state = reactive<State>({
   expenseAndIncome: null
 });
 

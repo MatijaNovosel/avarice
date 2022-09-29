@@ -62,7 +62,7 @@ const lineChartRef = ref(null);
 // eslint-disable-next-line
 const accentColor = computed(() => store.getters["app/accentColor"] as string);
 
-const state: State = reactive({
+const state = reactive<State>({
   chartData: null,
   graphData: null,
   timePeriod: "30D",
