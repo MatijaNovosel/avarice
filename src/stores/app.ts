@@ -11,10 +11,15 @@ export const useAppStore = defineStore(
   "app",
   () => {
     const createTransactionTrigger = ref(false);
+    const openTransactionDialogTrigger = ref(false);
     const accentColor = ref("#f44336");
 
     const createTransaction = () => {
       createTransactionTrigger.value = !createTransactionTrigger.value;
+    };
+
+    const openTransactionDialog = () => {
+      openTransactionDialogTrigger.value = !openTransactionDialogTrigger.value;
     };
 
     const changeAccentColor = (state: AppStoreState, color: string) => {
@@ -22,7 +27,14 @@ export const useAppStore = defineStore(
       state.accentColor = color;
     };
 
-    return { accentColor, createTransactionTrigger, createTransaction, changeAccentColor };
+    return {
+      accentColor,
+      createTransactionTrigger,
+      createTransaction,
+      changeAccentColor,
+      openTransactionDialogTrigger,
+      openTransactionDialog
+    };
   },
   {
     persist: {

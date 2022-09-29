@@ -3,7 +3,7 @@
     <template v-if="shouldShowUi">
       <navbar />
     </template>
-    <q-page-container class="q-pt-none">
+    <q-page-container>
       <q-tabs
         v-if="shouldShowUi"
         dense
