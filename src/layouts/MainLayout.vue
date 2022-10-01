@@ -39,7 +39,10 @@ const route = useRoute();
 const appStore = useAppStore();
 
 const shouldShowUi = computed(
-  () => ![ROUTE_NAMES.LOGIN, ROUTE_NAMES.REGISTER].includes(route.name as string)
+  () =>
+    ![ROUTE_NAMES.LOGIN, ROUTE_NAMES.REGISTER, ROUTE_NAMES.ACCOUNT_SETUP].includes(
+      route.name as string
+    )
 );
 
 const routes: DrawerItem[] = [

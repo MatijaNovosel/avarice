@@ -7,6 +7,7 @@ class ROUTE_NAMES {
   static CATEGORIES = "categories";
   static STATISTICS = "statistics";
   static SETTINGS = "settings";
+  static ACCOUNT_SETUP = "account-setup";
 }
 
 export default ROUTE_NAMES;

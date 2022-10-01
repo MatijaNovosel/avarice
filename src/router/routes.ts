@@ -55,6 +55,14 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "/account-setup",
+        name: ROUTE_NAMES.ACCOUNT_SETUP,
+        component: () => import("pages/AccountSetup.vue"),
+        meta: {
+          isAuth: true
+        }
+      },
+      {
         path: "/login",
         name: ROUTE_NAMES.LOGIN,
         component: () => import("pages/Login.vue"),
