@@ -1,6 +1,7 @@
 <template>
   <q-page class="window-height window-width row justify-center items-center">
-    <div class="row">
+    <div class="column text-center">
+      <span class="text-h3 q-mb-lg text-bold text-yellow">Avarice</span>
       <q-card flat class="q-pa-md shadow-1 rounded">
         <q-card-section>
           <q-form class="q-gutter-md">
@@ -45,9 +46,9 @@
             :loading="state.loading"
             @click="login"
             unelevated
-            color="light-green-7"
+            color="yellow"
             size="md"
-            class="full-width"
+            class="full-width text-black"
             label="Login"
             :disable="$v.$invalid"
           />
@@ -154,7 +155,12 @@ const login = async () => {
     });
 
     state.loading = false;
-    await router.push({ name: ROUTE_NAMES.DASHBOARD });
+
+    if (accounts.length !== 0) {
+      await router.push({ name: ROUTE_NAMES.DASHBOARD });
+    } else {
+      await router.push({ name: ROUTE_NAMES.ACCOUNT_SETUP });
+    }
   } catch (e) {
     $q.notify({
       message: (e as Error).message,
