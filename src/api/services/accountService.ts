@@ -24,6 +24,9 @@ class AccountService implements IAccountService {
     const data = await client.account_GetUserAccounts();
     return data;
   }
+  async create() {
+    //
+  }
 }
 
 export default AccountService;

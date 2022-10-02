@@ -79,14 +79,12 @@ import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
 import { useUserStore } from "src/stores/user";
 
-interface LoginForm {
-  password: string | null;
-  email: string | null;
-}
-
 interface State {
   loading: boolean;
-  login: LoginForm;
+  login: {
+    password: string | null;
+    email: string | null;
+  };
 }
 
 const userStore = useUserStore();
