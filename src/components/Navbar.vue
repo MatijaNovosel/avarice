@@ -1,7 +1,7 @@
 <template>
   <q-header class="layout bg-dark-1 row justify-end q-pt-lg q-pr-sm items-center" v-if="user">
     <div class="q-mr-md bg-dark q-px-md q-py-sm rounded text-bold">
-      {{ formatBalance(totalAccountValue, "HRK") }}
+      {{ formatBalance(userStore.totalBalance, "HRK") }}
     </div>
     <q-btn flat dense class="bg-grey-10 rounded">
       <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
@@ -56,9 +56,6 @@ const router = useRouter();
 const selectedColor = ref<string>("#ffffff");
 
 const user = computed(() => userStore.data);
-const totalAccountValue = computed(() =>
-  userStore.accounts.map((a) => a.balance).reduce((sum, val) => sum + val, 0)
-);
 
 async function logOut() {
   userStore.logout();

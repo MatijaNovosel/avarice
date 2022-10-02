@@ -2,7 +2,9 @@ import {
   AccountModel,
   AccountExpenseAndIncomeModel,
   Client,
-  AccountHistoryModel
+  AccountHistoryModel,
+  ICreateAccountModel,
+  CreateAccountModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
 import CONSTANTS from "src/utils/constants";
@@ -14,15 +16,22 @@ class AccountService implements IAccountService {
     const data = await client.account_GetAccountHistory(accountId);
     return data;
   }
+
   async getExpenseAndIncomeInTimePeriod(accountId: number): Promise<AccountExpenseAndIncomeModel> {
     const client = new Client(CONSTANTS.API_URL, api);
     const data = await client.account_GetExpenseAndIncomeInTimePeriod(accountId);
     return data;
   }
+
   async getLatestValues(): Promise<AccountModel[]> {
     const client = new Client(CONSTANTS.API_URL, api);
     const data = await client.account_GetUserAccounts();
     return data;
+  }
+
+  async create(payload: ICreateAccountModel): Promise<void> {
+    const client = new Client(CONSTANTS.API_URL, api);
+    await client.account_Create(new CreateAccountModel(payload));
   }
 }
 

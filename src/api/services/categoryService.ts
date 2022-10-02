@@ -1,4 +1,4 @@
-import { CategoryModel, Client, ICreateCategoryModel, CreateCategoryModel } from "src/api/client";
+import { CategoryModel, Client, CreateCategoryModel, ICreateCategoryModel } from "src/api/client";
 import { api } from "src/boot/axios";
 import CONSTANTS from "src/utils/constants";
 import ICategoryService from "../interfaces/categoryService";

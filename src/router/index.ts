@@ -29,23 +29,39 @@ export default route(() => {
   Router.beforeEach((to, from, next) => {
     const userStore = useUserStore();
     const isAuthenticated = userStore.isAuthenticated;
+    const accounts = userStore.accounts;
 
     if (to.matched.some((record) => record.meta.isAuth)) {
-      if (!isAuthenticated) {
-        next({
-          name: ROUTE_NAMES.LOGIN,
-          params: { nextUrl: to.fullPath }
-        });
+      if (isAuthenticated) {
+        if (to.name === ROUTE_NAMES.ACCOUNT_SETUP) {
+          next();
+        } else {
+          if (accounts.length === 0) {
+            next({
+              name: ROUTE_NAMES.ACCOUNT_SETUP
+            });
+          } else {
+            next();
+          }
+        }
       } else {
-        next();
+        next({
+          name: ROUTE_NAMES.LOGIN
+        });
       }
     } else if (to.matched.some((record) => record.meta.guest)) {
-      if (!isAuthenticated) {
-        next();
+      if (isAuthenticated) {
+        if (accounts.length !== 0) {
+          next({
+            name: ROUTE_NAMES.DASHBOARD
+          });
+        } else {
+          next({
+            name: ROUTE_NAMES.ACCOUNT_SETUP
+          });
+        }
       } else {
-        next({
-          name: ROUTE_NAMES.DASHBOARD
-        });
+        next();
       }
     } else {
       next();

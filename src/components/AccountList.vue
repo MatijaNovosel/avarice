@@ -56,12 +56,25 @@
             <q-item
               class="rounded q-mb-sm q-py-sm"
               :class="{
-                'bg-grey-9': selectedAccount.id != account.id,
-                'bg-accent': selectedAccount.id == account.id
+                'bg-grey-9': selectedAccount.id !== account.id,
+                'bg-accent': selectedAccount.id === account.id
               }"
               clickable
               @click="updateSelectedAccount(account)"
             >
+              <q-item-section avatar>
+                <q-avatar
+                  rounded
+                  :style="{
+                    backgroundColor:
+                      selectedAccount.id === account.id ? shadedAccountListItemColor : 'grey'
+                  }"
+                  text-color="white"
+                  size="md"
+                >
+                  {{ account.name && account.name[0].toUpperCase() }}
+                </q-avatar>
+              </q-item-section>
               <q-item-section>
                 <q-item-label class="text-weight-medium"> {{ account.name }} </q-item-label>
                 <q-item-label
@@ -83,7 +96,7 @@
           <q-item-section>
             <q-item-label class="text-weight-medium"> Total </q-item-label>
             <q-item-label class="text-caption">
-              {{ formatBalance(totalBalance, "HRK") }}
+              {{ formatBalance(userStore.totalBalance, "HRK") }}
             </q-item-label>
           </q-item-section>
           <q-item-section avatar>
@@ -98,7 +111,7 @@
           </q-item-section>
         </q-item>
       </q-item>
-      <q-item class="q-pa-none row justify-center" style="margin-bottom: -36px">
+      <q-item class="q-pa-none row justify-center" :style="{ marginBottom: '-36px' }">
         <q-btn dense class="q-mr-md bg-accent rounded q-mt-sm">
           <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="sm" />
         </q-btn>
@@ -110,7 +123,9 @@
 <script lang="ts" setup>
 import { AccountModel } from "src/api/client";
 import { DropResult } from "src/models/common";
-import { formatBalance } from "src/utils/helpers";
+import { useAppStore } from "src/stores/app";
+import { useUserStore } from "src/stores/user";
+import { formatBalance, shadeColor } from "src/utils/helpers";
 import { PropType, computed, ref } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 
@@ -135,6 +150,10 @@ function updateSelectedAccount(account: AccountModel) {
 }
 
 const accountsList = ref(props.accounts);
+const appStore = useAppStore();
+const userStore = useUserStore();
+
+const shadedAccountListItemColor = computed(() => shadeColor(appStore.accentColor, -30));
 
 const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
   const { removedIndex, addedIndex, payload } = dropResult;
@@ -165,11 +184,4 @@ const dropPlaceholderOptions = {
   animationDuration: "150",
   showOnTop: true
 };
-
-const totalBalance = computed(() => {
-  if (props.accounts) {
-    return props.accounts.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
-  }
-  return 0;
-});
 </script>

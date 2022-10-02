@@ -41,3 +41,14 @@ export const chunkArray = <T>(array: T[], chunkSize: number): T[][] => {
 export const collectErrors = (errors: ErrorObject[]) => {
   return errors.map((error) => error.$message).join("");
 };
+
+export const shadeColor = (color: string, percent: number) => {
+  return (
+    "#" +
+    color
+      .replace(/^#/, "")
+      .replace(/../g, (color) =>
+        ("0" + Math.min(255, Math.max(0, parseInt(color, 16) + percent)).toString(16)).substr(-2)
+      )
+  );
+};

@@ -88,15 +88,13 @@ import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
 import ROUTE_NAMES from "src/router/routeNames";
 
-interface Auth {
-  username: string | null;
-  password: string | null;
-  email: string | null;
-}
-
 interface State {
   loading: boolean;
-  auth: Auth;
+  auth: {
+    username: string | null;
+    password: string | null;
+    email: string | null;
+  };
 }
 
 const $q = useQuasar();
