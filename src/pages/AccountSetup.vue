@@ -102,10 +102,10 @@ const createAccount = async () => {
   state.loading = true;
 
   try {
-    const data = await getService<IAccountService>(Types.AccountService).create();
-
-    const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-    userStore.setAccounts(accounts);
+    await getService<IAccountService>(Types.AccountService).create({
+      initialBalance: parseFloat(state.data.initialBalance),
+      name: state.data.name
+    });
 
     $q.notify({
       message: "Successfully created an account!",
@@ -113,6 +113,9 @@ const createAccount = async () => {
       textColor: "green",
       position: "bottom"
     });
+
+    const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+    userStore.setAccounts(accounts);
 
     state.loading = false;
 

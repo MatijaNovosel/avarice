@@ -1,17 +1,15 @@
-import { LoginResult, Client, LoginModel, RegistrationModel, RegisterResult } from "src/api/client";
+import { LoginResult, Client, RegisterResult } from "src/api/client";
 import IAuthService from "../interfaces/authService";
 
 class AuthService implements IAuthService {
   async register(username: string, email: string, password: string): Promise<RegisterResult> {
     const client = new Client();
 
-    const data = await client.auth_Register(
-      new RegistrationModel({
-        username,
-        email,
-        password
-      })
-    );
+    const data = await client.auth_Register({
+      username,
+      email,
+      password
+    });
 
     return data;
   }
@@ -19,12 +17,10 @@ class AuthService implements IAuthService {
   async login(email: string, password: string): Promise<LoginResult> {
     const client = new Client();
 
-    const data = await client.auth_Login(
-      new LoginModel({
-        email,
-        password
-      })
-    );
+    const data = await client.auth_Login({
+      email,
+      password
+    });
 
     return data;
   }

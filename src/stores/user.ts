@@ -16,6 +16,13 @@ export const useUserStore = defineStore(
     const categories = ref<CategoryModel[]>([]);
     const accounts = ref<AccountModel[]>([]);
 
+    const totalBalance = computed(() => {
+      if (accounts.value) {
+        return accounts.value.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
+      }
+      return 0;
+    });
+
     const isAuthenticated = computed(() => {
       return data.value != null;
     });
@@ -44,7 +51,8 @@ export const useUserStore = defineStore(
       logout,
       setCategories,
       setAccounts,
-      login
+      login,
+      totalBalance
     };
   },
   {

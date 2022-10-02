@@ -82,6 +82,88 @@ export class Client {
     return Promise.resolve<AccountModel[]>(null as any);
   }
 
+  account_Create(
+    payload: CreateAccountModel,
+    cancelToken?: CancelToken | undefined
+  ): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/account";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(payload);
+
+    let options_: AxiosRequestConfig = {
+      data: content_,
+      responseType: "blob",
+      method: "POST",
+      url: url_,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/octet-stream"
+      },
+      cancelToken
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processAccount_Create(_response);
+      });
+  }
+
+  protected processAccount_Create(response: AxiosResponse): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers
+        ? response.headers["content-disposition"]
+        : undefined;
+      let fileNameMatch = contentDisposition
+        ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition)
+        : undefined;
+      let fileName =
+        fileNameMatch && fileNameMatch.length > 1
+          ? fileNameMatch[3] || fileNameMatch[2]
+          : undefined;
+      if (fileName) {
+        fileName = decodeURIComponent(fileName);
+      } else {
+        fileNameMatch = contentDisposition
+          ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition)
+          : undefined;
+        fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      }
+      return Promise.resolve({
+        fileName: fileName,
+        status: status,
+        data: new Blob([response.data], { type: response.headers["content-type"] }),
+        headers: _headers
+      });
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        "An unexpected server error occurred.",
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<FileResponse | null>(null as any);
+  }
+
   account_GetExpenseAndIncomeInTimePeriod(
     id: number,
     cancelToken?: CancelToken | undefined
@@ -1159,6 +1241,45 @@ export interface IAccountHistoryModel {
   amount: number;
 }
 
+export class CreateAccountModel implements ICreateAccountModel {
+  name?: string | undefined;
+  initialBalance!: number;
+
+  constructor(data?: ICreateAccountModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.initialBalance = _data["initialBalance"];
+    }
+  }
+
+  static fromJS(data: any): CreateAccountModel {
+    data = typeof data === "object" ? data : {};
+    let result = new CreateAccountModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["name"] = this.name;
+    data["initialBalance"] = this.initialBalance;
+    return data;
+  }
+}
+
+export interface ICreateAccountModel {
+  name?: string | undefined;
+  initialBalance: number;
+}
+
 export class RegisterResult implements IRegisterResult {
   result!: boolean;
   errors?: string[] | undefined;
@@ -1250,7 +1371,6 @@ export interface IRegistrationModel {
 export class LoginResult implements ILoginResult {
   token?: string | undefined;
   result!: boolean;
-  hasAccounts?: boolean | undefined;
   errors?: string[] | undefined;
 
   constructor(data?: ILoginResult) {
@@ -1265,7 +1385,6 @@ export class LoginResult implements ILoginResult {
     if (_data) {
       this.token = _data["token"];
       this.result = _data["result"];
-      this.hasAccounts = _data["hasAccounts"];
       if (Array.isArray(_data["errors"])) {
         this.errors = [] as any;
         for (let item of _data["errors"]) this.errors!.push(item);
@@ -1284,7 +1403,6 @@ export class LoginResult implements ILoginResult {
     data = typeof data === "object" ? data : {};
     data["token"] = this.token;
     data["result"] = this.result;
-    data["hasAccounts"] = this.hasAccounts;
     if (Array.isArray(this.errors)) {
       data["errors"] = [];
       for (let item of this.errors) data["errors"].push(item);
@@ -1296,7 +1414,6 @@ export class LoginResult implements ILoginResult {
 export interface ILoginResult {
   token?: string | undefined;
   result: boolean;
-  hasAccounts?: boolean | undefined;
   errors?: string[] | undefined;
 }
 
