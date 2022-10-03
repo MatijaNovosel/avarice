@@ -1,17 +1,19 @@
 <template>
-  <div class="bg-grey-10 rounded-t-md">
-    <div class="text-grey-6 q-py-md q-mx-lg flex justify-between items-center">
-      <span> Categories </span>
-      <q-btn class="bg-accent text-white rounded"> New category </q-btn>
+  <q-page>
+    <div class="bg-grey-10 rounded-t-md">
+      <div class="text-grey-6 q-py-md q-mx-lg flex justify-between items-center">
+        <span> Categories </span>
+        <q-btn class="bg-accent text-white rounded"> New category </q-btn>
+      </div>
+      <q-tree
+        :nodes="simple"
+        node-key="label"
+        v-model:expanded="expanded"
+        dark
+        class="bg-dark-2 q-pa-lg rounded-b-md"
+      />
     </div>
-    <q-tree
-      :nodes="simple"
-      node-key="label"
-      v-model:expanded="expanded"
-      dark
-      class="bg-dark-2 q-pa-lg rounded-b-md"
-    />
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts" setup>

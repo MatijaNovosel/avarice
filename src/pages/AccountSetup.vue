@@ -1,5 +1,5 @@
 <template>
-  <div class="column justify-center items-center">
+  <q-page class="column justify-center items-center">
     <q-card>
       <q-card-section>
         <div class="text-h6 q-mb-sm">Hold up!</div>
@@ -57,7 +57,7 @@
         />
       </q-card-section>
     </q-card>
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts" setup>
