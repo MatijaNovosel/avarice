@@ -83,7 +83,7 @@ import { reactive } from "vue";
 import { getService, Types } from "src/di-container";
 import IAuthService from "src/api/interfaces/authService";
 import { useQuasar } from "quasar";
-import { required, email, helpers } from "@vuelidate/validators";
+import { required, email, helpers, minLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
 import ROUTE_NAMES from "src/router/routeNames";
@@ -111,7 +111,7 @@ const rules = {
       mustMeetRequirements
     )
   },
-  username: { required, $autoDirty: true },
+  username: { required, minLength: minLength(5), $autoDirty: true },
   email: { required, email, $autoDirty: true }
 };
 
