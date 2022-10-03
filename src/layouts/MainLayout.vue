@@ -4,24 +4,26 @@
       <navbar />
     </template>
     <q-page-container>
-      <q-tabs
-        v-if="shouldShowUi"
-        dense
-        class="text-grey q-mt-md"
-        active-color="accent"
-        indicator-color="accent"
-        align="center"
-        narrow-indicator
-      >
-        <q-route-tab
-          v-for="(route, i) in routes"
-          :key="i"
-          :label="route.title"
-          :to="route.link"
-          exact
-        />
-      </q-tabs>
-      <router-view />
+      <q-page :style-fn="styleFn">
+        <q-tabs
+          v-if="shouldShowUi"
+          dense
+          class="text-grey q-my-md"
+          active-color="accent"
+          indicator-color="accent"
+          align="center"
+          narrow-indicator
+        >
+          <q-route-tab
+            v-for="(route, i) in routes"
+            :key="i"
+            :label="route.title"
+            :to="route.link"
+            exact
+          />
+        </q-tabs>
+        <router-view />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -85,16 +87,12 @@ const routes: DrawerItem[] = [
     link: {
       name: ROUTE_NAMES.STATISTICS
     }
-  },
-  {
-    title: "Settings",
-    caption: "App and user preferences",
-    icon: "mdi-cog",
-    link: {
-      name: ROUTE_NAMES.SETTINGS
-    }
   }
 ];
+
+const styleFn = () => {
+  return { minHeight: "0px" };
+};
 
 onMounted(() => setCssVar("accent", appStore.accentColor));
 </script>

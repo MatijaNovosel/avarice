@@ -84,26 +84,26 @@ defineProps({
 
 const userStore = useUserStore();
 
-const state = reactive<State>({
-  expenseAndIncome: null
-});
-
-onMounted(async () => {
+const getExpenseAndIncome = async () => {
   if (userStore.selectedAccount) {
     state.expenseAndIncome = await getService<IAccountService>(
       Types.AccountService
     ).getExpenseAndIncomeInTimePeriod(userStore.selectedAccount.id);
   }
+};
+
+const state = reactive<State>({
+  expenseAndIncome: null
+});
+
+onMounted(async () => {
+  await getExpenseAndIncome();
 });
 
 watch(
   () => userStore.selectedAccount,
-  async (val) => {
-    if (val) {
-      state.expenseAndIncome = await getService<IAccountService>(
-        Types.AccountService
-      ).getExpenseAndIncomeInTimePeriod(val.id);
-    }
+  async () => {
+    await getExpenseAndIncome();
   }
 );
 </script>
