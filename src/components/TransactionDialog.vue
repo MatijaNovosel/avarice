@@ -419,7 +419,6 @@ import { useQuasar, debounce } from "quasar";
 import { chunkArray, formatBalance } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
-import TransactionType from "src/utils/transactionTypes";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
@@ -532,22 +531,14 @@ const createTransactionOrCategory = async () => {
           amount: parseFloat(state.transaction.amount as string),
           accountId: state.transaction.account as number,
           categoryId: state.transaction.category as number,
-          description: state.transaction.description as string,
-          transactionType:
-            parseFloat(state.transaction.amount as string) < 0
-              ? TransactionType.Expense
-              : TransactionType.Income
+          description: state.transaction.description as string
         });
         if (state.saveAsTemplate) {
           await getService<ITemplateService>(Types.TemplateService).create({
             amount: parseFloat(state.transaction.amount as string),
             accountId: state.transaction.account as number,
             categoryId: state.transaction.category as number,
-            description: state.transaction.description as string,
-            transactionType:
-              parseFloat(state.transaction.amount as string) < 0
-                ? TransactionType.Expense
-                : TransactionType.Income
+            description: state.transaction.description as string
           });
         }
       }

@@ -13,19 +13,21 @@
     <q-card
       class="rounded-md q-px-md q-py-sm"
       :class="{
-        'flex items-center justify-center': account == null
+        'flex items-center justify-center': userStore.selectedAccount == null
       }"
       flat
       style="height: 200px"
       v-else
     >
-      <template v-if="account">
+      <template v-if="userStore.selectedAccount">
         <q-card-section class="row items-center justify-between q-pb-sm">
           <span class="text-grey-6"> Account balance </span>
         </q-card-section>
         <q-card-section class="column q-pb-sm">
           <span class="text-h3">
-            {{ formatBalance(account.balance, account.currency) }}
+            {{
+              formatBalance(userStore.selectedAccount.balance, userStore.selectedAccount.currency)
+            }}
           </span>
           <span class="text-caption text-grey-7 q-pt-xs">
             <span class="text-red-5">15% less</span> value in last time period
@@ -33,7 +35,11 @@
         </q-card-section>
         <q-card-section class="q-pt-xs">
           <q-chip color="red-4" size="sm" class="q-px-md">
-            <b> {{ formatBalance(state.expenseAndIncome?.expense, account.currency) }} </b>
+            <b>
+              {{
+                formatBalance(state.expenseAndIncome?.expense, userStore.selectedAccount.currency)
+              }}
+            </b>
           </q-chip>
           <q-chip
             size="sm"
@@ -42,7 +48,11 @@
             }"
             class="q-px-md"
           >
-            <b> {{ formatBalance(state.expenseAndIncome?.income, account.currency) }} </b>
+            <b>
+              {{
+                formatBalance(state.expenseAndIncome?.income, userStore.selectedAccount.currency)
+              }}
+            </b>
           </q-chip>
         </q-card-section>
       </template>
@@ -54,32 +64,32 @@
 </template>
 
 <script lang="ts" setup>
-import { AccountModel, AccountExpenseAndIncomeModel } from "src/api/client";
+import { AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
+import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
-import { watch, reactive, PropType } from "vue";
+import { watch, reactive } from "vue";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
 }
 
-const props = defineProps({
+defineProps({
   loading: {
     type: Boolean,
     default: false
-  },
-  account: {
-    type: Object as PropType<AccountModel | null>
   }
 });
+
+const userStore = useUserStore();
 
 const state = reactive<State>({
   expenseAndIncome: null
 });
 
 watch(
-  () => props.account,
+  () => userStore.selectedAccount,
   async (val) => {
     if (val) {
       state.expenseAndIncome = await getService<IAccountService>(

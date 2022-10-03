@@ -21,7 +21,7 @@
     <q-card-section class="q-pa-none">
       <line-chart
         v-if="state.chartData"
-        style="height: 130px"
+        style="height: 128px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
         ref="lineChartRef"
@@ -85,9 +85,7 @@ const state = reactive<State>({
       },
       tooltip: {
         callbacks: {
-          label: (context) => {
-            return formatBalance(context.parsed.y, "HRK");
-          }
+          label: (context) => formatBalance(context.parsed.y, "HRK")
         }
       }
     }
@@ -139,7 +137,7 @@ watch(
 
 <style lang="scss">
 canvas {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 </style>

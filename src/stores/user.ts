@@ -15,6 +15,7 @@ export const useUserStore = defineStore(
     const data = ref<AppUser | null>(null);
     const categories = ref<CategoryModel[]>([]);
     const accounts = ref<AccountModel[]>([]);
+    const selectedAccount = ref<AccountModel | null>(null);
 
     const totalBalance = computed(() => {
       if (accounts.value) {
@@ -35,6 +36,10 @@ export const useUserStore = defineStore(
       categories.value = payload;
     };
 
+    const setSelectedAccount = (payload: AccountModel) => {
+      selectedAccount.value = payload;
+    };
+
     const setAccounts = (payload: AccountModel[]) => {
       accounts.value = payload;
     };
@@ -52,7 +57,9 @@ export const useUserStore = defineStore(
       setCategories,
       setAccounts,
       login,
-      totalBalance
+      totalBalance,
+      selectedAccount,
+      setSelectedAccount
     };
   },
   {
