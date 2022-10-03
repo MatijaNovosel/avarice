@@ -69,7 +69,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
-import { watch, reactive } from "vue";
+import { watch, reactive, onMounted } from "vue";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
@@ -84,18 +84,26 @@ defineProps({
 
 const userStore = useUserStore();
 
+const getExpenseAndIncome = async () => {
+  if (userStore.selectedAccount) {
+    state.expenseAndIncome = await getService<IAccountService>(
+      Types.AccountService
+    ).getExpenseAndIncomeInTimePeriod(userStore.selectedAccount.id);
+  }
+};
+
 const state = reactive<State>({
   expenseAndIncome: null
 });
 
+onMounted(async () => {
+  await getExpenseAndIncome();
+});
+
 watch(
   () => userStore.selectedAccount,
-  async (val) => {
-    if (val) {
-      state.expenseAndIncome = await getService<IAccountService>(
-        Types.AccountService
-      ).getExpenseAndIncomeInTimePeriod(val.id);
-    }
+  async () => {
+    await getExpenseAndIncome();
   }
 );
 </script>

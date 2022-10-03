@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="bg-dark-1 column justify-center items-center">
+  <div class="column justify-center items-center">
     <q-card>
       <q-card-section>
         <div class="text-h6 q-mb-sm">Hold up!</div>
@@ -57,7 +57,7 @@
         />
       </q-card-section>
     </q-card>
-  </q-page>
+  </div>
 </template>
 
 <script lang="ts" setup>

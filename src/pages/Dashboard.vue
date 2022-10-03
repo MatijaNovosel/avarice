@@ -1,26 +1,24 @@
 <template>
-  <q-page padding class="bg-dark-1">
-    <div class="row">
-      <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
-        <account-list :loading="state.loading" @new-account="state.newAccountDialogOpen = true" />
-      </div>
-      <div class="col-12 col-md-9">
-        <div class="row">
-          <div class="col-12 col-md-6 q-pr-md-md">
-            <total-balance-card :loading="state.loading" />
-          </div>
-          <div class="col-12 col-md-6 q-pt-md q-pt-md-none">
-            <account-balance-graph-card :loading="state.loading" />
-          </div>
+  <div class="row">
+    <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
+      <account-list :loading="state.loading" @new-account="state.newAccountDialogOpen = true" />
+    </div>
+    <div class="col-12 col-md-9">
+      <div class="row">
+        <div class="col-12 col-md-6 q-pr-md-md">
+          <total-balance-card :loading="state.loading" />
         </div>
-        <div class="row q-mt-md">
-          <div class="col-12">
-            <transactions-table hide-select-all hide-page-selection />
-          </div>
+        <div class="col-12 col-md-6 q-pt-md q-pt-md-none">
+          <account-balance-graph-card :loading="state.loading" />
+        </div>
+      </div>
+      <div class="row q-mt-md">
+        <div class="col-12">
+          <transactions-table hide-select-all hide-page-selection />
         </div>
       </div>
     </div>
-  </q-page>
+  </div>
   <transaction-dialog
     v-model:open="state.transactionDialogOpen"
     @category-added="categoryAdded"

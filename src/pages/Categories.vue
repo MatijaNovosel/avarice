@@ -1,82 +1,53 @@
 <template>
-  <div class="simple-page">
-    <Container
-      orientation="vertical"
-      drag-class="card-ghost"
-      drop-class="card-ghost-drop"
-      :drop-placeholder="dropPlaceholderOptions"
-      :get-ghost-parent="getGhostParent"
-      @drop="onDrop"
-    >
-      <Draggable v-for="item in items" :key="item.id">
-        <div class="draggable-item text-black">Draggable {{ item.data }}</div>
-      </Draggable>
-    </Container>
+  <div class="bg-grey-10 rounded-t-md">
+    <div class="text-grey-6 q-py-lg q-mx-md flex justify-between items-center">
+      <span> Categories </span>
+      <q-btn class="bg-accent text-white rounded"> New category </q-btn>
+    </div>
+    <q-tree
+      :nodes="simple"
+      node-key="label"
+      v-model:expanded="expanded"
+      dark
+      class="bg-dark q-pa-lg rounded-b-md"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { DropResult } from "src/models/common";
 import { ref } from "vue";
-import { Container, Draggable } from "vue3-smooth-dnd";
 
-interface Item {
-  id: number;
-  data: number;
-}
+const expanded = ref(["Satisfied customers (with avatar)", "Good food (with icon)"]);
 
-const items = ref<Item[]>([
+const simple = [
   {
-    id: 1,
-    data: 1
-  },
-  {
-    id: 2,
-    data: 2
-  },
-  {
-    id: 3,
-    data: 3
-  },
-  {
-    id: 4,
-    data: 4
-  },
-  {
-    id: 5,
-    data: 5
+    label: "Satisfied customers (with avatar)",
+    avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
+    children: [
+      {
+        label: "Good food (with icon)",
+        icon: "restaurant_menu",
+        children: [{ label: "Quality ingredients" }, { label: "Good recipe" }]
+      },
+      {
+        label: "Good service (disabled node with icon)",
+        icon: "room_service",
+        disabled: true,
+        children: [{ label: "Prompt attention" }, { label: "Professional waiter" }]
+      },
+      {
+        label: "Pleasant surroundings (with icon)",
+        icon: "photo",
+        children: [
+          {
+            label: "Happy atmosphere (with image)",
+            img: "https://cdn.quasar.dev/img/logo_calendar_128px.png"
+          },
+          { label: "Good table presentation" },
+          { label: "Pleasing decor" }
+        ]
+      }
+    ]
   }
-]);
-
-const applyDrag = (arr: Item[], dropResult: DropResult<Item>) => {
-  const { removedIndex, addedIndex, payload } = dropResult;
-
-  if (removedIndex === null && addedIndex === null) return arr;
-
-  const result = [...arr];
-
-  let itemToAdd = payload;
-
-  if (removedIndex !== null) {
-    itemToAdd = result.splice(removedIndex, 1)[0];
-  }
-
-  if (addedIndex !== null) {
-    result.splice(addedIndex, 0, itemToAdd);
-  }
-
-  return result;
-};
-
-const onDrop = (dropResult: DropResult<Item>) => {
-  items.value = applyDrag(items.value, dropResult);
-};
-
-const dropPlaceholderOptions = {
-  className: "drop-preview",
-  animationDuration: "150",
-  showOnTop: true
-};
-
-const getGhostParent = () => document.body;
+];
 </script>
