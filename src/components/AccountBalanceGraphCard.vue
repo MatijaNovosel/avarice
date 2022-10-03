@@ -41,6 +41,7 @@ import { AccountHistoryModel } from "src/api/client";
 import { SelectItem } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
+import { useUserStore } from "src/stores/user";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -57,6 +58,7 @@ defineProps({
 });
 
 const appStore = useAppStore();
+const userStore = useUserStore();
 const lineChartRef = ref(null);
 
 const state = reactive<State>({
@@ -100,37 +102,49 @@ const graphDateOptions: SelectItem<string, string>[] = [
   { label: "1Y", value: "1Y" }
 ];
 
-const updateGraph = () => {
-  if (state.graphData) {
-    state.chartData = {
-      datasets: [
-        {
-          pointBackgroundColor: "rgba(0, 0, 0, 0)",
-          pointBorderColor: "rgba(0, 0, 0, 0)",
-          backgroundColor: appStore.accentColor,
-          borderColor: appStore.accentColor,
-          pointRadius: 0,
-          fill: true,
-          data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: "#ff3f2b",
-          tension: 0.2
-        }
-      ],
-      labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
-    };
+const updateGraph = async () => {
+  if (userStore.selectedAccount) {
+    state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
+      userStore.selectedAccount.id
+    );
+
+    if (state.graphData) {
+      state.chartData = {
+        datasets: [
+          {
+            pointBackgroundColor: "rgba(0, 0, 0, 0)",
+            pointBorderColor: "rgba(0, 0, 0, 0)",
+            backgroundColor: appStore.accentColor,
+            borderColor: appStore.accentColor,
+            pointRadius: 0,
+            fill: true,
+            data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#ff3f2b",
+            tension: 0.2
+          }
+        ],
+        labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
+      };
+    }
   }
 };
 
 onMounted(async () => {
-  state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(1);
-  updateGraph();
+  await updateGraph();
 });
 
 watch(
   () => appStore.accentColor,
-  () => {
-    updateGraph();
+  async () => {
+    await updateGraph();
+  }
+);
+
+watch(
+  () => userStore.selectedAccount,
+  async () => {
+    await updateGraph();
   }
 );
 </script>
