@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <q-page class="row">
     <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
       <account-list :loading="state.loading" @new-account="state.newAccountDialogOpen = true" />
     </div>
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </q-page>
   <transaction-dialog
     v-model:open="state.transactionDialogOpen"
     @category-added="categoryAdded"

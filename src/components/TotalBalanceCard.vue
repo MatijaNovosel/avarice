@@ -29,9 +29,6 @@
               formatBalance(userStore.selectedAccount.balance, userStore.selectedAccount.currency)
             }}
           </span>
-          <span class="text-caption text-grey-7 q-pt-xs">
-            <span class="text-red-5">15% less</span> value in last time period
-          </span>
         </q-card-section>
         <q-card-section class="q-pt-xs">
           <q-chip color="red-4" size="sm" class="q-px-md">

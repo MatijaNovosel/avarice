@@ -1,9 +1,9 @@
 <template>
-  <div class="row q-mt-md">
+  <q-page class="row">
     <div class="col-12">
       <transactions-table :rows-per-page="10" />
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts" setup>

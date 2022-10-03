@@ -1,5 +1,5 @@
 <template>
-  <div class="window-height window-width row justify-center items-center">
+  <q-page class="row justify-center items-center">
     <div class="column text-center">
       <span class="text-h3 q-mb-lg text-bold text-yellow">Avarice</span>
       <q-card flat class="q-pa-md shadow-1 rounded">
@@ -60,7 +60,7 @@
         </q-card-section>
       </q-card>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script lang="ts" setup>
