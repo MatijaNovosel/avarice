@@ -2,6 +2,25 @@
   <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md">
     <span class="text-grey-6"> Transactions </span>
     <div class="row">
+      <q-btn v-if="!hidePageSelection" no-caps class="bg-accent q-mr-md rounded">
+        {{ state.pagination.rowsPerPage }} records per page
+        <q-menu auto-close>
+          <q-list dense>
+            <q-item
+              @click="changeRowsPerPage(rows)"
+              v-for="(rows, i) in rowsPerPageOptions"
+              :key="i"
+              clickable
+            >
+              <q-item-section>
+                <q-item-label>
+                  {{ rows }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
       <q-btn
         v-if="!hideSelectAll"
         @click="setSelectionMode"
@@ -244,25 +263,6 @@
     </template>
   </q-table>
   <div class="row justify-end q-mt-md" v-if="state.transactions && state.transactions.total !== 0">
-    <q-btn v-if="!hidePageSelection" no-caps class="bg-accent">
-      {{ state.pagination.rowsPerPage }} records per page
-      <q-menu auto-close>
-        <q-list dense>
-          <q-item
-            @click="changeRowsPerPage(rows)"
-            v-for="(rows, i) in rowsPerPageOptions"
-            :key="i"
-            clickable
-          >
-            <q-item-section>
-              <q-item-label>
-                {{ rows }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-menu>
-    </q-btn>
     <q-pagination
       direction-links
       v-model="state.pagination.page"

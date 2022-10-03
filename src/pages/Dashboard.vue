@@ -4,9 +4,10 @@
       <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
         <account-list
           :selected-account="state.selectedAccount"
-          @update:selected-account="updateSelectedAccountDebounce"
           :loading="state.loading"
-          :accounts="accounts"
+          :accounts="userStore.accounts"
+          @update:selected-account="updateSelectedAccountDebounce"
+          @new-account="state.newAccountDialogOpen = true"
         />
       </div>
       <div class="col-12 col-md-9">
@@ -31,10 +32,11 @@
     @category-added="categoryAdded"
     @transaction-added="updateData"
   />
+  <new-account-dialog v-model:open="state.newAccountDialogOpen" />
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, computed, watch } from "vue";
+import { reactive, onMounted, watch } from "vue";
 import TransactionsTable from "src/components/TransactionsTable.vue";
 import AccountList from "src/components/AccountList.vue";
 import { getService, Types } from "src/di-container";
@@ -42,6 +44,7 @@ import { AccountModel } from "src/api/client";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
 import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 import TransactionDialog from "src/components/TransactionDialog.vue";
+import NewAccountDialog from "src/components/NewAccountDialog.vue";
 import { debounce } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import ICategoryService from "src/api/interfaces/categoryService";
@@ -50,55 +53,53 @@ import { useUserStore } from "src/stores/user";
 
 interface State {
   loading: boolean;
-  transactionsLoading: boolean;
   transactionDialogOpen: boolean;
+  newAccountDialogOpen: boolean;
   selectedAccount: AccountModel | null;
 }
 
 const userStore = useUserStore();
 const appStore = useAppStore();
 
-const accounts = computed(() => userStore.accounts);
-
 const state = reactive<State>({
   loading: false,
-  transactionsLoading: false,
   transactionDialogOpen: false,
+  newAccountDialogOpen: false,
   selectedAccount: null
 });
 
-function updateSelectedAccount(account: AccountModel) {
+const updateSelectedAccount = (account: AccountModel) => {
   if (state.selectedAccount) {
     if (state.selectedAccount.id === account.id) {
       return;
     }
     state.selectedAccount = account;
   }
-}
+};
+
+const getAccounts = async () => {
+  const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+  userStore.setAccounts(accounts);
+  state.selectedAccount = accounts[0];
+};
+
+const updateData = async () => {
+  appStore.createTransaction();
+  await getAccounts();
+};
+
+const categoryAdded = async () => {
+  const categories = await getService<ICategoryService>(Types.CategoryService).getUserCategories();
+  userStore.setCategories(categories);
+};
 
 const updateSelectedAccountDebounce = debounce(updateSelectedAccount, 300);
 
 onMounted(() => {
   state.loading = true;
-  state.selectedAccount = accounts.value[0];
+  state.selectedAccount = userStore.accounts[0];
   state.loading = false;
 });
-
-async function getAccounts() {
-  const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-  userStore.setAccounts(accounts);
-  state.selectedAccount = accounts[0];
-}
-
-async function updateData() {
-  appStore.createTransaction();
-  await getAccounts();
-}
-
-async function categoryAdded() {
-  const categories = await getService<ICategoryService>(Types.CategoryService).getUserCategories();
-  userStore.setCategories(categories);
-}
 
 watch(
   () => appStore.openTransactionDialogTrigger,

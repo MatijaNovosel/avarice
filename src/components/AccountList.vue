@@ -43,7 +43,7 @@
     </template>
     <template v-else>
       <span class="q-mb-md text-grey row"> Accounts </span>
-      <template v-if="selectedAccount && accountsList.length !== 0">
+      <template v-if="selectedAccount && accountList.length !== 0">
         <Container
           orientation="vertical"
           group-name="accounts"
@@ -52,7 +52,7 @@
           drop-class="card-ghost-drop"
           :drop-placeholder="dropPlaceholderOptions"
         >
-          <Draggable v-for="account in accountsList" :key="account.id">
+          <Draggable v-for="account in accountList" :key="account.id">
             <q-item
               class="rounded q-mb-sm q-py-sm"
               :class="{
@@ -112,7 +112,7 @@
         </q-item>
       </q-item>
       <q-item class="q-pa-none row justify-center" :style="{ marginBottom: '-36px' }">
-        <q-btn dense class="q-mr-md bg-accent rounded q-mt-sm">
+        <q-btn @click="$emit('new-account')" dense class="q-mr-md bg-accent rounded q-mt-sm">
           <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="sm" />
         </q-btn>
       </q-item>
@@ -126,10 +126,10 @@ import { DropResult } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance, shadeColor } from "src/utils/helpers";
-import { PropType, computed, ref } from "vue";
+import { PropType, computed, ref, watch } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 
-const emit = defineEmits(["update:selected-account"]);
+const emit = defineEmits(["update:selected-account", "new-account"]);
 
 const props = defineProps({
   accounts: {
@@ -149,11 +149,11 @@ function updateSelectedAccount(account: AccountModel) {
   emit("update:selected-account", account);
 }
 
-const accountsList = ref(props.accounts);
 const appStore = useAppStore();
 const userStore = useUserStore();
 
 const shadedAccountListItemColor = computed(() => shadeColor(appStore.accentColor, -30));
+const accountList = ref<AccountModel[]>(props.accounts);
 
 const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
   const { removedIndex, addedIndex, payload } = dropResult;
@@ -176,7 +176,7 @@ const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) =>
 };
 
 const onDrop = (dropResult: DropResult<AccountModel>) => {
-  accountsList.value = applyDrag(accountsList.value, dropResult);
+  accountList.value = applyDrag(accountList.value, dropResult);
 };
 
 const dropPlaceholderOptions = {
@@ -184,4 +184,9 @@ const dropPlaceholderOptions = {
   animationDuration: "150",
   showOnTop: true
 };
+
+watch(
+  () => props.accounts,
+  (val) => (accountList.value = val)
+);
 </script>
