@@ -400,13 +400,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions class="q-pa-md justify-end">
-          <q-btn
-            unelevated
-            color="light-green-7"
-            size="sm"
-            label="Create"
-            @click="createTransactionOrCategory"
-          />
+          <q-btn color="accent" label="Create" @click="createTransactionOrCategory" />
         </q-card-actions>
       </template>
     </q-card>
