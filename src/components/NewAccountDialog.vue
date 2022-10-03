@@ -44,17 +44,17 @@
             </template>
           </q-input>
         </q-form>
+      </q-card-section>
+      <q-card-actions class="q-px-md q-pb-md justify-end">
         <q-btn
           :loading="state.loading"
           @click="createAccount"
           unelevated
-          color="yellow"
-          size="md"
-          class="text-black q-mt-md"
+          color="accent"
           label="Create account"
           :disable="$v.$invalid"
         />
-      </q-card-section>
+      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>

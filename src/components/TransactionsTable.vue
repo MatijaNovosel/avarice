@@ -139,7 +139,7 @@
     hide-pagination
     flat
     dense
-    class="rounded-b-md q-pa-md rounded-t-none"
+    class="rounded-b-md q-pa-md rounded-t-none bg-dark-2"
     :rows="state.transactions.data"
     :columns="columns"
     :pagination="state.pagination"

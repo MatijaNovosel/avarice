@@ -1,6 +1,6 @@
 <template>
   <div class="bg-grey-10 rounded-t-md">
-    <div class="text-grey-6 q-py-lg q-mx-md flex justify-between items-center">
+    <div class="text-grey-6 q-py-md q-mx-lg flex justify-between items-center">
       <span> Categories </span>
       <q-btn class="bg-accent text-white rounded"> New category </q-btn>
     </div>
@@ -9,7 +9,7 @@
       node-key="label"
       v-model:expanded="expanded"
       dark
-      class="bg-dark q-pa-lg rounded-b-md"
+      class="bg-dark-2 q-pa-lg rounded-b-md"
     />
   </div>
 </template>
