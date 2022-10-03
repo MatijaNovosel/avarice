@@ -43,7 +43,7 @@
     </template>
     <template v-else>
       <span class="q-mb-md text-grey row"> Accounts </span>
-      <template v-if="selectedAccount && accountList.length !== 0">
+      <template v-if="userStore.selectedAccount && accountList.length !== 0">
         <Container
           orientation="vertical"
           group-name="accounts"
@@ -56,8 +56,8 @@
             <q-item
               class="rounded q-mb-sm q-py-sm"
               :class="{
-                'bg-grey-9': selectedAccount.id !== account.id,
-                'bg-accent': selectedAccount.id === account.id
+                'bg-grey-9': userStore.selectedAccount.id !== account.id,
+                'bg-accent': userStore.selectedAccount.id === account.id
               }"
               clickable
               @click="updateSelectedAccount(account)"
@@ -67,7 +67,9 @@
                   rounded
                   :style="{
                     backgroundColor:
-                      selectedAccount.id === account.id ? shadedAccountListItemColor : 'grey'
+                      userStore.selectedAccount.id === account.id
+                        ? shadedAccountListItemColor
+                        : 'grey'
                   }"
                   text-color="white"
                   size="md"
@@ -80,7 +82,7 @@
                 <q-item-label
                   class="text-caption"
                   :class="{
-                    'text-grey-6': selectedAccount.id != account.id
+                    'text-grey-6': userStore.selectedAccount.id != account.id
                   }"
                 >
                   {{ formatBalance(account.balance, account.currency) }}
@@ -126,34 +128,25 @@ import { DropResult } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance, shadeColor } from "src/utils/helpers";
-import { PropType, computed, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 
-const emit = defineEmits(["update:selected-account", "new-account"]);
-
-const props = defineProps({
-  accounts: {
-    type: Array as PropType<AccountModel[]>,
-    required: true
-  },
+defineProps({
   loading: {
     type: Boolean,
     default: false
-  },
-  selectedAccount: {
-    type: Object as PropType<AccountModel | null>
   }
 });
-
-function updateSelectedAccount(account: AccountModel) {
-  emit("update:selected-account", account);
-}
 
 const appStore = useAppStore();
 const userStore = useUserStore();
 
 const shadedAccountListItemColor = computed(() => shadeColor(appStore.accentColor, -30));
-const accountList = ref<AccountModel[]>(props.accounts);
+const accountList = ref<AccountModel[]>(userStore.accounts);
+
+function updateSelectedAccount(account: AccountModel) {
+  userStore.setSelectedAccount(account);
+}
 
 const applyDrag = (arr: AccountModel[], dropResult: DropResult<AccountModel>) => {
   const { removedIndex, addedIndex, payload } = dropResult;
@@ -186,7 +179,7 @@ const dropPlaceholderOptions = {
 };
 
 watch(
-  () => props.accounts,
+  () => userStore.accounts,
   (val) => (accountList.value = val)
 );
 </script>

@@ -85,9 +85,7 @@ const state = reactive<State>({
       },
       tooltip: {
         callbacks: {
-          label: (context) => {
-            return formatBalance(context.parsed.y, "HRK");
-          }
+          label: (context) => formatBalance(context.parsed.y, "HRK")
         }
       }
     }
