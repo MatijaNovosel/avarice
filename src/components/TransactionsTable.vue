@@ -539,7 +539,7 @@ const searchDebounce = debounce(async () => {
 }, 300);
 
 watch(
-  () => appStore.createTransactionTrigger,
+  () => appStore.transactionCreatedTrigger,
   async () => {
     await getTransactions();
   },

@@ -1,15 +1,5 @@
 <template>
   <div>
-    <template v-if="loading">
-      <q-card flat class="q-pa-md">
-        <q-skeleton height="55px" square />
-        <q-card-section>
-          <q-skeleton type="text" class="text-subtitle1" />
-          <q-skeleton type="text" width="50%" class="text-subtitle1" />
-          <q-skeleton type="text" class="text-caption" />
-        </q-card-section>
-      </q-card>
-    </template>
     <q-card
       class="rounded-md q-px-md q-py-sm"
       :class="{
@@ -17,7 +7,6 @@
       }"
       flat
       style="height: 200px"
-      v-else
     >
       <template v-if="userStore.selectedAccount">
         <q-card-section class="row items-center justify-between q-pb-sm">
@@ -71,13 +60,6 @@ import { watch, reactive, onMounted } from "vue";
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
 }
-
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false
-  }
-});
 
 const userStore = useUserStore();
 

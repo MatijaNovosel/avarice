@@ -50,13 +50,6 @@ interface State {
   graphData: AccountHistoryModel[] | null;
 }
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false
-  }
-});
-
 const appStore = useAppStore();
 const userStore = useUserStore();
 const lineChartRef = ref(null);

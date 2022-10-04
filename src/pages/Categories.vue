@@ -3,7 +3,9 @@
     <div class="bg-grey-10 rounded">
       <div class="text-grey-6 q-py-md q-mx-lg flex justify-between items-center">
         <span> Categories </span>
-        <q-btn class="bg-accent text-white rounded"> New category </q-btn>
+        <q-btn class="bg-accent text-white rounded" @click="newCategoryDialogOpen = true">
+          New category
+        </q-btn>
       </div>
       <q-tree
         :nodes="categoriesMapped"
@@ -15,12 +17,14 @@
       />
     </div>
   </q-page>
+  <new-category-dialog v-model:open="newCategoryDialogOpen" />
 </template>
 
 <script lang="ts" setup>
 import { CategoryModel } from "src/api/client";
 import { useUserStore } from "src/stores/user";
 import { onMounted, ref } from "vue";
+import NewCategoryDialog from "src/components/NewCategoryDialog.vue";
 
 interface CategoryModelWithChildren extends CategoryModel {
   children: CategoryModelWithChildren[];
@@ -50,6 +54,7 @@ const arrayToTree = (list: CategoryModelWithChildren[]) => {
 
 const categoriesMapped = ref<CategoryModelWithChildren[]>([]);
 const expanded = ref([]);
+const newCategoryDialogOpen = ref(false);
 const userStore = useUserStore();
 
 onMounted(() => {

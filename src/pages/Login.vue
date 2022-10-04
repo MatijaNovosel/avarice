@@ -144,6 +144,7 @@ const login = async () => {
 
     userStore.setCategories(categories);
     userStore.setAccounts(accounts);
+    userStore.setSelectedAccount(accounts[0]);
 
     $q.notify({
       message: "Successfully logged in!",

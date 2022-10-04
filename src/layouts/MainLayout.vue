@@ -5,6 +5,8 @@
     </template>
     <q-page-container>
       <router-view />
+      <transaction-dialog />
+      <new-account-dialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -16,6 +18,8 @@ import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { setCssVar } from "quasar";
 import { useAppStore } from "src/stores/app";
+import TransactionDialog from "src/components/TransactionDialog.vue";
+import NewAccountDialog from "src/components/NewAccountDialog.vue";
 
 const route = useRoute();
 const appStore = useAppStore();

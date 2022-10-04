@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="state.open" persistent>
+  <q-dialog v-model="appStore.transactionDialogOpen" persistent>
     <q-card style="min-width: 700px">
       <template v-if="state.loading">
         <div class="column items-center justify-center q-py-xl">
@@ -68,7 +68,7 @@
                       filled
                       dense
                       v-model="state.transaction.category"
-                      :options="categories"
+                      :options="userStore.categories"
                       label=""
                       option-value="id"
                       option-label="name"
@@ -293,7 +293,7 @@
                       filled
                       dense
                       v-model="state.newCategoryParent"
-                      :options="categories"
+                      :options="userStore.categories"
                       option-value="id"
                       option-label="name"
                       label="Parent category"
@@ -423,7 +423,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch, computed, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useQuasar, debounce } from "quasar";
 import { chunkArray, formatBalance, collectErrors } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
@@ -435,9 +435,10 @@ import iconList from "../utils/icons";
 import { useUserStore } from "src/stores/user";
 import { required, numeric, requiredIf } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
+import IAccountService from "src/api/interfaces/accountService";
+import { useAppStore } from "src/stores/app";
 
 interface State {
-  open: boolean;
   loading: boolean;
   closeAfterAdding: boolean;
   panel: string;
@@ -460,25 +461,17 @@ interface State {
   tempIcons: string[][];
 }
 
-const emit = defineEmits(["update:open", "transaction-added", "category-added"]);
-
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false
-  }
-});
-
 const $q = useQuasar();
+
 const userStore = useUserStore();
+const appStore = useAppStore();
+
 const scrollTargetRef = ref<HTMLElement | null>(null);
 const chunkedIconList = chunkArray<string>(iconList, 10);
 
 const accounts = computed(() => userStore.accounts);
-const categories = computed(() => userStore.categories);
 
 const state = reactive<State>({
-  open: props.open,
   loading: false,
   tempIcons: [],
   newCategoryParent: null,
@@ -536,7 +529,7 @@ const closeDialog = () => {
   state.panel = "newTransaction";
   state.icons = [];
   state.tempIcons = [];
-  emit("update:open", false);
+  appStore.toggleTransactionDialog();
 };
 
 const setCategoryIcon = (name: string) => {
@@ -571,7 +564,10 @@ const createTransactionOrCategory = async () => {
         }
       }
 
-      emit("transaction-added");
+      appStore.notifyTransactionCreated();
+      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      userStore.setAccounts(accounts);
+      userStore.setSelectedAccount(accounts[0]);
 
       $q.notify({
         message: "Transaction added",
@@ -601,7 +597,10 @@ const createTransactionOrCategory = async () => {
         parentId: state.newCategoryParent || undefined
       });
 
-      emit("category-added");
+      const categories = await getService<ICategoryService>(
+        Types.CategoryService
+      ).getUserCategories();
+      userStore.setCategories(categories);
 
       state.categoryName = null;
       state.selectedIcon = "mdi-plus";
@@ -641,13 +640,6 @@ const searchIcons = debounce(() => {
     state.icons = [...state.tempIcons];
   }
 }, 750);
-
-watch(
-  () => props.open,
-  (val) => {
-    state.open = val;
-  }
-);
 
 const onIconLoad = (index: number, done: () => void) => {
   setTimeout(() => {
