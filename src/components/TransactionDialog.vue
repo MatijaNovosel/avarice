@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="state.open" persistent>
+  <q-dialog v-model="appStore.transactionDialogOpen" persistent>
     <q-card style="min-width: 700px">
       <template v-if="state.loading">
         <div class="column items-center justify-center q-py-xl">
@@ -38,11 +38,13 @@
                       dense
                       square
                       filled
-                      hide-bottom-space
                       clearable
                       label=""
                       v-model="state.transaction.amount"
                       suffix="HRK"
+                      :error="$v.amount.$error"
+                      :error-message="collectErrors($v.amount.$errors)"
+                      :hide-bottom-space="!$v.amount.$error"
                     >
                       <template #label> <required-icon /> Amount </template>
                     </q-input>
@@ -51,27 +53,31 @@
                       dense
                       square
                       filled
-                      hide-bottom-space
                       clearable
                       label=""
                       v-model="state.transaction.description"
+                      :error="$v.description.$error"
+                      :error-message="collectErrors($v.description.$errors)"
+                      :hide-bottom-space="!$v.description.$error"
                     >
                       <template #label> <required-icon /> Description </template>
                     </q-input>
                     <q-select
                       v-if="!state.isTransfer"
-                      hide-bottom-space
                       options-dense
                       filled
                       dense
                       v-model="state.transaction.category"
-                      :options="categories"
+                      :options="userStore.categories"
                       label=""
                       option-value="id"
                       option-label="name"
                       clearable
                       emit-value
                       map-options
+                      :error="$v.category.$error"
+                      :error-message="collectErrors($v.category.$errors)"
+                      :hide-bottom-space="!$v.category.$error"
                     >
                       <template #label> <required-icon /> Category </template>
                       <template #after>
@@ -125,7 +131,6 @@
                       </template>
                     </q-select>
                     <q-select
-                      hide-bottom-space
                       options-dense
                       filled
                       dense
@@ -137,6 +142,9 @@
                       clearable
                       emit-value
                       map-options
+                      :error="$v.account.$error"
+                      :error-message="collectErrors($v.account.$errors)"
+                      :hide-bottom-space="!$v.account.$error"
                     >
                       <template #label>
                         <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
@@ -168,7 +176,6 @@
                     </q-select>
                     <q-select
                       v-if="state.isTransfer"
-                      hide-bottom-space
                       options-dense
                       filled
                       dense
@@ -180,6 +187,9 @@
                       clearable
                       emit-value
                       map-options
+                      :error="$v.accountTo.$error"
+                      :error-message="collectErrors($v.accountTo.$errors)"
+                      :hide-bottom-space="!$v.accountTo.$error"
                     >
                       <template #label> <required-icon /> Account to </template>
                       <template #selected-item="scope">
@@ -283,7 +293,7 @@
                       filled
                       dense
                       v-model="state.newCategoryParent"
-                      :options="categories"
+                      :options="userStore.categories"
                       option-value="id"
                       option-label="name"
                       label="Parent category"
@@ -400,7 +410,12 @@
         </q-card-section>
         <q-separator />
         <q-card-actions class="q-pa-md justify-end">
-          <q-btn color="accent" label="Create" @click="createTransactionOrCategory" />
+          <q-btn
+            :disable="$v.$invalid"
+            color="accent"
+            label="Create"
+            @click="createTransactionOrCategory"
+          />
         </q-card-actions>
       </template>
     </q-card>
@@ -408,9 +423,9 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch, computed, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useQuasar, debounce } from "quasar";
-import { chunkArray, formatBalance } from "src/utils/helpers";
+import { chunkArray, formatBalance, collectErrors } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
 import ICategoryService from "src/api/interfaces/categoryService";
@@ -418,17 +433,12 @@ import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
 import iconList from "../utils/icons";
 import { useUserStore } from "src/stores/user";
-
-interface NewTransaction {
-  amount: string | null;
-  category: number | null;
-  account: number | null;
-  accountTo: number | null;
-  description: string | null;
-}
+import { required, numeric, requiredIf } from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import IAccountService from "src/api/interfaces/accountService";
+import { useAppStore } from "src/stores/app";
 
 interface State {
-  open: boolean;
   loading: boolean;
   closeAfterAdding: boolean;
   panel: string;
@@ -437,7 +447,13 @@ interface State {
   selectedColor: string;
   isTransfer: boolean;
   saveAsTemplate: boolean;
-  transaction: NewTransaction;
+  transaction: {
+    amount: string | null;
+    category: number | null;
+    account: number | null;
+    accountTo: number | null;
+    description: string | null;
+  };
   categoryName: string | null;
   newCategoryParent: number | null;
   icons: string[][];
@@ -445,25 +461,17 @@ interface State {
   tempIcons: string[][];
 }
 
-const emit = defineEmits(["update:open", "transaction-added", "category-added"]);
-
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false
-  }
-});
-
 const $q = useQuasar();
+
 const userStore = useUserStore();
+const appStore = useAppStore();
+
 const scrollTargetRef = ref<HTMLElement | null>(null);
 const chunkedIconList = chunkArray<string>(iconList, 10);
 
 const accounts = computed(() => userStore.accounts);
-const categories = computed(() => userStore.categories);
 
 const state = reactive<State>({
-  open: props.open,
   loading: false,
   tempIcons: [],
   newCategoryParent: null,
@@ -486,28 +494,47 @@ const state = reactive<State>({
   }
 });
 
+const rules = {
+  amount: { required, numeric, $autoDirty: true },
+  category: { requiredIf: requiredIf(!state.isTransfer), $autoDirty: true },
+  account: { required, $autoDirty: true },
+  accountTo: { requiredIf: requiredIf(state.isTransfer), $autoDirty: true },
+  description: { required, $autoDirty: true }
+};
+
+const $v = useVuelidate(rules, state.transaction);
+
 for (let i = 0; i < 5; i++) {
   state.icons.push(chunkedIconList[i]);
 }
 
-function resetFormData(resetCloseAfterAdding?: boolean) {
-  // Reset here
+const resetFormData = (resetCloseAfterAdding?: boolean) => {
+  state.transaction = {
+    amount: "0",
+    category: null,
+    account: null,
+    accountTo: null,
+    description: null
+  };
+
+  $v.value.$reset();
+
   if (resetCloseAfterAdding) {
     state.closeAfterAdding = false;
   }
-}
+};
 
-function closeDialog() {
+const closeDialog = () => {
   resetFormData(true);
   state.panel = "newTransaction";
   state.icons = [];
   state.tempIcons = [];
-  emit("update:open", false);
-}
+  appStore.toggleTransactionDialog();
+};
 
-function setCategoryIcon(name: string) {
+const setCategoryIcon = (name: string) => {
   state.selectedIcon = name;
-}
+};
 
 const createTransactionOrCategory = async () => {
   try {
@@ -537,7 +564,10 @@ const createTransactionOrCategory = async () => {
         }
       }
 
-      emit("transaction-added");
+      appStore.notifyTransactionCreated();
+      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      userStore.setAccounts(accounts);
+      userStore.setSelectedAccount(accounts[0]);
 
       $q.notify({
         message: "Transaction added",
@@ -567,7 +597,10 @@ const createTransactionOrCategory = async () => {
         parentId: state.newCategoryParent || undefined
       });
 
-      emit("category-added");
+      const categories = await getService<ICategoryService>(
+        Types.CategoryService
+      ).getUserCategories();
+      userStore.setCategories(categories);
 
       state.categoryName = null;
       state.selectedIcon = "mdi-plus";
@@ -607,13 +640,6 @@ const searchIcons = debounce(() => {
     state.icons = [...state.tempIcons];
   }
 }, 750);
-
-watch(
-  () => props.open,
-  (val) => {
-    state.open = val;
-  }
-);
 
 const onIconLoad = (index: number, done: () => void) => {
   setTimeout(() => {

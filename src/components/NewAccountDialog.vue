@@ -1,8 +1,8 @@
 <template>
-  <q-dialog v-model="state.open" persistent>
+  <q-dialog v-model="appStore.accountDialogOpen" persistent>
     <q-card style="min-width: 700px">
       <q-card-section class="row justify-between items-center">
-        <span class="text-h6"> Add new account </span>
+        <span class="text-h6"> New account </span>
         <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-9 rounded">
           <q-icon class="q-pa-xs" name="mdi-close" size="xs" />
         </q-btn>
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
 import { required, numeric, minLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { collectErrors } from "src/utils/helpers";
@@ -68,9 +68,9 @@ import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
+import { useAppStore } from "src/stores/app";
 
 interface State {
-  open: boolean;
   loading: boolean;
   data: {
     name: string;
@@ -78,8 +78,8 @@ interface State {
   };
 }
 
-const emit = defineEmits(["update:open"]);
 const $q = useQuasar();
+const appStore = useAppStore();
 
 const rules = {
   initialBalance: { required, numeric, $autoDirty: true },
@@ -87,7 +87,6 @@ const rules = {
 };
 
 const state = reactive<State>({
-  open: false,
   loading: false,
   data: {
     initialBalance: "0",
@@ -98,20 +97,13 @@ const state = reactive<State>({
 const $v = useVuelidate(rules, state.data);
 const userStore = useUserStore();
 
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false
-  }
-});
-
 const closeDialog = () => {
   state.data = {
     initialBalance: "0",
     name: ""
   };
   $v.value.$reset();
-  emit("update:open", false);
+  appStore.toggleAccountDialog();
 };
 
 const createAccount = async () => {
@@ -145,9 +137,4 @@ const createAccount = async () => {
     state.loading = false;
   }
 };
-
-watch(
-  () => props.open,
-  (val) => (state.open = val)
-);
 </script>

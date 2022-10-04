@@ -3,23 +3,38 @@ import { setCssVar } from "quasar";
 import { ref } from "vue";
 
 export interface AppStoreState {
-  createTransactionTrigger: boolean;
+  transactionDialogOpen: boolean;
+  accountDialogOpen: boolean;
+  categoryDialogOpen: boolean;
+  transactionCreatedTrigger: boolean;
   accentColor: string;
 }
 
 export const useAppStore = defineStore(
   "app",
   () => {
-    const createTransactionTrigger = ref(false);
-    const openTransactionDialogTrigger = ref(false);
+    const transactionDialogOpen = ref(false);
+    const transactionCreatedTrigger = ref(false);
+
+    const categoryDialogOpen = ref(false);
+    const accountDialogOpen = ref(false);
+
     const accentColor = ref("#f44336");
 
-    const createTransaction = () => {
-      createTransactionTrigger.value = !createTransactionTrigger.value;
+    const notifyTransactionCreated = () => {
+      transactionCreatedTrigger.value = !transactionCreatedTrigger.value;
     };
 
-    const openTransactionDialog = () => {
-      openTransactionDialogTrigger.value = !openTransactionDialogTrigger.value;
+    const toggleTransactionDialog = () => {
+      transactionDialogOpen.value = !transactionDialogOpen.value;
+    };
+
+    const toggleCategoryDialog = () => {
+      categoryDialogOpen.value = !categoryDialogOpen.value;
+    };
+
+    const toggleAccountDialog = () => {
+      accountDialogOpen.value = !accountDialogOpen.value;
     };
 
     const changeAccentColor = (state: AppStoreState, color: string) => {
@@ -29,11 +44,15 @@ export const useAppStore = defineStore(
 
     return {
       accentColor,
-      createTransactionTrigger,
-      createTransaction,
       changeAccentColor,
-      openTransactionDialogTrigger,
-      openTransactionDialog
+      transactionDialogOpen,
+      toggleTransactionDialog,
+      notifyTransactionCreated,
+      transactionCreatedTrigger,
+      categoryDialogOpen,
+      accountDialogOpen,
+      toggleCategoryDialog,
+      toggleAccountDialog
     };
   },
   {

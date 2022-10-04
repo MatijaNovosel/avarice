@@ -88,7 +88,7 @@ async function logOut() {
 }
 
 const openTransactionDialog = () => {
-  appStore.openTransactionDialog();
+  appStore.toggleTransactionDialog();
 };
 
 const routes: DrawerItem[] = [
