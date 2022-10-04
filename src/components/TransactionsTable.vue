@@ -115,6 +115,10 @@
           </div>
         </q-menu>
       </q-btn>
+      <q-btn flat dense class="q-mr-md rounded bg-grey-9">
+        <q-icon class="q-pa-xs" name="mdi-information" size="sm" />
+        <q-tooltip> Tip: You can right click on a row to display cooresponding actions! </q-tooltip>
+      </q-btn>
       <q-input
         @update:model-value="searchDebounce"
         v-model="state.search"
@@ -127,10 +131,6 @@
           <q-icon name="mdi-magnify" />
         </template>
       </q-input>
-      <q-btn flat dense class="q-mx-md rounded bg-grey-9">
-        <q-icon class="q-pa-xs" name="mdi-information" size="sm" />
-        <q-tooltip> Tip: You can right click on a row to display cooresponding actions! </q-tooltip>
-      </q-btn>
     </div>
   </div>
   <q-table
