@@ -7,11 +7,15 @@
   📱 <a href="https://github.com/MatijaNovosel/avarice-mobile">Mobile version</a>
 </p>
 
-![image](https://user-images.githubusercontent.com/36193643/147499340-9fc08d9d-639a-4095-b068-486a5fcd94d6.png)
+![Dashboard](https://user-images.githubusercontent.com/36193643/194028498-1e2f76c5-0412-4d74-9e22-40f325642963.png)
 
-![image](https://user-images.githubusercontent.com/36193643/147499436-06417fa9-801a-4dcb-80e9-3c0999208071.png)
+![New transaction](https://user-images.githubusercontent.com/36193643/194028508-b6ba3262-4053-4679-b0da-1df17fd90fd0.png)
 
-![image](https://user-images.githubusercontent.com/36193643/147499467-af0b9099-cc87-449a-b860-5e07f3573201.png)
+![New category](https://user-images.githubusercontent.com/36193643/194028528-c596fe54-813f-49cf-bd25-a20a23cdba95.png)
+
+![Transactions](https://user-images.githubusercontent.com/36193643/194028534-ce519b90-ea18-4447-a5f3-6d31c623a088.png)
+
+![Categories](https://user-images.githubusercontent.com/36193643/194028540-2176e3f1-fdc8-4d1f-b181-762385918c43.png)
 
 ## 🔨 Built With
 
