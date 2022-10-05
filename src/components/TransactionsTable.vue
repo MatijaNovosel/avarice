@@ -203,13 +203,13 @@
         </q-td>
         <q-td key="category" :props="props">
           <q-item class="q-pa-none">
-            <q-item-section
-              avatar
-              :style="{
-                color: props.row.category.color
-              }"
-            >
-              <q-icon size="sm" :name="props.row.category.icon" />
+            <q-item-section avatar>
+              <q-avatar
+                :text-color="props.row.category.color"
+                :icon="props.row.category.icon"
+                color="grey-9"
+                size="36px"
+              />
             </q-item-section>
             <q-item-section>
               <q-item-label> {{ props.row.category.name }} </q-item-label>
