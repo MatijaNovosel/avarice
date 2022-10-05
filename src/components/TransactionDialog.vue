@@ -423,7 +423,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, watch } from "vue";
 import { useQuasar, debounce } from "quasar";
 import { chunkArray, formatBalance, collectErrors } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
@@ -504,11 +504,12 @@ const rules = {
 
 const $v = useVuelidate(rules, state.transaction);
 
-for (let i = 0; i < 5; i++) {
-  state.icons.push(chunkedIconList[i]);
-}
-
 const resetFormData = (resetCloseAfterAdding?: boolean) => {
+  state.icons = [];
+  state.tempIcons = [];
+  state.selectedColor = "#ff00ff";
+  state.selectedIcon = "mdi-plus";
+
   state.transaction = {
     amount: "0",
     category: null,
@@ -527,8 +528,6 @@ const resetFormData = (resetCloseAfterAdding?: boolean) => {
 const closeDialog = () => {
   resetFormData(true);
   state.panel = "newTransaction";
-  state.icons = [];
-  state.tempIcons = [];
   appStore.toggleTransactionDialog();
 };
 
@@ -650,6 +649,17 @@ const onIconLoad = (index: number, done: () => void) => {
 
 const categoryInfiniteLoadDisabled = computed(
   () => state.iconSearchText !== "" && state.iconSearchText !== null
+);
+
+watch(
+  () => appStore.transactionDialogOpen,
+  (val) => {
+    if (val) {
+      for (let i = 0; i < 5; i++) {
+        state.icons.push(chunkedIconList[i]);
+      }
+    }
+  }
 );
 </script>
 
