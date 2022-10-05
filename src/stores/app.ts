@@ -13,13 +13,12 @@ export interface AppStoreState {
 export const useAppStore = defineStore(
   "app",
   () => {
-    const transactionDialogOpen = ref(false);
     const transactionCreatedTrigger = ref(false);
+    const accentColor = ref("#f44336");
 
+    const transactionDialogOpen = ref(false);
     const categoryDialogOpen = ref(false);
     const accountDialogOpen = ref(false);
-
-    const accentColor = ref("#f44336");
 
     const notifyTransactionCreated = () => {
       transactionCreatedTrigger.value = !transactionCreatedTrigger.value;
@@ -57,7 +56,13 @@ export const useAppStore = defineStore(
   },
   {
     persist: {
-      enabled: true
+      enabled: true,
+      strategies: [
+        {
+          storage: sessionStorage,
+          paths: ["accentColor"]
+        }
+      ]
     }
   }
 );

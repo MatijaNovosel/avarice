@@ -20,7 +20,7 @@
           </span>
         </q-card-section>
         <q-card-section class="q-pt-xs">
-          <q-chip color="red-4" size="sm" class="q-px-md">
+          <q-chip color="red-4" class="q-px-md">
             <b>
               {{
                 formatBalance(state.expenseAndIncome?.expense, userStore.selectedAccount.currency)
@@ -28,7 +28,6 @@
             </b>
           </q-chip>
           <q-chip
-            size="sm"
             :style="{
               backgroundColor: '#6ca16f'
             }"
