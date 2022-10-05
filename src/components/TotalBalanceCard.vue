@@ -20,24 +20,11 @@
           </span>
         </q-card-section>
         <q-card-section class="q-pt-xs">
-          <q-chip color="red-4" class="q-px-md">
-            <b>
-              {{
-                formatBalance(state.expenseAndIncome?.expense, userStore.selectedAccount.currency)
-              }}
-            </b>
+          <q-chip size="11px" icon="mdi-menu-down" outline color="red-4" class="q-px-md">
+            {{ formatBalance(state.expenseAndIncome?.expense, userStore.selectedAccount.currency) }}
           </q-chip>
-          <q-chip
-            :style="{
-              backgroundColor: '#6ca16f'
-            }"
-            class="q-px-md"
-          >
-            <b>
-              {{
-                formatBalance(state.expenseAndIncome?.income, userStore.selectedAccount.currency)
-              }}
-            </b>
+          <q-chip size="11px" icon="mdi-menu-up" outline color="green" class="q-px-md">
+            {{ formatBalance(state.expenseAndIncome?.income, userStore.selectedAccount.currency) }}
           </q-chip>
         </q-card-section>
       </template>
