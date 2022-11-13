@@ -127,19 +127,9 @@ onMounted(async () => {
   await updateGraph();
 });
 
-watch(
-  () => appStore.accentColor,
-  async () => {
-    await updateGraph();
-  }
-);
-
-watch(
-  () => userStore.selectedAccount,
-  async () => {
-    await updateGraph();
-  }
-);
+watch([() => appStore.accentColor, () => userStore.selectedAccount], async () => {
+  await updateGraph();
+});
 </script>
 
 <style lang="scss">

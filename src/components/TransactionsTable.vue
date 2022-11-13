@@ -192,24 +192,24 @@
             size="sm"
             flat
             dense
-            :class="`bg-${formatTransactionColor(props.row.transactionType)}-6`"
+            :class="`bg-${TRANSACTION_TYPE_COLOR[props.row.transactionType]}-6`"
           >
             <q-icon
-              :name="formatTransactionIcon(props.row.transactionType)"
+              :name="TRANSACTION_TYPE_ICON[props.row.transactionType]"
               size="1.3em"
-              :class="`text-${formatTransactionColor(props.row.transactionType)}-2`"
+              :class="`text-${TRANSACTION_TYPE_COLOR[props.row.transactionType]}-2`"
             />
           </q-btn>
         </q-td>
         <q-td key="category" :props="props">
           <q-item class="q-pa-none">
-            <q-item-section avatar>
-              <q-avatar
-                :text-color="props.row.category.color"
-                :icon="props.row.category.icon"
-                color="grey-9"
-                size="36px"
-              />
+            <q-item-section
+              avatar
+              :style="{
+                color: props.row.category.color
+              }"
+            >
+              <q-icon size="sm" :name="props.row.category.icon" />
             </q-item-section>
             <q-item-section>
               <q-item-label> {{ props.row.category.name }} </q-item-label>
@@ -225,7 +225,7 @@
         <q-td
           key="amount"
           :props="props"
-          :class="`text-${formatTransactionColor(props.row.transactionType)}`"
+          :class="`text-${TRANSACTION_TYPE_COLOR[props.row.transactionType]}`"
         >
           {{ formatBalance(props.row.amount, "HRK") }}
         </q-td>
@@ -279,7 +279,6 @@ import { computed, reactive, onMounted, Ref, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
-import TransactionType from "src/utils/transactionTypes";
 import { formatBalance } from "src/utils/helpers";
 import { debounce, useQuasar } from "quasar";
 import { getService, Types } from "src/di-container";
@@ -287,6 +286,11 @@ import ITransactionService from "src/api/interfaces/transactionService";
 import { PageableCollection, SelectItem } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
+import {
+  TRANSACTION_TYPE,
+  TRANSACTION_TYPE_COLOR,
+  TRANSACTION_TYPE_ICON
+} from "src/utils/constants";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -420,32 +424,6 @@ const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() 
   return cols;
 });
 
-function formatTransactionIcon(transactionType: TransactionType) {
-  switch (transactionType) {
-    case TransactionType.Transfer:
-      return "mdi-swap-horizontal";
-    case TransactionType.Income:
-      return "mdi-arrow-up";
-    case TransactionType.Expense:
-      return "mdi-arrow-down";
-    default:
-      return "mdi-account";
-  }
-}
-
-function formatTransactionColor(transactionType: TransactionType) {
-  switch (transactionType) {
-    case TransactionType.Transfer:
-      return "grey";
-    case TransactionType.Income:
-      return "green";
-    case TransactionType.Expense:
-      return "red";
-    default:
-      return "yellow";
-  }
-}
-
 const getTransactions = async () => {
   state.loading = true;
 
@@ -548,7 +526,7 @@ watch(
   }
 );
 
-const transactionTypeOptions = Object.entries(TransactionType).map<SelectItem<string, string>>(
+const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<string, string>>(
   (x) => ({
     label: x[0],
     value: x[1]

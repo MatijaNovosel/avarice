@@ -1,6 +1,5 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosInstance } from "axios";
-import CONSTANTS from "src/utils/constants";
 import { useUserStore } from "src/stores/user";
 
 declare module "@vue/runtime-core" {
@@ -9,7 +8,7 @@ declare module "@vue/runtime-core" {
   }
 }
 
-const api = axios.create({ baseURL: CONSTANTS.API_URL });
+const api = axios.create({ baseURL: process.env.API_URL });
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
