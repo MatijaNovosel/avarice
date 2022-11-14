@@ -29,7 +29,7 @@
 - Transaction entry templating
 - Visual representation of user data
 
-## Set up the frontend
+## 🌟 Set up the frontend
 
 ### Install the dependencies
 
@@ -59,7 +59,9 @@ quasar build
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
-## Set up the backend
+## 🔧 Set up the backend
+
+First off, clone the backend repository [here](https://github.com/MatijaNovosel/avarice-backend).
 
 ### Install the dot net core dependencies
 
