@@ -65,8 +65,6 @@ First off, clone the backend repository [here](https://github.com/MatijaNovosel/
 
 ### Install the dot net core dependencies
 
-Clone the backend [here](https://github.com/MatijaNovosel/avarice-backend).
-
 ```bash
 dotnet restore
 ```
