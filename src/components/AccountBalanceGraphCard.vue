@@ -54,7 +54,7 @@ const appStore = useAppStore();
 const userStore = useUserStore();
 const lineChartRef = ref(null);
 
-const state = reactive<State>({
+const state: State = reactive({
   chartData: null,
   graphData: null,
   timePeriod: "30D",

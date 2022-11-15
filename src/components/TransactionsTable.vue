@@ -342,7 +342,7 @@ const pagesNumber = computed(() => {
   return 0;
 });
 
-const state = reactive<State>({
+const state: State = reactive({
   selectionMode: "none",
   transactionType: null,
   categoryType: null,

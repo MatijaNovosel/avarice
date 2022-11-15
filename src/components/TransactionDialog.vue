@@ -471,7 +471,7 @@ const chunkedIconList = chunkArray<string>(iconList, 10);
 
 const accounts = computed(() => userStore.accounts);
 
-const state = reactive<State>({
+const state: State = reactive({
   loading: false,
   tempIcons: [],
   newCategoryParent: null,

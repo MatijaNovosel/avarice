@@ -96,7 +96,7 @@ const rules = {
   email: { required, email, $autoDirty: true }
 };
 
-const state = reactive<State>({
+const state: State = reactive({
   loading: false,
   login: {
     password: null,

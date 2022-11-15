@@ -211,7 +211,7 @@ const rules = {
   name: { required, minLength: minLength(3), $autoDirty: true }
 };
 
-const state = reactive<State>({
+const state: State = reactive({
   open: false,
   loading: false,
   selectedColor: "#ff00ff",

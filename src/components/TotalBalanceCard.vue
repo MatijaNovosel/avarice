@@ -57,7 +57,7 @@ const getExpenseAndIncome = async () => {
   }
 };
 
-const state = reactive<State>({
+const state: State = reactive({
   expenseAndIncome: null
 });
 
