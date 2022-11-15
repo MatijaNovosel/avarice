@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="appStore.transactionDialogOpen" persistent>
+  <q-dialog v-model="transactionDialogOpen" persistent>
     <q-card style="min-width: 700px">
       <template v-if="state.loading">
         <div class="column items-center justify-center q-py-xl">
@@ -68,7 +68,7 @@
                       filled
                       dense
                       v-model="state.transaction.category"
-                      :options="userStore.categories"
+                      :options="categories"
                       label=""
                       option-value="id"
                       option-label="name"
@@ -293,7 +293,7 @@
                       filled
                       dense
                       v-model="state.newCategoryParent"
-                      :options="userStore.categories"
+                      :options="categories"
                       option-value="id"
                       option-label="name"
                       label="Parent category"
@@ -437,6 +437,7 @@ import { required, numeric, requiredIf } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import IAccountService from "src/api/interfaces/accountService";
 import { useAppStore } from "src/stores/app";
+import { storeToRefs } from "pinia";
 
 interface State {
   loading: boolean;
@@ -464,12 +465,12 @@ interface State {
 const $q = useQuasar();
 
 const userStore = useUserStore();
+const { accounts, categories } = storeToRefs(userStore);
 const appStore = useAppStore();
+const { transactionDialogOpen } = storeToRefs(appStore);
 
 const scrollTargetRef = ref<HTMLElement | null>(null);
 const chunkedIconList = chunkArray<string>(iconList, 10);
-
-const accounts = computed(() => userStore.accounts);
 
 const state: State = reactive({
   loading: false,
@@ -564,9 +565,11 @@ const createTransactionOrCategory = async () => {
       }
 
       appStore.notifyTransactionCreated();
-      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-      userStore.setAccounts(accounts);
-      userStore.setSelectedAccount(accounts[0]);
+      const fetchedAccounts = await getService<IAccountService>(
+        Types.AccountService
+      ).getLatestValues();
+      userStore.setAccounts(fetchedAccounts);
+      userStore.setSelectedAccount(fetchedAccounts[0]);
 
       $q.notify({
         message: "Transaction added",
@@ -651,16 +654,13 @@ const categoryInfiniteLoadDisabled = computed(
   () => state.iconSearchText !== "" && state.iconSearchText !== null
 );
 
-watch(
-  () => appStore.transactionDialogOpen,
-  (val) => {
-    if (val) {
-      for (let i = 0; i < 5; i++) {
-        state.icons.push(chunkedIconList[i]);
-      }
+watch(transactionDialogOpen, (val) => {
+  if (val) {
+    for (let i = 0; i < 5; i++) {
+      state.icons.push(chunkedIconList[i]);
     }
   }
-);
+});
 </script>
 
 <style scoped lang="scss">

@@ -20,9 +20,11 @@ import { setCssVar } from "quasar";
 import { useAppStore } from "src/stores/app";
 import TransactionDialog from "src/components/TransactionDialog.vue";
 import NewAccountDialog from "src/components/NewAccountDialog.vue";
+import { storeToRefs } from "pinia";
 
 const route = useRoute();
 const appStore = useAppStore();
+const { accentColor } = storeToRefs(appStore);
 
 const shouldShowUi = computed(
   () =>
@@ -31,7 +33,7 @@ const shouldShowUi = computed(
     )
 );
 
-onMounted(() => setCssVar("accent", appStore.accentColor));
+onMounted(() => setCssVar("accent", accentColor.value));
 </script>
 
 <style lang="scss">

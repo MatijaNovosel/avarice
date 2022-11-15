@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 row justify-end">
         <div class="q-mr-md bg-dark q-px-md q-py-sm rounded text-bold">
-          {{ formatBalance(userStore.totalBalance, "HRK") }}
+          {{ formatBalance(totalBalance, "HRK") }}
         </div>
         <q-btn flat dense class="bg-grey-10 rounded">
           <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />
@@ -65,20 +65,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
 import { acronym, formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { DrawerItem } from "src/models/common";
+import { storeToRefs } from "pinia";
 
-const appStore = useAppStore();
+const { toggleTransactionDialog, changeAccentColor } = useAppStore();
 const userStore = useUserStore();
+const { data: user, totalBalance } = storeToRefs(userStore);
 const router = useRouter();
 const selectedColor = ref<string>("#ffffff");
-
-const user = computed(() => userStore.data);
 
 async function logOut() {
   userStore.logout();
@@ -88,7 +88,7 @@ async function logOut() {
 }
 
 const openTransactionDialog = () => {
-  appStore.toggleTransactionDialog();
+  toggleTransactionDialog();
 };
 
 const routes: DrawerItem[] = [
@@ -134,8 +134,5 @@ const routes: DrawerItem[] = [
   }
 ];
 
-watch(
-  () => selectedColor.value,
-  (val) => appStore.changeAccentColor(appStore, val)
-);
+watch(selectedColor, (val) => changeAccentColor(val));
 </script>

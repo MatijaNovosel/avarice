@@ -51,7 +51,7 @@
             filled
             dense
             v-model="state.newCategoryParent"
-            :options="userStore.categories"
+            :options="categories"
             option-value="id"
             option-label="name"
             label="Parent category"
@@ -183,6 +183,7 @@ import { useUserStore } from "src/stores/user";
 import iconList from "src/utils/icons";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ICategoryService from "src/api/interfaces/categoryService";
+import { storeToRefs } from "pinia";
 
 interface State {
   open: boolean;
@@ -199,9 +200,18 @@ interface State {
   };
 }
 
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
+  }
+});
+
 const chunkedIconList = chunkArray<string>(iconList, 10);
 const emit = defineEmits(["update:open"]);
 const $q = useQuasar();
+const userStore = useUserStore();
+const { categories } = storeToRefs(userStore);
 
 const categoryInfiniteLoadDisabled = computed(
   () => state.iconSearchText !== "" && state.iconSearchText !== null
@@ -231,14 +241,6 @@ for (let i = 0; i < 5; i++) {
 }
 
 const $v = useVuelidate(rules, state.data);
-const userStore = useUserStore();
-
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false
-  }
-});
 
 const setCategoryIcon = (name: string) => {
   state.selectedIcon = name;

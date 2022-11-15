@@ -42,6 +42,7 @@ import { SelectItem } from "src/models/common";
 import { formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
+import { storeToRefs } from "pinia";
 
 interface State {
   chartData: ChartData<"line"> | null;
@@ -50,8 +51,8 @@ interface State {
   graphData: AccountHistoryModel[] | null;
 }
 
-const appStore = useAppStore();
-const userStore = useUserStore();
+const { accentColor } = storeToRefs(useAppStore());
+const { selectedAccount } = storeToRefs(useUserStore());
 const lineChartRef = ref(null);
 
 const state: State = reactive({
@@ -96,9 +97,9 @@ const graphDateOptions: SelectItem<string, string>[] = [
 ];
 
 const updateGraph = async () => {
-  if (userStore.selectedAccount) {
+  if (selectedAccount.value) {
     state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
-      userStore.selectedAccount.id
+      selectedAccount.value.id
     );
 
     if (state.graphData) {
@@ -107,8 +108,8 @@ const updateGraph = async () => {
           {
             pointBackgroundColor: "rgba(0, 0, 0, 0)",
             pointBorderColor: "rgba(0, 0, 0, 0)",
-            backgroundColor: appStore.accentColor,
-            borderColor: appStore.accentColor,
+            backgroundColor: accentColor.value,
+            borderColor: accentColor.value,
             pointRadius: 0,
             fill: true,
             data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
@@ -127,7 +128,7 @@ onMounted(async () => {
   await updateGraph();
 });
 
-watch([() => appStore.accentColor, () => userStore.selectedAccount], async () => {
+watch([accentColor, selectedAccount], async () => {
   await updateGraph();
 });
 </script>

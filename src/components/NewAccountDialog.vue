@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="appStore.accountDialogOpen" persistent>
+  <q-dialog v-model="accountDialogOpen" persistent>
     <q-card style="min-width: 700px">
       <q-card-section class="row justify-between items-center">
         <span class="text-h6"> New account </span>
@@ -69,6 +69,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
 import { useAppStore } from "src/stores/app";
+import { storeToRefs } from "pinia";
 
 interface State {
   loading: boolean;
@@ -78,14 +79,6 @@ interface State {
   };
 }
 
-const $q = useQuasar();
-const appStore = useAppStore();
-
-const rules = {
-  initialBalance: { required, numeric, $autoDirty: true },
-  name: { required, minLength: minLength(3), $autoDirty: true }
-};
-
 const state: State = reactive({
   loading: false,
   data: {
@@ -94,6 +87,14 @@ const state: State = reactive({
   }
 });
 
+const rules = {
+  initialBalance: { required, numeric, $autoDirty: true },
+  name: { required, minLength: minLength(3), $autoDirty: true }
+};
+
+const $q = useQuasar();
+const appStore = useAppStore();
+const { accountDialogOpen } = storeToRefs(appStore);
 const $v = useVuelidate(rules, state.data);
 const userStore = useUserStore();
 

@@ -42,18 +42,20 @@ import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
 import { watch, reactive, onMounted } from "vue";
+import { storeToRefs } from "pinia";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;
 }
 
 const userStore = useUserStore();
+const { selectedAccount } = storeToRefs(userStore);
 
 const getExpenseAndIncome = async () => {
-  if (userStore.selectedAccount) {
+  if (selectedAccount.value) {
     state.expenseAndIncome = await getService<IAccountService>(
       Types.AccountService
-    ).getExpenseAndIncomeInTimePeriod(userStore.selectedAccount.id);
+    ).getExpenseAndIncomeInTimePeriod(selectedAccount.value.id);
   }
 };
 
@@ -65,10 +67,7 @@ onMounted(async () => {
   await getExpenseAndIncome();
 });
 
-watch(
-  () => userStore.selectedAccount,
-  async () => {
-    await getExpenseAndIncome();
-  }
-);
+watch(selectedAccount, async () => {
+  await getExpenseAndIncome();
+});
 </script>

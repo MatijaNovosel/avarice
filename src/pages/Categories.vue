@@ -49,6 +49,7 @@ import { CategoryModel } from "src/api/client";
 import { useUserStore } from "src/stores/user";
 import { onMounted, ref } from "vue";
 import NewCategoryDialog from "src/components/NewCategoryDialog.vue";
+import { storeToRefs } from "pinia";
 
 interface CategoryModelWithChildren extends CategoryModel {
   children: CategoryModelWithChildren[];
@@ -80,9 +81,10 @@ const categoriesMapped = ref<CategoryModelWithChildren[]>([]);
 const expanded = ref([]);
 const newCategoryDialogOpen = ref(false);
 const userStore = useUserStore();
+const { categories } = storeToRefs(userStore);
 
 onMounted(() => {
-  const c = [...userStore.categories];
+  const c = [...categories.value];
   categoriesMapped.value = arrayToTree(c.map((c) => ({ ...c, children: [] })));
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <q-list class="bg-dark q-pa-md rounded">
     <span class="q-mb-md text-grey row"> Accounts </span>
-    <template v-if="userStore.selectedAccount && accountList.length !== 0">
+    <template v-if="selectedAccount && accountList.length !== 0">
       <Container
         orientation="vertical"
         group-name="accounts"
@@ -14,8 +14,8 @@
           <q-item
             class="rounded q-mb-sm q-py-sm"
             :class="{
-              'bg-grey-9': userStore.selectedAccount.id !== account.id,
-              'bg-accent': userStore.selectedAccount.id === account.id
+              'bg-grey-9': selectedAccount.id !== account.id,
+              'bg-accent': selectedAccount.id === account.id
             }"
             clickable
             @click="updateSelectedAccount(account)"
@@ -25,9 +25,7 @@
                 rounded
                 :style="{
                   backgroundColor:
-                    userStore.selectedAccount.id === account.id
-                      ? shadedAccountListItemColor
-                      : 'grey'
+                    selectedAccount.id === account.id ? shadedAccountListItemColor : 'grey'
                 }"
                 text-color="white"
                 size="md"
@@ -40,7 +38,7 @@
               <q-item-label
                 class="text-caption"
                 :class="{
-                  'text-grey-6': userStore.selectedAccount.id != account.id
+                  'text-grey-6': selectedAccount.id != account.id
                 }"
               >
                 {{ formatBalance(account.balance, account.currency) }}
@@ -56,7 +54,7 @@
         <q-item-section>
           <q-item-label class="text-weight-medium"> Total </q-item-label>
           <q-item-label class="text-caption">
-            {{ formatBalance(userStore.totalBalance, "HRK") }}
+            {{ formatBalance(totalBalance, "HRK") }}
           </q-item-label>
         </q-item-section>
         <q-item-section avatar>
@@ -91,12 +89,15 @@ import { useUserStore } from "src/stores/user";
 import { formatBalance, shadeColor } from "src/utils/helpers";
 import { computed, ref, watch } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
+import { storeToRefs } from "pinia";
 
 const appStore = useAppStore();
+const { accentColor } = storeToRefs(appStore);
 const userStore = useUserStore();
+const { accounts, selectedAccount, totalBalance } = storeToRefs(userStore);
 
-const shadedAccountListItemColor = computed(() => shadeColor(appStore.accentColor, -30));
-const accountList = ref<AccountModel[]>(userStore.accounts);
+const shadedAccountListItemColor = computed(() => shadeColor(accentColor.value, -30));
+const accountList = ref<AccountModel[]>(accounts.value);
 
 function updateSelectedAccount(account: AccountModel) {
   userStore.setSelectedAccount(account);
@@ -132,8 +133,5 @@ const dropPlaceholderOptions = {
   showOnTop: true
 };
 
-watch(
-  () => userStore.accounts,
-  (val) => (accountList.value = val)
-);
+watch(accounts, (val) => (accountList.value = val));
 </script>

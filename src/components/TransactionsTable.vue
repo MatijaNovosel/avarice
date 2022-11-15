@@ -291,6 +291,7 @@ import {
   TRANSACTION_TYPE_COLOR,
   TRANSACTION_TYPE_ICON
 } from "src/utils/constants";
+import { storeToRefs } from "pinia";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -329,10 +330,11 @@ const props = defineProps({
 
 const $q = useQuasar();
 const userStore = useUserStore();
+const { categories } = storeToRefs(userStore);
 const appStore = useAppStore();
+const { transactionCreatedTrigger } = storeToRefs(appStore);
 const rowsPerPageOptions = [5, 10, 15];
 
-const categories = computed(() => userStore.categories);
 const activeFilters = computed(() => state.transactionType || state.categoryType);
 
 const pagesNumber = computed(() => {
@@ -517,7 +519,7 @@ const searchDebounce = debounce(async () => {
 }, 300);
 
 watch(
-  () => appStore.transactionCreatedTrigger,
+  transactionCreatedTrigger,
   async () => {
     await getTransactions();
   },

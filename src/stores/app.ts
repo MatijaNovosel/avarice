@@ -36,9 +36,9 @@ export const useAppStore = defineStore(
       accountDialogOpen.value = !accountDialogOpen.value;
     };
 
-    const changeAccentColor = (state: AppStoreState, color: string) => {
+    const changeAccentColor = (color: string) => {
       setCssVar("accent", color);
-      state.accentColor = color;
+      accentColor.value = color;
     };
 
     return {
