@@ -53,7 +53,7 @@
               map-options
               emit-value
               label="Transaction type"
-              @update:model-value="filterUpdated"
+              @update:model-value="searchDebounce"
               :style="{
                 width: '300px'
               }"
@@ -68,7 +68,7 @@
               label="Category"
               option-value="id"
               option-label="name"
-              @update:model-value="filterUpdated"
+              @update:model-value="searchDebounce"
               class="q-mt-sm"
               clearable
               emit-value
@@ -269,13 +269,13 @@
       color="grey-9"
       :max="pagesNumber"
       :max-pages="5"
-      @update:model-value="paginationUpdated"
+      @update:model-value="searchDebounce"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, Ref, watch } from "vue";
+import { computed, reactive, onMounted, watch } from "vue";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
@@ -313,18 +313,15 @@ interface State {
 const props = defineProps({
   rowsPerPage: {
     type: Number,
-    default: 5,
-    required: false
+    default: 5
   },
   hidePageSelection: {
     type: Boolean,
-    default: false,
-    required: false
+    default: false
   },
   hideSelectAll: {
     type: Boolean,
-    default: false,
-    required: false
+    default: false
   }
 });
 
@@ -358,13 +355,13 @@ const state: State = reactive({
     sortBy: "desc",
     descending: false,
     page: 1,
-    rowsPerPage: props.rowsPerPage
+    rowsPerPage: 15
   },
   loading: false,
   selectAll: false
 });
 
-const columns: Ref<QuasarTableColumn<TransactionModelExtended>[]> = computed(() => {
+const columns = computed(() => {
   let cols: QuasarTableColumn<TransactionModelExtended>[] = [
     {
       name: "transactionType",
@@ -501,17 +498,9 @@ const setSelectionMode = () => {
   }
 };
 
-const filterUpdated = async () => {
-  await getTransactions();
-};
-
-const paginationUpdated = async () => {
-  await getTransactions();
-};
-
 const changeRowsPerPage = async (rows: number) => {
   state.pagination.rowsPerPage = rows;
-  await getTransactions();
+  await searchDebounce();
 };
 
 const searchDebounce = debounce(async () => {
@@ -536,6 +525,7 @@ const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<s
 );
 
 onMounted(async () => {
+  state.pagination.rowsPerPage = props.rowsPerPage; // This is here just to ensure the number of rows renders properly since providing in the state initially doesn't prove fruitful
   await getTransactions();
 });
 </script>

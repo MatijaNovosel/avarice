@@ -29,7 +29,7 @@
             </q-list>
           </q-menu>
         </q-btn>
-        <q-btn flat dense class="q-ml-md bg-grey-10 rounded" @click="openTransactionDialog">
+        <q-btn flat dense class="q-ml-md bg-grey-10 rounded" @click="toggleTransactionDialog">
           <q-icon class="q-pa-xs" name="mdi-plus" size="sm" />
         </q-btn>
         <q-btn flat dense class="q-mx-md bg-grey-10 rounded">
@@ -86,10 +86,6 @@ async function logOut() {
     name: ROUTE_NAMES.LOGIN
   });
 }
-
-const openTransactionDialog = () => {
-  toggleTransactionDialog();
-};
 
 const routes: DrawerItem[] = [
   {
