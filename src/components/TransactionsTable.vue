@@ -28,8 +28,8 @@
         flat
         dense
         :class="{
-          'bg-grey-9': state.selectionMode === 'none',
-          'bg-blue-7': state.selectionMode === 'multiple'
+          'bg-grey-9': !state.multiple,
+          'bg-blue-7': state.multiple
         }"
         class="q-mr-md rounded"
       >
@@ -301,12 +301,12 @@ interface TransactionModelExtended extends ITransactionModel {
 interface State {
   pagination: QuasarTablePagination;
   categoryType: number | null;
-  search: string | null;
+  search: string;
   transactions: PageableCollection<TransactionModelExtended>;
   loading: boolean;
   selectAll: boolean;
   selectedRows: number[];
-  selectionMode: string;
+  multiple: boolean;
   transactionType: string | null;
 }
 
@@ -344,9 +344,10 @@ const pagesNumber = computed(() => {
 const state: State = reactive({
   selectionMode: "none",
   transactionType: null,
+  multiple: false,
   categoryType: null,
   selectedRows: [],
-  search: null,
+  search: "",
   transactions: {
     data: [],
     total: 0
@@ -408,7 +409,7 @@ const columns = computed(() => {
     }
   ];
 
-  if (state.selectionMode === "multiple") {
+  if (state.multiple) {
     cols = [
       {
         name: "selection",
@@ -424,10 +425,11 @@ const columns = computed(() => {
 });
 
 const getTransactions = async () => {
-  state.loading = true;
-
   try {
-    const transactions = await getService<ITransactionService>(Types.TransactionService).getAll(
+    state.loading = true;
+    const { total, results } = await getService<ITransactionService>(
+      Types.TransactionService
+    ).getAll(
       state.pagination.rowsPerPage,
       state.pagination.page - 1,
       state.search || "",
@@ -435,14 +437,13 @@ const getTransactions = async () => {
       state.categoryType
     );
 
-    if (transactions.results) {
+    if (results) {
       state.transactions = {
-        data: transactions.results?.map((t, i) => ({
+        data: results?.map((t) => ({
           ...t,
-          id: i + 1,
           selected: false
         })),
-        total: transactions.total
+        total
       };
     }
   } catch (e) {
@@ -452,12 +453,12 @@ const getTransactions = async () => {
       textColor: "red",
       position: "bottom"
     });
+  } finally {
+    state.loading = false;
   }
-
-  state.loading = false;
 };
 
-async function deleteTransaction(id: number) {
+const deleteTransaction = async (id: number) => {
   if (state.transactions) {
     const transaction = state.transactions.data.find((t) => t.id === id);
     try {
@@ -480,7 +481,7 @@ async function deleteTransaction(id: number) {
       });
     }
   }
-}
+};
 
 const selectAllTriggered = () => {
   if (state.transactions) {
@@ -491,11 +492,7 @@ const selectAllTriggered = () => {
 };
 
 const setSelectionMode = () => {
-  if (state.selectionMode === "none") {
-    state.selectionMode = "multiple";
-  } else {
-    state.selectionMode = "none";
-  }
+  state.multiple = !state.multiple;
 };
 
 const changeRowsPerPage = async (rows: number) => {
@@ -503,19 +500,9 @@ const changeRowsPerPage = async (rows: number) => {
   await searchDebounce();
 };
 
-const searchDebounce = debounce(async () => {
-  await getTransactions();
-}, 300);
+const searchDebounce = debounce(getTransactions, 300);
 
-watch(
-  transactionCreatedTrigger,
-  async () => {
-    await getTransactions();
-  },
-  {
-    deep: true
-  }
-);
+watch(transactionCreatedTrigger, getTransactions);
 
 const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<string, string>>(
   (x) => ({
@@ -525,7 +512,7 @@ const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<s
 );
 
 onMounted(async () => {
-  state.pagination.rowsPerPage = props.rowsPerPage; // This is here just to ensure the number of rows renders properly since providing in the state initially doesn't prove fruitful
+  state.pagination.rowsPerPage = props.rowsPerPage; // This is here just to ensure the number of rows renders properly since the initial state doesn't prove fruitful
   await getTransactions();
 });
 </script>

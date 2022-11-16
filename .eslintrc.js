@@ -10,8 +10,8 @@ module.exports = {
     node: true,
     "vue/setup-compiler-macros": true
   },
-  extends: ["plugin:@typescript-eslint/recommended", "plugin:vue/vue3-essential", "standard"],
-  plugins: ["@typescript-eslint", "vue"],
+  extends: ["plugin:vue/vue3-essential", "standard"],
+  plugins: ["vue"],
   globals: {
     ga: "readonly",
     cordova: "readonly",

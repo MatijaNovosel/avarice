@@ -433,7 +433,7 @@ import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
 import iconList from "../utils/icons";
 import { useUserStore } from "src/stores/user";
-import { required, numeric, requiredIf } from "@vuelidate/validators";
+import { required, decimal, requiredIf } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import IAccountService from "src/api/interfaces/accountService";
 import { useAppStore } from "src/stores/app";
@@ -496,7 +496,7 @@ const state: State = reactive({
 });
 
 const rules = {
-  amount: { required, numeric, $autoDirty: true },
+  amount: { required, decimal, $autoDirty: true },
   category: { requiredIf: requiredIf(!state.isTransfer), $autoDirty: true },
   account: { required, $autoDirty: true },
   accountTo: { requiredIf: requiredIf(state.isTransfer), $autoDirty: true },
@@ -565,11 +565,12 @@ const createTransactionOrCategory = async () => {
       }
 
       appStore.notifyTransactionCreated();
+
       const fetchedAccounts = await getService<IAccountService>(
         Types.AccountService
       ).getLatestValues();
+
       userStore.setAccounts(fetchedAccounts);
-      userStore.setSelectedAccount(fetchedAccounts[0]);
 
       $q.notify({
         message: "Transaction added",

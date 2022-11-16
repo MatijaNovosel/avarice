@@ -108,9 +108,9 @@ const closeDialog = () => {
 };
 
 const createAccount = async () => {
-  state.loading = true;
-
   try {
+    state.loading = true;
+
     await getService<IAccountService>(Types.AccountService).create({
       initialBalance: parseFloat(state.data.initialBalance),
       name: state.data.name
@@ -126,7 +126,6 @@ const createAccount = async () => {
     const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
     userStore.setAccounts(accounts);
 
-    state.loading = false;
     closeDialog();
   } catch (e) {
     $q.notify({
@@ -135,6 +134,7 @@ const createAccount = async () => {
       textColor: "red",
       position: "bottom"
     });
+  } finally {
     state.loading = false;
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <q-page class="row">
-    <div class="col-12 col-md-3 q-pr-md-lg q-pb-xl q-md-pb-none">
+    <div class="col-12 col-md-3 q-pr-md-md q-pb-xl q-md-pb-none">
       <account-list />
     </div>
     <div class="col-12 col-md-9">

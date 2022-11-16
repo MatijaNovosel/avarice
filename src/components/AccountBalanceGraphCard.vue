@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="rounded-t-md" style="height: 200px">
+  <q-card flat class="rounded-md" style="height: 240px">
     <q-card-section>
       <q-btn flat dense class="q-mr-md bg-grey-9 rounded">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
@@ -21,7 +21,7 @@
     <q-card-section class="q-pa-none">
       <line-chart
         v-if="state.chartData"
-        style="height: 128px"
+        style="height: 168px"
         :chart-data="state.chartData"
         :options="state.chartOptions"
         ref="lineChartRef"
@@ -128,9 +128,7 @@ onMounted(async () => {
   await updateGraph();
 });
 
-watch([accentColor, selectedAccount], async () => {
-  await updateGraph();
-});
+watch([accentColor, selectedAccount], updateGraph);
 </script>
 
 <style lang="scss">

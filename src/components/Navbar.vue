@@ -130,5 +130,5 @@ const routes: DrawerItem[] = [
   }
 ];
 
-watch(selectedColor, (val) => changeAccentColor(val));
+watch(selectedColor, changeAccentColor);
 </script>
