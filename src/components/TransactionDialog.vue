@@ -9,404 +9,195 @@
       </template>
       <template v-else>
         <q-card-section class="row justify-between items-center">
-          <span class="text-h6">
-            New {{ state.panel == "newTransaction" ? "transaction" : "category" }}
-          </span>
+          <span class="text-h6"> New transaction </span>
           <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-9 rounded">
             <q-icon class="q-pa-xs" name="mdi-close" size="xs" />
           </q-btn>
         </q-card-section>
         <q-separator />
-        <q-card-section class="q-pl-none">
-          <q-tab-panels v-model="state.panel" animated>
-            <q-tab-panel name="newTransaction" class="q-pl-none">
-              <div class="row">
-                <div class="col-2 justify-center column content-center">
-                  <q-toggle
-                    style="transform: rotate(-90deg)"
-                    v-model="state.isTransfer"
-                    checked-icon="check"
-                    color="accent"
-                    label="Transfer"
-                    unchecked-icon="clear"
-                    class="q-pl-md"
-                  />
-                </div>
-                <div class="col-10">
-                  <q-form class="q-gutter-md">
-                    <q-input
-                      dense
-                      square
-                      filled
-                      clearable
-                      label=""
-                      v-model="state.transaction.amount"
-                      suffix="HRK"
-                      :error="$v.amount.$error"
-                      :error-message="collectErrors($v.amount.$errors)"
-                      :hide-bottom-space="!$v.amount.$error"
-                    >
-                      <template #label> <required-icon /> Amount </template>
-                    </q-input>
-                    <q-input
-                      v-if="!state.isTransfer"
-                      dense
-                      square
-                      filled
-                      clearable
-                      label=""
-                      v-model="state.transaction.description"
-                      :error="$v.description.$error"
-                      :error-message="collectErrors($v.description.$errors)"
-                      :hide-bottom-space="!$v.description.$error"
-                    >
-                      <template #label> <required-icon /> Description </template>
-                    </q-input>
-                    <q-select
-                      v-if="!state.isTransfer"
-                      options-dense
-                      filled
-                      dense
-                      v-model="state.transaction.category"
-                      :options="categories"
-                      label=""
-                      option-value="id"
-                      option-label="name"
-                      clearable
-                      emit-value
-                      map-options
-                      :error="$v.category.$error"
-                      :error-message="collectErrors($v.category.$errors)"
-                      :hide-bottom-space="!$v.category.$error"
-                    >
-                      <template #label> <required-icon /> Category </template>
-                      <template #after>
-                        <q-btn
-                          @click="state.panel = 'newCategory'"
-                          size="xs"
-                          flat
-                          dense
-                          class="bg-accent rounded q-ml-sm"
-                        >
-                          <q-icon class="q-pa-xs" name="mdi-plus" color="black" size="xs" />
-                        </q-btn>
-                      </template>
-                      <template #selected-item="scope">
-                        <q-item class="q-px-none q-pb-sm q-pt-md">
-                          <q-item-section avatar>
-                            <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
-                          </q-item-section>
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption class="text-grey-7">
-                              {{
-                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
-                              }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                      <template #option="scope">
-                        <q-item class="q-py-sm" v-bind="scope.itemProps">
-                          <q-item-section avatar>
-                            <q-icon
-                              :style="{ color: scope.opt.color }"
-                              :name="scope.opt.icon"
-                              :color="scope.opt.color"
-                            />
-                          </q-item-section>
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption class="text-grey-7">
-                              {{
-                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
-                              }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                    </q-select>
-                    <q-select
-                      options-dense
-                      filled
-                      dense
-                      v-model="state.transaction.account"
-                      :options="accounts"
-                      label=""
-                      option-value="id"
-                      option-label="name"
-                      clearable
-                      emit-value
-                      map-options
-                      :error="$v.account.$error"
-                      :error-message="collectErrors($v.account.$errors)"
-                      :hide-bottom-space="!$v.account.$error"
-                    >
-                      <template #label>
-                        <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
-                      </template>
-                      <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption>
-                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                      <template #option="scope">
-                        <q-item class="q-py-sm" v-bind="scope.itemProps">
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption>
-                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                    </q-select>
-                    <q-select
-                      v-if="state.isTransfer"
-                      options-dense
-                      filled
-                      dense
-                      v-model="state.transaction.accountTo"
-                      :options="accounts"
-                      label=""
-                      option-value="id"
-                      option-label="name"
-                      clearable
-                      emit-value
-                      map-options
-                      :error="$v.accountTo.$error"
-                      :error-message="collectErrors($v.accountTo.$errors)"
-                      :hide-bottom-space="!$v.accountTo.$error"
-                    >
-                      <template #label> <required-icon /> Account to </template>
-                      <template #selected-item="scope">
-                        <q-item class="q-px-none q-py-sm">
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption>
-                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                      <template #option="scope">
-                        <q-item class="q-py-sm" v-bind="scope.itemProps">
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption>
-                              {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                    </q-select>
-                    <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
-                    <q-checkbox
-                      v-model="state.saveAsTemplate"
-                      label="Save as a template after creating"
+        <q-card-section>
+          <q-form class="q-gutter-md">
+            <q-input
+              dense
+              square
+              filled
+              clearable
+              label=""
+              v-model="state.transaction.amount"
+              suffix="HRK"
+              :error="$v.amount.$error"
+              :error-message="collectErrors($v.amount.$errors)"
+              :hide-bottom-space="!$v.amount.$error"
+            >
+              <template #label> <required-icon /> Amount </template>
+            </q-input>
+            <q-input
+              v-if="!state.isTransfer"
+              dense
+              square
+              filled
+              clearable
+              label=""
+              v-model="state.transaction.description"
+              :error="$v.description.$error"
+              :error-message="collectErrors($v.description.$errors)"
+              :hide-bottom-space="!$v.description.$error"
+            >
+              <template #label> <required-icon /> Description </template>
+            </q-input>
+            <q-select
+              v-if="!state.isTransfer"
+              options-dense
+              filled
+              dense
+              v-model="state.transaction.category"
+              :options="categories"
+              label=""
+              option-value="id"
+              option-label="name"
+              clearable
+              emit-value
+              map-options
+              :error="$v.category.$error"
+              :error-message="collectErrors($v.category.$errors)"
+              :hide-bottom-space="!$v.category.$error"
+            >
+              <template #label> <required-icon /> Category </template>
+              <template #selected-item="scope">
+                <q-item class="q-px-none q-pb-sm q-pt-md">
+                  <q-item-section avatar>
+                    <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #option="scope">
+                <q-item class="q-py-sm" v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-icon
+                      :style="{ color: scope.opt.color }"
+                      :name="scope.opt.icon"
+                      :color="scope.opt.color"
                     />
-                    <div class="row justify-end">
-                      <q-btn flat dense class="q-ml-md bg-accent rounded">
-                        <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
-                        <q-tooltip> Select template </q-tooltip>
-                      </q-btn>
-                      <q-btn flat dense class="q-ml-md bg-accent rounded">
-                        <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
-                        <q-tooltip> Select location </q-tooltip>
-                      </q-btn>
-                    </div>
-                  </q-form>
-                </div>
-              </div>
-            </q-tab-panel>
-            <q-tab-panel name="newCategory" class="q-pl-none">
-              <div class="row">
-                <div class="col-2 justify-center column content-center">
-                  <q-btn
-                    @click="state.panel = 'newTransaction'"
-                    size="xs"
-                    flat
-                    dense
-                    class="bg-grey-9 rounded"
-                  >
-                    <q-icon class="q-pa-xs" name="mdi-chevron-left" size="xs" />
-                  </q-btn>
-                </div>
-                <div class="col-10">
-                  <q-form class="q-gutter-md">
-                    <q-input
-                      v-model="state.categoryName"
-                      dense
-                      square
-                      filled
-                      label=""
-                      hide-bottom-space
-                      clearable
-                    >
-                      <template #label> <required-icon /> Category name </template>
-                      <template #after>
-                        <q-icon
-                          class="rounded bg-black q-pa-sm"
-                          :style="{ color: state.selectedColor }"
-                          :name="state.selectedIcon"
-                        >
-                          <q-tooltip>
-                            {{ state.selectedIcon.split("mdi-")[1] }}
-                          </q-tooltip>
-                        </q-icon>
-                        <q-btn flat dense size="lg">
-                          <q-icon
-                            class="rounded"
-                            :style="{ backgroundColor: state.selectedColor }"
-                          />
-                          <q-menu touch-position>
-                            <q-color
-                              v-model="state.selectedColor"
-                              no-header
-                              no-footer
-                              default-view="palette"
-                            />
-                          </q-menu>
-                        </q-btn>
-                      </template>
-                    </q-input>
-                    <q-select
-                      hide-bottom-space
-                      options-dense
-                      filled
-                      dense
-                      v-model="state.newCategoryParent"
-                      :options="categories"
-                      option-value="id"
-                      option-label="name"
-                      label="Parent category"
-                      clearable
-                      emit-value
-                      map-options
-                    >
-                      <template #selected-item="scope">
-                        <q-item class="q-px-none q-pb-sm q-pt-md">
-                          <q-item-section avatar>
-                            <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
-                          </q-item-section>
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption class="text-grey-7">
-                              {{
-                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
-                              }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                      <template #option="scope">
-                        <q-item class="q-py-sm" v-bind="scope.itemProps">
-                          <q-item-section avatar>
-                            <q-icon
-                              :style="{ color: scope.opt.color }"
-                              :name="scope.opt.icon"
-                              :color="scope.opt.color"
-                            />
-                          </q-item-section>
-                          <q-item-section>
-                            <q-item-label>
-                              {{ scope.opt.name }}
-                            </q-item-label>
-                            <q-item-label caption class="text-grey-7">
-                              {{
-                                (scope.opt.parent && scope.opt.parent.name) || "No parent category"
-                              }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-                    </q-select>
-                    <q-input
-                      placeholder="Search icons"
-                      dense
-                      filled
-                      clearable
-                      @update:model-value="searchIcons"
-                      v-model="state.iconSearchText"
-                    >
-                      <template #append>
-                        <q-icon size="xs" name="mdi-magnify" />
-                      </template>
-                    </q-input>
-                    <q-list
-                      ref="scrollTargetRef"
-                      class="scroll bg-icon-list q-pt-md rounded"
-                      style="max-height: 250px"
-                      :class="{
-                        'q-pb-md': categoryInfiniteLoadDisabled
-                      }"
-                    >
-                      <q-infinite-scroll
-                        @load="onIconLoad"
-                        :disable="categoryInfiniteLoadDisabled"
-                        :offset="50"
-                        v-if="state.icons.length !== 0"
-                      >
-                        <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
-                          <q-btn
-                            v-for="(icon, j) in icons"
-                            :key="j"
-                            class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
-                            flat
-                            dense
-                            @click="setCategoryIcon(`mdi-${icon}`)"
-                          >
-                            <q-icon
-                              :style="{
-                                color: state.selectedColor
-                              }"
-                              :name="`mdi-${icon}`"
-                            >
-                              <q-tooltip>
-                                {{ icon }}
-                              </q-tooltip>
-                            </q-icon>
-                          </q-btn>
-                        </div>
-                        <template #loading>
-                          <div class="row justify-center q-my-md">
-                            <q-spinner-dots :style="{ color: state.selectedColor }" size="40px" />
-                          </div>
-                        </template>
-                      </q-infinite-scroll>
-                      <q-item v-else>
-                        <q-item-section>
-                          <q-item-label> No icons found. </q-item-label>
-                          <q-item-label caption class="text-grey-7">
-                            Try searching with other parameters.
-                          </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-form>
-                </div>
-              </div>
-            </q-tab-panel>
-          </q-tab-panels>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-select
+              options-dense
+              filled
+              dense
+              v-model="state.transaction.account"
+              :options="accounts"
+              label=""
+              option-value="id"
+              option-label="name"
+              clearable
+              emit-value
+              map-options
+              :error="$v.account.$error"
+              :error-message="collectErrors($v.account.$errors)"
+              :hide-bottom-space="!$v.account.$error"
+            >
+              <template #label>
+                <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
+              </template>
+              <template #selected-item="scope">
+                <q-item class="q-px-none q-py-sm">
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #option="scope">
+                <q-item class="q-py-sm" v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-select
+              v-if="state.isTransfer"
+              options-dense
+              filled
+              dense
+              v-model="state.transaction.accountTo"
+              :options="accounts"
+              label=""
+              option-value="id"
+              option-label="name"
+              clearable
+              emit-value
+              map-options
+              :error="$v.accountTo.$error"
+              :error-message="collectErrors($v.accountTo.$errors)"
+              :hide-bottom-space="!$v.accountTo.$error"
+            >
+              <template #label> <required-icon /> Account to </template>
+              <template #selected-item="scope">
+                <q-item class="q-px-none q-py-sm">
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #option="scope">
+                <q-item class="q-py-sm" v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
+            <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
+            <div class="row justify-end">
+              <q-btn flat dense class="q-ml-md bg-accent rounded">
+                <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
+                <q-tooltip> Select template </q-tooltip>
+              </q-btn>
+              <q-btn flat dense class="q-ml-md bg-accent rounded">
+                <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
+                <q-tooltip> Select location </q-tooltip>
+              </q-btn>
+            </div>
+          </q-form>
         </q-card-section>
         <q-separator />
         <q-card-actions class="q-pa-md justify-end">
@@ -442,10 +233,6 @@ import { storeToRefs } from "pinia";
 interface State {
   loading: boolean;
   closeAfterAdding: boolean;
-  panel: string;
-  selectedIcon: string;
-  iconSearchText: string | null;
-  selectedColor: string;
   isTransfer: boolean;
   saveAsTemplate: boolean;
   transaction: {
@@ -455,11 +242,6 @@ interface State {
     accountTo: number | null;
     description: string | null;
   };
-  categoryName: string | null;
-  newCategoryParent: number | null;
-  icons: string[][];
-  filteredIcons: string[][];
-  tempIcons: string[][];
 }
 
 const $q = useQuasar();
@@ -469,23 +251,11 @@ const { accounts, categories } = storeToRefs(userStore);
 const appStore = useAppStore();
 const { transactionDialogOpen } = storeToRefs(appStore);
 
-const scrollTargetRef = ref<HTMLElement | null>(null);
-const chunkedIconList = chunkArray<string>(iconList, 10);
-
 const state: State = reactive({
   loading: false,
-  tempIcons: [],
-  newCategoryParent: null,
-  iconSearchText: null,
   closeAfterAdding: false,
-  selectedColor: "#ff00ff",
-  panel: "newTransaction",
-  selectedIcon: "mdi-plus",
-  categoryName: null,
   isTransfer: false,
   saveAsTemplate: false,
-  icons: [],
-  filteredIcons: [],
   transaction: {
     amount: "0",
     category: null,
@@ -506,11 +276,6 @@ const rules = {
 const $v = useVuelidate(rules, state.transaction);
 
 const resetFormData = (resetCloseAfterAdding?: boolean) => {
-  state.icons = [];
-  state.tempIcons = [];
-  state.selectedColor = "#ff00ff";
-  state.selectedIcon = "mdi-plus";
-
   state.transaction = {
     amount: "0",
     category: null,
@@ -528,94 +293,63 @@ const resetFormData = (resetCloseAfterAdding?: boolean) => {
 
 const closeDialog = () => {
   resetFormData(true);
-  state.panel = "newTransaction";
   appStore.toggleTransactionDialog();
-};
-
-const setCategoryIcon = (name: string) => {
-  state.selectedIcon = name;
 };
 
 const createTransactionOrCategory = async () => {
   try {
     state.loading = true;
 
-    if (state.panel === "newTransaction") {
-      if (state.isTransfer) {
-        await getService<ITransactionService>(Types.TransactionService).transfer({
-          amount: parseFloat(state.transaction.amount as string),
-          accountFromId: state.transaction.account as number,
-          accountToId: state.transaction.accountTo as number
-        });
-      } else {
-        await getService<ITransactionService>(Types.TransactionService).create({
+    if (state.isTransfer) {
+      await getService<ITransactionService>(Types.TransactionService).transfer({
+        amount: parseFloat(state.transaction.amount as string),
+        accountFromId: state.transaction.account as number,
+        accountToId: state.transaction.accountTo as number
+      });
+    } else {
+      await getService<ITransactionService>(Types.TransactionService).create({
+        amount: parseFloat(state.transaction.amount as string),
+        accountId: state.transaction.account as number,
+        categoryId: state.transaction.category as number,
+        description: state.transaction.description as string
+      });
+      if (state.saveAsTemplate) {
+        await getService<ITemplateService>(Types.TemplateService).create({
           amount: parseFloat(state.transaction.amount as string),
           accountId: state.transaction.account as number,
           categoryId: state.transaction.category as number,
           description: state.transaction.description as string
         });
-        if (state.saveAsTemplate) {
-          await getService<ITemplateService>(Types.TemplateService).create({
-            amount: parseFloat(state.transaction.amount as string),
-            accountId: state.transaction.account as number,
-            categoryId: state.transaction.category as number,
-            description: state.transaction.description as string
-          });
-        }
       }
+    }
 
-      appStore.notifyTransactionChanged();
+    appStore.notifyTransactionChanged();
 
-      const fetchedAccounts = await getService<IAccountService>(
-        Types.AccountService
-      ).getLatestValues();
+    const fetchedAccounts = await getService<IAccountService>(
+      Types.AccountService
+    ).getLatestValues();
 
-      userStore.setAccounts(fetchedAccounts);
+    userStore.setAccounts(fetchedAccounts);
 
-      $q.notify({
-        message: "Transaction added",
-        color: "dark",
-        textColor: "green",
-        position: "bottom"
-      });
+    $q.notify({
+      message: "Transaction added",
+      color: "dark",
+      textColor: "green",
+      position: "bottom"
+    });
 
-      state.transaction = {
-        amount: "0",
-        category: null,
-        account: null,
-        accountTo: null,
-        description: null
-      };
+    state.transaction = {
+      amount: "0",
+      category: null,
+      account: null,
+      accountTo: null,
+      description: null
+    };
 
-      if (state.closeAfterAdding) {
-        closeDialog();
-      } else {
-        resetFormData();
-      }
+    if (state.closeAfterAdding) {
+      closeDialog();
     } else {
-      await getService<ICategoryService>(Types.CategoryService).createCategory({
-        name: state.categoryName as string,
-        icon: state.selectedIcon,
-        color: state.selectedColor,
-        parentId: state.newCategoryParent || undefined
-      });
-
-      const categories = await getService<ICategoryService>(
-        Types.CategoryService
-      ).getUserCategories();
-      userStore.setCategories(categories);
-
-      state.categoryName = null;
-      state.selectedIcon = "mdi-plus";
-      state.selectedColor = "#ff00ff";
-      state.newCategoryParent = null;
-
-      $q.notify({
-        message: "Category added",
-        color: "dark",
-        position: "bottom",
-        textColor: "green"
-      });
+      resetFormData();
     }
   } catch (e) {
     $q.notify({
@@ -628,40 +362,6 @@ const createTransactionOrCategory = async () => {
     state.loading = false;
   }
 };
-
-const searchIcons = debounce(() => {
-  if (state.iconSearchText !== "" && state.iconSearchText !== null) {
-    // TODO: Memorize initial icons before first actual search
-    state.tempIcons = [...state.icons];
-    state.icons = chunkArray<string>(
-      iconList.filter((icon) =>
-        icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
-      ),
-      10
-    );
-  } else {
-    state.icons = [...state.tempIcons];
-  }
-}, 750);
-
-const onIconLoad = (index: number, done: () => void) => {
-  setTimeout(() => {
-    state.icons.push(chunkedIconList[index + 4]);
-    done();
-  }, 600);
-};
-
-const categoryInfiniteLoadDisabled = computed(
-  () => state.iconSearchText !== "" && state.iconSearchText !== null
-);
-
-watch(transactionDialogOpen, (val) => {
-  if (val) {
-    for (let i = 0; i < 5; i++) {
-      state.icons.push(chunkedIconList[i]);
-    }
-  }
-});
 </script>
 
 <style scoped lang="scss">

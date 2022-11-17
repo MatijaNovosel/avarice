@@ -459,25 +459,23 @@ const getTransactions = async () => {
 };
 
 const deleteTransaction = async (id: number) => {
-  if (state.transactions) {
-    try {
-      await getService<ITransactionService>(Types.TransactionService).delete(id);
-      $q.notify({
-        message: "Transaction deleted!",
-        color: "dark",
-        position: "bottom",
-        textColor: "green"
-      });
-      await getTransactions();
-      appStore.notifyTransactionChanged();
-    } catch (e) {
-      $q.notify({
-        message: (e as Error).message,
-        color: "dark",
-        textColor: "red",
-        position: "bottom"
-      });
-    }
+  try {
+    await getService<ITransactionService>(Types.TransactionService).delete(id);
+    $q.notify({
+      message: "Transaction deleted!",
+      color: "dark",
+      position: "bottom",
+      textColor: "green"
+    });
+    appStore.notifyTransactionChanged();
+    await getTransactions();
+  } catch (e) {
+    $q.notify({
+      message: (e as Error).message,
+      color: "dark",
+      textColor: "red",
+      position: "bottom"
+    });
   }
 };
 
@@ -495,7 +493,7 @@ const setSelectionMode = () => {
 
 const changeRowsPerPage = async (rows: number) => {
   state.pagination.rowsPerPage = rows;
-  await searchDebounce();
+  await getTransactions();
 };
 
 const searchDebounce = debounce(getTransactions, 300);
