@@ -329,7 +329,7 @@ const $q = useQuasar();
 const userStore = useUserStore();
 const { categories } = storeToRefs(userStore);
 const appStore = useAppStore();
-const { transactionCreatedTrigger } = storeToRefs(appStore);
+const { transactionsChangeNotifier } = storeToRefs(appStore);
 const rowsPerPageOptions = [5, 10, 15];
 
 const activeFilters = computed(() => state.transactionType || state.categoryType);
@@ -502,7 +502,7 @@ const changeRowsPerPage = async (rows: number) => {
 
 const searchDebounce = debounce(getTransactions, 300);
 
-watch(transactionCreatedTrigger, getTransactions);
+watch(transactionsChangeNotifier, getTransactions);
 
 const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<string, string>>(
   (x) => ({

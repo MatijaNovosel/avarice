@@ -3,12 +3,6 @@ import { ref, computed } from "vue";
 import { AppUser } from "src/models/user";
 import { AccountModel, CategoryModel } from "src/api/client";
 
-export interface UserStateInterface {
-  data: AppUser | null;
-  categories: CategoryModel[];
-  accounts: AccountModel[];
-}
-
 export const useUserStore = defineStore(
   "user",
   () => {

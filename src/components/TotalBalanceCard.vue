@@ -77,7 +77,7 @@ interface State {
 const userStore = useUserStore();
 const { selectedAccount } = storeToRefs(userStore);
 const appStore = useAppStore();
-const { transactionCreatedTrigger } = storeToRefs(appStore);
+const { transactionsChangeNotifier } = storeToRefs(appStore);
 
 const state: State = reactive({
   expenseAndIncome: null
@@ -100,7 +100,7 @@ const percentages = computed(() => {
     if (expense > income) {
       expensePercentage = 1;
       incomePercentage = income / (expense * -1);
-    } else {
+    } else if (income > expense) {
       incomePercentage = 1;
       expensePercentage = (expense * -1) / income;
     }
@@ -112,7 +112,7 @@ const percentages = computed(() => {
   };
 });
 
-watch([selectedAccount, transactionCreatedTrigger], getExpenseAndIncome);
+watch([selectedAccount, transactionsChangeNotifier], getExpenseAndIncome);
 
 onMounted(async () => {
   await getExpenseAndIncome();

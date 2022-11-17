@@ -2,18 +2,10 @@ import { defineStore } from "pinia";
 import { setCssVar } from "quasar";
 import { ref } from "vue";
 
-export interface AppStoreState {
-  transactionDialogOpen: boolean;
-  accountDialogOpen: boolean;
-  categoryDialogOpen: boolean;
-  transactionCreatedTrigger: boolean;
-  accentColor: string;
-}
-
 export const useAppStore = defineStore(
   "app",
   () => {
-    const transactionCreatedTrigger = ref(false);
+    const transactionsChangeNotifier = ref(false);
     const accentColor = ref("#f44336");
 
     const transactionDialogOpen = ref(false);
@@ -21,7 +13,7 @@ export const useAppStore = defineStore(
     const accountDialogOpen = ref(false);
 
     const notifyTransactionCreated = () => {
-      transactionCreatedTrigger.value = !transactionCreatedTrigger.value;
+      transactionsChangeNotifier.value = !transactionsChangeNotifier.value;
     };
 
     const toggleTransactionDialog = () => {
@@ -47,7 +39,7 @@ export const useAppStore = defineStore(
       transactionDialogOpen,
       toggleTransactionDialog,
       notifyTransactionCreated,
-      transactionCreatedTrigger,
+      transactionsChangeNotifier,
       categoryDialogOpen,
       accountDialogOpen,
       toggleCategoryDialog,
