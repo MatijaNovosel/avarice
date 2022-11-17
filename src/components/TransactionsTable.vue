@@ -460,18 +460,16 @@ const getTransactions = async () => {
 
 const deleteTransaction = async (id: number) => {
   if (state.transactions) {
-    const transaction = state.transactions.data.find((t) => t.id === id);
     try {
-      if (transaction) {
-        await getService<ITransactionService>(Types.TransactionService).delete(transaction.id);
-        $q.notify({
-          message: "Transaction deleted!",
-          color: "dark",
-          position: "bottom",
-          textColor: "green"
-        });
-        await getTransactions();
-      }
+      await getService<ITransactionService>(Types.TransactionService).delete(id);
+      $q.notify({
+        message: "Transaction deleted!",
+        color: "dark",
+        position: "bottom",
+        textColor: "green"
+      });
+      await getTransactions();
+      appStore.notifyTransactionChanged();
     } catch (e) {
       $q.notify({
         message: (e as Error).message,

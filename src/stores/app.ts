@@ -12,7 +12,7 @@ export const useAppStore = defineStore(
     const categoryDialogOpen = ref(false);
     const accountDialogOpen = ref(false);
 
-    const notifyTransactionCreated = () => {
+    const notifyTransactionChanged = () => {
       transactionsChangeNotifier.value = !transactionsChangeNotifier.value;
     };
 
@@ -38,7 +38,7 @@ export const useAppStore = defineStore(
       changeAccentColor,
       transactionDialogOpen,
       toggleTransactionDialog,
-      notifyTransactionCreated,
+      notifyTransactionChanged,
       transactionsChangeNotifier,
       categoryDialogOpen,
       accountDialogOpen,

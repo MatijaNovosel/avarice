@@ -14,6 +14,13 @@ export const formatBalance = (balance: number | undefined, currency: string | un
   return "";
 };
 
+export const formatNumericValue = (val: number | undefined) => {
+  if (val !== undefined) {
+    return new Intl.NumberFormat().format(val);
+  }
+  return "";
+};
+
 export const acronym = (txt: string) => {
   return txt
     .split(" ")

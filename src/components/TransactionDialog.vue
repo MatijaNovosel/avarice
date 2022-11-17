@@ -564,7 +564,7 @@ const createTransactionOrCategory = async () => {
         }
       }
 
-      appStore.notifyTransactionCreated();
+      appStore.notifyTransactionChanged();
 
       const fetchedAccounts = await getService<IAccountService>(
         Types.AccountService

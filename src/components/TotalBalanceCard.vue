@@ -12,11 +12,12 @@
         <q-card-section class="row items-center justify-between q-pb-sm">
           <span class="text-grey-6"> Account balance </span>
         </q-card-section>
-        <q-card-section class="column q-pb-sm q-pt-none">
+        <q-card-section class="row items-end q-pb-sm q-pt-none">
           <span class="text-h3">
-            {{
-              formatBalance(userStore.selectedAccount.balance, userStore.selectedAccount.currency)
-            }}
+            {{ formatNumericValue(userStore.selectedAccount.balance) }}
+          </span>
+          <span class="text-h5 q-ml-sm text-accent">
+            {{ userStore.selectedAccount.currency }}
           </span>
         </q-card-section>
         <q-separator class="q-my-sm" />
@@ -65,7 +66,7 @@ import { AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
-import { formatBalance } from "src/utils/helpers";
+import { formatBalance, formatNumericValue } from "src/utils/helpers";
 import { watch, reactive, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useAppStore } from "src/stores/app";
