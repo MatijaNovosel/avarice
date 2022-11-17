@@ -214,15 +214,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, ref, watch } from "vue";
-import { useQuasar, debounce } from "quasar";
-import { chunkArray, formatBalance, collectErrors } from "src/utils/helpers";
+import { reactive } from "vue";
+import { useQuasar } from "quasar";
+import { formatBalance, collectErrors } from "src/utils/helpers";
 import { getService, Types } from "src/di-container";
 import ITransactionService from "src/api/interfaces/transactionService";
-import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import ITemplateService from "src/api/interfaces/templateService";
-import iconList from "../utils/icons";
 import { useUserStore } from "src/stores/user";
 import { required, decimal, requiredIf } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
@@ -363,9 +361,3 @@ const createTransactionOrCategory = async () => {
   }
 };
 </script>
-
-<style scoped lang="scss">
-.bg-icon-list {
-  background-color: #151414;
-}
-</style>
