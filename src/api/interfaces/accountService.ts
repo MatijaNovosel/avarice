@@ -8,6 +8,6 @@ import {
 export default interface IAccountService {
   getLatestValues(): Promise<AccountModel[]>;
   getExpenseAndIncomeInTimePeriod(accountId: number): Promise<AccountExpenseAndIncomeModel>;
-  getAccountHistory(accountId: number): Promise<AccountHistoryModel[]>;
+  getAccountHistory(accountId: number, timePeriod: number): Promise<AccountHistoryModel[]>;
   create(payload: ICreateAccountModel): Promise<void>;
 }

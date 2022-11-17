@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="rounded-md" style="height: 240px">
+  <q-card flat class="rounded-md" :style="{ height: `${CARD_HEIGHT}px` }">
     <q-card-section>
       <q-btn flat dense class="q-mr-md bg-grey-9 rounded">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
@@ -21,9 +21,9 @@
     <q-card-section class="q-pa-none">
       <line-chart
         v-if="state.chartData"
-        style="height: 168px"
+        :style="{ height: `${CARD_HEIGHT - 72}px` }"
         :chart-data="state.chartData"
-        :options="state.chartOptions"
+        :options="chartOptions"
         ref="lineChartRef"
       />
     </q-card-section>
@@ -43,63 +43,66 @@ import { formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { storeToRefs } from "pinia";
+import { TIME_PERIOD } from "src/utils/constants";
 
 interface State {
   chartData: ChartData<"line"> | null;
-  chartOptions: ChartOptions<"line">;
-  timePeriod: string | null;
+  timePeriod: number;
   graphData: AccountHistoryModel[] | null;
 }
 
 const { accentColor } = storeToRefs(useAppStore());
 const { selectedAccount } = storeToRefs(useUserStore());
 const lineChartRef = ref(null);
+const CARD_HEIGHT = 240;
+
+const chartOptions: ChartOptions<"line"> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: {
+    mode: "nearest",
+    axis: "x",
+    intersect: false
+  },
+  scales: {
+    y: {
+      display: false
+    },
+    x: {
+      display: false
+    }
+  },
+  plugins: {
+    legend: {
+      display: false
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => formatBalance(context.parsed.y, "HRK")
+      }
+    }
+  }
+};
 
 const state: State = reactive({
   chartData: null,
   graphData: null,
-  timePeriod: "30D",
-  chartOptions: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: "nearest",
-      axis: "x",
-      intersect: false
-    },
-    scales: {
-      y: {
-        display: false
-      },
-      x: {
-        display: false
-      }
-    },
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => formatBalance(context.parsed.y, "HRK")
-        }
-      }
-    }
-  }
+  timePeriod: TIME_PERIOD.ThirtyDays
 });
 
-const graphDateOptions: SelectItem<string, string>[] = [
-  { label: "7D", value: "7D" },
-  { label: "30D", value: "30D" },
-  { label: "12W", value: "12W" },
-  { label: "6M", value: "6M" },
-  { label: "1Y", value: "1Y" }
+const graphDateOptions: SelectItem<string, number>[] = [
+  { label: "7D", value: TIME_PERIOD.SevenDays },
+  { label: "30D", value: TIME_PERIOD.ThirtyDays },
+  { label: "12W", value: TIME_PERIOD.TwelveWeeks },
+  { label: "6M", value: TIME_PERIOD.SixMonths },
+  { label: "1Y", value: TIME_PERIOD.OneYear }
 ];
 
 const updateGraph = async () => {
   if (selectedAccount.value) {
     state.graphData = await getService<IAccountService>(Types.AccountService).getAccountHistory(
-      selectedAccount.value.id
+      selectedAccount.value.id,
+      state.timePeriod
     );
 
     if (state.graphData) {
@@ -112,13 +115,13 @@ const updateGraph = async () => {
             borderColor: accentColor.value,
             pointRadius: 0,
             fill: true,
-            data: state.graphData.map((dataItem) => dataItem.amount).reverse(),
+            data: state.graphData.map(({ amount }) => amount).reverse(),
             pointHoverRadius: 5,
             pointHoverBackgroundColor: "#ff3f2b",
             tension: 0.2
           }
         ],
-        labels: state.graphData.map((dataItem) => format(dataItem.date, "dd.MM.yyyy.")).reverse()
+        labels: state.graphData.map(({ date }) => format(date, "dd.MM.yyyy.")).reverse()
       };
     }
   }
@@ -128,7 +131,7 @@ onMounted(async () => {
   await updateGraph();
 });
 
-watch([accentColor, selectedAccount], updateGraph);
+watch([accentColor, selectedAccount, () => state.timePeriod], updateGraph);
 </script>
 
 <style lang="scss">

@@ -10,9 +10,9 @@ import { api } from "src/boot/axios";
 import IAccountService from "../interfaces/accountService";
 
 class AccountService implements IAccountService {
-  async getAccountHistory(accountId: number): Promise<AccountHistoryModel[]> {
+  async getAccountHistory(accountId: number, timePeriod: number): Promise<AccountHistoryModel[]> {
     const client = new Client(process.env.API_URL, api);
-    const data = await client.account_GetAccountHistory(accountId);
+    const data = await client.account_GetAccountHistory(accountId, timePeriod);
     return data;
   }
 
