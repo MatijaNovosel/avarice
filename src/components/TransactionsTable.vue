@@ -292,6 +292,7 @@ import {
   TRANSACTION_TYPE_ICON
 } from "src/utils/constants";
 import { storeToRefs } from "pinia";
+import IAccountService from "src/api/interfaces/accountService";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;
@@ -468,7 +469,10 @@ const deleteTransaction = async (id: number) => {
       textColor: "green"
     });
     appStore.notifyTransactionChanged();
-    await getTransactions();
+    const fetchedAccounts = await getService<IAccountService>(
+      Types.AccountService
+    ).getLatestValues();
+    userStore.setAccounts(fetchedAccounts);
   } catch (e) {
     $q.notify({
       message: (e as Error).message,
