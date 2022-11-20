@@ -4,7 +4,7 @@
   💾 <a href="https://github.com/MatijaNovosel/avarice-backend">Backend</a>
 </p>
 <p align=center>
-  📱 <a href="https://github.com/MatijaNovosel/avarice-mobile">Mobile version</a>
+  📱 <a href="https://github.com/MatijaNovosel/avarice-mobile">Mobile</a>
 </p>
 
 ![Dashboard](https://user-images.githubusercontent.com/36193643/194028498-1e2f76c5-0412-4d74-9e22-40f325642963.png)
