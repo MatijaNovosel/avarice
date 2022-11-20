@@ -1,9 +1,9 @@
 import {
-  IAddTransactionDto,
   AddTransactionDto,
-  IAddTransferDto,
   AddTransferDto,
   Client,
+  IAddTransactionDto,
+  IAddTransferDto,
   PageableCollectionOfTransactionModel,
   TransactionActivityHeatmapModel
 } from "src/api/client";

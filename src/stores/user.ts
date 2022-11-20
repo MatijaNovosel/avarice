@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { AppUser } from "src/models/user";
 import { AccountModel, CategoryModel } from "src/api/client";
+import { AppUser } from "src/models/user";
+import { computed, ref } from "vue";
 
 export const useUserStore = defineStore(
   "user",

@@ -214,19 +214,19 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import useVuelidate from "@vuelidate/core";
+import { decimal, required, requiredIf } from "@vuelidate/validators";
+import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { formatBalance, collectErrors } from "src/utils/helpers";
-import { getService, Types } from "src/di-container";
+import IAccountService from "src/api/interfaces/accountService";
+import ITemplateService from "src/api/interfaces/templateService";
 import ITransactionService from "src/api/interfaces/transactionService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
-import ITemplateService from "src/api/interfaces/templateService";
-import { useUserStore } from "src/stores/user";
-import { required, decimal, requiredIf } from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
-import IAccountService from "src/api/interfaces/accountService";
+import { getService, Types } from "src/di-container";
 import { useAppStore } from "src/stores/app";
-import { storeToRefs } from "pinia";
+import { useUserStore } from "src/stores/user";
+import { collectErrors, formatBalance } from "src/utils/helpers";
+import { reactive } from "vue";
 
 interface State {
   loading: boolean;

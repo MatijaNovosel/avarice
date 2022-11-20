@@ -1,17 +1,17 @@
 import { Container } from "inversify";
 import "reflect-metadata";
-import IWebStorage from "src/api/interfaces/webStorageService";
-import SessionStorage from "src/api/services/sessionStorageService";
-import AuthService from "src/api/services/authService";
 import IAuthService from "src/api/interfaces/authService";
-import AccountService from "./api/services/accountService";
+import IWebStorage from "src/api/interfaces/webStorageService";
+import AuthService from "src/api/services/authService";
+import SessionStorage from "src/api/services/sessionStorageService";
 import IAccountService from "./api/interfaces/accountService";
-import TransactionService from "./api/services/transactionService";
-import ITransactionService from "./api/interfaces/transactionService";
-import CategoryService from "./api/services/categoryService";
 import ICategoryService from "./api/interfaces/categoryService";
-import TemplateService from "./api/services/templateService";
 import ITemplateService from "./api/interfaces/templateService";
+import ITransactionService from "./api/interfaces/transactionService";
+import AccountService from "./api/services/accountService";
+import CategoryService from "./api/services/categoryService";
+import TemplateService from "./api/services/templateService";
+import TransactionService from "./api/services/transactionService";
 
 export class Types {
   static readonly WebStorageService = Symbol("IWebStorageService");

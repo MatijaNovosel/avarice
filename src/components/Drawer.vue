@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts" setup>
+import DrawerItem from "src/components/DrawerItem.vue";
 import { DrawerItem as DrawerItemModel } from "src/models/common";
 import { PropType, reactive } from "vue";
-import DrawerItem from "src/components/DrawerItem.vue";
 
 interface State {
   drawer: boolean;

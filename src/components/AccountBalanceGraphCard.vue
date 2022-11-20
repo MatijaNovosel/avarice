@@ -31,19 +31,19 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from "vue";
-import { getService, Types } from "src/di-container";
-import IAccountService from "src/api/interfaces/accountService";
 import { ChartData, ChartOptions } from "chart.js";
-import { LineChart } from "vue-chart-3";
 import { format } from "date-fns";
+import { storeToRefs } from "pinia";
 import { AccountHistoryModel } from "src/api/client";
+import IAccountService from "src/api/interfaces/accountService";
+import { getService, Types } from "src/di-container";
 import { SelectItem } from "src/models/common";
-import { formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { storeToRefs } from "pinia";
 import { TIME_PERIOD } from "src/utils/constants";
+import { formatBalance } from "src/utils/helpers";
+import { onMounted, reactive, ref, watch } from "vue";
+import { LineChart } from "vue-chart-3";
 
 interface State {
   chartData: ChartData<"line"> | null;

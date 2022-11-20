@@ -275,15 +275,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, onMounted, watch } from "vue";
-import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
-import { ITransactionModel } from "src/api/client";
 import { format } from "date-fns";
-import { formatBalance } from "src/utils/helpers";
+import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
-import { getService, Types } from "src/di-container";
+import { ITransactionModel } from "src/api/client";
+import IAccountService from "src/api/interfaces/accountService";
 import ITransactionService from "src/api/interfaces/transactionService";
+import { getService, Types } from "src/di-container";
 import { PageableCollection, SelectItem } from "src/models/common";
+import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import {
@@ -291,8 +291,8 @@ import {
   TRANSACTION_TYPE_COLOR,
   TRANSACTION_TYPE_ICON
 } from "src/utils/constants";
-import { storeToRefs } from "pinia";
-import IAccountService from "src/api/interfaces/accountService";
+import { formatBalance } from "src/utils/helpers";
+import { computed, onMounted, reactive, watch } from "vue";
 
 interface TransactionModelExtended extends ITransactionModel {
   id: number;

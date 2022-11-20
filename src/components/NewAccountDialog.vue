@@ -60,16 +60,16 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
-import { required, numeric, minLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
-import { collectErrors } from "src/utils/helpers";
+import { minLength, numeric, required } from "@vuelidate/validators";
+import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
-import { useUserStore } from "src/stores/user";
 import { useAppStore } from "src/stores/app";
-import { storeToRefs } from "pinia";
+import { useUserStore } from "src/stores/user";
+import { collectErrors } from "src/utils/helpers";
+import { reactive } from "vue";
 
 interface State {
   loading: boolean;

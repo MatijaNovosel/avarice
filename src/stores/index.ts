@@ -1,7 +1,7 @@
-import { store } from "quasar/wrappers";
 import { createPinia } from "pinia";
-import { Router } from "vue-router";
 import piniaPersist from "pinia-plugin-persist";
+import { store } from "quasar/wrappers";
+import { Router } from "vue-router";
 
 declare module "pinia" {
   export interface PiniaCustomProperties {

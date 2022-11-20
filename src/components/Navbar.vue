@@ -65,14 +65,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { DrawerItem } from "src/models/common";
 import ROUTE_NAMES from "src/router/routeNames";
-import { acronym, formatBalance } from "src/utils/helpers";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { DrawerItem } from "src/models/common";
-import { storeToRefs } from "pinia";
+import { acronym, formatBalance } from "src/utils/helpers";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 const { toggleTransactionDialog, changeAccentColor } = useAppStore();
 const userStore = useUserStore();

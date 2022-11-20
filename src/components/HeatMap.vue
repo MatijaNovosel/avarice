@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
 import * as d3 from "d3";
-import { getService, Types } from "src/di-container";
-import ITransactionService from "src/api/interfaces/transactionService";
-import { TransactionActivityHeatmapModel } from "src/api/client";
 import { format } from "date-fns";
+import { TransactionActivityHeatmapModel } from "src/api/client";
+import ITransactionService from "src/api/interfaces/transactionService";
+import { getService, Types } from "src/di-container";
+import { onMounted, ref } from "vue";
 
 interface d3MouseEvent {
   layerX: number;

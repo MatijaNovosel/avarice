@@ -64,20 +64,20 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
-import { DecodedToken } from "src/models/auth";
-import jwt_decode from "jwt-decode";
-import { getService, Types } from "src/di-container";
-import IAuthService from "src/api/interfaces/authService";
-import ROUTE_NAMES from "src/router/routeNames";
-import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
-import { required, email } from "@vuelidate/validators";
-import ICategoryService from "src/api/interfaces/categoryService";
-import IAccountService from "src/api/interfaces/accountService";
 import useVuelidate from "@vuelidate/core";
-import { collectErrors } from "src/utils/helpers";
+import { email, required } from "@vuelidate/validators";
+import jwt_decode from "jwt-decode";
+import { useQuasar } from "quasar";
+import IAccountService from "src/api/interfaces/accountService";
+import IAuthService from "src/api/interfaces/authService";
+import ICategoryService from "src/api/interfaces/categoryService";
+import { getService, Types } from "src/di-container";
+import { DecodedToken } from "src/models/auth";
+import ROUTE_NAMES from "src/router/routeNames";
 import { useUserStore } from "src/stores/user";
+import { collectErrors } from "src/utils/helpers";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
 
 interface State {
   loading: boolean;

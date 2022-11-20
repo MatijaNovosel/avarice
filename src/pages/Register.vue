@@ -79,14 +79,14 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
-import { getService, Types } from "src/di-container";
-import IAuthService from "src/api/interfaces/authService";
-import { useQuasar } from "quasar";
-import { required, email, helpers, minLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
-import { collectErrors } from "src/utils/helpers";
+import { email, helpers, minLength, required } from "@vuelidate/validators";
+import { useQuasar } from "quasar";
+import IAuthService from "src/api/interfaces/authService";
+import { getService, Types } from "src/di-container";
 import ROUTE_NAMES from "src/router/routeNames";
+import { collectErrors } from "src/utils/helpers";
+import { reactive } from "vue";
 
 interface State {
   loading: boolean;

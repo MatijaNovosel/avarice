@@ -62,14 +62,14 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
 import { AccountExpenseAndIncomeModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
+import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance, formatNumericValue } from "src/utils/helpers";
-import { watch, reactive, onMounted, computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useAppStore } from "src/stores/app";
+import { computed, onMounted, reactive, watch } from "vue";
 
 interface State {
   expenseAndIncome: AccountExpenseAndIncomeModel | null;

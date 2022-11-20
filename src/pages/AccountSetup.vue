@@ -61,16 +61,16 @@
 </template>
 
 <script lang="ts" setup>
-import { collectErrors } from "src/utils/helpers";
 import useVuelidate from "@vuelidate/core";
-import { required, numeric, minLength } from "@vuelidate/validators";
-import { reactive } from "vue";
+import { minLength, numeric, required } from "@vuelidate/validators";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
-import { useUserStore } from "src/stores/user";
-import { useRouter } from "vue-router";
 import ROUTE_NAMES from "src/router/routeNames";
+import { useUserStore } from "src/stores/user";
+import { collectErrors } from "src/utils/helpers";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
 
 interface State {
   loading: boolean;

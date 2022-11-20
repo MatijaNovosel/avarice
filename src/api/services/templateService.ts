@@ -1,8 +1,8 @@
 import {
-  Client,
-  PageableCollectionOfTemplateModel,
   AddTemplateDto,
-  IAddTemplateDto
+  Client,
+  IAddTemplateDto,
+  PageableCollectionOfTemplateModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
 import ITemplateService from "../interfaces/templateService";

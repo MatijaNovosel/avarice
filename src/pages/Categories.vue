@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
 import { CategoryModel } from "src/api/client";
+import NewCategoryDialog from "src/components/NewCategoryDialog.vue";
 import { useUserStore } from "src/stores/user";
 import { onMounted, ref } from "vue";
-import NewCategoryDialog from "src/components/NewCategoryDialog.vue";
-import { storeToRefs } from "pinia";
 
 interface CategoryModelWithChildren extends CategoryModel {
   children: CategoryModelWithChildren[];

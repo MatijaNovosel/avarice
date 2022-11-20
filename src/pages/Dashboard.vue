@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-import TransactionsTable from "src/components/TransactionsTable.vue";
+import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
 import AccountList from "src/components/AccountList.vue";
 import TotalBalanceCard from "src/components/TotalBalanceCard.vue";
-import AccountBalanceGraphCard from "src/components/AccountBalanceGraphCard.vue";
+import TransactionsTable from "src/components/TransactionsTable.vue";
 </script>

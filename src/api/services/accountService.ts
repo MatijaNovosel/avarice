@@ -1,10 +1,10 @@
 import {
-  AccountModel,
   AccountExpenseAndIncomeModel,
-  Client,
   AccountHistoryModel,
-  ICreateAccountModel,
-  CreateAccountModel
+  AccountModel,
+  Client,
+  CreateAccountModel,
+  ICreateAccountModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
 import IAccountService from "../interfaces/accountService";

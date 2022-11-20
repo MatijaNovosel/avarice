@@ -173,17 +173,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, watch } from "vue";
-import { required, minLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
-import { chunkArray, collectErrors } from "src/utils/helpers";
+import { minLength, required } from "@vuelidate/validators";
+import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
+import ICategoryService from "src/api/interfaces/categoryService";
+import RequiredIcon from "src/components/RequiredIcon.vue";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
+import { chunkArray, collectErrors } from "src/utils/helpers";
 import iconList from "src/utils/icons";
-import RequiredIcon from "src/components/RequiredIcon.vue";
-import ICategoryService from "src/api/interfaces/categoryService";
-import { storeToRefs } from "pinia";
+import { computed, reactive, watch } from "vue";
 
 interface State {
   open: boolean;

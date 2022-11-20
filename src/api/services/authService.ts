@@ -1,4 +1,4 @@
-import { LoginResult, Client, RegisterResult, RegistrationModel, LoginModel } from "src/api/client";
+import { Client, LoginModel, LoginResult, RegisterResult, RegistrationModel } from "src/api/client";
 import IAuthService from "../interfaces/authService";
 
 class AuthService implements IAuthService {

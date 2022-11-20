@@ -1,7 +1,7 @@
 import {
-  AccountModel,
   AccountExpenseAndIncomeModel,
   AccountHistoryModel,
+  AccountModel,
   ICreateAccountModel
 } from "src/api/client";
 
