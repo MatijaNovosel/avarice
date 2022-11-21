@@ -1,10 +1,10 @@
 <h1 align=center>Avarice</h1>
 <p align=center>App for tracking personal finances</p>
-<p align=center>
-  💾 <a href="https://github.com/MatijaNovosel/avarice-backend">Backend</a>
-</p>
-<p align=center>
-  📱 <a href="https://github.com/MatijaNovosel/avarice-mobile">Mobile version</a>
+<p align="center">
+  <samp>
+    <a href="https://github.com/MatijaNovosel/avarice-backend">💾 Backend</a> |
+    <a href="https://github.com/MatijaNovosel/avarice-mobile">📱 Mobile</a>
+  </samp>
 </p>
 
 ![Dashboard](https://user-images.githubusercontent.com/36193643/194028498-1e2f76c5-0412-4d74-9e22-40f325642963.png)
