@@ -10,7 +10,7 @@
       <template v-else>
         <q-card-section class="row justify-between items-center">
           <span class="text-h6"> New transaction </span>
-          <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-9 rounded">
+          <q-btn size="xs" @click="closeDialog" flat dense class="bg-grey-9 rounded">
             <q-icon class="q-pa-xs" name="mdi-close" size="xs" />
           </q-btn>
         </q-card-section>

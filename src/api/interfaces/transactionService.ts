@@ -17,4 +17,5 @@ export default interface ITransactionService {
   create(payload: IAddTransactionDto): Promise<void>;
   transfer(payload: IAddTransferDto): Promise<void>;
   delete(id: number): Promise<void>;
+  duplicate(id: number): Promise<void>;
 }

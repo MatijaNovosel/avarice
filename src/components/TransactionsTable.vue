@@ -177,7 +177,7 @@
                 <q-item-label> Edit transaction </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable>
+            <q-item clickable @click="duplicateTransaction(props.row.id)">
               <q-item-section>
                 <q-item-label> Create copy of transaction </q-item-label>
               </q-item-section>
@@ -250,7 +250,7 @@
                     <q-item-label> Edit transaction </q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable>
+                <q-item clickable @click="duplicateTransaction(props.row.id)">
                   <q-item-section>
                     <q-item-label> Create copy of transaction </q-item-label>
                   </q-item-section>
@@ -464,6 +464,30 @@ const deleteTransaction = async (id: number) => {
     await getService<ITransactionService>(Types.TransactionService).delete(id);
     $q.notify({
       message: "Transaction deleted!",
+      color: "dark",
+      position: "bottom",
+      textColor: "green"
+    });
+    appStore.notifyTransactionChanged();
+    const fetchedAccounts = await getService<IAccountService>(
+      Types.AccountService
+    ).getLatestValues();
+    userStore.setAccounts(fetchedAccounts);
+  } catch (e) {
+    $q.notify({
+      message: (e as Error).message,
+      color: "dark",
+      textColor: "red",
+      position: "bottom"
+    });
+  }
+};
+
+const duplicateTransaction = async (id: number) => {
+  try {
+    await getService<ITransactionService>(Types.TransactionService).duplicate(id);
+    $q.notify({
+      message: "Transaction duplicated!",
       color: "dark",
       position: "bottom",
       textColor: "green"

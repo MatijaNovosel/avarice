@@ -45,6 +45,10 @@ class TransactionService implements ITransactionService {
     );
     return data;
   }
+  async duplicate(id: number): Promise<void> {
+    const client = new Client(process.env.API_URL, api);
+    await client.transaction_Duplicate(id);
+  }
 }
 
 export default TransactionService;
