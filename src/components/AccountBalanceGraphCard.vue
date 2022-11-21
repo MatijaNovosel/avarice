@@ -75,7 +75,7 @@ const chartOptions: ChartOptions<"line"> = {
       },
       grid: {
         borderDash: [6, 6],
-        color: "rba(1, 1, 1, 0.5)"
+        color: "rgba(220,220,220, 0.2)"
       }
     },
     x: {
