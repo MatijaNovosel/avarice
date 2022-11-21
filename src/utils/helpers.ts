@@ -1,4 +1,5 @@
 import { ErrorObject } from "@vuelidate/core";
+import { SI_SYMBOL } from "./constants";
 
 export const sample = <T>(array: T[]) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -58,4 +59,13 @@ export const shadeColor = (color: string, percent: number) => {
         ("0" + Math.min(255, Math.max(0, parseInt(color, 16) + percent)).toString(16)).substr(-2)
       )
   );
+};
+
+export const abbreviateNumber = (val: number): string => {
+  const tier = (Math.log10(Math.abs(val)) / 3) | 0;
+  if (tier === 0) return val.toString();
+  const suffix = SI_SYMBOL[tier];
+  const scale = Math.pow(10, tier * 3);
+  const scaled = val / scale;
+  return scaled.toFixed(1) + suffix;
 };

@@ -20,18 +20,17 @@
     </q-card-section>
     <q-card-section class="q-pa-none">
       <line-chart
-        v-if="state.chartData"
         :style="{ height: `${CARD_HEIGHT - 72}px` }"
         :chart-data="state.chartData"
         :options="chartOptions"
-        ref="lineChartRef"
+        ref="chartRef"
       />
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts" setup>
-import { ChartData, ChartOptions } from "chart.js";
+import { Chart, ChartData, ChartOptions } from "chart.js";
 import { format } from "date-fns";
 import { storeToRefs } from "pinia";
 import { AccountHistoryModel } from "src/api/client";
@@ -41,19 +40,19 @@ import { SelectItem } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { TIME_PERIOD } from "src/utils/constants";
-import { formatBalance } from "src/utils/helpers";
+import { abbreviateNumber, formatBalance } from "src/utils/helpers";
 import { onMounted, reactive, ref, watch } from "vue";
 import { LineChart } from "vue-chart-3";
 
 interface State {
-  chartData: ChartData<"line"> | null;
+  chartData: ChartData<"line">;
   timePeriod: number;
   graphData: AccountHistoryModel[] | null;
 }
 
 const { accentColor } = storeToRefs(useAppStore());
 const { selectedAccount } = storeToRefs(useUserStore());
-const lineChartRef = ref(null);
+const chartRef = ref<Chart | null>(null);
 const CARD_HEIGHT = 240;
 
 const chartOptions: ChartOptions<"line"> = {
@@ -64,9 +63,20 @@ const chartOptions: ChartOptions<"line"> = {
     axis: "x",
     intersect: false
   },
+  layout: {
+    padding: 20
+  },
   scales: {
     y: {
-      display: false
+      ticks: {
+        callback: (label, index, labels) => {
+          return abbreviateNumber(parseFloat(label.toString()));
+        }
+      },
+      grid: {
+        borderDash: [6, 6],
+        color: "rba(1, 1, 1, 0.5)"
+      }
     },
     x: {
       display: false
@@ -85,9 +95,12 @@ const chartOptions: ChartOptions<"line"> = {
 };
 
 const state: State = reactive({
-  chartData: null,
+  chartData: {
+    datasets: [],
+    labels: []
+  },
   graphData: null,
-  timePeriod: TIME_PERIOD.ThirtyDays
+  timePeriod: TIME_PERIOD.SixMonths
 });
 
 const graphDateOptions: SelectItem<string, number>[] = [
@@ -109,15 +122,12 @@ const updateGraph = async () => {
       state.chartData = {
         datasets: [
           {
-            pointBackgroundColor: "rgba(0, 0, 0, 0)",
-            pointBorderColor: "rgba(0, 0, 0, 0)",
             backgroundColor: accentColor.value,
             borderColor: accentColor.value,
             pointRadius: 0,
             fill: true,
             data: state.graphData.map(({ amount }) => amount).reverse(),
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "#ff3f2b",
             tension: 0.2
           }
         ],
