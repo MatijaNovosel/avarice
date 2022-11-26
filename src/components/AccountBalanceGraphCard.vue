@@ -70,10 +70,11 @@ const chartOptions: ChartOptions<"line"> = {
     y: {
       ticks: {
         callback: (label, index, labels) => {
-          return abbreviateNumber(parseFloat(label.toString()));
+          return abbreviateNumber(parseFloat(label as string));
         }
       },
       grid: {
+        drawBorder: false,
         borderDash: [6, 6],
         color: "rgba(220,220,220, 0.2)"
       }

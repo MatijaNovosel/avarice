@@ -10,7 +10,7 @@
     >
       <template v-if="userStore.selectedAccount">
         <q-card-section class="row items-center justify-between q-pb-sm">
-          <span class="text-grey-6"> Account balance </span>
+          <span class="text-grey-6"> Balance </span>
         </q-card-section>
         <q-card-section class="row items-end q-pb-sm q-pt-none">
           <span class="text-h3">

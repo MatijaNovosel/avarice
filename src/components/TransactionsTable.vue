@@ -1,6 +1,5 @@
 <template>
-  <div class="row justify-between bg-grey-10 q-py-md q-pr-md q-pl-lg items-center rounded-t-md">
-    <span class="text-grey-6"> Transactions </span>
+  <div class="row justify-end bg-grey-10 q-py-sm q-pr-md q-pl-lg items-center rounded-t-md">
     <div class="row">
       <q-btn v-if="!hidePageSelection" no-caps class="bg-accent q-mr-md rounded">
         {{ state.pagination.rowsPerPage }} records per page
@@ -114,10 +113,6 @@
             </q-btn>
           </div>
         </q-menu>
-      </q-btn>
-      <q-btn flat dense class="q-mr-md rounded bg-grey-9">
-        <q-icon class="q-pa-xs" name="mdi-information" size="sm" />
-        <q-tooltip> Tip: You can right click on a row to display cooresponding actions! </q-tooltip>
       </q-btn>
       <q-input
         @update:model-value="searchDebounce"
