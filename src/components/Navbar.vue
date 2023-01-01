@@ -68,12 +68,13 @@
 </template>
 
 <script lang="ts" setup>
+import { acronym } from "matija-utils";
 import { storeToRefs } from "pinia";
 import { DrawerItem } from "src/models/common";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { acronym, formatBalance } from "src/utils/helpers";
+import { formatBalance } from "src/utils/helpers";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 

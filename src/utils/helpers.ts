@@ -1,9 +1,4 @@
 import { ErrorObject } from "@vuelidate/core";
-import { SI_SYMBOL } from "./constants";
-
-export const sample = <T>(array: T[]) => {
-  return array[Math.floor(Math.random() * array.length)];
-};
 
 export const formatBalance = (balance: number | undefined, currency: string | undefined) => {
   if (balance !== undefined && currency !== undefined) {
@@ -22,50 +17,6 @@ export const formatNumericValue = (val: number | undefined) => {
   return "";
 };
 
-export const acronym = (txt: string) => {
-  return txt
-    .split(" ")
-    .map((item) => item[0])
-    .join("");
-};
-
-export const randInt = (start: number, end: number) => {
-  const min = Math.ceil(start);
-  const max = Math.floor(end);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-export const chunkArray = <T>(array: T[], chunkSize: number): T[][] => {
-  if (chunkSize <= 0) {
-    throw new Error("Invalid chunk size");
-  }
-  const res: T[][] = [];
-  for (let i = 0, len = array.length; i < len; i += chunkSize) {
-    res.push(array.slice(i, i + chunkSize));
-  }
-  return res;
-};
-
 export const collectErrors = (errors: ErrorObject[]) => {
   return errors.map((error) => error.$message).join("");
-};
-
-export const shadeColor = (color: string, percent: number) => {
-  return (
-    "#" +
-    color
-      .replace(/^#/, "")
-      .replace(/../g, (color) =>
-        ("0" + Math.min(255, Math.max(0, parseInt(color, 16) + percent)).toString(16)).substr(-2)
-      )
-  );
-};
-
-export const abbreviateNumber = (val: number): string => {
-  const tier = (Math.log10(Math.abs(val)) / 3) | 0;
-  if (tier === 0) return val.toString();
-  const suffix = SI_SYMBOL[tier];
-  const scale = Math.pow(10, tier * 3);
-  const scaled = val / scale;
-  return scaled.toFixed(1) + suffix;
 };

@@ -82,12 +82,13 @@
 </template>
 
 <script lang="ts" setup>
+import { shadeColor } from "matija-utils";
 import { storeToRefs } from "pinia";
 import { AccountModel } from "src/api/client";
 import { DropResult } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { formatBalance, shadeColor } from "src/utils/helpers";
+import { formatBalance } from "src/utils/helpers";
 import { computed, ref, watch } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 

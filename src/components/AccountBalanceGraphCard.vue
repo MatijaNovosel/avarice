@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import { Chart, ChartData, ChartOptions } from "chart.js";
 import { format } from "date-fns";
+import { abbreviateNumber } from "matija-utils";
 import { storeToRefs } from "pinia";
 import { AccountHistoryModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
@@ -40,7 +41,7 @@ import { SelectItem } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { TIME_PERIOD } from "src/utils/constants";
-import { abbreviateNumber, formatBalance } from "src/utils/helpers";
+import { formatBalance } from "src/utils/helpers";
 import { onMounted, reactive, ref, watch } from "vue";
 import { LineChart } from "vue-chart-3";
 
