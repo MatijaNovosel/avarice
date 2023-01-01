@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/36193643/205901383-5d0e996b-243a-43d9-a375-451e5424221b.png" />
+</div>
+
 <h1 align=center>Avarice</h1>
 <p align=center>App for tracking personal finances</p>
 <p align="center">
