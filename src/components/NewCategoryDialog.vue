@@ -175,13 +175,14 @@
 <script lang="ts" setup>
 import useVuelidate from "@vuelidate/core";
 import { minLength, required } from "@vuelidate/validators";
+import { chunk } from "matija-utils";
 import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import { getService, Types } from "src/di-container";
 import { useUserStore } from "src/stores/user";
-import { chunkArray, collectErrors } from "src/utils/helpers";
+import { collectErrors } from "src/utils/helpers";
 import iconList from "src/utils/icons";
 import { computed, reactive, watch } from "vue";
 
@@ -207,7 +208,7 @@ const props = defineProps({
   }
 });
 
-const chunkedIconList = chunkArray<string>(iconList, 10);
+const chunkedIconList = chunk(iconList, 10);
 const emit = defineEmits(["update:open"]);
 const $q = useQuasar();
 const userStore = useUserStore();
@@ -250,7 +251,7 @@ const searchIcons = debounce(() => {
   if (state.iconSearchText !== "" && state.iconSearchText !== null) {
     // TODO: Memorize initial icons before first actual search
     state.tempIcons = [...state.icons];
-    state.icons = chunkArray<string>(
+    state.icons = chunk(
       iconList.filter((icon) =>
         icon.toLowerCase().includes(state.iconSearchText?.toLowerCase() as string)
       ),

@@ -84,7 +84,6 @@ const userStore = useUserStore();
 const { categories } = storeToRefs(userStore);
 
 onMounted(() => {
-  const c = [...categories.value];
-  categoriesMapped.value = arrayToTree(c.map((c) => ({ ...c, children: [] })));
+  categoriesMapped.value = arrayToTree([...categories.value].map((c) => ({ ...c, children: [] })));
 });
 </script>

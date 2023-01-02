@@ -25,5 +25,3 @@ export const TIME_PERIOD = {
   SixMonths: 4,
   OneYear: 5
 };
-
-export const SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];

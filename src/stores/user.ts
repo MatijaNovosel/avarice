@@ -18,9 +18,7 @@ export const useUserStore = defineStore(
       return 0;
     });
 
-    const isAuthenticated = computed(() => {
-      return data.value != null;
-    });
+    const isAuthenticated = computed(() => data.value != null);
 
     const logout = () => {
       data.value = null;
