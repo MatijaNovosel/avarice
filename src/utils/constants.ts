@@ -1,18 +1,16 @@
-import { IDictionary } from "src/models/common";
-
 export const TRANSACTION_TYPE = {
   TRANSFER: "TRA",
   EXPENSE: "EXP",
   INCOME: "INC"
 };
 
-export const TRANSACTION_TYPE_ICON: IDictionary<string> = {
+export const TRANSACTION_TYPE_ICON: Record<string, string> = {
   [TRANSACTION_TYPE.TRANSFER]: "mdi-swap-horizontal",
   [TRANSACTION_TYPE.INCOME]: "mdi-arrow-up",
   [TRANSACTION_TYPE.EXPENSE]: "mdi-arrow-down"
 };
 
-export const TRANSACTION_TYPE_COLOR: IDictionary<string> = {
+export const TRANSACTION_TYPE_COLOR: Record<string, string> = {
   [TRANSACTION_TYPE.TRANSFER]: "grey",
   [TRANSACTION_TYPE.INCOME]: "green",
   [TRANSACTION_TYPE.EXPENSE]: "red"

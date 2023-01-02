@@ -24,7 +24,3 @@ export interface PageableCollection<T> {
   data: T[];
   total: number;
 }
-
-export interface IDictionary<T> {
-  [index: string]: T;
-}
