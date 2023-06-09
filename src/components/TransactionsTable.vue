@@ -276,7 +276,7 @@ import { debounce, useQuasar } from "quasar";
 import { ITransactionModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import ITransactionService from "src/api/interfaces/transactionService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import { PageableCollection, SelectItem } from "src/models/common";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
 import { useAppStore } from "src/stores/app";
@@ -306,20 +306,18 @@ interface State {
   transactionType: string | null;
 }
 
-const props = defineProps({
-  rowsPerPage: {
-    type: Number,
-    default: 5
-  },
-  hidePageSelection: {
-    type: Boolean,
-    default: false
-  },
-  hideSelectAll: {
-    type: Boolean,
-    default: false
+const props = withDefaults(
+  defineProps<{
+    rowsPerPage: number;
+    hidePageSelection: boolean;
+    hideSelectAll: boolean;
+  }>(),
+  {
+    rowsPerPage: 5,
+    hidePageSelection: false,
+    hideSelectAll: false
   }
-});
+);
 
 const $q = useQuasar();
 const userStore = useUserStore();

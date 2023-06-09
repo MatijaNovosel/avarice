@@ -180,7 +180,7 @@ import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
 import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import { useUserStore } from "src/stores/user";
 import { collectErrors } from "src/utils/helpers";
 import iconList from "src/utils/icons";
@@ -201,15 +201,20 @@ interface State {
   };
 }
 
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false
+const props = withDefaults(
+  defineProps<{
+    open: boolean;
+  }>(),
+  {
+    open: false
   }
-});
+);
+
+const emit = defineEmits<{
+  (e: "update:open", val: boolean): void;
+}>();
 
 const chunkedIconList = chunk(iconList, 10);
-const emit = defineEmits(["update:open"]);
 const $q = useQuasar();
 const userStore = useUserStore();
 const { categories } = storeToRefs(userStore);
