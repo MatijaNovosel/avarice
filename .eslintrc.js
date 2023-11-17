@@ -31,6 +31,7 @@ module.exports = {
     "arrow-parens": "off",
     "@typescript-eslint/camelcase": "off",
     camelcase: "off",
+    "func-call-spacing": "off",
     "one-var": "off",
     "no-void": "off",
     "multiline-ternary": "off",

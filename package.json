@@ -1,13 +1,12 @@
 {
   "name": "avarice",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "App for tracking personal finances.",
   "productName": "Avarice",
   "author": "Matija Novosel <mnovosel5@gmail.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
-    "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build",
     "deploy": "vercel"
   },
