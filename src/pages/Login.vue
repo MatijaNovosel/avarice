@@ -71,7 +71,7 @@ import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import IAuthService from "src/api/interfaces/authService";
 import ICategoryService from "src/api/interfaces/categoryService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import { DecodedToken } from "src/models/auth";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useUserStore } from "src/stores/user";
@@ -115,25 +115,16 @@ const login = async () => {
       state.login.password as string
     );
 
-    if (!data.result) {
-      $q.notify({
-        message: data.errors?.join(", "),
-        color: "dark",
-        textColor: "red",
-        position: "bottom"
-      });
-      state.loading = false;
-      return;
-    }
+    console.log(data);
 
-    const decodedToken: DecodedToken = jwt_decode(data.token as string);
+    const decodedToken: DecodedToken = jwt_decode(data.accessToken as string);
 
     userStore.login({
       id: decodedToken.Id,
       email: state.login.email as string,
       userName: decodedToken.unique_name,
       emailConfirmed: false,
-      token: data.token as string
+      token: data.accessToken as string
     });
 
     const categories = await getService<ICategoryService>(

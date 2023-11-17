@@ -6,3 +6,8 @@ export interface DecodedToken {
   nbf: number;
   unique_name: string;
 }
+
+export interface LoginResult {
+  accessToken: string;
+  refreshToken: string;
+}
