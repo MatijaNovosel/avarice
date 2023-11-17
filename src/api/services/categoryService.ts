@@ -1,5 +1,6 @@
-import { CategoryModel, Client, CreateCategoryModel, ICreateCategoryModel } from "src/api/client";
+import { Client, CreateCategoryModel, ICreateCategoryModel } from "src/api/client";
 import { api } from "src/boot/axios";
+import { CategoryModel } from "src/models/category";
 import ICategoryService from "../interfaces/categoryService";
 
 class CategoryService implements ICategoryService {
@@ -9,9 +10,23 @@ class CategoryService implements ICategoryService {
   }
 
   async getUserCategories(): Promise<CategoryModel[]> {
-    const client = new Client(process.env.API_URL, api);
-    const data = await client.category_GetUserCategories();
-    return data;
+    const {
+      data: {
+        data: { getUserCategories }
+      }
+    } = await api.post("http://localhost:3000/graphql", {
+      query: `query {
+        getUserCategories {
+          id,
+          color,
+          name,
+          system,
+          icon
+        }
+      }`
+    });
+
+    return getUserCategories as CategoryModel[];
   }
 }
 

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { AccountModel, CategoryModel } from "src/api/client";
+import { AccountModel } from "src/models/account";
+import { CategoryModel } from "src/models/category";
 import { AppUser } from "src/models/user";
 import { computed, ref } from "vue";
 
@@ -13,7 +14,7 @@ export const useUserStore = defineStore(
 
     const totalBalance = computed(() => {
       if (accounts.value) {
-        return accounts.value.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
+        return accounts.value.map(({ balance }) => balance).reduce((prev, curr) => prev + curr, 0);
       }
       return 0;
     });

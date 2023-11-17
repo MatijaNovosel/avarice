@@ -1,9 +1,9 @@
 import {
   AccountExpenseAndIncomeModel,
   AccountHistoryModel,
-  AccountModel,
   ICreateAccountModel
 } from "src/api/client";
+import { AccountModel } from "src/models/account";
 
 export default interface IAccountService {
   getLatestValues(): Promise<AccountModel[]>;

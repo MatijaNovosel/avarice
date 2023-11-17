@@ -1,12 +1,12 @@
 import {
   AccountExpenseAndIncomeModel,
   AccountHistoryModel,
-  AccountModel,
   Client,
   CreateAccountModel,
   ICreateAccountModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
+import { AccountModel } from "src/models/account";
 import IAccountService from "../interfaces/accountService";
 
 class AccountService implements IAccountService {
@@ -23,9 +23,23 @@ class AccountService implements IAccountService {
   }
 
   async getLatestValues(): Promise<AccountModel[]> {
-    const client = new Client(process.env.API_URL, api);
-    const data = await client.account_GetUserAccounts();
-    return data;
+    const {
+      data: {
+        data: { getUserAccounts }
+      }
+    } = await api.post("http://localhost:3000/graphql", {
+      query: `query {
+        getUserAccounts {
+          id,
+          name,
+        }
+      }`
+    });
+    return (getUserAccounts as any[]).map<AccountModel>((a) => ({
+      balance: 0,
+      id: a.id,
+      name: a.name
+    }));
   }
 
   async create(payload: ICreateAccountModel): Promise<void> {

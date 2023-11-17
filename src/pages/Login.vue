@@ -117,12 +117,12 @@ const login = async () => {
 
     console.log(data);
 
-    const decodedToken: DecodedToken = jwt_decode(data.accessToken as string);
+    const decodedToken = jwt_decode<DecodedToken>(data.accessToken as string);
 
     userStore.login({
-      id: decodedToken.Id,
+      id: decodedToken.userId,
       email: state.login.email as string,
-      userName: decodedToken.unique_name,
+      userName: "username",
       emailConfirmed: false,
       token: data.accessToken as string
     });
@@ -144,8 +144,6 @@ const login = async () => {
       position: "bottom"
     });
 
-    state.loading = false;
-
     if (accounts.length !== 0) {
       await router.push({ name: ROUTE_NAMES.DASHBOARD });
     } else {
@@ -158,6 +156,7 @@ const login = async () => {
       textColor: "red",
       position: "bottom"
     });
+  } finally {
     state.loading = false;
   }
 };
