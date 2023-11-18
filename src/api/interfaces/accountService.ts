@@ -7,7 +7,7 @@ import { AccountModel } from "src/models/account";
 
 export default interface IAccountService {
   getLatestValues(): Promise<AccountModel[]>;
-  getExpenseAndIncomeInTimePeriod(accountId: number): Promise<AccountExpenseAndIncomeModel>;
+  getExpenseAndIncomeInTimePeriod(accountId: string): Promise<AccountExpenseAndIncomeModel>;
   getAccountHistory(accountId: number, timePeriod: number): Promise<AccountHistoryModel[]>;
   create(payload: ICreateAccountModel): Promise<void>;
 }

@@ -115,8 +115,6 @@ const login = async () => {
       state.login.password as string
     );
 
-    console.log(data);
-
     const decodedToken = jwt_decode<DecodedToken>(data.accessToken as string);
 
     userStore.login({

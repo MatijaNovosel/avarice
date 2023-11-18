@@ -16,9 +16,9 @@ class AccountService implements IAccountService {
     return data;
   }
 
-  async getExpenseAndIncomeInTimePeriod(accountId: number): Promise<AccountExpenseAndIncomeModel> {
+  async getExpenseAndIncomeInTimePeriod(accountId: string): Promise<AccountExpenseAndIncomeModel> {
     const client = new Client(process.env.API_URL, api);
-    const data = await client.account_GetExpenseAndIncomeInTimePeriod(accountId);
+    const data = await client.account_GetExpenseAndIncomeInTimePeriod(1);
     return data;
   }
 
@@ -32,13 +32,16 @@ class AccountService implements IAccountService {
         getUserAccounts {
           id,
           name,
+          currency,
+          balance
         }
       }`
     });
     return (getUserAccounts as any[]).map<AccountModel>((a) => ({
-      balance: 0,
+      balance: a.balance,
       id: a.id,
-      name: a.name
+      name: a.name,
+      currency: a.currency
     }));
   }
 
