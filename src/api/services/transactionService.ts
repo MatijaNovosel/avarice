@@ -17,18 +17,22 @@ class TransactionService implements ITransactionService {
     const data = await client.transaction_GetHeatmap();
     return data;
   }
+
   async transfer(payload: IAddTransferDto): Promise<void> {
     const client = new Client(process.env.API_URL, api);
     await client.transaction_Transfer(new AddTransferDto(payload));
   }
+
   async create(payload: IAddTransactionDto): Promise<void> {
     const client = new Client(process.env.API_URL, api);
     await client.transaction_Add(new AddTransactionDto(payload));
   }
+
   async delete(id: number): Promise<void> {
     const client = new Client(process.env.API_URL, api);
     await client.transaction_Delete(id);
   }
+
   async getAll(
     itemsPerPage: number,
     page: number,
@@ -36,31 +40,6 @@ class TransactionService implements ITransactionService {
     transactionType?: string | null,
     categoryType?: number | null
   ): Promise<PageableCollection<TransactionModel>> {
-    /*
-    const data = await client.transaction_Get(
-      itemsPerPage * page,
-      itemsPerPage,
-      description,
-      transactionType,
-      categoryType
-    );
-    query {
-      getTransactions(query: "") {
-        totalCount,
-        edges {
-          node {
-            amount,
-            id,
-            description,
-            category {
-              id,
-              name
-            }
-          }
-        }
-      }
-    }
-    */
     const {
       data: {
         data: {
@@ -69,7 +48,7 @@ class TransactionService implements ITransactionService {
       }
     } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `query {
-        getTransactions(query: "") {
+        getTransactions(query: ${description || ""}) {
           totalCount,
           edges {
             node {
@@ -90,7 +69,6 @@ class TransactionService implements ITransactionService {
         }
       }`
     });
-
     return {
       total: totalCount,
       data: edges.map(({ node }: any) => ({
@@ -100,6 +78,7 @@ class TransactionService implements ITransactionService {
       }))
     };
   }
+
   async duplicate(id: number): Promise<void> {
     const client = new Client(process.env.API_URL, api);
     await client.transaction_Duplicate(id);
