@@ -14,10 +14,11 @@ module.exports = configure((ctx) => ({
   extras: ["mdi-v5", "roboto-font", "material-icons", "material-icons-outlined"],
   build: {
     vueRouterMode: "history",
-    distDir: ctx.mode.spa ? "public" : null
+    distDir: ctx.mode.spa ? "public" : null,
+    env: require("dotenv").config().parsed
   },
   devServer: {
-    https: false,
+    https: true,
     port: 8080,
     open: true
   },

@@ -4,10 +4,11 @@ import {
   Client,
   IAddTransactionDto,
   IAddTransferDto,
-  PageableCollectionOfTransactionModel,
   TransactionActivityHeatmapModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
+import { PageableCollection } from "src/models/common";
+import { TransactionModel } from "src/models/transaction";
 import ITransactionService from "../interfaces/transactionService";
 
 class TransactionService implements ITransactionService {
@@ -34,8 +35,8 @@ class TransactionService implements ITransactionService {
     description?: string,
     transactionType?: string | null,
     categoryType?: number | null
-  ): Promise<PageableCollectionOfTransactionModel> {
-    const client = new Client(process.env.API_URL, api);
+  ): Promise<PageableCollection<TransactionModel>> {
+    /*
     const data = await client.transaction_Get(
       itemsPerPage * page,
       itemsPerPage,
@@ -43,7 +44,61 @@ class TransactionService implements ITransactionService {
       transactionType,
       categoryType
     );
-    return data;
+    query {
+      getTransactions(query: "") {
+        totalCount,
+        edges {
+          node {
+            amount,
+            id,
+            description,
+            category {
+              id,
+              name
+            }
+          }
+        }
+      }
+    }
+    */
+    const {
+      data: {
+        data: {
+          getTransactions: { edges, totalCount }
+        }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `query {
+        getTransactions(query: "") {
+          totalCount,
+          edges {
+            node {
+              amount,
+              id,
+              description,
+              createdAt,
+              category {
+                id,
+                name,
+                icon
+              }
+              account {
+                name
+              }
+            }
+          }
+        }
+      }`
+    });
+
+    return {
+      total: totalCount,
+      data: edges.map(({ node }: any) => ({
+        ...node,
+        createdAt: new Date(node.createdAt),
+        account: node.account.name
+      }))
+    };
   }
   async duplicate(id: number): Promise<void> {
     const client = new Client(process.env.API_URL, api);

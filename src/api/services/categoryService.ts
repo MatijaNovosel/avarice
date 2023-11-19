@@ -14,7 +14,7 @@ class CategoryService implements ICategoryService {
       data: {
         data: { getUserCategories }
       }
-    } = await api.post("http://localhost:3000/graphql", {
+    } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `query {
         getUserCategories {
           id,

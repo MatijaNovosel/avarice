@@ -27,7 +27,7 @@ class AccountService implements IAccountService {
       data: {
         data: { getUserAccounts }
       }
-    } = await api.post("http://localhost:3000/graphql", {
+    } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `query {
         getUserAccounts {
           id,

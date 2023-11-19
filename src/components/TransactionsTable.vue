@@ -273,12 +273,12 @@
 import { format } from "date-fns";
 import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
-import { ITransactionModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import ITransactionService from "src/api/interfaces/transactionService";
 import { Types, getService } from "src/di-container";
 import { PageableCollection, SelectItem } from "src/models/common";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
+import { TransactionModel } from "src/models/transaction";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import {
@@ -289,8 +289,7 @@ import {
 import { formatBalance } from "src/utils/helpers";
 import { computed, onMounted, reactive, watch } from "vue";
 
-interface TransactionModelExtended extends ITransactionModel {
-  id: number;
+interface TransactionModelExtended extends TransactionModel {
   selected: boolean;
 }
 
@@ -421,9 +420,7 @@ const columns = computed(() => {
 const getTransactions = async () => {
   try {
     state.loading = true;
-    const { total, results } = await getService<ITransactionService>(
-      Types.TransactionService
-    ).getAll(
+    const { total, data } = await getService<ITransactionService>(Types.TransactionService).getAll(
       state.pagination.rowsPerPage,
       state.pagination.page - 1,
       state.search || "",
@@ -431,9 +428,11 @@ const getTransactions = async () => {
       state.categoryType
     );
 
-    if (results) {
+    console.log(data);
+
+    if (data) {
       state.transactions = {
-        data: results?.map((t) => ({
+        data: data.map((t) => ({
           ...t,
           selected: false
         })),
@@ -522,9 +521,9 @@ const searchDebounce = debounce(getTransactions, 300);
 watch(transactionsChangeNotifier, getTransactions);
 
 const transactionTypeOptions = Object.entries(TRANSACTION_TYPE).map<SelectItem<string, string>>(
-  (x) => ({
-    label: x[0],
-    value: x[1]
+  ([label, value]) => ({
+    label,
+    value
   })
 );
 

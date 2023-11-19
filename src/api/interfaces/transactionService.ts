@@ -1,9 +1,10 @@
 import {
   IAddTransactionDto,
   IAddTransferDto,
-  PageableCollectionOfTransactionModel,
   TransactionActivityHeatmapModel
 } from "src/api/client";
+import { PageableCollection } from "src/models/common";
+import { TransactionModel } from "src/models/transaction";
 
 export default interface ITransactionService {
   getAll(
@@ -12,7 +13,7 @@ export default interface ITransactionService {
     description?: string,
     transactionType?: string | null,
     categoryType?: number | null
-  ): Promise<PageableCollectionOfTransactionModel>;
+  ): Promise<PageableCollection<TransactionModel>>;
   getHeatmap(): Promise<TransactionActivityHeatmapModel[]>;
   create(payload: IAddTransactionDto): Promise<void>;
   transfer(payload: IAddTransferDto): Promise<void>;

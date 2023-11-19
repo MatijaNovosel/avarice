@@ -14,7 +14,7 @@ class AuthService implements IAuthService {
       data: {
         data: { signIn }
       }
-    } = await api.post("http://localhost:3000/graphql", {
+    } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `mutation {
         signIn(data: {
           email: "lisa@simpson.com",
