@@ -9,3 +9,8 @@ export interface AccountHistoryModel {
   date: Date;
   amount: number;
 }
+
+export interface AccountExpenseIncomeModel {
+  expense: number;
+  income: number;
+}

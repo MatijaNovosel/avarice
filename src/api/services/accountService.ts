@@ -1,11 +1,6 @@
-import {
-  AccountExpenseAndIncomeModel,
-  Client,
-  CreateAccountModel,
-  ICreateAccountModel
-} from "src/api/client";
+import { Client, CreateAccountModel, ICreateAccountModel } from "src/api/client";
 import { api } from "src/boot/axios";
-import { AccountHistoryModel, AccountModel } from "src/models/account";
+import { AccountExpenseIncomeModel, AccountHistoryModel, AccountModel } from "../../models/account";
 import IAccountService from "../interfaces/accountService";
 
 class AccountService implements IAccountService {
@@ -27,14 +22,34 @@ class AccountService implements IAccountService {
     });
     return getAccountHistory.map((a: any) => ({
       amount: a.amount,
-      date: a.date
+      date: new Date(a.date)
     }));
   }
 
-  async getExpenseAndIncomeInTimePeriod(accountId: string): Promise<AccountExpenseAndIncomeModel> {
-    const client = new Client(process.env.API_URL, api);
-    const data = await client.account_GetExpenseAndIncomeInTimePeriod(1);
-    return data;
+  async getExpenseAndIncomeInTimePeriod(
+    accountId: string,
+    timePeriod: number
+  ): Promise<AccountExpenseIncomeModel> {
+    const {
+      data: {
+        data: { getExpenseAndIncomeInTimePeriod }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `query {
+        getExpenseAndIncomeInTimePeriod(data: {
+          accountId: "${accountId}",
+          timePeriod: ${timePeriod}
+        }) {
+          expense,
+          income
+        }
+      }`
+    });
+
+    return {
+      expense: getExpenseAndIncomeInTimePeriod.expense,
+      income: getExpenseAndIncomeInTimePeriod.income
+    };
   }
 
   async getLatestValues(): Promise<AccountModel[]> {

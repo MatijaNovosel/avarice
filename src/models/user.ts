@@ -4,6 +4,7 @@ export interface AppUser {
   userName: string;
   emailConfirmed: boolean;
   token: string;
+  refreshToken: string;
   iat: number;
   exp: number;
 }

@@ -9,6 +9,7 @@ import {
 import { api } from "src/boot/axios";
 import { PageableCollection } from "src/models/common";
 import { TransactionModel } from "src/models/transaction";
+import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITransactionService from "../interfaces/transactionService";
 
 class TransactionService implements ITransactionService {
@@ -74,7 +75,8 @@ class TransactionService implements ITransactionService {
       data: edges.map(({ node }: any) => ({
         ...node,
         createdAt: new Date(node.createdAt),
-        account: node.account.name
+        account: node.account.name,
+        transactionType: node.amount > 0 ? TRANSACTION_TYPE.INCOME : TRANSACTION_TYPE.EXPENSE
       }))
     };
   }

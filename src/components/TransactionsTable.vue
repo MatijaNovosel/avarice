@@ -428,8 +428,6 @@ const getTransactions = async () => {
       state.categoryType
     );
 
-    console.log(data);
-
     if (data) {
       state.transactions = {
         data: data.map((t) => ({

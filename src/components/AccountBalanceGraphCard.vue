@@ -34,9 +34,9 @@ import { Chart, ChartData, ChartOptions } from "chart.js";
 import { format } from "date-fns";
 import { abbreviateNumber } from "matija-utils";
 import { storeToRefs } from "pinia";
-import { AccountHistoryModel } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
+import { AccountHistoryModel } from "src/models/account";
 import { SelectItem } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
@@ -90,7 +90,7 @@ const chartOptions: ChartOptions<"line"> = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => formatBalance(context.parsed.y, "HRK")
+        label: (context) => formatBalance(context.parsed.y, "EUR")
       }
     }
   }
@@ -102,7 +102,7 @@ const state: State = reactive({
     labels: []
   },
   graphData: null,
-  timePeriod: TIME_PERIOD.SixMonths
+  timePeriod: TIME_PERIOD.ThirtyDays
 });
 
 const graphDateOptions: SelectItem<string, number>[] = [

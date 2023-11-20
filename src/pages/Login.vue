@@ -110,19 +110,20 @@ const login = async () => {
   state.loading = true;
 
   try {
-    const data = await getService<IAuthService>(Types.AuthService).login(
+    const { accessToken, refreshToken } = await getService<IAuthService>(Types.AuthService).login(
       state.login.email as string,
       state.login.password as string
     );
 
-    const decodedToken = jwt_decode<DecodedToken>(data.accessToken as string);
+    const decodedToken = jwt_decode<DecodedToken>(accessToken as string);
 
     userStore.login({
       id: decodedToken.userId,
       email: state.login.email as string,
       userName: "username",
       emailConfirmed: false,
-      token: data.accessToken as string,
+      token: accessToken,
+      refreshToken,
       exp: decodedToken.exp,
       iat: decodedToken.iat
     });
