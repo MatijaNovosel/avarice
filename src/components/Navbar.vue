@@ -5,7 +5,7 @@
         <div class="text-h5 text-accent text-weight-bold">Avarice</div>
         <div class="row">
           <div class="q-mr-md bg-dark q-px-md q-py-sm rounded text-bold row items-center">
-            {{ formatBalance(totalBalance, "HRK") }}
+            {{ formatBalance(totalBalance, "EUR") }}
           </div>
           <q-btn flat dense class="bg-grey-10 rounded">
             <q-icon class="q-pa-xs" name="mdi-account-outline" size="sm" />

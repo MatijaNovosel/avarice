@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="accountDialogOpen" persistent>
-    <q-card style="min-width: 700px">
+    <q-card flat style="min-width: 700px">
       <q-card-section class="row justify-between items-center">
         <span class="text-h6"> New account </span>
         <q-btn size="xs" @click="closeDialog" flat dense class="q-mr-md bg-grey-9 rounded">
@@ -65,7 +65,7 @@ import { minLength, numeric, required } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { collectErrors } from "src/utils/helpers";

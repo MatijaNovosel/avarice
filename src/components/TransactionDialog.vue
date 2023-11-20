@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="transactionDialogOpen" persistent>
-    <q-card style="min-width: 700px">
+    <q-card flat style="min-width: 700px">
       <template v-if="state.loading">
         <div class="column items-center justify-center q-py-xl">
           <q-spinner color="green" size="3em" :thickness="10" />
@@ -222,7 +222,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import ITemplateService from "src/api/interfaces/templateService";
 import ITransactionService from "src/api/interfaces/transactionService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { collectErrors, formatBalance } from "src/utils/helpers";
