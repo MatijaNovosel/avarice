@@ -48,7 +48,7 @@ class TransactionService implements ITransactionService {
       }
     } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `query {
-        getTransactions(query: ${description || ""}) {
+        getTransactions(query: "${description || ""}") {
           totalCount,
           edges {
             node {

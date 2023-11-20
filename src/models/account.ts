@@ -4,3 +4,8 @@ export interface AccountModel {
   currency: string;
   balance: number;
 }
+
+export interface AccountHistoryModel {
+  date: Date;
+  amount: number;
+}

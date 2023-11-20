@@ -122,7 +122,9 @@ const login = async () => {
       email: state.login.email as string,
       userName: "username",
       emailConfirmed: false,
-      token: data.accessToken as string
+      token: data.accessToken as string,
+      exp: decodedToken.exp,
+      iat: decodedToken.iat
     });
 
     const categories = await getService<ICategoryService>(
