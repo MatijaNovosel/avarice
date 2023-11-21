@@ -30,8 +30,18 @@ class TransactionService implements ITransactionService {
   }
 
   async delete(id: number): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.transaction_Delete(id);
+    const {
+      data: {
+        data: { deleteTransaction }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        deleteTransaction(data: {
+          id: ${id},
+        })
+      }`
+    });
+    return deleteTransaction;
   }
 
   async getAll(
