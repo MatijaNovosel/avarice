@@ -14,3 +14,8 @@ export interface AccountExpenseIncomeModel {
   expense: number;
   income: number;
 }
+
+export interface CreateAccountModel {
+  name: string;
+  initialBalance: number;
+}

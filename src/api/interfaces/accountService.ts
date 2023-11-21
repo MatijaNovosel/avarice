@@ -1,5 +1,9 @@
-import { ICreateAccountModel } from "src/api/client";
-import { AccountExpenseIncomeModel, AccountHistoryModel, AccountModel } from "../../models/account";
+import {
+  AccountExpenseIncomeModel,
+  AccountHistoryModel,
+  AccountModel,
+  CreateAccountModel
+} from "../../models/account";
 
 export default interface IAccountService {
   getLatestValues(): Promise<AccountModel[]>;
@@ -8,5 +12,5 @@ export default interface IAccountService {
     timePeriod: number
   ): Promise<AccountExpenseIncomeModel>;
   getAccountHistory(accountId: string, timePeriod: number): Promise<AccountHistoryModel[]>;
-  create(payload: ICreateAccountModel): Promise<void>;
+  create(payload: CreateAccountModel): Promise<string>;
 }

@@ -1,6 +1,10 @@
-import { Client, CreateAccountModel, ICreateAccountModel } from "src/api/client";
 import { api } from "src/boot/axios";
-import { AccountExpenseIncomeModel, AccountHistoryModel, AccountModel } from "../../models/account";
+import {
+  AccountExpenseIncomeModel,
+  AccountHistoryModel,
+  AccountModel,
+  CreateAccountModel
+} from "../../models/account";
 import IAccountService from "../interfaces/accountService";
 
 class AccountService implements IAccountService {
@@ -75,9 +79,21 @@ class AccountService implements IAccountService {
     }));
   }
 
-  async create(payload: ICreateAccountModel): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.account_Create(new CreateAccountModel(payload));
+  async create({ initialBalance, name }: CreateAccountModel): Promise<string> {
+    const {
+      data: {
+        data: { createAccount }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        createAccount(data: {
+          name: "${name}",
+          currency: "EUR",
+          initialBalance: ${initialBalance}
+        })
+      }`
+    });
+    return createAccount;
   }
 }
 
