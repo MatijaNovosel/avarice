@@ -97,8 +97,6 @@ const percentages = computed(() => {
   let incomePercentage = 0;
   let expensePercentage = 0;
 
-  console.log(state.expenseAndIncome);
-
   if (state.expenseAndIncome) {
     const { expense, income } = state.expenseAndIncome;
     if (expense > income) {
