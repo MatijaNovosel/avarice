@@ -21,7 +21,11 @@ class CategoryService implements ICategoryService {
           color,
           name,
           system,
-          icon
+          icon,
+          parent {
+            id,
+            name
+          }
         }
       }`
     });

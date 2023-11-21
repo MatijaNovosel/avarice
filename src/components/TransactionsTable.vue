@@ -35,7 +35,19 @@
         <q-icon class="q-pa-xs" name="mdi-selection-multiple" size="sm" />
         <q-tooltip> Select multiple records </q-tooltip>
       </q-btn>
-      <q-btn flat dense class="q-mr-md rounded bg-grey-9">
+      <q-input
+        @update:model-value="searchDebounce"
+        v-model="state.search"
+        dense
+        filled
+        label="Search"
+        clearable
+      >
+        <template #prepend>
+          <q-icon name="mdi-magnify" />
+        </template>
+      </q-input>
+      <q-btn flat dense class="q-ml-md rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
         <q-badge v-if="activeFilters" rounded color="accent" floating align="top" />
         <q-menu>
@@ -114,18 +126,6 @@
           </div>
         </q-menu>
       </q-btn>
-      <q-input
-        @update:model-value="searchDebounce"
-        v-model="state.search"
-        dense
-        filled
-        label="Search"
-        clearable
-      >
-        <template #prepend>
-          <q-icon name="mdi-magnify" />
-        </template>
-      </q-input>
     </div>
   </div>
   <q-table
@@ -222,7 +222,7 @@
           :props="props"
           :class="`text-${TRANSACTION_TYPE_COLOR[props.row.transactionType]}`"
         >
-          {{ formatBalance(props.row.amount, "HRK") }}
+          {{ formatBalance(props.row.amount, "EUR") }}
         </q-td>
         <q-td key="account" :props="props">
           {{ props.row.account }}
@@ -307,9 +307,9 @@ interface State {
 
 const props = withDefaults(
   defineProps<{
-    rowsPerPage: number;
-    hidePageSelection: boolean;
-    hideSelectAll: boolean;
+    rowsPerPage?: number;
+    hidePageSelection?: boolean;
+    hideSelectAll?: boolean;
   }>(),
   {
     rowsPerPage: 5,
@@ -380,7 +380,7 @@ const columns = computed(() => {
       align: "left",
       label: "Amount",
       field: "amount",
-      format: (val) => `${val} HRK`
+      format: (val) => `${val} EUR`
     },
     {
       name: "account",

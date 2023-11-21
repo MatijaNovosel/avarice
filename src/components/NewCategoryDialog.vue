@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="state.open" persistent>
-    <q-card style="min-width: 700px">
+    <q-card flat style="min-width: 700px">
       <q-card-section class="row justify-between items-center">
         <span class="text-h6"> New category </span>
         <q-btn size="xs" @click="closeDialog" flat dense class="bg-grey-9 rounded">

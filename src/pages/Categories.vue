@@ -46,8 +46,8 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { CategoryModel } from "src/api/client";
 import NewCategoryDialog from "src/components/NewCategoryDialog.vue";
+import { CategoryModel } from "src/models/category";
 import { useUserStore } from "src/stores/user";
 import { onMounted, ref } from "vue";
 
@@ -84,6 +84,6 @@ const userStore = useUserStore();
 const { categories } = storeToRefs(userStore);
 
 onMounted(() => {
-  categoriesMapped.value = arrayToTree([...categories.value].map((c) => ({ ...c, children: [] })));
+  categoriesMapped.value = arrayToTree(categories.value.map((c) => ({ ...c, children: [] })));
 });
 </script>
