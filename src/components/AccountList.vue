@@ -54,7 +54,7 @@
         <q-item-section>
           <q-item-label class="text-weight-medium"> Total </q-item-label>
           <q-item-label class="text-caption">
-            {{ formatBalance(totalBalance, "HRK") }}
+            {{ formatBalance(totalBalance, "EUR") }}
           </q-item-label>
         </q-item-section>
         <q-item-section avatar>
@@ -84,7 +84,7 @@
 <script lang="ts" setup>
 import { shadeColor } from "matija-utils";
 import { storeToRefs } from "pinia";
-import { AccountModel } from "src/api/client";
+import { AccountModel } from "src/models/account";
 import { DropResult } from "src/models/common";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";

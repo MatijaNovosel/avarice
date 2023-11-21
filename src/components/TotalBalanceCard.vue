@@ -97,14 +97,16 @@ const percentages = computed(() => {
   let incomePercentage = 0;
   let expensePercentage = 0;
 
+  console.log(state.expenseAndIncome);
+
   if (state.expenseAndIncome) {
     const { expense, income } = state.expenseAndIncome;
     if (expense > income) {
       expensePercentage = 1;
-      incomePercentage = income / (expense * -1);
+      incomePercentage = income / expense;
     } else if (income > expense) {
       incomePercentage = 1;
-      expensePercentage = (expense * -1) / income;
+      expensePercentage = expense / income;
     }
   }
 
