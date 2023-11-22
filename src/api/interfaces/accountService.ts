@@ -13,4 +13,5 @@ export default interface IAccountService {
   ): Promise<AccountExpenseIncomeModel>;
   getAccountHistory(accountId: string, timePeriod: number): Promise<AccountHistoryModel[]>;
   create(payload: CreateAccountModel): Promise<string>;
+  delete(id: string): Promise<string>;
 }

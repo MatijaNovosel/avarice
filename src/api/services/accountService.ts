@@ -95,6 +95,21 @@ class AccountService implements IAccountService {
     });
     return createAccount;
   }
+
+  async delete(id: string): Promise<string> {
+    const {
+      data: {
+        data: { deleteAccount }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        deleteAccount(data: {
+          id: "${id}"
+        })
+      }`
+    });
+    return deleteAccount;
+  }
 }
 
 export default AccountService;
