@@ -16,3 +16,11 @@ export interface TransactionModel {
   category: TransactionCategoryModel;
   account: string;
 }
+
+export interface CreateTransactionModel {
+  amount: number;
+  description: string;
+  accountId: string;
+  categoryId: string;
+  saveAsTemplate: boolean;
+}

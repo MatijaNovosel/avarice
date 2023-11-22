@@ -1,14 +1,12 @@
 import {
-  AddTransactionDto,
   AddTransferDto,
   Client,
-  IAddTransactionDto,
   IAddTransferDto,
   TransactionActivityHeatmapModel
 } from "src/api/client";
 import { api } from "src/boot/axios";
 import { PageableCollection } from "src/models/common";
-import { TransactionModel } from "src/models/transaction";
+import { CreateTransactionModel, TransactionModel } from "src/models/transaction";
 import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITransactionService from "../interfaces/transactionService";
 
@@ -24,9 +22,29 @@ class TransactionService implements ITransactionService {
     await client.transaction_Transfer(new AddTransferDto(payload));
   }
 
-  async create(payload: IAddTransactionDto): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.transaction_Add(new AddTransactionDto(payload));
+  async create({
+    amount,
+    accountId,
+    categoryId,
+    description,
+    saveAsTemplate
+  }: CreateTransactionModel): Promise<string> {
+    const {
+      data: {
+        data: { createTransaction }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        createTransaction(data: {
+          amount: ${amount},
+          description: "${description}",
+          accountId: "${accountId}",
+          categoryId: "${categoryId}",
+          saveAsTemplate: ${saveAsTemplate}
+        })
+      }`
+    });
+    return createTransaction;
   }
 
   async delete(id: number): Promise<void> {
@@ -98,8 +116,18 @@ class TransactionService implements ITransactionService {
   }
 
   async duplicate(id: number): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.transaction_Duplicate(id);
+    const {
+      data: {
+        data: { duplicateTransaction }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        duplicateTransaction(data: {
+          id: ${id},
+        })
+      }`
+    });
+    return duplicateTransaction;
   }
 }
 
