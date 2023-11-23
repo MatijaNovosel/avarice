@@ -66,6 +66,7 @@
 <script lang="ts" setup>
 import useVuelidate from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
+import { onKeyStroke } from "@vueuse/core";
 import jwt_decode from "jwt-decode";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
@@ -161,4 +162,8 @@ const login = async () => {
     state.loading = false;
   }
 };
+
+onKeyStroke("Enter", () => {
+  login();
+});
 </script>

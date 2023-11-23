@@ -187,15 +187,18 @@
             </q-select>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
             <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
-            <div class="row justify-end">
-              <q-btn flat dense class="q-ml-md bg-accent rounded">
-                <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
-                <q-tooltip> Select template </q-tooltip>
-              </q-btn>
-              <q-btn flat dense class="q-ml-md bg-accent rounded">
-                <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
-                <q-tooltip> Select location </q-tooltip>
-              </q-btn>
+            <div class="row justify-between">
+              <q-toggle v-model="state.expense" label="Expense" color="accent" />
+              <div>
+                <q-btn flat dense class="q-ml-md bg-accent rounded">
+                  <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
+                  <q-tooltip> Select template </q-tooltip>
+                </q-btn>
+                <q-btn flat dense class="q-ml-md bg-accent rounded">
+                  <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
+                  <q-tooltip> Select location </q-tooltip>
+                </q-btn>
+              </div>
             </div>
           </q-form>
         </q-card-section>
@@ -219,7 +222,6 @@ import { decimal, required, requiredIf } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
-import ITemplateService from "src/api/interfaces/templateService";
 import ITransactionService from "src/api/interfaces/transactionService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import { Types, getService } from "src/di-container";
@@ -233,11 +235,12 @@ interface State {
   closeAfterAdding: boolean;
   isTransfer: boolean;
   saveAsTemplate: boolean;
+  expense: boolean;
   transaction: {
     amount: string | null;
-    category: number | null;
-    account: number | null;
-    accountTo: number | null;
+    category: string | null;
+    account: string | null;
+    accountTo: string | null;
     description: string | null;
   };
 }
@@ -254,6 +257,7 @@ const state: State = reactive({
   closeAfterAdding: false,
   isTransfer: false,
   saveAsTemplate: false,
+  expense: true,
   transaction: {
     amount: "0",
     category: null,
@@ -299,26 +303,16 @@ const createTransactionOrCategory = async () => {
     state.loading = true;
 
     if (state.isTransfer) {
-      await getService<ITransactionService>(Types.TransactionService).transfer({
-        amount: parseFloat(state.transaction.amount as string),
-        accountFromId: state.transaction.account as number,
-        accountToId: state.transaction.accountTo as number
-      });
+      //
     } else {
+      const amount = parseFloat(state.transaction.amount as string);
       await getService<ITransactionService>(Types.TransactionService).create({
-        amount: parseFloat(state.transaction.amount as string),
-        accountId: state.transaction.account as number,
-        categoryId: state.transaction.category as number,
-        description: state.transaction.description as string
+        amount: state.expense ? amount * -1 : amount,
+        accountId: state.transaction.account as string,
+        categoryId: state.transaction.category as string,
+        description: state.transaction.description as string,
+        saveAsTemplate: state.saveAsTemplate
       });
-      if (state.saveAsTemplate) {
-        await getService<ITemplateService>(Types.TemplateService).create({
-          amount: parseFloat(state.transaction.amount as string),
-          accountId: state.transaction.account as number,
-          categoryId: state.transaction.category as number,
-          description: state.transaction.description as string
-        });
-      }
     }
 
     appStore.notifyTransactionChanged();

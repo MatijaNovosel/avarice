@@ -40,11 +40,15 @@ class TransactionService implements ITransactionService {
           description: "${description}",
           accountId: "${accountId}",
           categoryId: "${categoryId}",
-          saveAsTemplate: ${saveAsTemplate}
-        })
+          saveAsTemplate: ${saveAsTemplate},
+          longitude: 0,
+          latitude: 0
+        }) {
+          id
+        }
       }`
     });
-    return createTransaction;
+    return createTransaction.id;
   }
 
   async delete(id: number): Promise<void> {
