@@ -1,6 +1,19 @@
 <template>
   <div class="row justify-end bg-grey-10 q-py-sm q-pr-md q-pl-lg items-center rounded-t-md">
     <div class="row">
+      <q-input
+        @update:model-value="searchDebounce"
+        v-model="state.search"
+        dense
+        filled
+        label="Search"
+        clearable
+        class="q-mr-md"
+      >
+        <template #prepend>
+          <q-icon name="mdi-magnify" />
+        </template>
+      </q-input>
       <q-btn v-if="!hidePageSelection" no-caps class="bg-accent q-mr-md rounded">
         {{ state.pagination.rowsPerPage }} records per page
         <q-menu auto-close>
@@ -35,19 +48,7 @@
         <q-icon class="q-pa-xs" name="mdi-selection-multiple" size="sm" />
         <q-tooltip> Select multiple records </q-tooltip>
       </q-btn>
-      <q-input
-        @update:model-value="searchDebounce"
-        v-model="state.search"
-        dense
-        filled
-        label="Search"
-        clearable
-      >
-        <template #prepend>
-          <q-icon name="mdi-magnify" />
-        </template>
-      </q-input>
-      <q-btn flat dense class="q-ml-md rounded bg-grey-9">
+      <q-btn flat dense class="rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
         <q-badge v-if="activeFilters" rounded color="accent" floating align="top" />
         <q-menu>
@@ -231,27 +232,17 @@
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}
         </q-td>
         <q-td key="actions" :props="props">
+          <q-btn flat round size="sm" @click="deleteTransaction(props.row.id)">
+            <q-icon size="2.6em" name="mdi-delete" color="red" />
+            <q-tooltip> Delete </q-tooltip>
+          </q-btn>
+          <q-btn flat round size="sm" @click="duplicateTransaction(props.row.id)">
+            <q-icon size="2.2em" name="mdi-content-duplicate" color="grey" />
+            <q-tooltip> Duplicate </q-tooltip>
+          </q-btn>
           <q-btn flat round size="sm">
-            <q-icon size="2.6em" name="mdi-dots-horizontal" color="grey" />
-            <q-menu>
-              <q-list dense>
-                <q-item clickable @click="deleteTransaction(props.row.id)">
-                  <q-item-section>
-                    <q-item-label> Delete transaction </q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>
-                    <q-item-label> Edit transaction </q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable @click="duplicateTransaction(props.row.id)">
-                  <q-item-section>
-                    <q-item-label> Create copy of transaction </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
+            <q-icon size="2.6em" name="mdi-pencil" color="grey" />
+            <q-tooltip> Edit </q-tooltip>
           </q-btn>
         </q-td>
       </q-tr>
@@ -396,7 +387,7 @@ const columns = computed(() => {
     },
     {
       name: "actions",
-      label: "",
+      label: "Actions",
       align: "center",
       field: "actions"
     }

@@ -24,3 +24,10 @@ export interface CreateTransactionModel {
   categoryId: string;
   saveAsTemplate: boolean;
 }
+
+export interface TransactionHeatmapModel {
+  week: number;
+  value: number;
+  date: Date;
+  weekDay?: string;
+}

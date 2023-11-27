@@ -1,20 +1,36 @@
-import {
-  AddTransferDto,
-  Client,
-  IAddTransferDto,
-  TransactionActivityHeatmapModel
-} from "src/api/client";
+import { AddTransferDto, Client, IAddTransferDto } from "src/api/client";
 import { api } from "src/boot/axios";
 import { PageableCollection } from "src/models/common";
-import { CreateTransactionModel, TransactionModel } from "src/models/transaction";
+import {
+  CreateTransactionModel,
+  TransactionHeatmapModel,
+  TransactionModel
+} from "src/models/transaction";
 import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITransactionService from "../interfaces/transactionService";
 
 class TransactionService implements ITransactionService {
-  async getHeatmap(): Promise<TransactionActivityHeatmapModel[]> {
-    const client = new Client(process.env.API_URL, api);
-    const data = await client.transaction_GetHeatmap();
-    return data;
+  async getHeatmap(): Promise<TransactionHeatmapModel[]> {
+    const {
+      data: {
+        data: { getHeatmap }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `query {
+        getHeatmap {
+          date,
+          value,
+          week,
+          weekDay
+        }
+      }`
+    });
+    return getHeatmap.map((a: any) => ({
+      date: a.amount,
+      value: a.value,
+      week: a.week,
+      weekDay: a.weekDay
+    }));
   }
 
   async transfer(payload: IAddTransferDto): Promise<void> {
