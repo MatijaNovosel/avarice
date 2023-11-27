@@ -1,10 +1,7 @@
-import {
-  AddTemplateDto,
-  Client,
-  IAddTemplateDto,
-  PageableCollectionOfTemplateModel
-} from "src/api/client";
+import { AddTemplateDto, Client, IAddTemplateDto } from "src/api/client";
 import { api } from "src/boot/axios";
+import { TemplateModel } from "src/models/template";
+import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITemplateService from "../interfaces/templateService";
 
 class TemplateService implements ITemplateService {
@@ -18,10 +15,35 @@ class TemplateService implements ITemplateService {
     await client.template_Delete(id);
   }
 
-  async getAll(): Promise<PageableCollectionOfTemplateModel> {
-    const client = new Client(process.env.API_URL, api);
-    const data = await client.template_Get(0, 25);
-    return data;
+  async getAll(): Promise<TemplateModel[]> {
+    const {
+      data: {
+        data: { getUserTemplates }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `query {
+        getUserTemplates {
+          amount,
+          id,
+          description,
+          createdAt,
+          category {
+            id,
+            name,
+            icon
+          }
+          account {
+            name
+          }
+        }
+      }`
+    });
+    return getUserTemplates.map((a: any) => ({
+      ...a,
+      createdAt: new Date(a.createdAt),
+      account: a.account.name,
+      transactionType: a.amount > 0 ? TRANSACTION_TYPE.INCOME : TRANSACTION_TYPE.EXPENSE
+    }));
   }
 }
 
