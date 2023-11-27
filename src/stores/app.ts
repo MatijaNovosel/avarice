@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
 import { setCssVar } from "quasar";
+import IAccountService from "src/api/interfaces/accountService";
+import { Types, getService } from "src/di-container";
 import { ref } from "vue";
+import { useUserStore } from "./user";
 
 export const useAppStore = defineStore(
   "app",
   () => {
+    const userStore = useUserStore();
     const transactionsChangeNotifier = ref(false);
     const accentColor = ref("#f44336");
 
@@ -12,7 +16,9 @@ export const useAppStore = defineStore(
     const categoryDialogOpen = ref(false);
     const accountDialogOpen = ref(false);
 
-    const notifyTransactionChanged = () => {
+    const notifyTransactionChanged = async () => {
+      const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+      userStore.setAccounts(accounts);
       transactionsChangeNotifier.value = !transactionsChangeNotifier.value;
     };
 

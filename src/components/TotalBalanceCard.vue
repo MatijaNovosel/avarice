@@ -105,6 +105,9 @@ const percentages = computed(() => {
     } else if (income > expense) {
       incomePercentage = 1;
       expensePercentage = expense / income;
+    } else {
+      incomePercentage = 1;
+      expensePercentage = 1;
     }
   }
 

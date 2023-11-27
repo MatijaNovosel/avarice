@@ -59,7 +59,7 @@ class TransactionService implements ITransactionService {
     } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `mutation {
         deleteTransaction(data: {
-          id: ${id},
+          id: "${id}",
         })
       }`
     });
@@ -83,6 +83,10 @@ class TransactionService implements ITransactionService {
       query: `query {
         getTransactions(
           query: "${description || ""}",
+          pagination: {
+            skip: ${itemsPerPage * page},
+            take: ${itemsPerPage}
+          },
           orderBy: {
             direction: desc,
             field: createdAt
@@ -127,7 +131,7 @@ class TransactionService implements ITransactionService {
     } = await api.post(`${process.env.API_URL}/graphql`, {
       query: `mutation {
         duplicateTransaction(data: {
-          id: ${id},
+          id: "${id}",
         })
       }`
     });

@@ -459,10 +459,6 @@ const deleteTransaction = async (id: number) => {
       textColor: "green"
     });
     appStore.notifyTransactionChanged();
-    const fetchedAccounts = await getService<IAccountService>(
-      Types.AccountService
-    ).getLatestValues();
-    userStore.setAccounts(fetchedAccounts);
   } catch (e) {
     $q.notify({
       message: (e as Error).message,

@@ -187,6 +187,7 @@
             </q-select>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
             <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
+            <q-checkbox v-model="state.saveAsTemplate" label="Clear data after saving" />
             <div class="row justify-between">
               <q-toggle v-model="state.expense" label="Expense" color="accent" />
               <div>
