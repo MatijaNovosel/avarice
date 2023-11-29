@@ -11,9 +11,9 @@
 <script lang="ts" setup>
 import * as d3 from "d3";
 import { format } from "date-fns";
-import { TransactionActivityHeatmapModel } from "src/api/client";
 import ITransactionService from "src/api/interfaces/transactionService";
 import { getService, Types } from "src/di-container";
+import { TransactionHeatmapModel } from "src/models/transaction";
 import { onMounted, ref } from "vue";
 
 interface d3MouseEvent {
@@ -79,7 +79,7 @@ async function initHeatMap() {
     tooltip.style("opacity", 1);
   };
 
-  const mousemove = (event: d3MouseEvent, d: TransactionActivityHeatmapModel) => {
+  const mousemove = (event: d3MouseEvent, d: TransactionHeatmapModel) => {
     tooltip
       .html(`<b>${d.value}</b><i> transactions on </i><b>${format(d.date, "dd.MM.yyyy.")}</b>`)
       .style("left", `${event.layerX + 10}px`)

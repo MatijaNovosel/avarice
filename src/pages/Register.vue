@@ -83,7 +83,7 @@ import useVuelidate from "@vuelidate/core";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
 import { useQuasar } from "quasar";
 import IAuthService from "src/api/interfaces/authService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import ROUTE_NAMES from "src/router/routeNames";
 import { collectErrors } from "src/utils/helpers";
 import { reactive } from "vue";
@@ -130,22 +130,13 @@ const register = async () => {
   state.loading = true;
 
   try {
-    const data = await getService<IAuthService>(Types.AuthService).register(
+    const { accessToken, refreshToken } = await getService<IAuthService>(
+      Types.AuthService
+    ).register(
       state.auth.username as string,
       state.auth.email as string,
       state.auth.password as string
     );
-
-    if (!data.result) {
-      $q.notify({
-        message: data.errors?.join(", "),
-        color: "dark",
-        textColor: "red",
-        position: "bottom"
-      });
-      state.loading = false;
-      return;
-    }
 
     $q.notify({
       message: "Successfully registered an account!",

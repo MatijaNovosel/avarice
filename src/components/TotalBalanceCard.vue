@@ -63,12 +63,12 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { TimePeriodEnum } from "src/api/client";
 import IAccountService from "src/api/interfaces/accountService";
 import { getService, Types } from "src/di-container";
 import { AccountExpenseIncomeModel } from "src/models/account";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
+import { TIME_PERIOD } from "src/utils/constants";
 import { formatBalance, formatNumericValue } from "src/utils/helpers";
 import { computed, onMounted, reactive, watch } from "vue";
 
@@ -89,7 +89,7 @@ const getExpenseAndIncome = async () => {
   if (selectedAccount.value) {
     state.expenseAndIncome = await getService<IAccountService>(
       Types.AccountService
-    ).getExpenseAndIncomeInTimePeriod(selectedAccount.value.id, TimePeriodEnum.ThirtyDays);
+    ).getExpenseAndIncomeInTimePeriod(selectedAccount.value.id, TIME_PERIOD.ThirtyDays);
   }
 };
 

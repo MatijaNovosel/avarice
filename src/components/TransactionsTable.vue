@@ -161,7 +161,7 @@
     </template>
     <template #body="props">
       <q-tr :props="props">
-        <q-menu context-menu touch-position>
+        <q-menu context-menu touch-position auto-close>
           <q-list dense>
             <q-item clickable @click="deleteTransaction(props.row.id)">
               <q-item-section>

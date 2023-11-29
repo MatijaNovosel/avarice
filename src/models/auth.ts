@@ -4,7 +4,7 @@ export interface DecodedToken {
   iat: number;
 }
 
-export interface LoginResult {
+export interface AuthResult {
   accessToken: string;
   refreshToken: string;
 }
