@@ -35,9 +35,15 @@ export const useUserStore = defineStore(
       selectedAccount.value = payload;
     };
 
+    const setTemplates = (payload: TemplateModel[]) => {
+      templates.value = payload;
+    };
+
     const setAccounts = (payload: AccountModel[]) => {
-      const selectedAccountId = selectedAccount.value?.id;
-      setSelectedAccount(payload.find((a) => a.id === selectedAccountId) as AccountModel);
+      if (selectedAccount.value) {
+        const selectedAccountId = selectedAccount.value?.id;
+        setSelectedAccount(payload.find((a) => a.id === selectedAccountId) as AccountModel);
+      }
       accounts.value = payload;
     };
 
@@ -56,7 +62,9 @@ export const useUserStore = defineStore(
       login,
       totalBalance,
       selectedAccount,
-      setSelectedAccount
+      setSelectedAccount,
+      templates,
+      setTemplates
     };
   },
   {

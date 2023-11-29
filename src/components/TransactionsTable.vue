@@ -236,7 +236,7 @@
             <q-icon size="2.6em" name="mdi-delete" color="red" />
             <q-tooltip> Delete </q-tooltip>
           </q-btn>
-          <q-btn flat round size="sm" @click="duplicateTransaction(props.row.id)">
+          <q-btn class="q-mx-md" flat round size="sm" @click="duplicateTransaction(props.row.id)">
             <q-icon size="2.2em" name="mdi-content-duplicate" color="grey" />
             <q-tooltip> Duplicate </q-tooltip>
           </q-btn>
@@ -266,6 +266,7 @@ import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import ITransactionService from "src/api/interfaces/transactionService";
+import { useConfirmationDialog } from "src/composables/useConfirmationDialog";
 import { Types, getService } from "src/di-container";
 import { PageableCollection, SelectItem } from "src/models/common";
 import { QuasarTableColumn, QuasarTablePagination } from "src/models/quasar";
@@ -309,6 +310,7 @@ const props = withDefaults(
   }
 );
 
+const createConfirmationDialog = useConfirmationDialog();
 const $q = useQuasar();
 const userStore = useUserStore();
 const { categories } = storeToRefs(userStore);
@@ -442,14 +444,20 @@ const getTransactions = async () => {
 
 const deleteTransaction = async (id: number) => {
   try {
-    await getService<ITransactionService>(Types.TransactionService).delete(id);
-    $q.notify({
-      message: "Transaction deleted!",
-      color: "dark",
-      position: "bottom",
-      textColor: "green"
+    const answer = await createConfirmationDialog("Are you sure?", "", {
+      width: 300,
+      persistent: true
     });
-    appStore.notifyTransactionChanged();
+    if (answer) {
+      await getService<ITransactionService>(Types.TransactionService).delete(id);
+      $q.notify({
+        message: "Transaction deleted!",
+        color: "dark",
+        position: "bottom",
+        textColor: "green"
+      });
+      appStore.notifyTransactionChanged();
+    }
   } catch (e) {
     $q.notify({
       message: (e as Error).message,

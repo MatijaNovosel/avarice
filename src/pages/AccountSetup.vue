@@ -1,6 +1,6 @@
 <template>
   <q-page class="column justify-center items-center">
-    <q-card>
+    <q-card flat>
       <q-card-section>
         <div class="text-h6 q-mb-sm">Hold up!</div>
         <div class="text-subtitle2 text-grey-6">
@@ -65,7 +65,7 @@ import useVuelidate from "@vuelidate/core";
 import { minLength, numeric, required } from "@vuelidate/validators";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
-import { getService, Types } from "src/di-container";
+import { Types, getService } from "src/di-container";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useUserStore } from "src/stores/user";
 import { collectErrors } from "src/utils/helpers";

@@ -72,6 +72,7 @@ import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import IAuthService from "src/api/interfaces/authService";
 import ICategoryService from "src/api/interfaces/categoryService";
+import ITemplateService from "src/api/interfaces/templateService";
 import { Types, getService } from "src/di-container";
 import { DecodedToken } from "src/models/auth";
 import ROUTE_NAMES from "src/router/routeNames";
@@ -132,12 +133,13 @@ const login = async () => {
     const categories = await getService<ICategoryService>(
       Types.CategoryService
     ).getUserCategories();
-
     const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
+    const templates = await getService<ITemplateService>(Types.TemplateService).getAll();
 
     userStore.setCategories(categories);
     userStore.setAccounts(accounts);
     userStore.setSelectedAccount(accounts[0]);
+    userStore.setTemplates(templates);
 
     $q.notify({
       message: "Successfully logged in!",
@@ -153,7 +155,7 @@ const login = async () => {
     }
   } catch (e) {
     $q.notify({
-      message: (e as Error).message,
+      message: "Error while signing in!",
       color: "dark",
       textColor: "red",
       position: "bottom"

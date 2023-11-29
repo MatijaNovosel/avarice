@@ -187,11 +187,19 @@
             </q-select>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
             <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
-            <q-checkbox v-model="state.saveAsTemplate" label="Clear data after saving" />
+            <q-checkbox v-model="state.clearDataAferSaving" label="Clear data after saving" />
             <div class="row justify-between">
-              <q-toggle v-model="state.expense" label="Expense" color="accent" />
               <div>
-                <q-btn flat dense class="q-ml-md bg-accent rounded">
+                <q-toggle v-model="state.expense" label="Expense" color="accent" />
+                <q-toggle v-model="state.isTransfer" label="Transfer" color="accent" />
+              </div>
+              <div>
+                <q-btn
+                  :disable="templates.length === 0"
+                  flat
+                  dense
+                  class="q-ml-md bg-accent rounded"
+                >
                   <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
                   <q-tooltip> Select template </q-tooltip>
                 </q-btn>
@@ -236,6 +244,7 @@ interface State {
   closeAfterAdding: boolean;
   isTransfer: boolean;
   saveAsTemplate: boolean;
+  clearDataAferSaving: boolean;
   expense: boolean;
   transaction: {
     amount: string | null;
@@ -249,7 +258,7 @@ interface State {
 const $q = useQuasar();
 
 const userStore = useUserStore();
-const { accounts, categories } = storeToRefs(userStore);
+const { accounts, categories, templates } = storeToRefs(userStore);
 const appStore = useAppStore();
 const { transactionDialogOpen } = storeToRefs(appStore);
 
@@ -258,6 +267,7 @@ const state: State = reactive({
   closeAfterAdding: false,
   isTransfer: false,
   saveAsTemplate: false,
+  clearDataAferSaving: false,
   expense: true,
   transaction: {
     amount: "0",
@@ -318,11 +328,9 @@ const createTransactionOrCategory = async () => {
 
     appStore.notifyTransactionChanged();
 
-    const fetchedAccounts = await getService<IAccountService>(
-      Types.AccountService
-    ).getLatestValues();
+    const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
 
-    userStore.setAccounts(fetchedAccounts);
+    userStore.setAccounts(accounts);
 
     $q.notify({
       message: "Transaction added",
@@ -331,18 +339,12 @@ const createTransactionOrCategory = async () => {
       position: "bottom"
     });
 
-    state.transaction = {
-      amount: "0",
-      category: null,
-      account: null,
-      accountTo: null,
-      description: null
-    };
-
     if (state.closeAfterAdding) {
       closeDialog();
     } else {
-      resetFormData();
+      if (state.clearDataAferSaving) {
+        resetFormData();
+      }
     }
   } catch (e) {
     $q.notify({
