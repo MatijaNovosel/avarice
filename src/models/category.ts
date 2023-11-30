@@ -11,3 +11,10 @@ export interface CategoryModel {
   system: boolean;
   parent?: CategoryParent;
 }
+
+export interface CreateCategoryModel {
+  name: string;
+  icon: string;
+  color: string;
+  parentId?: string;
+}

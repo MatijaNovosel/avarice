@@ -1,12 +1,26 @@
-import { Client, CreateCategoryModel, ICreateCategoryModel } from "src/api/client";
 import { api } from "src/boot/axios";
-import { CategoryModel } from "src/models/category";
+import { CategoryModel, CreateCategoryModel } from "src/models/category";
 import ICategoryService from "../interfaces/categoryService";
 
 class CategoryService implements ICategoryService {
-  async createCategory(payload: ICreateCategoryModel): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.category_Create(new CreateCategoryModel(payload));
+  async createCategory({ color, icon, name, parentId }: CreateCategoryModel): Promise<void> {
+    const {
+      data: {
+        data: { createCategory }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        createCategory(data: {
+          color: "${color}",
+          icon: "${icon}",
+          name: "${name}",
+          parentId: "${parentId}"
+        }) {
+          id 
+        }
+      }`
+    });
+    return createCategory.id;
   }
 
   async getUserCategories(): Promise<CategoryModel[]> {
@@ -29,7 +43,6 @@ class CategoryService implements ICategoryService {
         }
       }`
     });
-
     return getUserCategories as CategoryModel[];
   }
 }

@@ -1,18 +1,15 @@
-import { AddTemplateDto, Client, IAddTemplateDto } from "src/api/client";
 import { api } from "src/boot/axios";
-import { TemplateModel } from "src/models/template";
+import { CreateTemplateModel, TemplateModel } from "src/models/template";
 import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITemplateService from "../interfaces/templateService";
 
 class TemplateService implements ITemplateService {
-  async create(payload: IAddTemplateDto): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.template_Add(new AddTemplateDto(payload));
+  async create(payload: CreateTemplateModel): Promise<void> {
+    //
   }
 
   async delete(id: number): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.template_Delete(id);
+    //
   }
 
   async getAll(): Promise<TemplateModel[]> {

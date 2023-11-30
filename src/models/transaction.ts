@@ -31,3 +31,9 @@ export interface TransactionHeatmapModel {
   date: Date;
   weekDay?: string;
 }
+
+export interface TransferModel {
+  accountFromId: string;
+  accountToId: string;
+  amount: number;
+}

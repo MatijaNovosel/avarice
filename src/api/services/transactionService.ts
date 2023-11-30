@@ -1,10 +1,10 @@
-import { AddTransferDto, Client, IAddTransferDto } from "src/api/client";
 import { api } from "src/boot/axios";
 import { PageableCollection } from "src/models/common";
 import {
   CreateTransactionModel,
   TransactionHeatmapModel,
-  TransactionModel
+  TransactionModel,
+  TransferModel
 } from "src/models/transaction";
 import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITransactionService from "../interfaces/transactionService";
@@ -33,9 +33,21 @@ class TransactionService implements ITransactionService {
     }));
   }
 
-  async transfer(payload: IAddTransferDto): Promise<void> {
-    const client = new Client(process.env.API_URL, api);
-    await client.transaction_Transfer(new AddTransferDto(payload));
+  async transfer(payload: TransferModel): Promise<string[]> {
+    const {
+      data: {
+        data: { transfer }
+      }
+    } = await api.post(`${process.env.API_URL}/graphql`, {
+      query: `mutation {
+        transfer(data: {
+          accountFromId: "${payload.accountFromId}",
+          accountToId: "${payload.accountToId}",
+          amount: ${payload.amount},
+        })
+      }`
+    });
+    return transfer;
   }
 
   async create({

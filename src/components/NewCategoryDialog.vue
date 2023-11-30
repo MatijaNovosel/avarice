@@ -161,7 +161,7 @@
       <q-card-actions class="q-px-md q-pb-md justify-end">
         <q-btn
           :loading="state.loading"
-          @click="createAccount"
+          @click="createCategory"
           unelevated
           color="accent"
           label="Create category"
@@ -195,7 +195,7 @@ interface State {
   icons: string[][];
   filteredIcons: string[][];
   tempIcons: string[][];
-  newCategoryParent: number | null;
+  newCategoryParent: string | null;
   data: {
     name: string;
   };
@@ -279,11 +279,16 @@ const closeDialog = () => {
   emit("update:open", false);
 };
 
-const createAccount = async () => {
+const createCategory = async () => {
   state.loading = true;
 
   try {
-    // Call create category here
+    await getService<ICategoryService>(Types.CategoryService).createCategory({
+      color: state.selectedColor,
+      icon: state.selectedIcon,
+      name: state.data.name,
+      parentId: state.newCategoryParent as string
+    });
 
     $q.notify({
       message: "Successfully created an account!",

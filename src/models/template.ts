@@ -10,3 +10,12 @@ export interface TemplateModel {
   category: TransactionCategoryModel;
   account: string;
 }
+
+export interface CreateTemplateModel {
+  amount: number;
+  description: string;
+  currency: string;
+  transactionType: string;
+  categoryId: string;
+  account: string;
+}
