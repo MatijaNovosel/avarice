@@ -102,7 +102,6 @@ const state: State = reactive({
 });
 
 const login = async () => {
-  console.log("xdd");
   state.loading = true;
 
   try {
