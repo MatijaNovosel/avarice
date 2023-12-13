@@ -215,7 +215,7 @@ import { Types, getService } from "src/di-container";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 interface State {
   loading: boolean;
@@ -323,4 +323,11 @@ const createTransactionOrCategory = async () => {
     state.loading = false;
   }
 };
+
+watch(
+  () => transactionDialogOpen,
+  () => {
+    console.log(transactionEmphereal);
+  }
+);
 </script>

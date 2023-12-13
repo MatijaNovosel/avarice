@@ -1,8 +1,8 @@
+import { TransactionModel } from "./../models/transaction";
 import { defineStore } from "pinia";
 import { setCssVar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { Types, getService } from "src/di-container";
-import { TransactionModel } from "src/models/transaction";
 import { ref } from "vue";
 import { useUserStore } from "./user";
 
@@ -41,6 +41,10 @@ export const useAppStore = defineStore(
       accentColor.value = color;
     };
 
+    const setTransactionEmphereal = (transaction: TransactionModel) => {
+      transactionEmphereal.value = transaction;
+    };
+
     return {
       transactionEmphereal,
       accentColor,
@@ -52,7 +56,8 @@ export const useAppStore = defineStore(
       categoryDialogOpen,
       accountDialogOpen,
       toggleCategoryDialog,
-      toggleAccountDialog
+      toggleAccountDialog,
+      setTransactionEmphereal
     };
   },
   {
