@@ -35,7 +35,7 @@
             v-model="state.data.initialBalance"
             dense
             label="Initial balance"
-            suffix="HRK"
+            suffix="EUR"
             :error="$v.initialBalance.$error"
             :error-message="collectErrors($v.initialBalance.$errors)"
             :hide-bottom-space="!$v.initialBalance.$error"

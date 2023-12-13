@@ -24,10 +24,7 @@
               clearable
               label=""
               v-model="state.transaction.amount"
-              suffix="HRK"
-              :error="$v.amount.$error"
-              :error-message="collectErrors($v.amount.$errors)"
-              :hide-bottom-space="!$v.amount.$error"
+              suffix="EUR"
             >
               <template #label> <required-icon /> Amount </template>
             </q-input>
@@ -39,9 +36,6 @@
               clearable
               label=""
               v-model="state.transaction.description"
-              :error="$v.description.$error"
-              :error-message="collectErrors($v.description.$errors)"
-              :hide-bottom-space="!$v.description.$error"
             >
               <template #label> <required-icon /> Description </template>
             </q-input>
@@ -58,9 +52,6 @@
               clearable
               emit-value
               map-options
-              :error="$v.category.$error"
-              :error-message="collectErrors($v.category.$errors)"
-              :hide-bottom-space="!$v.category.$error"
             >
               <template #label> <required-icon /> Category </template>
               <template #selected-item="scope">
@@ -110,9 +101,6 @@
               clearable
               emit-value
               map-options
-              :error="$v.account.$error"
-              :error-message="collectErrors($v.account.$errors)"
-              :hide-bottom-space="!$v.account.$error"
             >
               <template #label>
                 <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
@@ -155,9 +143,6 @@
               clearable
               emit-value
               map-options
-              :error="$v.accountTo.$error"
-              :error-message="collectErrors($v.accountTo.$errors)"
-              :hide-bottom-space="!$v.accountTo.$error"
             >
               <template #label> <required-icon /> Account to </template>
               <template #selected-item="scope">
@@ -213,12 +198,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions class="q-pa-md justify-end">
-          <q-btn
-            :disable="$v.$invalid"
-            color="accent"
-            label="Create"
-            @click="createTransactionOrCategory"
-          />
+          <q-btn color="accent" label="Create" @click="createTransactionOrCategory" />
         </q-card-actions>
       </template>
     </q-card>
@@ -226,8 +206,6 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { decimal, required, requiredIf } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
@@ -236,7 +214,7 @@ import RequiredIcon from "src/components/RequiredIcon.vue";
 import { Types, getService } from "src/di-container";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { collectErrors, formatBalance } from "src/utils/helpers";
+import { formatBalance } from "src/utils/helpers";
 import { reactive } from "vue";
 
 interface State {
@@ -260,7 +238,7 @@ const $q = useQuasar();
 const userStore = useUserStore();
 const { accounts, categories, templates } = storeToRefs(userStore);
 const appStore = useAppStore();
-const { transactionDialogOpen } = storeToRefs(appStore);
+const { transactionDialogOpen, transactionEmphereal } = storeToRefs(appStore);
 
 const state: State = reactive({
   loading: false,
@@ -278,16 +256,6 @@ const state: State = reactive({
   }
 });
 
-const rules = {
-  amount: { required, decimal, $autoDirty: true },
-  category: { requiredIf: requiredIf(!state.isTransfer), $autoDirty: true },
-  account: { required, $autoDirty: true },
-  accountTo: { requiredIf: requiredIf(state.isTransfer), $autoDirty: true },
-  description: { required, $autoDirty: true }
-};
-
-const $v = useVuelidate(rules, state.transaction);
-
 const resetFormData = (resetCloseAfterAdding?: boolean) => {
   state.transaction = {
     amount: "0",
@@ -296,8 +264,6 @@ const resetFormData = (resetCloseAfterAdding?: boolean) => {
     accountTo: null,
     description: null
   };
-
-  $v.value.$reset();
 
   if (resetCloseAfterAdding) {
     state.closeAfterAdding = false;

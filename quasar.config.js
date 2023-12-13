@@ -9,7 +9,7 @@ module.exports = configure((ctx) => ({
       }
     }
   },
-  boot: ["i18n", "axios", "charts"],
+  boot: ["i18n", "axios", "charts", "components", "validation"],
   css: ["app.scss"],
   extras: ["mdi-v5", "roboto-font", "material-icons", "material-icons-outlined"],
   build: {

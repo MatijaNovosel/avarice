@@ -18,9 +18,6 @@
             v-model="state.data.name"
             dense
             label="Name"
-            :error="$v.name.$error"
-            :error-message="collectErrors($v.name.$errors)"
-            :hide-bottom-space="!$v.name.$error"
           >
             <template #prepend>
               <q-icon name="mdi-tag" />
@@ -34,10 +31,7 @@
             v-model="state.data.initialBalance"
             dense
             label="Initial balance"
-            suffix="HRK"
-            :error="$v.initialBalance.$error"
-            :error-message="collectErrors($v.initialBalance.$errors)"
-            :hide-bottom-space="!$v.initialBalance.$error"
+            suffix="EUR"
           >
             <template #prepend>
               <q-icon name="mdi-bank" />
@@ -52,7 +46,6 @@
           unelevated
           color="accent"
           label="Create account"
-          :disable="$v.$invalid"
         />
       </q-card-actions>
     </q-card>
@@ -60,15 +53,12 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { minLength, numeric, required } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { Types, getService } from "src/di-container";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
-import { collectErrors } from "src/utils/helpers";
 import { reactive } from "vue";
 
 interface State {
@@ -87,15 +77,9 @@ const state: State = reactive({
   }
 });
 
-const rules = {
-  initialBalance: { required, numeric, $autoDirty: true },
-  name: { required, minLength: minLength(3), $autoDirty: true }
-};
-
 const $q = useQuasar();
 const appStore = useAppStore();
 const { accountDialogOpen } = storeToRefs(appStore);
-const $v = useVuelidate(rules, state.data);
 const userStore = useUserStore();
 
 const closeDialog = () => {
@@ -103,7 +87,6 @@ const closeDialog = () => {
     initialBalance: "0",
     name: ""
   };
-  $v.value.$reset();
   appStore.toggleAccountDialog();
 };
 

@@ -168,7 +168,7 @@
                 <q-item-label> Delete transaction </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable>
+            <q-item clickable @click="editTransaction(props.row)">
               <q-item-section>
                 <q-item-label> Edit transaction </q-item-label>
               </q-item-section>
@@ -240,7 +240,7 @@
             <q-icon size="2.2em" name="mdi-content-duplicate" color="grey" />
             <q-tooltip> Duplicate </q-tooltip>
           </q-btn>
-          <q-btn flat round size="sm">
+          <q-btn flat round size="sm" @click="editTransaction(props.row)">
             <q-icon size="2.6em" name="mdi-pencil" color="grey" />
             <q-tooltip> Edit </q-tooltip>
           </q-btn>
@@ -470,18 +470,24 @@ const deleteTransaction = async (id: number) => {
 
 const duplicateTransaction = async (id: number) => {
   try {
-    await getService<ITransactionService>(Types.TransactionService).duplicate(id);
-    $q.notify({
-      message: "Transaction duplicated!",
-      color: "dark",
-      position: "bottom",
-      textColor: "green"
+    const answer = await createConfirmationDialog("Are you sure?", "", {
+      width: 300,
+      persistent: true
     });
-    appStore.notifyTransactionChanged();
-    const fetchedAccounts = await getService<IAccountService>(
-      Types.AccountService
-    ).getLatestValues();
-    userStore.setAccounts(fetchedAccounts);
+    if (answer) {
+      await getService<ITransactionService>(Types.TransactionService).duplicate(id);
+      $q.notify({
+        message: "Transaction duplicated!",
+        color: "dark",
+        position: "bottom",
+        textColor: "green"
+      });
+      appStore.notifyTransactionChanged();
+      const fetchedAccounts = await getService<IAccountService>(
+        Types.AccountService
+      ).getLatestValues();
+      userStore.setAccounts(fetchedAccounts);
+    }
   } catch (e) {
     $q.notify({
       message: (e as Error).message,
@@ -490,6 +496,10 @@ const duplicateTransaction = async (id: number) => {
       position: "bottom"
     });
   }
+};
+
+const editTransaction = (transaction: TransactionModelExtended) => {
+  console.log({ transaction });
 };
 
 const selectAllTriggered = () => {

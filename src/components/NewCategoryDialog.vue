@@ -10,17 +10,7 @@
       <q-separator />
       <q-card-section class="text-center">
         <q-form class="q-gutter-md">
-          <q-input
-            v-model="state.data.name"
-            dense
-            square
-            filled
-            label=""
-            clearable
-            :error="$v.name.$error"
-            :error-message="collectErrors($v.name.$errors)"
-            :hide-bottom-space="!$v.name.$error"
-          >
+          <q-input v-model="state.data.name" dense square filled label="" clearable>
             <template #label> <required-icon /> Category name </template>
             <template #after>
               <q-icon
@@ -165,7 +155,6 @@
           unelevated
           color="accent"
           label="Create category"
-          :disable="$v.$invalid"
         />
       </q-card-actions>
     </q-card>
@@ -173,8 +162,6 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { minLength, required } from "@vuelidate/validators";
 import { chunk } from "matija-utils";
 import { storeToRefs } from "pinia";
 import { debounce, useQuasar } from "quasar";
@@ -182,7 +169,6 @@ import ICategoryService from "src/api/interfaces/categoryService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import { Types, getService } from "src/di-container";
 import { useUserStore } from "src/stores/user";
-import { collectErrors } from "src/utils/helpers";
 import iconList from "src/utils/icons";
 import { computed, reactive, watch } from "vue";
 
@@ -223,10 +209,6 @@ const categoryInfiniteLoadDisabled = computed(
   () => state.iconSearchText !== "" && state.iconSearchText !== null
 );
 
-const rules = {
-  name: { required, minLength: minLength(3), $autoDirty: true }
-};
-
 const state: State = reactive({
   open: false,
   loading: false,
@@ -245,8 +227,6 @@ const state: State = reactive({
 for (let i = 0; i < 5; i++) {
   state.icons.push(chunkedIconList[i]);
 }
-
-const $v = useVuelidate(rules, state.data);
 
 const setCategoryIcon = (name: string) => {
   state.selectedIcon = name;
@@ -275,7 +255,6 @@ const closeDialog = () => {
   state.data = {
     name: ""
   };
-  $v.value.$reset();
   emit("update:open", false);
 };
 

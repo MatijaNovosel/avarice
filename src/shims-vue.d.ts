@@ -1,10 +1,17 @@
 /* eslint-disable */
 
-/// <reference types="vite/client" />
+import { Field, Form } from "vee-validate";
+import { DefineComponent } from "vue";
 
-// Mocks all files ending in `.vue` showing them as plain Vue instances
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue';
-  const component: DefineComponent<{}, {}, any>;
+/// <reference types="vite/client" />
+declare module "*.vue" {
+  const component: DefineComponent<Record<string, unknown>, Record<string, unknown>, any>;
   export default component;
+}
+
+declare module "@vue/runtime-core" {
+  export interface GlobalComponents {
+    vvForm: typeof Form;
+    vvField: typeof Field;
+  }
 }

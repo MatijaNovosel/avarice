@@ -4,55 +4,58 @@
       <span class="text-h3 q-mb-lg text-bold text-yellow">Avarice</span>
       <q-card flat class="q-pa-md shadow-1 rounded">
         <q-card-section>
-          <q-form class="q-gutter-md">
-            <q-input
-              :disabled="state.loading"
-              square
-              filled
-              clearable
-              v-model="state.login.email"
-              type="email"
-              dense
-              label="Email"
-              :error="$v.email.$error"
-              :error-message="collectErrors($v.email.$errors)"
-              :hide-bottom-space="!$v.email.$error"
-            >
-              <template #prepend>
-                <q-icon name="mdi-email" />
-              </template>
-            </q-input>
-            <q-input
-              :disabled="state.loading"
-              square
-              filled
-              clearable
-              v-model="state.login.password"
-              dense
-              type="password"
-              label="Password"
-              :error="$v.password.$error"
-              :error-message="collectErrors($v.password.$errors)"
-              :hide-bottom-space="!$v.password.$error"
-            >
-              <template #prepend>
-                <q-icon name="mdi-lock" />
-              </template>
-            </q-input>
-          </q-form>
+          <vv-form as="q-form" class="q-gutter-md" @submit="login">
+            <vv-field v-slot="{ field, errors }" name="email" label="Email" rules="email|required">
+              <q-input
+                :disabled="state.loading"
+                square
+                filled
+                clearable
+                v-model="state.login.email"
+                v-bind="field"
+                type="email"
+                dense
+                label="Email"
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+              >
+                <template #prepend>
+                  <q-icon name="mdi-email" />
+                </template>
+              </q-input>
+            </vv-field>
+            <vv-field v-slot="{ field, errors }" name="password" label="Password" rules="required">
+              <q-input
+                :disabled="state.loading"
+                square
+                filled
+                clearable
+                v-model="state.login.password"
+                v-bind="field"
+                dense
+                type="password"
+                label="Password"
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+              >
+                <template #prepend>
+                  <q-icon name="mdi-lock" />
+                </template>
+              </q-input>
+            </vv-field>
+            <q-btn
+              :loading="state.loading"
+              unelevated
+              color="yellow"
+              size="md"
+              class="text-black"
+              label="Login"
+              type="submit"
+            />
+          </vv-form>
         </q-card-section>
-        <q-card-actions class="q-px-md">
-          <q-btn
-            :loading="state.loading"
-            @click="login"
-            unelevated
-            color="yellow"
-            size="md"
-            class="full-width text-black"
-            label="Login"
-            :disable="$v.$invalid"
-          />
-        </q-card-actions>
         <q-card-section class="text-center q-pa-none">
           <router-link class="text-grey-6" :to="{ name: ROUTE_NAMES.REGISTER }">
             Create an account
@@ -64,8 +67,6 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { email, required } from "@vuelidate/validators";
 import { onKeyStroke } from "@vueuse/core";
 import jwt_decode from "jwt-decode";
 import { useQuasar } from "quasar";
@@ -77,7 +78,6 @@ import { Types, getService } from "src/di-container";
 import { DecodedToken } from "src/models/auth";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useUserStore } from "src/stores/user";
-import { collectErrors } from "src/utils/helpers";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 
@@ -93,11 +93,6 @@ const userStore = useUserStore();
 const router = useRouter();
 const $q = useQuasar();
 
-const rules = {
-  password: { required, $autoDirty: true },
-  email: { required, email, $autoDirty: true }
-};
-
 const state: State = reactive({
   loading: false,
   login: {
@@ -106,9 +101,8 @@ const state: State = reactive({
   }
 });
 
-const $v = useVuelidate(rules, state.login);
-
 const login = async () => {
+  console.log("xdd");
   state.loading = true;
 
   try {
