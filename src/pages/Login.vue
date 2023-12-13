@@ -11,7 +11,7 @@
                 square
                 filled
                 clearable
-                v-model="state.login.email"
+                v-model="state.email"
                 v-bind="field"
                 type="email"
                 dense
@@ -31,7 +31,7 @@
                 square
                 filled
                 clearable
-                v-model="state.login.password"
+                v-model="state.password"
                 v-bind="field"
                 dense
                 type="password"
@@ -83,10 +83,8 @@ import { useRouter } from "vue-router";
 
 interface State {
   loading: boolean;
-  login: {
-    password: string | null;
-    email: string | null;
-  };
+  password: string | null;
+  email: string | null;
 }
 
 const userStore = useUserStore();
@@ -95,10 +93,8 @@ const $q = useQuasar();
 
 const state: State = reactive({
   loading: false,
-  login: {
-    password: null,
-    email: null
-  }
+  password: null,
+  email: null
 });
 
 const login = async () => {
@@ -106,15 +102,15 @@ const login = async () => {
 
   try {
     const { accessToken, refreshToken } = await getService<IAuthService>(Types.AuthService).login(
-      state.login.email as string,
-      state.login.password as string
+      state.email as string,
+      state.password as string
     );
 
     const decodedToken = jwt_decode<DecodedToken>(accessToken as string);
 
     userStore.login({
       id: decodedToken.userId,
-      email: state.login.email as string,
+      email: state.email as string,
       userName: "username",
       emailConfirmed: false,
       token: accessToken,
