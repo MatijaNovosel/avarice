@@ -4,7 +4,7 @@
       <span class="text-h3 q-mb-lg text-bold text-yellow">Avarice</span>
       <q-card flat class="q-pa-md shadow-1 rounded">
         <q-card-section>
-          <vv-form as="q-form" class="q-gutter-md" @submit="login">
+          <vv-form v-slot="{ handleSubmit }" as="q-form" @submit="login">
             <vv-field v-slot="{ field, errors }" name="email" label="Email" rules="email|required">
               <q-input
                 :disabled="state.loading"
@@ -27,6 +27,7 @@
             </vv-field>
             <vv-field v-slot="{ field, errors }" name="password" label="Password" rules="required">
               <q-input
+                class="q-my-md"
                 :disabled="state.loading"
                 square
                 filled
@@ -53,6 +54,7 @@
               class="text-black"
               label="Login"
               type="submit"
+              @click="handleSubmit(login)"
             />
           </vv-form>
         </q-card-section>
