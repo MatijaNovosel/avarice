@@ -16,29 +16,56 @@
         </q-card-section>
         <q-separator />
         <q-card-section>
-          <q-form class="q-gutter-md">
-            <q-input
-              dense
-              square
-              filled
-              clearable
-              label=""
-              v-model="state.transaction.amount"
-              suffix="EUR"
+          <vv-form
+            v-slot="{ handleSubmit }"
+            as="q-form"
+            class="q-gutter-md"
+            @submit="createTransactionOrCategory"
+          >
+            <vv-field
+              v-slot="{ field, errors }"
+              name="amount"
+              label="Amount"
+              rules="numeric|required"
             >
-              <template #label> <required-icon /> Amount </template>
-            </q-input>
-            <q-input
-              v-if="!state.isTransfer"
-              dense
-              square
-              filled
-              clearable
-              label=""
-              v-model="state.transaction.description"
+              <q-input
+                dense
+                square
+                filled
+                clearable
+                label=""
+                v-model="state.transaction.amount"
+                v-bind="field"
+                suffix="EUR"
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+              >
+                <template #label> <required-icon /> Amount </template>
+              </q-input>
+            </vv-field>
+            <vv-field
+              v-slot="{ field, errors }"
+              name="description"
+              label="Description"
+              rules="required|min:3"
             >
-              <template #label> <required-icon /> Description </template>
-            </q-input>
+              <q-input
+                v-if="!state.isTransfer"
+                dense
+                square
+                filled
+                clearable
+                label=""
+                v-model="state.transaction.description"
+                v-bind="field"
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+              >
+                <template #label> <required-icon /> Description </template>
+              </q-input>
+            </vv-field>
             <q-select
               v-if="!state.isTransfer"
               options-dense
@@ -194,12 +221,16 @@
                 </q-btn>
               </div>
             </div>
-          </q-form>
+            <div class="text-right">
+              <q-btn
+                color="accent"
+                label="Create"
+                type="submit"
+                @click="handleSubmit(createTransactionOrCategory)"
+              />
+            </div>
+          </vv-form>
         </q-card-section>
-        <q-separator />
-        <q-card-actions class="q-pa-md justify-end">
-          <q-btn color="accent" label="Create" @click="createTransactionOrCategory" />
-        </q-card-actions>
       </template>
     </q-card>
   </q-dialog>
@@ -327,7 +358,7 @@ const createTransactionOrCategory = async () => {
 watch(
   () => transactionDialogOpen,
   () => {
-    console.log(transactionEmphereal);
+    console.log(transactionEmphereal.value);
   }
 );
 </script>
