@@ -19,9 +19,6 @@
             v-model="state.data.name"
             dense
             label="Name"
-            :error="$v.name.$error"
-            :error-message="collectErrors($v.name.$errors)"
-            :hide-bottom-space="!$v.name.$error"
           >
             <template #prepend>
               <q-icon name="mdi-tag" />
@@ -36,9 +33,6 @@
             dense
             label="Initial balance"
             suffix="EUR"
-            :error="$v.initialBalance.$error"
-            :error-message="collectErrors($v.initialBalance.$errors)"
-            :hide-bottom-space="!$v.initialBalance.$error"
           >
             <template #prepend>
               <q-icon name="mdi-bank" />
@@ -53,7 +47,6 @@
           size="md"
           class="text-black q-mt-md full-width"
           label="Create account"
-          :disable="$v.$invalid"
         />
       </q-card-section>
     </q-card>
@@ -61,14 +54,11 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { minLength, numeric, required } from "@vuelidate/validators";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { Types, getService } from "src/di-container";
 import ROUTE_NAMES from "src/router/routeNames";
 import { useUserStore } from "src/stores/user";
-import { collectErrors } from "src/utils/helpers";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 
@@ -80,11 +70,6 @@ interface State {
   };
 }
 
-const rules = {
-  initialBalance: { required, numeric, $autoDirty: true },
-  name: { required, minLength: minLength(3), $autoDirty: true }
-};
-
 const state: State = reactive({
   loading: false,
   data: {
@@ -93,7 +78,6 @@ const state: State = reactive({
   }
 });
 
-const $v = useVuelidate(rules, state.data);
 const $q = useQuasar();
 const userStore = useUserStore();
 const router = useRouter();

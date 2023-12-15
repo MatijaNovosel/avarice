@@ -13,9 +13,6 @@
               v-model="state.auth.username"
               dense
               label="Username"
-              :error="$v.username.$error"
-              :error-message="collectErrors($v.username.$errors)"
-              :hide-bottom-space="!$v.username.$error"
             >
               <template #prepend>
                 <q-icon name="mdi-account" />
@@ -30,9 +27,6 @@
               type="email"
               dense
               label="Email"
-              :error="$v.email.$error"
-              :error-message="collectErrors($v.email.$errors)"
-              :hide-bottom-space="!$v.email.$error"
             >
               <template #prepend>
                 <q-icon name="mdi-email" />
@@ -48,9 +42,6 @@
               type="password"
               label="Password"
               autocomplete="new-password"
-              :error="$v.password.$error"
-              :error-message="collectErrors($v.password.$errors)"
-              :hide-bottom-space="!$v.password.$error"
             >
               <template #prepend>
                 <q-icon name="mdi-lock" />
@@ -67,7 +58,6 @@
             size="md"
             class="full-width text-black"
             label="Register"
-            :disable="$v.$invalid"
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-none">
@@ -79,13 +69,10 @@
 </template>
 
 <script lang="ts" setup>
-import useVuelidate from "@vuelidate/core";
-import { email, helpers, minLength, required } from "@vuelidate/validators";
 import { useQuasar } from "quasar";
 import IAuthService from "src/api/interfaces/authService";
 import { Types, getService } from "src/di-container";
 import ROUTE_NAMES from "src/router/routeNames";
-import { collectErrors } from "src/utils/helpers";
 import { reactive } from "vue";
 
 interface State {
@@ -102,19 +89,6 @@ const $q = useQuasar();
 const mustMeetRequirements = (value: string) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(value);
 
-const rules = {
-  password: {
-    required,
-    $autoDirty: true,
-    mustMeetRequirements: helpers.withMessage(
-      "Password must be max 8 characters, have one special character and a number!",
-      mustMeetRequirements
-    )
-  },
-  username: { required, minLength: minLength(5), $autoDirty: true },
-  email: { required, email, $autoDirty: true }
-};
-
 const state: State = reactive({
   loading: false,
   auth: {
@@ -123,8 +97,6 @@ const state: State = reactive({
     email: null
   }
 });
-
-const $v = useVuelidate(rules, state.auth);
 
 const register = async () => {
   state.loading = true;
@@ -151,7 +123,6 @@ const register = async () => {
       password: null,
       email: null
     };
-    $v.value.$reset();
   } catch (e) {
     $q.notify({
       message: (e as Error).message,
