@@ -17,7 +17,7 @@ class TemplateService implements ITemplateService {
       data: {
         data: { getUserTemplates }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getUserTemplates {
           amount,

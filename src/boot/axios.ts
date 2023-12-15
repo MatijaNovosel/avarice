@@ -9,6 +9,7 @@ declare module "@vue/runtime-core" {
 }
 
 const api = axios.create({ baseURL: process.env.API_URL });
+api.defaults.baseURL = `${process.env.API_URL}/graphql`;
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;

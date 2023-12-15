@@ -13,7 +13,7 @@ class AccountService implements IAccountService {
       data: {
         data: { getAccountHistory }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getAccountHistory(data: {
           accountId: "${accountId}",
@@ -38,7 +38,7 @@ class AccountService implements IAccountService {
       data: {
         data: { getExpenseAndIncomeInTimePeriod }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getExpenseAndIncomeInTimePeriod(data: {
           accountId: "${accountId}",
@@ -61,7 +61,7 @@ class AccountService implements IAccountService {
       data: {
         data: { getUserAccounts }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getUserAccounts {
           id,
@@ -84,7 +84,7 @@ class AccountService implements IAccountService {
       data: {
         data: { createAccount }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         createAccount(data: {
           name: "${name}",
@@ -101,7 +101,7 @@ class AccountService implements IAccountService {
       data: {
         data: { deleteAccount }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         deleteAccount(data: {
           id: "${id}"

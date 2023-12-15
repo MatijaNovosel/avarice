@@ -8,7 +8,7 @@ class AuthService implements IAuthService {
       data: {
         data: { signUp }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         signUp(data: {
           username: "${username}",
@@ -31,7 +31,7 @@ class AuthService implements IAuthService {
       data: {
         data: { signIn }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         signIn(data: {
           email: "lisa@simpson.com",

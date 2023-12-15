@@ -8,7 +8,7 @@ class CategoryService implements ICategoryService {
       data: {
         data: { createCategory }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         createCategory(data: {
           color: "${color}",
@@ -28,7 +28,7 @@ class CategoryService implements ICategoryService {
       data: {
         data: { getUserCategories }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getUserCategories {
           id,

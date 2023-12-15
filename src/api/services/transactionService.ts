@@ -15,7 +15,7 @@ class TransactionService implements ITransactionService {
       data: {
         data: { getHeatmap }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getHeatmap {
           date,
@@ -38,7 +38,7 @@ class TransactionService implements ITransactionService {
       data: {
         data: { transfer }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         transfer(data: {
           accountFromId: "${payload.accountFromId}",
@@ -61,7 +61,7 @@ class TransactionService implements ITransactionService {
       data: {
         data: { createTransaction }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         createTransaction(data: {
           amount: ${amount},
@@ -84,7 +84,7 @@ class TransactionService implements ITransactionService {
       data: {
         data: { deleteTransaction }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         deleteTransaction(data: {
           id: "${id}",
@@ -107,7 +107,7 @@ class TransactionService implements ITransactionService {
           getTransactions: { edges, totalCount }
         }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `query {
         getTransactions(
           query: "${description || ""}",
@@ -156,7 +156,7 @@ class TransactionService implements ITransactionService {
       data: {
         data: { duplicateTransaction }
       }
-    } = await api.post(`${process.env.API_URL}/graphql`, {
+    } = await api.post("", {
       query: `mutation {
         duplicateTransaction(data: {
           id: "${id}",
