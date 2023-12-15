@@ -146,7 +146,7 @@
     <template #no-data>
       <div class="full-width row flex-center text-grey-6 q-gutter-sm q-pt-md">
         <q-icon size="2em" name="mdi-database-alert" />
-        <span> {{ i18n.t("noTransactionsFound") }}! </span>
+        <span> {{ $t("noTransactionsFound") }}! </span>
       </div>
     </template>
     <template #header-cell-transactionType="props">
@@ -280,7 +280,6 @@ import {
 } from "src/utils/constants";
 import { formatBalance } from "src/utils/helpers";
 import { computed, onMounted, reactive, watch } from "vue";
-import { useI18n } from "vue-i18n";
 
 interface TransactionModelExtended extends TransactionModel {
   selected: boolean;
@@ -311,7 +310,6 @@ const props = withDefaults(
   }
 );
 
-const i18n = useI18n();
 const createConfirmationDialog = useConfirmationDialog();
 const $q = useQuasar();
 const userStore = useUserStore();

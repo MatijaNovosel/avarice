@@ -66,137 +66,165 @@
                 <template #label> <required-icon /> Description </template>
               </q-input>
             </vv-field>
-            <q-select
-              v-if="!state.isTransfer"
-              options-dense
-              filled
-              dense
-              v-model="state.transaction.category"
-              :options="categories"
-              label=""
-              option-value="id"
-              option-label="name"
-              clearable
-              emit-value
-              map-options
+            <vv-field v-slot="{ field, errors }" name="category" label="Category" rules="required">
+              <q-select
+                v-if="!state.isTransfer"
+                options-dense
+                filled
+                dense
+                v-model="state.transaction.category"
+                v-bind="field"
+                :options="categories"
+                label=""
+                option-value="id"
+                option-label="name"
+                clearable
+                emit-value
+                map-options
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+              >
+                <template #label> <required-icon /> Category </template>
+                <template #selected-item="scope">
+                  <q-item class="q-px-none q-pb-sm q-pt-md">
+                    <q-item-section avatar>
+                      <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption class="text-grey-7">
+                        {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template #option="scope">
+                  <q-item class="q-py-sm" v-bind="scope.itemProps">
+                    <q-item-section avatar>
+                      <q-icon
+                        :style="{ color: scope.opt.color }"
+                        :name="scope.opt.icon"
+                        :color="scope.opt.color"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption class="text-grey-7">
+                        {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </vv-field>
+            <vv-field
+              v-slot="{ field, errors }"
+              name="accountFrom"
+              :label="state.isTransfer ? 'Account from' : 'Account'"
+              rules="required"
             >
-              <template #label> <required-icon /> Category </template>
-              <template #selected-item="scope">
-                <q-item class="q-px-none q-pb-sm q-pt-md">
-                  <q-item-section avatar>
-                    <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #option="scope">
-                <q-item class="q-py-sm" v-bind="scope.itemProps">
-                  <q-item-section avatar>
-                    <q-icon
-                      :style="{ color: scope.opt.color }"
-                      :name="scope.opt.icon"
-                      :color="scope.opt.color"
-                    />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-            <q-select
-              options-dense
-              filled
-              dense
-              v-model="state.transaction.account"
-              :options="accounts"
-              label=""
-              option-value="id"
-              option-label="name"
-              clearable
-              emit-value
-              map-options
+              <q-select
+                options-dense
+                filled
+                dense
+                v-model="state.transaction.account"
+                :options="accounts"
+                label=""
+                option-value="id"
+                option-label="name"
+                clearable
+                emit-value
+                map-options
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+                v-bind="field"
+              >
+                <template #label>
+                  <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
+                </template>
+                <template #selected-item="scope">
+                  <q-item class="q-px-none q-py-sm">
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption>
+                        {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template #option="scope">
+                  <q-item class="q-py-sm" v-bind="scope.itemProps">
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption>
+                        {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </vv-field>
+            <vv-field
+              v-slot="{ field, errors }"
+              name="accountTo"
+              label="Account to"
+              rules="required"
             >
-              <template #label>
-                <required-icon /> {{ state.isTransfer ? "Account from" : "Account" }}
-              </template>
-              <template #selected-item="scope">
-                <q-item class="q-px-none q-py-sm">
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption>
-                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #option="scope">
-                <q-item class="q-py-sm" v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption>
-                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-            <q-select
-              v-if="state.isTransfer"
-              options-dense
-              filled
-              dense
-              v-model="state.transaction.accountTo"
-              :options="accounts"
-              label=""
-              option-value="id"
-              option-label="name"
-              clearable
-              emit-value
-              map-options
-            >
-              <template #label> <required-icon /> Account to </template>
-              <template #selected-item="scope">
-                <q-item class="q-px-none q-py-sm">
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption>
-                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #option="scope">
-                <q-item class="q-py-sm" v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption>
-                      {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              <q-select
+                v-if="state.isTransfer"
+                options-dense
+                filled
+                dense
+                v-model="state.transaction.accountTo"
+                :options="accounts"
+                label=""
+                option-value="id"
+                option-label="name"
+                clearable
+                emit-value
+                map-options
+                :error-message="errors.join('')"
+                :error="!!errors.length"
+                :hide-bottom-space="!errors.length"
+                v-bind="field"
+              >
+                <template #label> <required-icon /> Account to </template>
+                <template #selected-item="scope">
+                  <q-item class="q-px-none q-py-sm">
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption>
+                        {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template #option="scope">
+                  <q-item class="q-py-sm" v-bind="scope.itemProps">
+                    <q-item-section>
+                      <q-item-label>
+                        {{ scope.opt.name }}
+                      </q-item-label>
+                      <q-item-label caption>
+                        {{ formatBalance(scope.opt.balance, scope.opt.currency) }}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </vv-field>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
             <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
             <q-checkbox v-model="state.clearDataAferSaving" label="Clear data after saving" />
