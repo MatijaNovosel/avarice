@@ -17,7 +17,7 @@
         <q-separator />
         <q-card-section>
           <vv-form
-            v-slot="{ handleSubmit }"
+            v-slot="{ handleSubmit, handleReset }"
             as="q-form"
             class="q-gutter-md"
             @submit="createTransactionOrCategory"
@@ -231,7 +231,12 @@
             <div class="row justify-between">
               <div>
                 <q-toggle v-model="state.expense" label="Expense" color="accent" />
-                <q-toggle v-model="state.isTransfer" label="Transfer" color="accent" />
+                <q-toggle
+                  v-model="state.isTransfer"
+                  label="Transfer"
+                  color="accent"
+                  @click="handleReset"
+                />
               </div>
               <div>
                 <q-btn
@@ -387,6 +392,19 @@ watch(
   () => transactionDialogOpen,
   () => {
     console.log(transactionEmphereal.value);
+  }
+);
+
+watch(
+  () => state.isTransfer,
+  () => {
+    state.transaction = {
+      amount: "0",
+      category: null,
+      account: null,
+      accountTo: null,
+      description: null
+    };
   }
 );
 </script>
