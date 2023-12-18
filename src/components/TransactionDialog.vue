@@ -342,13 +342,18 @@ const closeDialog = () => {
 const createTransactionOrCategory = async () => {
   try {
     state.loading = true;
+    const value = parseFloat(state.transaction.amount as string);
+    const amount = state.expense ? value * -1 : value;
 
     if (state.isTransfer) {
-      //
+      await getService<ITransactionService>(Types.TransactionService).transfer({
+        amount,
+        accountFromId: state.transaction.account as string,
+        accountToId: state.transaction.accountTo as string
+      });
     } else {
-      const amount = parseFloat(state.transaction.amount as string);
       await getService<ITransactionService>(Types.TransactionService).create({
-        amount: state.expense ? amount * -1 : amount,
+        amount,
         accountId: state.transaction.account as string,
         categoryId: state.transaction.category as string,
         description: state.transaction.description as string,
