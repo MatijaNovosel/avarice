@@ -1,9 +1,9 @@
-import { TransactionModel } from "./../models/transaction";
 import { defineStore } from "pinia";
 import { setCssVar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import { Types, getService } from "src/di-container";
 import { ref } from "vue";
+import { TransactionModel } from "./../models/transaction";
 import { useUserStore } from "./user";
 
 export const useAppStore = defineStore(
@@ -12,7 +12,7 @@ export const useAppStore = defineStore(
     const userStore = useUserStore();
     const transactionsChangeNotifier = ref(false);
     const accentColor = ref("#f44336");
-    const transactionEmphereal = ref<TransactionModel | null>(null);
+    const transactionEphemeral = ref<TransactionModel | null>(null);
 
     const transactionDialogOpen = ref(false);
     const categoryDialogOpen = ref(false);
@@ -41,12 +41,12 @@ export const useAppStore = defineStore(
       accentColor.value = color;
     };
 
-    const setTransactionEmphereal = (transaction: TransactionModel) => {
-      transactionEmphereal.value = transaction;
+    const setTransactionEphemeral = (transaction: TransactionModel) => {
+      transactionEphemeral.value = transaction;
     };
 
     return {
-      transactionEmphereal,
+      transactionEphemeral,
       accentColor,
       changeAccentColor,
       transactionDialogOpen,
@@ -57,7 +57,7 @@ export const useAppStore = defineStore(
       accountDialogOpen,
       toggleCategoryDialog,
       toggleAccountDialog,
-      setTransactionEmphereal
+      setTransactionEphemeral
     };
   },
   {

@@ -55,10 +55,10 @@
           narrow-indicator
         >
           <q-route-tab
-            v-for="(route, i) in routes"
+            v-for="({ title, link }, i) in routes"
             :key="i"
-            :label="route.title"
-            :to="route.link"
+            :label="title"
+            :to="link"
             exact
           />
         </q-tabs>

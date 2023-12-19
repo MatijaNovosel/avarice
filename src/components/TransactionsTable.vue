@@ -499,7 +499,8 @@ const duplicateTransaction = async (id: number) => {
 };
 
 const editTransaction = (transaction: TransactionModelExtended) => {
-  appStore.setTransactionEmphereal(transaction);
+  appStore.setTransactionEphemeral(transaction);
+  appStore.toggleTransactionDialog();
 };
 
 const selectAllTriggered = () => {

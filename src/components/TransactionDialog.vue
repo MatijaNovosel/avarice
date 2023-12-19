@@ -302,7 +302,7 @@ const $q = useQuasar();
 const userStore = useUserStore();
 const { accounts, categories, templates } = storeToRefs(userStore);
 const appStore = useAppStore();
-const { transactionDialogOpen, transactionEmphereal } = storeToRefs(appStore);
+const { transactionDialogOpen, transactionEphemeral } = storeToRefs(appStore);
 
 const state: State = reactive({
   loading: false,
@@ -397,7 +397,7 @@ watch(
   () => transactionDialogOpen,
   () => {
     console.log("halo????");
-    console.log(transactionEmphereal.value);
+    console.log(transactionEphemeral.value);
   }
 );
 
