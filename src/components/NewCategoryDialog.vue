@@ -9,81 +9,104 @@
       </q-card-section>
       <q-separator />
       <q-card-section class="text-center">
-        <q-form class="q-gutter-md">
-          <q-input v-model="state.data.name" dense square filled label="" clearable>
-            <template #label> <required-icon /> Category name </template>
-            <template #after>
-              <q-icon
-                class="rounded bg-black q-pa-sm"
-                :style="{ color: state.selectedColor }"
-                :name="state.selectedIcon"
-              >
-                <q-tooltip>
-                  {{ state.selectedIcon.split("mdi-")[1] }}
-                </q-tooltip>
-              </q-icon>
-              <q-btn flat dense size="lg">
-                <q-icon class="rounded" :style="{ backgroundColor: state.selectedColor }" />
-                <q-menu touch-position>
-                  <q-color
-                    v-model="state.selectedColor"
-                    no-header
-                    no-footer
-                    default-view="palette"
-                  />
-                </q-menu>
-              </q-btn>
-            </template>
-          </q-input>
-          <q-select
-            hide-bottom-space
-            options-dense
-            filled
-            dense
-            v-model="state.newCategoryParent"
-            :options="categories"
-            option-value="id"
-            option-label="name"
+        <vv-form v-slot="{ handleSubmit }" as="q-form" class="q-gutter-md" @submit="createCategory">
+          <vv-field v-slot="{ field, errors }" name="name" label="Name" rules="required|min:3">
+            <q-input
+              v-model="state.data.name"
+              dense
+              square
+              filled
+              label=""
+              clearable
+              :error-message="errors.join('')"
+              :error="!!errors.length"
+              :hide-bottom-space="!errors.length"
+              v-bind="field"
+            >
+              <template #label> <required-icon /> Category name </template>
+              <template #after>
+                <q-icon
+                  class="rounded bg-black q-pa-sm"
+                  :style="{ color: state.selectedColor }"
+                  :name="state.selectedIcon"
+                >
+                  <q-tooltip>
+                    {{ state.selectedIcon.split("mdi-")[1] }}
+                  </q-tooltip>
+                </q-icon>
+                <q-btn flat dense size="lg">
+                  <q-icon class="rounded" :style="{ backgroundColor: state.selectedColor }" />
+                  <q-menu touch-position>
+                    <q-color
+                      v-model="state.selectedColor"
+                      no-header
+                      no-footer
+                      default-view="palette"
+                    />
+                  </q-menu>
+                </q-btn>
+              </template>
+            </q-input>
+          </vv-field>
+          <vv-field
+            v-slot="{ field, errors }"
+            name="parentCategory"
             label="Parent category"
-            clearable
-            emit-value
-            map-options
+            rules="required"
           >
-            <template #selected-item="scope">
-              <q-item class="q-px-none q-pb-sm q-pt-md">
-                <q-item-section avatar>
-                  <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>
-                    {{ scope.opt.name }}
-                  </q-item-label>
-                  <q-item-label caption class="text-grey-7">
-                    {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-            <template #option="scope">
-              <q-item class="q-py-sm" v-bind="scope.itemProps">
-                <q-item-section avatar>
-                  <q-icon
-                    :style="{ color: scope.opt.color }"
-                    :name="scope.opt.icon"
-                    :color="scope.opt.color"
-                  />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>
-                    {{ scope.opt.name }}
-                  </q-item-label>
-                  <q-item-label caption class="text-grey-7">
-                    {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+            <q-select
+              options-dense
+              filled
+              dense
+              v-model="state.newCategoryParent"
+              :options="categories"
+              option-value="id"
+              option-label="name"
+              label="Parent category"
+              clearable
+              emit-value
+              map-options
+              :error-message="errors.join('')"
+              :error="!!errors.length"
+              :hide-bottom-space="!errors.length"
+              v-bind="field"
+            >
+              <template #selected-item="scope">
+                <q-item class="q-px-none q-pb-sm q-pt-md">
+                  <q-item-section avatar>
+                    <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #option="scope">
+                <q-item class="q-py-sm" v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-icon
+                      :style="{ color: scope.opt.color }"
+                      :name="scope.opt.icon"
+                      :color="scope.opt.color"
+                    />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                    <q-item-label caption class="text-grey-7">
+                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </vv-field>
           <q-input
             placeholder="Search icons"
             dense
@@ -146,17 +169,16 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </q-form>
+          <q-btn
+            :loading="state.loading"
+            @click="handleSubmit(createCategory)"
+            unelevated
+            type="submit"
+            color="accent"
+            label="Create category"
+          />
+        </vv-form>
       </q-card-section>
-      <q-card-actions class="q-px-md q-pb-md justify-end">
-        <q-btn
-          :loading="state.loading"
-          @click="createCategory"
-          unelevated
-          color="accent"
-          label="Create category"
-        />
-      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>

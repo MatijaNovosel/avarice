@@ -396,6 +396,7 @@ const createTransactionOrCategory = async () => {
 watch(
   () => transactionDialogOpen,
   () => {
+    console.log("halo????");
     console.log(transactionEmphereal.value);
   }
 );

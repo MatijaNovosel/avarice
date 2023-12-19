@@ -10,44 +10,62 @@
       <q-separator dark inset />
       <q-card-section>
         <div class="q-pb-md text-center">Account data</div>
-        <q-form class="q-gutter-md">
-          <q-input
-            :disabled="state.loading"
-            square
-            filled
-            clearable
-            v-model="state.data.name"
-            dense
-            label="Name"
-          >
-            <template #prepend>
-              <q-icon name="mdi-tag" />
-            </template>
-          </q-input>
-          <q-input
-            :disabled="state.loading"
-            square
-            filled
-            clearable
-            v-model="state.data.initialBalance"
-            dense
+        <vv-form v-slot="{ handleSubmit }" as="q-form" class="q-gutter-md" @submit="createAccount">
+          <vv-field v-slot="{ field, errors }" name="name" label="Name" rules="required|min:3">
+            <q-input
+              :disabled="state.loading"
+              square
+              filled
+              clearable
+              v-model="state.data.name"
+              dense
+              label="Name"
+              :error-message="errors.join('')"
+              :error="!!errors.length"
+              :hide-bottom-space="!errors.length"
+              v-bind="field"
+            >
+              <template #prepend>
+                <q-icon name="mdi-tag" />
+              </template>
+            </q-input>
+          </vv-field>
+          <vv-field
+            v-slot="{ field, errors }"
+            name="initialBalance"
             label="Initial balance"
-            suffix="EUR"
+            rules="numeric|required"
           >
-            <template #prepend>
-              <q-icon name="mdi-bank" />
-            </template>
-          </q-input>
-        </q-form>
-        <q-btn
-          :loading="state.loading"
-          @click="createAccount"
-          unelevated
-          color="yellow"
-          size="md"
-          class="text-black q-mt-md full-width"
-          label="Create account"
-        />
+            <q-input
+              :disabled="state.loading"
+              square
+              filled
+              clearable
+              v-model="state.data.initialBalance"
+              dense
+              label="Initial balance"
+              suffix="EUR"
+              :error-message="errors.join('')"
+              :error="!!errors.length"
+              :hide-bottom-space="!errors.length"
+              v-bind="field"
+            >
+              <template #prepend>
+                <q-icon name="mdi-bank" />
+              </template>
+            </q-input>
+          </vv-field>
+          <q-btn
+            :loading="state.loading"
+            @click="handleSubmit(createAccount)"
+            unelevated
+            color="yellow"
+            size="md"
+            type="submit"
+            class="text-black q-mt-md full-width"
+            label="Create account"
+          />
+        </vv-form>
       </q-card-section>
     </q-card>
   </q-page>
