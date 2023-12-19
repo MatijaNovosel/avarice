@@ -226,7 +226,7 @@
           {{ formatBalance(props.row.amount, "EUR") }}
         </q-td>
         <q-td key="account" :props="props">
-          {{ props.row.account }}
+          {{ props.row.account.name }}
         </q-td>
         <q-td key="createdAt" :props="props">
           {{ format(props.row.createdAt, "dd.MM.yyyy. HH:mm") }}

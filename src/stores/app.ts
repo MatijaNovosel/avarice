@@ -41,7 +41,7 @@ export const useAppStore = defineStore(
       accentColor.value = color;
     };
 
-    const setTransactionEphemeral = (transaction: TransactionModel) => {
+    const setTransactionEphemeral = (transaction: TransactionModel | null) => {
       transactionEphemeral.value = transaction;
     };
 

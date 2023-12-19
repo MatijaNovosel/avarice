@@ -130,10 +130,12 @@ class TransactionService implements ITransactionService {
               category {
                 id,
                 name,
-                icon
+                icon,
+                color
               }
               account {
-                name
+                name,
+                id
               }
             }
           }
@@ -145,7 +147,6 @@ class TransactionService implements ITransactionService {
       data: edges.map(({ node }: any) => ({
         ...node,
         createdAt: new Date(node.createdAt),
-        account: node.account.name,
         transactionType: node.amount > 0 ? TRANSACTION_TYPE.INCOME : TRANSACTION_TYPE.EXPENSE
       }))
     };

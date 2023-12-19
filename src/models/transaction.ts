@@ -6,6 +6,11 @@ export interface TransactionCategoryModel {
   parentName?: string;
 }
 
+export interface TransactionAccountModel {
+  id: string;
+  name: string;
+}
+
 export interface TransactionModel {
   id: string;
   amount: number;
@@ -14,7 +19,7 @@ export interface TransactionModel {
   currency: string;
   transactionType: string;
   category: TransactionCategoryModel;
-  account: string;
+  account: TransactionAccountModel;
 }
 
 export interface CreateTransactionModel {

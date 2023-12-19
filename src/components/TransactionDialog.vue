@@ -22,12 +22,7 @@
             class="q-gutter-md"
             @submit="createTransactionOrCategory"
           >
-            <vv-field
-              v-slot="{ field, errors }"
-              name="amount"
-              label="Amount"
-              rules="numeric|required"
-            >
+            <vv-field v-slot="{ field, errors }" name="amount" label="Amount" rules="required">
               <q-input
                 dense
                 square
@@ -179,9 +174,9 @@
               name="accountTo"
               label="Account to"
               rules="required"
+              v-if="state.isTransfer"
             >
               <q-select
-                v-if="state.isTransfer"
                 options-dense
                 filled
                 dense
@@ -227,10 +222,8 @@
             </vv-field>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
             <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
-            <q-checkbox v-model="state.clearDataAferSaving" label="Clear data after saving" />
             <div class="row justify-between">
               <div>
-                <q-toggle v-model="state.expense" label="Expense" color="accent" />
                 <q-toggle
                   v-model="state.isTransfer"
                   label="Transfer"
@@ -276,6 +269,7 @@ import IAccountService from "src/api/interfaces/accountService";
 import ITransactionService from "src/api/interfaces/transactionService";
 import RequiredIcon from "src/components/RequiredIcon.vue";
 import { Types, getService } from "src/di-container";
+import { TransactionModel } from "src/models/transaction";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
@@ -286,8 +280,6 @@ interface State {
   closeAfterAdding: boolean;
   isTransfer: boolean;
   saveAsTemplate: boolean;
-  clearDataAferSaving: boolean;
-  expense: boolean;
   transaction: {
     amount: string | null;
     category: string | null;
@@ -309,8 +301,6 @@ const state: State = reactive({
   closeAfterAdding: false,
   isTransfer: false,
   saveAsTemplate: false,
-  clearDataAferSaving: false,
-  expense: true,
   transaction: {
     amount: "0",
     category: null,
@@ -320,7 +310,7 @@ const state: State = reactive({
   }
 });
 
-const resetFormData = (resetCloseAfterAdding?: boolean) => {
+const resetFormData = () => {
   state.transaction = {
     amount: "0",
     category: null,
@@ -328,37 +318,36 @@ const resetFormData = (resetCloseAfterAdding?: boolean) => {
     accountTo: null,
     description: null
   };
-
-  if (resetCloseAfterAdding) {
-    state.closeAfterAdding = false;
-  }
 };
 
 const closeDialog = () => {
-  resetFormData(true);
+  resetFormData();
   appStore.toggleTransactionDialog();
 };
 
 const createTransactionOrCategory = async () => {
   try {
     state.loading = true;
-    const value = parseFloat(state.transaction.amount as string);
-    const amount = state.expense ? value * -1 : value;
+    const amount = parseFloat(state.transaction.amount as string);
 
-    if (state.isTransfer) {
-      await getService<ITransactionService>(Types.TransactionService).transfer({
-        amount,
-        accountFromId: state.transaction.account as string,
-        accountToId: state.transaction.accountTo as string
-      });
+    if (transactionEphemeral.value) {
+      // Call edit transaction here
     } else {
-      await getService<ITransactionService>(Types.TransactionService).create({
-        amount,
-        accountId: state.transaction.account as string,
-        categoryId: state.transaction.category as string,
-        description: state.transaction.description as string,
-        saveAsTemplate: state.saveAsTemplate
-      });
+      if (state.isTransfer) {
+        await getService<ITransactionService>(Types.TransactionService).transfer({
+          amount,
+          accountFromId: state.transaction.account as string,
+          accountToId: state.transaction.accountTo as string
+        });
+      } else {
+        await getService<ITransactionService>(Types.TransactionService).create({
+          amount,
+          accountId: state.transaction.account as string,
+          categoryId: state.transaction.category as string,
+          description: state.transaction.description as string,
+          saveAsTemplate: state.saveAsTemplate
+        });
+      }
     }
 
     appStore.notifyTransactionChanged();
@@ -376,10 +365,6 @@ const createTransactionOrCategory = async () => {
 
     if (state.closeAfterAdding) {
       closeDialog();
-    } else {
-      if (state.clearDataAferSaving) {
-        resetFormData();
-      }
     }
   } catch (e) {
     $q.notify({
@@ -394,10 +379,17 @@ const createTransactionOrCategory = async () => {
 };
 
 watch(
-  () => transactionDialogOpen,
-  () => {
-    console.log("halo????");
-    console.log(transactionEphemeral.value);
+  () => transactionDialogOpen.value,
+  (val) => {
+    if (val && transactionEphemeral.value) {
+      const t = transactionEphemeral.value as TransactionModel;
+      state.transaction.amount = t.amount.toString();
+      state.transaction.description = t.description;
+      state.transaction.category = t.category.id;
+      state.transaction.account = t.account.id;
+    } else {
+      appStore.setTransactionEphemeral(null);
+    }
   }
 );
 
