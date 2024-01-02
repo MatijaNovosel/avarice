@@ -118,6 +118,7 @@
               </q-select>
             </vv-field>
             <vv-field
+              v-if="!editing"
               v-slot="{ field, errors }"
               name="accountFrom"
               :label="state.isTransfer ? 'Account from' : 'Account'"
@@ -221,16 +222,18 @@
               </q-select>
             </vv-field>
             <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
-            <q-checkbox v-model="state.saveAsTemplate" label="Save as a template after creating" />
-            <div class="row justify-between">
-              <div>
-                <q-toggle
-                  v-model="state.isTransfer"
-                  label="Transfer"
-                  color="accent"
-                  @click="handleReset"
-                />
-              </div>
+            <q-checkbox
+              v-if="!editing"
+              v-model="state.saveAsTemplate"
+              label="Save as a template after creating"
+            />
+            <div class="row justify-between" v-if="!editing">
+              <q-toggle
+                v-model="state.isTransfer"
+                label="Transfer"
+                color="accent"
+                @click="handleReset"
+              />
               <div>
                 <q-btn
                   :disable="templates.length === 0"
@@ -273,9 +276,10 @@ import { TransactionModel } from "src/models/transaction";
 import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
-import { reactive, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 
 interface State {
+  transactionId: string | null;
   loading: boolean;
   closeAfterAdding: boolean;
   isTransfer: boolean;
@@ -297,6 +301,7 @@ const appStore = useAppStore();
 const { transactionDialogOpen, transactionEphemeral } = storeToRefs(appStore);
 
 const state: State = reactive({
+  transactionId: null,
   loading: false,
   closeAfterAdding: false,
   isTransfer: false,
@@ -310,6 +315,8 @@ const state: State = reactive({
   }
 });
 
+const editing = computed(() => state.transactionId != null);
+
 const resetFormData = () => {
   state.transaction = {
     amount: "0",
@@ -318,6 +325,7 @@ const resetFormData = () => {
     accountTo: null,
     description: null
   };
+  state.transactionId = null;
 };
 
 const closeDialog = () => {
@@ -383,6 +391,7 @@ watch(
   (val) => {
     if (val && transactionEphemeral.value) {
       const t = transactionEphemeral.value as TransactionModel;
+      state.transactionId = t.id;
       state.transaction.amount = t.amount.toString();
       state.transaction.description = t.description;
       state.transaction.category = t.category.id;

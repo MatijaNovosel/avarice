@@ -2,6 +2,7 @@ import { api } from "src/boot/axios";
 import { PageableCollection } from "src/models/common";
 import {
   CreateTransactionModel,
+  EditTransactionModel,
   TransactionHeatmapModel,
   TransactionModel,
   TransferModel
@@ -48,6 +49,24 @@ class TransactionService implements ITransactionService {
       }`
     });
     return transfer;
+  }
+
+  async edit(payload: EditTransactionModel): Promise<string> {
+    const {
+      data: {
+        data: { editTransaction }
+      }
+    } = await api.post("", {
+      query: `mutation {
+        editTransaction(data: {
+          id: "${payload.id}",
+          amount: ${payload.amount},
+          description: ${payload.description},
+          categoryId: ${payload.categoryId}
+        })
+      }`
+    });
+    return editTransaction;
   }
 
   async create({

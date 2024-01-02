@@ -42,3 +42,10 @@ export interface TransferModel {
   accountToId: string;
   amount: number;
 }
+
+export interface EditTransactionModel {
+  id: string;
+  categoryId: string;
+  amount: number;
+  description: string;
+}
