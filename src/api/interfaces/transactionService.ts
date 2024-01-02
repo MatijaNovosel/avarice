@@ -1,6 +1,7 @@
 import { PageableCollection } from "src/models/common";
 import {
   CreateTransactionModel,
+  EditTransactionModel,
   TransactionHeatmapModel,
   TransactionModel,
   TransferModel
@@ -18,5 +19,6 @@ export default interface ITransactionService {
   create(payload: CreateTransactionModel): Promise<string>;
   transfer(payload: TransferModel): Promise<string[]>;
   delete(id: number): Promise<void>;
+  edit(payload: EditTransactionModel): Promise<string>;
   duplicate(id: number): Promise<void>;
 }

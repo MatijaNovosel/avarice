@@ -61,8 +61,8 @@ class TransactionService implements ITransactionService {
         editTransaction(data: {
           id: "${payload.id}",
           amount: ${payload.amount},
-          description: ${payload.description},
-          categoryId: ${payload.categoryId}
+          description: "${payload.description}",
+          categoryId: "${payload.categoryId}"
         })
       }`
     });

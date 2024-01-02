@@ -9,7 +9,7 @@
       </template>
       <template v-else>
         <q-card-section class="row justify-between items-center">
-          <span class="text-h6"> New transaction </span>
+          <span class="text-h6"> {{ editing ? "Edit transaction" : "New transaction" }} </span>
           <q-btn size="xs" @click="closeDialog" flat dense class="bg-grey-9 rounded">
             <q-icon class="q-pa-xs" name="mdi-close" size="xs" />
           </q-btn>
@@ -253,7 +253,7 @@
             <div class="text-right">
               <q-btn
                 color="accent"
-                label="Create"
+                label="Confirm"
                 type="submit"
                 @click="handleSubmit(createTransactionOrCategory)"
               />
@@ -339,7 +339,12 @@ const createTransactionOrCategory = async () => {
     const amount = parseFloat(state.transaction.amount as string);
 
     if (transactionEphemeral.value) {
-      // Call edit transaction here
+      await getService<ITransactionService>(Types.TransactionService).edit({
+        amount,
+        categoryId: state.transaction.category as string,
+        description: state.transaction.description as string,
+        id: state.transactionId as string
+      });
     } else {
       if (state.isTransfer) {
         await getService<ITransactionService>(Types.TransactionService).transfer({
@@ -365,7 +370,7 @@ const createTransactionOrCategory = async () => {
     userStore.setAccounts(accounts);
 
     $q.notify({
-      message: "Transaction added",
+      message: "Success!",
       color: "dark",
       textColor: "green",
       position: "bottom"
