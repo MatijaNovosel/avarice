@@ -1,5 +1,22 @@
 export default {
   failed: "Action failed",
   success: "Action was successful",
-  noTransactionsFound: "No transactions found"
+  noTransactionsFound: "No transactions found",
+  recordsPerPage: "{n} records per page",
+  selectMultipleRecords: "Select multiple records",
+  search: "Search",
+  transactionType: "Transaction type",
+  category: "Category",
+  noParentCategory: "No parent category",
+  clear: "Clear",
+  deleteTransaction: "Delete transaction",
+  editTransaction: "Edit transaction",
+  duplicateTransaction: "Duplicate transaction",
+  noDescription: "No description",
+  duplicate: "Duplicate",
+  delete: "Delete",
+  edit: "Edit",
+  areYouSure: "Are you sure",
+  transactionDeleted: "Transaction deleted",
+  transactionDuplicated: "Transaction duplicated"
 };

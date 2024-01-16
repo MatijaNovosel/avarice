@@ -6,7 +6,7 @@
         v-model="state.search"
         dense
         filled
-        label="Search"
+        :label="i18n.t('search')"
         clearable
         class="q-mr-md"
       >
@@ -15,7 +15,7 @@
         </template>
       </q-input>
       <q-btn v-if="!hidePageSelection" no-caps class="bg-accent q-mr-md rounded">
-        {{ state.pagination.rowsPerPage }} records per page
+        {{ i18n.t("recordsPerPage", { n: state.pagination.rowsPerPage }) }}
         <q-menu auto-close>
           <q-list dense>
             <q-item
@@ -46,7 +46,7 @@
         class="q-mr-md rounded"
       >
         <q-icon class="q-pa-xs" name="mdi-selection-multiple" size="sm" />
-        <q-tooltip> Select multiple records </q-tooltip>
+        <q-tooltip> {{ i18n.t("selectMultipleRecords") }} </q-tooltip>
       </q-btn>
       <q-btn flat dense class="rounded bg-grey-9">
         <q-icon class="q-pa-xs" name="mdi-tune-variant" size="sm" />
@@ -64,7 +64,7 @@
               option-label="label"
               map-options
               emit-value
-              label="Transaction type"
+              :label="i18n.t('transactionType')"
               @update:model-value="searchDebounce"
               :style="{
                 width: '300px'
@@ -77,7 +77,7 @@
               dense
               v-model="state.categoryType"
               :options="categories"
-              label="Category"
+              :label="i18n.t('category')"
               option-value="id"
               option-label="name"
               @update:model-value="searchDebounce"
@@ -96,7 +96,9 @@
                       {{ scope.opt.name }}
                     </q-item-label>
                     <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                      {{
+                        (scope.opt.parent && scope.opt.parent.name) || i18n.t("noParentCategory")
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -115,14 +117,16 @@
                       {{ scope.opt.name }}
                     </q-item-label>
                     <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                      {{
+                        (scope.opt.parent && scope.opt.parent.name) || i18n.t("noParentCategory")
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
             </q-select>
             <q-btn size="sm" class="q-mt-sm" color="accent" :disable="!activeFilters">
-              Clear
+              {{ i18n.t("clear") }}
             </q-btn>
           </div>
         </q-menu>
@@ -146,7 +150,7 @@
     <template #no-data>
       <div class="full-width row flex-center text-grey-6 q-gutter-sm q-pt-md">
         <q-icon size="2em" name="mdi-database-alert" />
-        <span> {{ $t("noTransactionsFound") }}! </span>
+        <span> {{ i18n.t("noTransactionsFound") }}! </span>
       </div>
     </template>
     <template #header-cell-transactionType="props">
@@ -165,17 +169,17 @@
           <q-list dense>
             <q-item clickable @click="deleteTransaction(props.row.id)">
               <q-item-section>
-                <q-item-label> Delete transaction </q-item-label>
+                <q-item-label> {{ i18n.t("deleteTransaction") }} </q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable @click="editTransaction(props.row)">
               <q-item-section>
-                <q-item-label> Edit transaction </q-item-label>
+                <q-item-label> {{ i18n.t("editTransaction") }} </q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable @click="duplicateTransaction(props.row.id)">
               <q-item-section>
-                <q-item-label> Create copy of transaction </q-item-label>
+                <q-item-label> {{ i18n.t("duplicateTransaction") }} </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -210,13 +214,13 @@
             <q-item-section>
               <q-item-label> {{ props.row.category.name }} </q-item-label>
               <q-item-label caption class="text-grey-7">
-                {{ props.row.category.parentName || "No parent category" }}
+                {{ props.row.category.parentName || i18n.t("noParentCategory") }}
               </q-item-label>
             </q-item-section>
           </q-item>
         </q-td>
         <q-td key="description" :props="props" class="text-grey-7">
-          {{ props.row.description || "No description" }}
+          {{ props.row.description || i18n.t("noDescription") }}
         </q-td>
         <q-td
           key="amount"
@@ -234,15 +238,15 @@
         <q-td key="actions" :props="props">
           <q-btn flat round size="sm" @click="deleteTransaction(props.row.id)">
             <q-icon size="2.6em" name="mdi-delete" color="red" />
-            <q-tooltip> Delete </q-tooltip>
+            <q-tooltip> {{ i18n.t("delete") }} </q-tooltip>
           </q-btn>
           <q-btn class="q-mx-md" flat round size="sm" @click="duplicateTransaction(props.row.id)">
             <q-icon size="2.2em" name="mdi-content-duplicate" color="grey" />
-            <q-tooltip> Duplicate </q-tooltip>
+            <q-tooltip> {{ i18n.t("duplicate") }} </q-tooltip>
           </q-btn>
           <q-btn flat round size="sm" @click="editTransaction(props.row)">
             <q-icon size="2.6em" name="mdi-pencil" color="grey" />
-            <q-tooltip> Edit </q-tooltip>
+            <q-tooltip> {{ i18n.t("edit") }} </q-tooltip>
           </q-btn>
         </q-td>
       </q-tr>
@@ -280,6 +284,7 @@ import {
 } from "src/utils/constants";
 import { formatBalance } from "src/utils/helpers";
 import { computed, onMounted, reactive, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 interface TransactionModelExtended extends TransactionModel {
   selected: boolean;
@@ -313,6 +318,7 @@ const props = withDefaults(
 const createConfirmationDialog = useConfirmationDialog();
 const $q = useQuasar();
 const userStore = useUserStore();
+const i18n = useI18n();
 const { categories } = storeToRefs(userStore);
 const appStore = useAppStore();
 const { transactionsChangeNotifier } = storeToRefs(appStore);
@@ -444,14 +450,14 @@ const getTransactions = async () => {
 
 const deleteTransaction = async (id: number) => {
   try {
-    const answer = await createConfirmationDialog("Are you sure?", "", {
+    const answer = await createConfirmationDialog(i18n.t("areYouSure"), "", {
       width: 300,
       persistent: true
     });
     if (answer) {
       await getService<ITransactionService>(Types.TransactionService).delete(id);
       $q.notify({
-        message: "Transaction deleted!",
+        message: i18n.t("transactionDeleted"),
         color: "dark",
         position: "bottom",
         textColor: "green"
@@ -470,14 +476,14 @@ const deleteTransaction = async (id: number) => {
 
 const duplicateTransaction = async (id: number) => {
   try {
-    const answer = await createConfirmationDialog("Are you sure?", "", {
+    const answer = await createConfirmationDialog(i18n.t("areYouSure"), "", {
       width: 300,
       persistent: true
     });
     if (answer) {
       await getService<ITransactionService>(Types.TransactionService).duplicate(id);
       $q.notify({
-        message: "Transaction duplicated!",
+        message: i18n.t("transactionDuplicated"),
         color: "dark",
         position: "bottom",
         textColor: "green"

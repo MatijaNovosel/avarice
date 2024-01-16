@@ -91,7 +91,9 @@
                         {{ scope.opt.name }}
                       </q-item-label>
                       <q-item-label caption class="text-grey-7">
-                        {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                        {{
+                          (scope.opt.parent && scope.opt.parent.name) || i18n.t("noParentCategory")
+                        }}
                       </q-item-label>
                     </q-item-section>
                   </q-item>
@@ -110,7 +112,9 @@
                         {{ scope.opt.name }}
                       </q-item-label>
                       <q-item-label caption class="text-grey-7">
-                        {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                        {{
+                          (scope.opt.parent && scope.opt.parent.name) || i18n.t("noParentCategory")
+                        }}
                       </q-item-label>
                     </q-item-section>
                   </q-item>
@@ -277,6 +281,7 @@ import { useAppStore } from "src/stores/app";
 import { useUserStore } from "src/stores/user";
 import { formatBalance } from "src/utils/helpers";
 import { computed, reactive, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 interface State {
   transactionId: string | null;
@@ -294,6 +299,7 @@ interface State {
 }
 
 const $q = useQuasar();
+const i18n = useI18n();
 
 const userStore = useUserStore();
 const { accounts, categories, templates } = storeToRefs(userStore);
@@ -395,12 +401,13 @@ watch(
   () => transactionDialogOpen.value,
   (val) => {
     if (val && transactionEphemeral.value) {
-      const t = transactionEphemeral.value as TransactionModel;
-      state.transactionId = t.id;
-      state.transaction.amount = t.amount.toString();
-      state.transaction.description = t.description;
-      state.transaction.category = t.category.id;
-      state.transaction.account = t.account.id;
+      const { account, amount, category, description, id } =
+        transactionEphemeral.value as TransactionModel;
+      state.transactionId = id;
+      state.transaction.amount = amount.toString();
+      state.transaction.description = description;
+      state.transaction.category = category.id;
+      state.transaction.account = account.id;
     } else {
       appStore.setTransactionEphemeral(null);
     }

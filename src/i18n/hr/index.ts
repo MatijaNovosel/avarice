@@ -1,5 +1,22 @@
 export default {
-  failed: "Action failed",
-  success: "Action was successful",
-  noTransactionsFound: "No transactions found"
+  failed: "Operacija je neuspješno izvršena",
+  success: "Operaicja je uspješno izvršena",
+  noTransactionsFound: "Nije pronađena ni jedna transakcija",
+  recordsPerPage: "{n} zapisa po stranici",
+  selectMultipleRecords: "Odaberi više zapisa",
+  search: "Pretraži",
+  transactionType: "Tip transakcije",
+  category: "Kategorija",
+  noParentCategory: "Nema nadređene kategorije",
+  clear: "Poništi",
+  deleteTransaction: "Obriši transakciju",
+  editTransaction: "Uredi transakciju",
+  duplicateTransaction: "Dupliciraj transakciju",
+  noDescription: "Ne postoji opis",
+  duplicate: "Dupliciraj",
+  delete: "Izbriši",
+  edit: "Uredi",
+  areYouSure: "Jeste li sigurni",
+  transactionDeleted: "Transaction deleted",
+  transactionDuplicated: "Transaction duplicated"
 };
