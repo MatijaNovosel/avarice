@@ -1,6 +1,4 @@
 export default {
-  failed: "Action failed",
-  success: "Action was successful",
   noTransactionsFound: "No transactions found",
   recordsPerPage: "{n} records per page",
   selectMultipleRecords: "Select multiple records",
@@ -18,5 +16,10 @@ export default {
   edit: "Edit",
   areYouSure: "Are you sure",
   transactionDeleted: "Transaction deleted",
-  transactionDuplicated: "Transaction duplicated"
+  transactionDuplicated: "Transaction duplicated",
+  success: "Success",
+  selectTemplate: "Select template",
+  selectLocation: "Select location",
+  transfer: "Transfer",
+  closeAfterCreating: "Close after creating"
 };

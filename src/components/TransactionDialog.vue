@@ -225,7 +225,7 @@
                 </template>
               </q-select>
             </vv-field>
-            <q-checkbox v-model="state.closeAfterAdding" label="Close after creating" />
+            <q-checkbox v-model="state.closeAfterAdding" :label="i18n.t('closeAfterCreating')" />
             <q-checkbox
               v-if="!editing"
               v-model="state.saveAsTemplate"
@@ -234,7 +234,7 @@
             <div class="row justify-between" v-if="!editing">
               <q-toggle
                 v-model="state.isTransfer"
-                label="Transfer"
+                :label="i18n.t('transfer')"
                 color="accent"
                 @click="handleReset"
               />
@@ -246,11 +246,11 @@
                   class="q-ml-md bg-accent rounded"
                 >
                   <q-icon class="q-pa-xs" name="mdi-file" size="sm" color="grey-10" />
-                  <q-tooltip> Select template </q-tooltip>
+                  <q-tooltip> {{ i18n.t("selectTemplate") }} </q-tooltip>
                 </q-btn>
                 <q-btn flat dense class="q-ml-md bg-accent rounded">
                   <q-icon class="q-pa-xs" name="mdi-map-marker" size="sm" color="grey-10" />
-                  <q-tooltip> Select location </q-tooltip>
+                  <q-tooltip> {{ i18n.t("selectLocation") }} </q-tooltip>
                 </q-btn>
               </div>
             </div>
@@ -376,7 +376,7 @@ const createTransactionOrCategory = async () => {
     userStore.setAccounts(accounts);
 
     $q.notify({
-      message: "Success!",
+      message: i18n.t("success"),
       color: "dark",
       textColor: "green",
       position: "bottom"

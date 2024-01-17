@@ -1,6 +1,4 @@
 export default {
-  failed: "Operacija je neuspješno izvršena",
-  success: "Operaicja je uspješno izvršena",
   noTransactionsFound: "Nije pronađena ni jedna transakcija",
   recordsPerPage: "{n} zapisa po stranici",
   selectMultipleRecords: "Odaberi više zapisa",
@@ -18,5 +16,10 @@ export default {
   edit: "Uredi",
   areYouSure: "Jeste li sigurni",
   transactionDeleted: "Transaction deleted",
-  transactionDuplicated: "Transaction duplicated"
+  transactionDuplicated: "Transaction duplicated",
+  success: "Uspjeh",
+  selectTemplate: "Odaberite predložak",
+  selectLocation: "Odaberite mjesto",
+  transfer: "Prijenos",
+  closeAfterCreating: "Zatvori nakon stvaranja"
 };
