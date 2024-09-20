@@ -12,11 +12,11 @@
         <div class="q-pb-md text-center">Account data</div>
         <q-form class="q-gutter-md">
           <q-input
+            v-model="state.data.name"
             :disabled="state.loading"
             square
             filled
             clearable
-            v-model="state.data.name"
             dense
             label="Name"
             :error="$v.name.$error"
@@ -28,11 +28,11 @@
             </template>
           </q-input>
           <q-input
+            v-model="state.data.initialBalance"
             :disabled="state.loading"
             square
             filled
             clearable
-            v-model="state.data.initialBalance"
             dense
             label="Initial balance"
             suffix="HRK"
@@ -47,13 +47,13 @@
         </q-form>
         <q-btn
           :loading="state.loading"
-          @click="createAccount"
           unelevated
           color="yellow"
           size="md"
           class="text-black q-mt-md full-width"
           label="Create account"
           :disable="$v.$invalid"
+          @click="createAccount"
         />
       </q-card-section>
     </q-card>

@@ -55,8 +55,6 @@ export const useUserStore = defineStore(
     };
   },
   {
-    persist: {
-      enabled: true
-    }
+    persist: true
   }
 );

@@ -48,13 +48,8 @@ export const useAppStore = defineStore(
   },
   {
     persist: {
-      enabled: true,
-      strategies: [
-        {
-          storage: sessionStorage,
-          paths: ["accentColor"]
-        }
-      ]
+      storage: sessionStorage,
+      paths: ["accentColor"]
     }
   }
 );
