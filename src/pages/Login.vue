@@ -4,60 +4,55 @@
       <span class="text-h3 q-mb-lg text-bold text-yellow">Avarice</span>
       <q-card flat class="q-pa-md shadow-1 rounded">
         <q-card-section>
-          <vv-form v-slot="{ handleSubmit }" as="q-form" @submit="login">
-            <vv-field v-slot="{ field, errors }" name="email" label="Email" rules="email|required">
-              <q-input
-                :disabled="state.loading"
-                square
-                filled
-                clearable
-                v-model="state.email"
-                v-bind="field"
-                type="email"
-                dense
-                label="Email"
-                :error-message="errors.join('')"
-                :error="!!errors.length"
-                :hide-bottom-space="!errors.length"
-              >
-                <template #prepend>
-                  <q-icon name="mdi-email" />
-                </template>
-              </q-input>
-            </vv-field>
-            <vv-field v-slot="{ field, errors }" name="password" label="Password" rules="required">
-              <q-input
-                class="q-my-md"
-                :disabled="state.loading"
-                square
-                filled
-                clearable
-                v-model="state.password"
-                v-bind="field"
-                dense
-                type="password"
-                label="Password"
-                :error-message="errors.join('')"
-                :error="!!errors.length"
-                :hide-bottom-space="!errors.length"
-              >
-                <template #prepend>
-                  <q-icon name="mdi-lock" />
-                </template>
-              </q-input>
-            </vv-field>
-            <q-btn
-              :loading="state.loading"
-              unelevated
-              color="yellow"
-              size="md"
-              class="text-black"
-              label="Login"
-              type="submit"
-              @click="handleSubmit(login)"
-            />
-          </vv-form>
+          <q-form class="q-gutter-md">
+            <q-input
+              v-model="state.login.email"
+              :disabled="state.loading"
+              square
+              filled
+              clearable
+              type="email"
+              dense
+              label="Email"
+              :error="$v.email.$error"
+              :error-message="collectErrors($v.email.$errors)"
+              :hide-bottom-space="!$v.email.$error"
+            >
+              <template #prepend>
+                <q-icon name="mdi-email" />
+              </template>
+            </q-input>
+            <q-input
+              v-model="state.login.password"
+              :disabled="state.loading"
+              square
+              filled
+              clearable
+              dense
+              type="password"
+              label="Password"
+              :error="$v.password.$error"
+              :error-message="collectErrors($v.password.$errors)"
+              :hide-bottom-space="!$v.password.$error"
+            >
+              <template #prepend>
+                <q-icon name="mdi-lock" />
+              </template>
+            </q-input>
+          </q-form>
         </q-card-section>
+        <q-card-actions class="q-px-md">
+          <q-btn
+            :loading="state.loading"
+            unelevated
+            color="yellow"
+            size="md"
+            class="full-width text-black"
+            label="Login"
+            :disable="$v.$invalid"
+            @click="login"
+          />
+        </q-card-actions>
         <q-card-section class="text-center q-pa-none">
           <router-link class="text-grey-6" :to="{ name: ROUTE_NAMES.REGISTER }">
             Create an account
@@ -69,8 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onKeyStroke } from "@vueuse/core";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useQuasar } from "quasar";
 import IAccountService from "src/api/interfaces/accountService";
 import IAuthService from "src/api/interfaces/authService";
@@ -108,7 +102,18 @@ const login = async () => {
       state.password as string
     );
 
-    const decodedToken = jwt_decode<DecodedToken>(accessToken as string);
+    if (!data.result) {
+      $q.notify({
+        message: data.errors?.join(", "),
+        color: "dark",
+        textColor: "red",
+        position: "bottom"
+      });
+      state.loading = false;
+      return;
+    }
+
+    const decodedToken: DecodedToken = jwtDecode(data.token as string);
 
     userStore.login({
       id: decodedToken.userId,

@@ -11,10 +11,10 @@
         </q-btn>
       </div>
       <q-tree
+        v-model:expanded="expanded"
         :nodes="categoriesMapped"
         node-key="id"
         label-key="name"
-        v-model:expanded="expanded"
         dark
         class="bg-dark-2 q-pa-lg rounded-b"
       >

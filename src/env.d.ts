@@ -1,9 +1,12 @@
-/* eslint-disable */
+/// <reference types="vite/client" />
 
 declare namespace NodeJS {
   interface ProcessEnv {
-    NODE_ENV: string;
-    VUE_ROUTER_MODE: 'hash' | 'history' | 'abstract' | undefined;
-    VUE_ROUTER_BASE: string | undefined;
+    readonly NODE_ENV: string;
+    readonly VITE_ROUTER_MODE: "hash" | "history" | "memory" | undefined;
+    readonly VITE_SERVER_URL: string?;
+    readonly VITE_API_VERSION: string?;
+    readonly VITE_API_KEY: string?;
+    readonly VITE_API_ID: string?;
   }
 }

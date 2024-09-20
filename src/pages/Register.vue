@@ -6,11 +6,11 @@
         <q-card-section>
           <q-form class="q-gutter-md">
             <q-input
+              v-model="state.auth.username"
               :disabled="state.loading"
               square
               filled
               clearable
-              v-model="state.auth.username"
               dense
               label="Username"
             >
@@ -19,11 +19,11 @@
               </template>
             </q-input>
             <q-input
+              v-model="state.auth.email"
               :disabled="state.loading"
               square
               filled
               clearable
-              v-model="state.auth.email"
               type="email"
               dense
               label="Email"
@@ -33,11 +33,11 @@
               </template>
             </q-input>
             <q-input
+              v-model="state.auth.password"
               :disabled="state.loading"
               square
               filled
               clearable
-              v-model="state.auth.password"
               dense
               type="password"
               label="Password"
@@ -52,12 +52,13 @@
         <q-card-actions class="q-px-md">
           <q-btn
             :loading="state.loading"
-            @click="register"
             unelevated
             color="yellow"
             size="md"
             class="full-width text-black"
             label="Register"
+            :disable="$v.$invalid"
+            @click="register"
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-none">
