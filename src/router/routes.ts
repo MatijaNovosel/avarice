@@ -4,12 +4,12 @@ import ROUTE_NAMES from "./routeNames";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("layouts/MainLayout.vue"),
+    component: () => import("@/layouts/MainLayout.vue"),
     children: [
       {
         path: "",
         name: ROUTE_NAMES.DASHBOARD,
-        component: () => import("src/pages/Dashboard.vue"),
+        component: () => import("@/pages/Dashboard.vue"),
         meta: {
           isAuth: true
         }
@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/history",
         name: ROUTE_NAMES.HISTORY,
-        component: () => import("pages/History.vue"),
+        component: () => import("@/pages/History.vue"),
         meta: {
           isAuth: true
         }
@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/templates",
         name: ROUTE_NAMES.TEMPLATES,
-        component: () => import("pages/Templates.vue"),
+        component: () => import("@/pages/Templates.vue"),
         meta: {
           isAuth: true
         }
@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/statistics",
         name: ROUTE_NAMES.STATISTICS,
-        component: () => import("pages/Statistics.vue"),
+        component: () => import("@/pages/Statistics.vue"),
         meta: {
           isAuth: true
         }
@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/settings",
         name: ROUTE_NAMES.SETTINGS,
-        component: () => import("pages/Settings.vue"),
+        component: () => import("@/pages/Settings.vue"),
         meta: {
           isAuth: true
         }
@@ -49,7 +49,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/categories",
         name: ROUTE_NAMES.CATEGORIES,
-        component: () => import("pages/Categories.vue"),
+        component: () => import("@/pages/Categories.vue"),
         meta: {
           isAuth: true
         }
@@ -57,7 +57,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/account-setup",
         name: ROUTE_NAMES.ACCOUNT_SETUP,
-        component: () => import("pages/AccountSetup.vue"),
+        component: () => import("@/pages/AccountSetup.vue"),
         meta: {
           isAuth: true
         }
@@ -65,7 +65,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/login",
         name: ROUTE_NAMES.LOGIN,
-        component: () => import("pages/Login.vue"),
+        component: () => import("@/pages/Login.vue"),
         meta: {
           guest: true
         }
@@ -73,7 +73,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/register",
         name: ROUTE_NAMES.REGISTER,
-        component: () => import("pages/Register.vue"),
+        component: () => import("@/pages/Register.vue"),
         meta: {
           guest: true
         }
@@ -82,7 +82,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/Error404.vue")
+    component: () => import("@/pages/Error404.vue")
   }
 ];
 

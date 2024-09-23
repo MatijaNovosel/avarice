@@ -1,6 +1,6 @@
-import { api } from "src/boot/axios";
-import { CreateTemplateModel, TemplateModel } from "src/models/template";
-import { TRANSACTION_TYPE } from "src/utils/constants";
+import { api } from "@/configurations/axios";
+import { CreateTemplateModel, TemplateModel } from "@/models/template";
+import { TRANSACTION_TYPE } from "@/utils/constants";
 import ITemplateService from "../interfaces/templateService";
 
 class TemplateService implements ITemplateService {

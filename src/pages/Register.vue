@@ -70,10 +70,10 @@
 </template>
 
 <script lang="ts" setup>
+import IAuthService from "@/api/interfaces/authService";
+import { Types, getService } from "@/di-container";
+import ROUTE_NAMES from "@/router/routeNames";
 import { useQuasar } from "quasar";
-import IAuthService from "src/api/interfaces/authService";
-import { Types, getService } from "src/di-container";
-import ROUTE_NAMES from "src/router/routeNames";
 import { reactive } from "vue";
 
 interface State {

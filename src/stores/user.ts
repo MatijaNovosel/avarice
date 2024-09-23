@@ -1,7 +1,5 @@
+import { AccountModel, CategoryModel } from "@/api/client";
 import { defineStore } from "pinia";
-import { AccountModel } from "src/models/account";
-import { CategoryModel } from "src/models/category";
-import { TemplateModel } from "src/models/template";
 import { AppUser } from "src/models/user";
 import { computed, ref } from "vue";
 
@@ -11,12 +9,11 @@ export const useUserStore = defineStore(
     const data = ref<AppUser | null>(null);
     const categories = ref<CategoryModel[]>([]);
     const accounts = ref<AccountModel[]>([]);
-    const templates = ref<TemplateModel[]>([]);
     const selectedAccount = ref<AccountModel | null>(null);
 
     const totalBalance = computed(() => {
       if (accounts.value) {
-        return accounts.value.map(({ balance }) => balance).reduce((acc, curr) => acc + curr, 0);
+        return accounts.value.map((a) => a.balance).reduce((prev, curr) => prev + curr, 0);
       }
       return 0;
     });
@@ -35,15 +32,7 @@ export const useUserStore = defineStore(
       selectedAccount.value = payload;
     };
 
-    const setTemplates = (payload: TemplateModel[]) => {
-      templates.value = payload;
-    };
-
     const setAccounts = (payload: AccountModel[]) => {
-      if (selectedAccount.value) {
-        const selectedAccountId = selectedAccount.value?.id;
-        setSelectedAccount(payload.find((a) => a.id === selectedAccountId) as AccountModel);
-      }
       accounts.value = payload;
     };
 
@@ -62,9 +51,7 @@ export const useUserStore = defineStore(
       login,
       totalBalance,
       selectedAccount,
-      setSelectedAccount,
-      templates,
-      setTemplates
+      setSelectedAccount
     };
   },
   {

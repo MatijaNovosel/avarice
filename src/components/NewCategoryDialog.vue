@@ -9,175 +9,143 @@
       </q-card-section>
       <q-separator />
       <q-card-section class="text-center">
-        <vv-form v-slot="{ handleSubmit }" as="q-form" class="q-gutter-md" @submit="createCategory">
-          <vv-field v-slot="{ field, errors }" name="name" label="Name" rules="required|min:3">
-            <q-input
-              v-model="state.data.name"
-              dense
-              square
-              filled
-              label=""
-              clearable
-              :error-message="errors.join('')"
-              :error="!!errors.length"
-              :hide-bottom-space="!errors.length"
-              v-bind="field"
+        <q-input v-model="state.data.name" dense square filled label="" clearable>
+          <template #label> <required-icon /> Category name </template>
+          <template #after>
+            <q-icon
+              class="rounded bg-black q-pa-sm"
+              :style="{ color: state.selectedColor }"
+              :name="state.selectedIcon"
             >
-              <template #label> <required-icon /> Category name </template>
-              <template #after>
-                <q-icon
-                  class="rounded bg-black q-pa-sm"
-                  :style="{ color: state.selectedColor }"
-                  :name="state.selectedIcon"
-                >
-                  <q-tooltip>
-                    {{ state.selectedIcon.split("mdi-")[1] }}
-                  </q-tooltip>
-                </q-icon>
-                <q-btn flat dense size="lg">
-                  <q-icon class="rounded" :style="{ backgroundColor: state.selectedColor }" />
-                  <q-menu touch-position>
-                    <q-color
-                      v-model="state.selectedColor"
-                      no-header
-                      no-footer
-                      default-view="palette"
-                    />
-                  </q-menu>
-                </q-btn>
-              </template>
-            </q-input>
-          </vv-field>
-          <vv-field
-            v-slot="{ field, errors }"
-            name="parentCategory"
-            label="Parent category"
-            rules="required"
-          >
-            <q-select
-              options-dense
-              filled
-              dense
-              v-model="state.newCategoryParent"
-              :options="categories"
-              option-value="id"
-              option-label="name"
-              label="Parent category"
-              clearable
-              emit-value
-              map-options
-              :error-message="errors.join('')"
-              :error="!!errors.length"
-              :hide-bottom-space="!errors.length"
-              v-bind="field"
-            >
-              <template #selected-item="scope">
-                <q-item class="q-px-none q-pb-sm q-pt-md">
-                  <q-item-section avatar>
-                    <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #option="scope">
-                <q-item class="q-py-sm" v-bind="scope.itemProps">
-                  <q-item-section avatar>
-                    <q-icon
-                      :style="{ color: scope.opt.color }"
-                      :name="scope.opt.icon"
-                      :color="scope.opt.color"
-                    />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                    <q-item-label caption class="text-grey-7">
-                      {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </vv-field>
-          <q-input
-            placeholder="Search icons"
-            dense
-            filled
-            clearable
-            @update:model-value="searchIcons"
-            v-model="state.iconSearchText"
-          >
-            <template #append>
-              <q-icon size="xs" name="mdi-magnify" />
-            </template>
-          </q-input>
-          <q-list
-            ref="scrollTargetRef"
-            class="scroll bg-icon-list q-pt-md rounded"
-            style="max-height: 250px"
-            :class="{
-              'q-pb-md': categoryInfiniteLoadDisabled
-            }"
-          >
-            <q-infinite-scroll
-              @load="onIconLoad"
-              :disable="categoryInfiniteLoadDisabled"
-              :offset="50"
-              v-if="state.icons.length !== 0"
-            >
-              <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
-                <q-btn
-                  v-for="(icon, j) in icons"
-                  :key="j"
-                  class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
-                  flat
-                  dense
-                  @click="setCategoryIcon(`mdi-${icon}`)"
-                >
-                  <q-icon
-                    :style="{
-                      color: state.selectedColor
-                    }"
-                    :name="`mdi-${icon}`"
-                  >
-                    <q-tooltip>
-                      {{ icon }}
-                    </q-tooltip>
-                  </q-icon>
-                </q-btn>
-              </div>
-              <template #loading>
-                <div class="row justify-center q-my-md">
-                  <q-spinner-dots :style="{ color: state.selectedColor }" size="40px" />
-                </div>
-              </template>
-            </q-infinite-scroll>
-            <q-item v-else>
+              <q-tooltip>
+                {{ state.selectedIcon.split("mdi-")[1] }}
+              </q-tooltip>
+            </q-icon>
+            <q-btn flat dense size="lg">
+              <q-icon class="rounded" :style="{ backgroundColor: state.selectedColor }" />
+              <q-menu touch-position>
+                <q-color v-model="state.selectedColor" no-header no-footer default-view="palette" />
+              </q-menu>
+            </q-btn>
+          </template>
+        </q-input>
+        <q-select
+          v-model="state.newCategoryParent"
+          options-dense
+          filled
+          dense
+          :options="categories"
+          option-value="id"
+          option-label="name"
+          label="Parent category"
+          clearable
+          emit-value
+          map-options
+        >
+          <template #selected-item="scope">
+            <q-item class="q-px-none q-pb-sm q-pt-md">
+              <q-item-section avatar>
+                <q-icon :style="{ color: scope.opt.color }" :name="scope.opt.icon" />
+              </q-item-section>
               <q-item-section>
-                <q-item-label> No icons found. </q-item-label>
+                <q-item-label>
+                  {{ scope.opt.name }}
+                </q-item-label>
                 <q-item-label caption class="text-grey-7">
-                  Try searching with other parameters.
+                  {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
                 </q-item-label>
               </q-item-section>
             </q-item>
-          </q-list>
-          <q-btn
-            :loading="state.loading"
-            @click="handleSubmit(createCategory)"
-            unelevated
-            type="submit"
-            color="accent"
-            label="Create category"
-          />
-        </vv-form>
+          </template>
+          <template #option="scope">
+            <q-item class="q-py-sm" v-bind="scope.itemProps">
+              <q-item-section avatar>
+                <q-icon
+                  :style="{ color: scope.opt.color }"
+                  :name="scope.opt.icon"
+                  :color="scope.opt.color"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  {{ scope.opt.name }}
+                </q-item-label>
+                <q-item-label caption class="text-grey-7">
+                  {{ (scope.opt.parent && scope.opt.parent.name) || "No parent category" }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+        <q-input
+          v-model="state.iconSearchText"
+          placeholder="Search icons"
+          dense
+          filled
+          clearable
+          @update:model-value="searchIcons"
+        >
+          <template #append>
+            <q-icon size="xs" name="mdi-magnify" />
+          </template>
+        </q-input>
+        <q-list
+          ref="scrollTargetRef"
+          class="scroll bg-icon-list q-pt-md rounded"
+          style="max-height: 250px"
+          :class="{
+            'q-pb-md': categoryInfiniteLoadDisabled
+          }"
+        >
+          <q-infinite-scroll
+            v-if="state.icons.length !== 0"
+            :disable="categoryInfiniteLoadDisabled"
+            :offset="50"
+            @load="onIconLoad"
+          >
+            <div v-for="(icons, i) in state.icons" :key="i" class="row justify-center">
+              <q-btn
+                v-for="(icon, j) in icons"
+                :key="j"
+                class="bg-black q-pa-sm q-mr-xs q-mb-xs rounded"
+                flat
+                dense
+                @click="setCategoryIcon(`mdi-${icon}`)"
+              >
+                <q-icon
+                  :style="{
+                    color: state.selectedColor
+                  }"
+                  :name="`mdi-${icon}`"
+                >
+                  <q-tooltip>
+                    {{ icon }}
+                  </q-tooltip>
+                </q-icon>
+              </q-btn>
+            </div>
+            <template #loading>
+              <div class="row justify-center q-my-md">
+                <q-spinner-dots :style="{ color: state.selectedColor }" size="40px" />
+              </div>
+            </template>
+          </q-infinite-scroll>
+          <q-item v-else>
+            <q-item-section>
+              <q-item-label> No icons found. </q-item-label>
+              <q-item-label caption class="text-grey-7">
+                Try searching with other parameters.
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <q-btn
+          :loading="state.loading"
+          unelevated
+          type="submit"
+          color="accent"
+          label="Create category"
+        />
       </q-card-section>
     </q-card>
   </q-dialog>

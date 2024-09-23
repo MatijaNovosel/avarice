@@ -1,4 +1,4 @@
-import { api } from "src/boot/axios";
+import { api } from "@/configurations/axios";
 import { CategoryModel, CreateCategoryModel } from "src/models/category";
 import ICategoryService from "../interfaces/categoryService";
 

@@ -7,5 +7,5 @@
 </template>
 
 <script lang="ts" setup>
-import TransactionsTable from "src/components/TransactionsTable.vue";
+import TransactionsTable from "@/components/TransactionsTable.vue";
 </script>

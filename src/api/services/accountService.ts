@@ -1,4 +1,4 @@
-import { api } from "src/boot/axios";
+import { api } from "@/configurations/axios";
 import {
   AccountExpenseIncomeModel,
   AccountHistoryModel,

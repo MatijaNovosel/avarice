@@ -1,10 +1,14 @@
 export interface DecodedToken {
-  userId: string;
+  Id: string;
+  email: string;
   exp: number;
   iat: number;
+  nbf: number;
+  unique_name: string;
 }
 
 export interface AuthResult {
-  accessToken: string;
-  refreshToken: string;
+  token: string;
+  result: boolean;
+  errors: string[];
 }

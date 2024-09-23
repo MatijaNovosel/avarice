@@ -1,4 +1,4 @@
-import { api } from "src/boot/axios";
+import { api } from "@/configurations/axios";
 import { AuthResult } from "src/models/auth";
 import IAuthService from "../interfaces/authService";
 

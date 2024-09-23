@@ -58,11 +58,11 @@
 </template>
 
 <script lang="ts" setup>
+import IAccountService from "@/api/interfaces/accountService";
+import { Types, getService } from "@/di-container";
+import ROUTE_NAMES from "@/router/routeNames";
+import { useUserStore } from "@/stores/user";
 import { useQuasar } from "quasar";
-import IAccountService from "src/api/interfaces/accountService";
-import { Types, getService } from "src/di-container";
-import ROUTE_NAMES from "src/router/routeNames";
-import { useUserStore } from "src/stores/user";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 

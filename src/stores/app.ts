@@ -1,9 +1,9 @@
+import IAccountService from "@/api/interfaces/accountService";
+import { Types, getService } from "@/di-container";
+import { TransactionModel } from "@/models/transaction";
 import { defineStore } from "pinia";
 import { setCssVar } from "quasar";
-import IAccountService from "src/api/interfaces/accountService";
-import { Types, getService } from "src/di-container";
 import { ref } from "vue";
-import { TransactionModel } from "./../models/transaction";
 import { useUserStore } from "./user";
 
 export const useAppStore = defineStore(

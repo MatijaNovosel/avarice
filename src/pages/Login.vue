@@ -64,42 +64,55 @@
 </template>
 
 <script lang="ts" setup>
+import IAccountService from "@/api/interfaces/accountService";
+import IAuthService from "@/api/interfaces/authService";
+import ICategoryService from "@/api/interfaces/categoryService";
+import { getService, Types } from "@/di-container";
+import { DecodedToken } from "@/models/auth";
+import ROUTE_NAMES from "@/router/routeNames";
+import { useUserStore } from "@/stores/user";
+import { collectErrors } from "@/utils/helpers";
+import useVuelidate from "@vuelidate/core";
+import { email, required } from "@vuelidate/validators";
 import { jwtDecode } from "jwt-decode";
 import { useQuasar } from "quasar";
-import IAccountService from "src/api/interfaces/accountService";
-import IAuthService from "src/api/interfaces/authService";
-import ICategoryService from "src/api/interfaces/categoryService";
-import ITemplateService from "src/api/interfaces/templateService";
-import { Types, getService } from "src/di-container";
-import { DecodedToken } from "src/models/auth";
-import ROUTE_NAMES from "src/router/routeNames";
-import { useUserStore } from "src/stores/user";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 
 interface State {
   loading: boolean;
-  password: string | null;
-  email: string | null;
+  login: {
+    password: string | null;
+    email: string | null;
+  };
 }
 
 const userStore = useUserStore();
 const router = useRouter();
 const $q = useQuasar();
 
+const rules = {
+  password: { required, $autoDirty: true },
+  email: { required, email, $autoDirty: true }
+};
+
 const state: State = reactive({
   loading: false,
-  password: null,
-  email: null
+  login: {
+    password: null,
+    email: null
+  }
 });
+
+const $v = useVuelidate(rules, state.login);
 
 const login = async () => {
   state.loading = true;
 
   try {
-    const { accessToken, refreshToken } = await getService<IAuthService>(Types.AuthService).login(
-      state.email as string,
-      state.password as string
+    const data = await getService<IAuthService>(Types.AuthService).login(
+      state.login.email as string,
+      state.login.password as string
     );
 
     if (!data.result) {
@@ -116,26 +129,22 @@ const login = async () => {
     const decodedToken: DecodedToken = jwtDecode(data.token as string);
 
     userStore.login({
-      id: decodedToken.userId,
-      email: state.email as string,
-      userName: "username",
+      id: decodedToken.Id,
+      email: state.login.email as string,
+      userName: decodedToken.unique_name,
       emailConfirmed: false,
-      token: accessToken,
-      refreshToken,
-      exp: decodedToken.exp,
-      iat: decodedToken.iat
+      token: data.token as string
     });
 
     const categories = await getService<ICategoryService>(
       Types.CategoryService
     ).getUserCategories();
+
     const accounts = await getService<IAccountService>(Types.AccountService).getLatestValues();
-    const templates = await getService<ITemplateService>(Types.TemplateService).getAll();
 
     userStore.setCategories(categories);
     userStore.setAccounts(accounts);
     userStore.setSelectedAccount(accounts[0]);
-    userStore.setTemplates(templates);
 
     $q.notify({
       message: "Successfully logged in!",
@@ -144,6 +153,8 @@ const login = async () => {
       position: "bottom"
     });
 
+    state.loading = false;
+
     if (accounts.length !== 0) {
       await router.push({ name: ROUTE_NAMES.DASHBOARD });
     } else {
@@ -151,17 +162,12 @@ const login = async () => {
     }
   } catch (e) {
     $q.notify({
-      message: "Error while signing in!",
+      message: (e as Error).message,
       color: "dark",
       textColor: "red",
       position: "bottom"
     });
-  } finally {
     state.loading = false;
   }
 };
-
-onKeyStroke("Enter", () => {
-  login();
-});
 </script>

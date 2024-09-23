@@ -1,5 +1,6 @@
-import { api } from "src/boot/axios";
-import { PageableCollection } from "src/models/common";
+import { api } from "@/configurations/axios";
+import { PageableCollection } from "@/models/common";
+import { TRANSACTION_TYPE } from "@/utils/constants";
 import {
   CreateTransactionModel,
   EditTransactionModel,
@@ -7,7 +8,6 @@ import {
   TransactionModel,
   TransferModel
 } from "src/models/transaction";
-import { TRANSACTION_TYPE } from "src/utils/constants";
 import ITransactionService from "../interfaces/transactionService";
 
 class TransactionService implements ITransactionService {

@@ -31,7 +31,7 @@
 import {
   CreateConfirmDialogKey,
   CreateConfirmDialogOptions
-} from "src/composables/useConfirmationDialog";
+} from "@/composables/useConfirmationDialog";
 import { provide, reactive } from "vue";
 
 const state = reactive({

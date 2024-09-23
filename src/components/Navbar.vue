@@ -1,5 +1,5 @@
 <template>
-  <q-header class="layout bg-dark-1 q-pt-lg" v-if="user">
+  <q-header v-if="user" class="layout bg-dark-1 q-pt-lg">
     <div class="row">
       <div class="col-12 row items-center justify-between">
         <div class="text-h5 text-accent text-weight-bold">Avarice</div>
@@ -25,7 +25,7 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable v-close-popup>
+                <q-item v-close-popup clickable>
                   <q-item-section> User settings </q-item-section>
                 </q-item>
               </q-list>
@@ -68,13 +68,13 @@
 </template>
 
 <script lang="ts" setup>
+import { DrawerItem } from "@/models/common";
+import ROUTE_NAMES from "@/router/routeNames";
+import { useAppStore } from "@/stores/app";
+import { useUserStore } from "@/stores/user";
+import { formatBalance } from "@/utils/helpers";
 import { acronym } from "matija-utils";
 import { storeToRefs } from "pinia";
-import { DrawerItem } from "src/models/common";
-import ROUTE_NAMES from "src/router/routeNames";
-import { useAppStore } from "src/stores/app";
-import { useUserStore } from "src/stores/user";
-import { formatBalance } from "src/utils/helpers";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 

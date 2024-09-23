@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { i18n } from "../configurations/i18n";
 import Constants, { ApiUrlPrefixes } from "../constants";
 import { queryOptionsToParams } from "../helpers/apiClient";
+import { i18n } from "../i18n";
 import { ApiClient } from "../infrastructure/apiClient";
 import { IQueryParam } from "../interfaces/apiClient";
 import { IPageableCollection } from "../interfaces/common";
